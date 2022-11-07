@@ -1,0 +1,52 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+
+<!-- please note these are half lengths and widths -->
+
+  <detectors>
+    <detector id="EcalBarrel_ID" name="DRCrystal" type="DD4hep_DRCrystal" readout="DRCNoSegment" vis="Invisible">
+
+
+ <comment>Electromagnetic Calorimeter Barrel</comment>
+
+
+
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" />
+
+
+
+
+<!--  a tower may have several different patterns that repeat.
+for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
+each of these repeating things is a "layer". (so in this example, two "layers") 
+within a layer is a slice os the Pb and scint are slices
+the assembled tower is a Stave 
+-->
+
+ <staves vis="Invisible"/>
+<layer repeat="1" vis="Invisible">
+      <slice material = "killMedia" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+      <slice material = "E_PbWO4" thickness = "DRcrystallength" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
+      <slice material = "killMedia" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+</layer>
+    </detector>
+  </detectors>
+
+

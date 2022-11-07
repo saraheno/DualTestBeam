@@ -1,0 +1,52 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<lccdd>
+  <!--  Definition of global dictionary constants          -->
+  <define>
+  </define>
+
+  <!--  Definition of the used visualization attributes    -->
+  <display>
+    <vis name="CrystalEcalBarrelVis"       alpha="0.1" r="1.0"  g="1.0"  b="1.0"  showDaughters="true" visible="true"/>
+    <vis name="CrystalEcalTowerVis"        alpha="0.1" r="0.0"  g="0.0"  b="1.0"   showDaughters="true" visible="true"/>
+    <vis name="CrystalEcalLayerVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"  showDaughters="true" visible="true"/>
+    <vis name="CrystalEcalSensitiveVis"    alpha="0.1" r="1.0"  g="0.0"  b="0.0"  showDaughters="true" visible="true"/>
+    <vis name="Invisible" showDaughers="true" visible="false"/> 
+  </display>
+
+  <!--  Definition of the readout segmentation/definition  -->
+  <readouts>
+    <readout name="CrystalEcalBarrelHits">
+      <segmentation type="GridPhiEta" grid_size_eta="1.0*cm" phi_bins="1" />
+      <id>system:8,barrel:3,module:8,layer:6,slice:5,eta:32:-16,phi:-16</id>
+    </readout>        
+ <readout name="DRCNoSegment">
+      <segmentation type="NoSegmentation"/>
+      <id>system:3,barrel:1,side:1,slice:2,layer:2,ieta:9,iphi:9,eta:-8,phi:9</id>
+ </readout>
+
+  </readouts>
+
+  <!--  Includes for sensitives and support                -->
+  <include ref="SCEPCAL_DRCrystal.xml"/>
+
+<!--
+-->
+</lccdd>

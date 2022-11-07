@@ -1,0 +1,23 @@
+<define>
+    <constant name="world_side" value="600.*m"/>
+    <constant name="world_x" value="world_side"/>
+    <constant name="world_y" value="world_side"/>
+    <constant name="world_z" value="world_side"/>
+
+
+    
+ 
+
+    <constant name="DRcrystalwidth" value="1.25"/>
+    <constant name="DRcrystallength" value="3."/>
+
+    
+    <constant name="EcalBarrel_ID" value="6"/>
+
+
+
+
+
+    
+
+</define>
