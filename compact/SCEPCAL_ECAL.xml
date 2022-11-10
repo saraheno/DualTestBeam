@@ -33,14 +33,11 @@
 
   <!--  Definition of the readout segmentation/definition  -->
   <readouts>
-    <readout name="CrysEcalBarrelHits">
-      <segmentation type="GridPhiEta" grid_size_eta="1.0*cm" phi_bins="1" />
-      <id>system:8,barrel:3,module:8,layer:6,slice:5,eta:32:-16,phi:-16</id>
-    </readout>        
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,barrel:1,side:1,slice:2,layer:2,ieta:9,iphi:9,eta:-8,phi:9</id>
+      <id>slice:3,layer:3,ix:3,iy:3,system:3</id>
  </readout>
+
 
   </readouts>
 

@@ -10,7 +10,7 @@
 
     <constant name="DRcrystalwidth" value="1.25"/>
     <constant name="DRcrystallength" value="3."/>
-
+    <constant name="DRcrystalNsize" value="2"/>
     
     <constant name="EcalBarrel_ID" value="6"/>
 

@@ -21,14 +21,14 @@
 <!-- please note these are half lengths and widths -->
 
   <detectors>
-    <detector id="EcalBarrel_ID" name="DRCrystal" type="DD4hep_DRCrystal" readout="DRCNoSegment" vis="Invisible">
+    <detector id="EcalBarrel_ID" name="DRCrystal" type="DD4hep_DRCrys" readout="DRCNoSegment" vis="Invisible">
 
 
  <comment>Electromagnetic Calorimeter Barrel</comment>
 
 
 
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" />
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" repeat="DRcrystalNsize"/>
 
 
 
