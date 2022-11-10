@@ -12,7 +12,7 @@
 //==========================================================================
 
 /// Framework include files
-#include "DualCrystalCalorimeterHit.h"
+#include "DualCrysCalorimeterHit.h"
 #include "G4Track.hh"
 
 using namespace CalVision;

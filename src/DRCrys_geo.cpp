@@ -22,7 +22,7 @@ using namespace dd4hep;
 using namespace dd4hep::detail;
 
 static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens)  {
-  std::cout<<"Creating DRCrystal"<<std::endl;
+  std::cout<<"Creating DRCrys"<<std::endl;
 
   static double tol = 0.001;
   // material to underly it all
@@ -101,12 +101,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double z_bottoml  = -hzmax;
   int l_num = 1;
   for(xml_coll_t li(x_det,_U(layer)); li; ++li)  {
-    std::cout<<"DRCrystal layer "<<li<<std::endl;
+    std::cout<<"DRCrys layer "<<li<<std::endl;
     xml_comp_t x_layer = li;
     int repeat = x_layer.repeat();
       // Loop over number of repeats for this layer.
     for (int j=0; j<repeat; j++)    {
-      std::cout<<"DRCrystal layer "<<li<<" repeat "<<j<<std::endl;
+      std::cout<<"DRCrys layer "<<li<<" repeat "<<j<<std::endl;
       string l_name = _toString(l_num,"layer%d");
       double l_hzthick = layering.layer(l_num-1)->thickness();  // Layer's thickness.
       std::cout<<"half  thickness is "<<l_hzthick<<std::endl;
@@ -218,11 +218,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  std::cout<<"exiting DRCrystal creator"<<std::endl;
+  std::cout<<"exiting DRCrys creator"<<std::endl;
 
   return sdet;
 }
 
-DECLARE_DETELEMENT(DD4hep_DRCrystal,create_detector)
+DECLARE_DETELEMENT(DD4hep_DRCrys,create_detector)
 
-DECLARE_DEPRECATED_DETELEMENT(DRCrystal,create_detector)
+DECLARE_DEPRECATED_DETELEMENT(DRCrys,create_detector)

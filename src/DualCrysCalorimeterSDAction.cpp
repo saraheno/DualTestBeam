@@ -12,7 +12,7 @@
 //==========================================================================
 
 // Framework include files
-#include "DualCrystalCalorimeterHit.h"
+#include "DualCrysCalorimeterHit.h"
 #include "DDG4/Geant4SensDetAction.inl"
 #include "DDG4/Factories.h"
 
@@ -35,9 +35,9 @@ namespace CalVision {
 
   int SCECOUNT=0;
 
-  class DualCrystalCalorimeterSD {
+  class DualCrysCalorimeterSD {
   public:
-    typedef DualCrystalCalorimeterHit Hit;
+    typedef DualCrysCalorimeterHit Hit;
     // If we need special data to personalize the action, be put it here
     //int mumDeposits = 0;
     //double integratedDeposit = 0;
@@ -57,18 +57,18 @@ namespace dd4hep {
     /** \addtogroup Geant4SDActionPlugin
      *
      * @{
-     * \package DualCrystalCalorimeterSDAction
+     * \package DualCrysCalorimeterSDAction
      *
      * @}
      */
 
     /// Define collections created by this sensitivie action object
-    template <> void Geant4SensitiveAction<DualCrystalCalorimeterSD>::defineCollections()    {
-      m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrystalCalorimeterSD::Hit>();
+    template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::defineCollections()    {
+      m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrysCalorimeterSD::Hit>();
     }
 
     /// Method for generating hit(s) using the information of G4Step object.
-    template <> bool Geant4SensitiveAction<DualCrystalCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
+    template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
 
 
       bool SCEPRINT=(SCECOUNT<10000);
@@ -92,7 +92,7 @@ namespace dd4hep {
       //G4int TrPDGid = theTrack->GetDefinition()->GetPDGEncoding();
 
       //      if(thePrePVName.contains("slice")==0) {
-      //std::cout<<"entering DualCrystalAction"<<std::endl;
+      //std::cout<<"entering DualCrysAction"<<std::endl;
       //  std::cout<<" prevolume is "<<thePrePVName<<std::endl;
       //  std::cout<<" postvolume is "<<thePostPVName<<std::endl;
       //  std::cout<<" pid is "<<TrPDGid<<std::endl;
@@ -100,7 +100,7 @@ namespace dd4hep {
 
 
       Geant4StepHandler h(step);
-      HitContribution contrib = DualCrystalCalorimeterHit::extractContribution(step);
+      HitContribution contrib = DualCrysCalorimeterHit::extractContribution(step);
 
       Geant4HitCollection*  coll    = collection(m_collectionID);
       VolumeID cell = 0;
@@ -126,12 +126,12 @@ namespace dd4hep {
       }
 
 
-      DualCrystalCalorimeterHit* hit = coll->findByKey<DualCrystalCalorimeterHit>(cell);
+      DualCrysCalorimeterHit* hit = coll->findByKey<DualCrysCalorimeterHit>(cell);
       if ( !hit ) {
         Geant4TouchableHandler handler(step);
 	DDSegmentation::Vector3D pos = m_segmentation.position(cell);
         Position global = h.localToGlobal(pos);
-        hit = new DualCrystalCalorimeterHit(global);
+        hit = new DualCrysCalorimeterHit(global);
         hit->cellID = cell;
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
@@ -337,8 +337,8 @@ namespace dd4hep { namespace sim {
 
 //--- Factory declaration
 namespace dd4hep { namespace sim {
-    typedef Geant4SensitiveAction<DualCrystalCalorimeterSD> DualCrystalCalorimeterSDAction;
+    typedef Geant4SensitiveAction<DualCrysCalorimeterSD> DualCrysCalorimeterSDAction;
   }}
-DECLARE_GEANT4SENSITIVE(DualCrystalCalorimeterSDAction)
+DECLARE_GEANT4SENSITIVE(DualCrysCalorimeterSDAction)
 DECLARE_GEANT4ACTION(WavelengthMinimumCut)
 DECLARE_GEANT4ACTION(WavelengthnmwindCut)

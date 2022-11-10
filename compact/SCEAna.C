@@ -11,7 +11,7 @@
 #include "DD4hep/Factories.h"
 #include "DDG4/Geant4Particle.h"
 #include "DDG4/Geant4Data.h"
-#include "../src/DualCrystalCalorimeterHit.h"
+#include "../src/DualCrysCalorimeterHit.h"
 
 #include <vector>
 #include <algorithm>
@@ -24,7 +24,7 @@ void SCEana(int num_evtsmax, const char* inputfilename) {
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
-  typedef std::vector<CalVision::DualCrystalCalorimeterHit*> CalHits;
+  typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
 
   // read in libraries that define the classes
   Long_t result;
@@ -37,14 +37,14 @@ void SCEana(int num_evtsmax, const char* inputfilename) {
   result = gSystem->Load("libDDG4IO");
   result = gSystem->Load("libDDEvePlugins");
   result = gSystem->Load("libDDEvePlugins");
-  result = gSystem->Load("libDDDualCrystal");
+  result = gSystem->Load("libDDDualCrys");
   result = gSystem->Load("libDDG4Plugins");
 
 
   // define histograms
   TH1F *hgenPsize = new TH1F("hgenPsize","number of generator particles",600,0.,40000);
   TH1F *hgenPdgID = new TH1F("hgenpdgID","pdgID of generator particles",600,-200,200);
-  TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy",100,0.,100.);
+  TH1F *hcEcalE = new TH1F("hcEcalE","sum crys ecal energy",100,0.,100.);
   TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100,0.,10000);
   TH1F *hcEcalncer0 = new TH1F("hcEcalncer0","total number of cerenkov chan 1",100,0.,10000);
   TH1F *hcEcalncer1 = new TH1F("hcEcalncer1","total number of cerenkov chan 2",100,0.,10000);
@@ -124,7 +124,7 @@ void SCEana(int num_evtsmax, const char* inputfilename) {
       int ncertot=0;
       int nscinttot=0;
       for(size_t i=0;i<ecalhits->size(); ++i) {
-	CalVision::DualCrystalCalorimeterHit* aecalhit =ecalhits->at(i);
+	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 	//	std::cout<<"       "<<i<<" energy "<<aecalhit->energyDeposit<<std::endl;
 	esum+=aecalhit->energyDeposit;
 	ncertot+=aecalhit->ncerenkov;

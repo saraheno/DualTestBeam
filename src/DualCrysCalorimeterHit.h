@@ -10,8 +10,8 @@
 // Author     : M.Frank
 //
 //==========================================================================
-#ifndef EXAMPLES_DDDualCrystal_SRC_DualCrystalCalorimeterHIT_H
-#define EXAMPLES_DDDualCrystal_SRC_DualCrystalCalorimeterHIT_H
+#ifndef EXAMPLES_DDDualCrys_SRC_DualCrysCalorimeterHIT_H
+#define EXAMPLES_DDDualCrys_SRC_DualCrysCalorimeterHIT_H
 
 /// Framework include files
 #include "DDG4/Geant4Data.h"
@@ -46,7 +46,7 @@ namespace CalVision {
    *  \version 1.0
    *  \ingroup DD4HEP_SIMULATION
    */
-  class DualCrystalCalorimeterHit : public dd4hep::sim::Geant4Calorimeter::Hit   {
+  class DualCrysCalorimeterHit : public dd4hep::sim::Geant4Calorimeter::Hit   {
 
   public:
     int ncerenkov,nscintillator;
@@ -60,9 +60,9 @@ namespace CalVision {
 
   public:
     /// Default constructor
-    DualCrystalCalorimeterHit() = default;
+    DualCrysCalorimeterHit() = default;
     /// Initializing constructor
-  DualCrystalCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0) {
+  DualCrysCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0) {
 
       for( int i=0;i<nbin;i++){
 	ncerwave[i]=0;
@@ -72,9 +72,9 @@ namespace CalVision {
 }
 
     /// Default destructor
-    virtual ~DualCrystalCalorimeterHit() = default;
+    virtual ~DualCrysCalorimeterHit() = default;
     /// Assignment operator
-    //DualCrystalCalorimeterHit& operator=(const DualCrystalCalorimeterHit& c);
+    //DualCrysCalorimeterHit& operator=(const DualCrysCalorimeterHit& c);
   };
 
   /// Helper to dump data file
@@ -90,7 +90,7 @@ namespace CalVision {
   class Dump   {
   public:
     /// Standalone function to dump data from a root file
-    static int DualCrystalCalorimeterdumpData(int num_evts, const char* file_name);
+    static int DualCrysCalorimeterdumpData(int num_evts, const char* file_name);
   };
 }
 
@@ -104,8 +104,8 @@ namespace CalVision {
 #pragma link C++ namespace dd4hep;
 #pragma link C++ namespace dd4hep::sim;
 #pragma link C++ namespace CalVision;
-#pragma link C++ class     CalVision::DualCrystalCalorimeterHit+;
-#pragma link C++ class     CalVision::DualCrystalCalorimeterDump;
+#pragma link C++ class     CalVision::DualCrysCalorimeterHit+;
+#pragma link C++ class     CalVision::DualCrysCalorimeterDump;
 #endif
 
-#endif // EXAMPLES_DDDualCrystal_SRC_DualCrystalCalorimeterHIT_H
+#endif // EXAMPLES_DDDualCrys_SRC_DualCrysCalorimeterHIT_H

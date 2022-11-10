@@ -10,7 +10,7 @@
 // Author     : M.Frank
 //
 //==========================================================================
-#include "DualCrystalCalorimeterHit.h"
+#include "DualCrysCalorimeterHit.h"
 #include <TFile.h>
 #include <TBranch.h>
 #include <TTree.h>
@@ -23,7 +23,7 @@ using namespace std;
 
 namespace CalVision   {
 
-  void DualCrystalCalorimeterdump_branch(int num_evts, TBranch* b)    {
+  void DualCrysCalorimeterdump_branch(int num_evts, TBranch* b)    {
     typedef vector<dd4hep::sim::Geant4Calorimeter::Hit*> CalHits;
     int num_evt;
     num_evt = b->GetEntries();
@@ -35,7 +35,7 @@ namespace CalVision   {
 	if ( nbyte > 0 )    {
 	  cout << "Cal hits: " << nbyte << " bytes " << hits->size()  << endl;
 	  for(size_t i=0; i<min(hits->size(),10UL); ++i)    {
-	    DualCrystalCalorimeterHit* hit = (DualCrystalCalorimeterHit*)hits->at(i);
+	    DualCrysCalorimeterHit* hit = (DualCrysCalorimeterHit*)hits->at(i);
 	    cout << b->GetName() << " Event " << ievt
 		 << " Hit " << (int)i
 		 << " type: "    << typeid(*hit).name()
@@ -52,7 +52,7 @@ namespace CalVision   {
   }
 
   /// Standalone function to dump data from a root file
-  int Dump::DualCrystalCalorimeterdumpData(int num_evts, const char* file_name)    {
+  int Dump::DualCrysCalorimeterdumpData(int num_evts, const char* file_name)    {
     if ( !file_name )    {
       cout << "Illegal file name: Input file cannot be opened!" << endl;
       return ENOENT;
@@ -70,7 +70,7 @@ namespace CalVision   {
       return ENOENT;
     }
     t->Print();
-    DualCrystalCalorimeterdump_branch(num_evts,t->GetBranch("CrystalEcalBarrelHits"));
+    DualCrysCalorimeterdump_branch(num_evts,t->GetBranch("CrysEcalBarrelHits"));
 
     f->Close();
     delete f;
