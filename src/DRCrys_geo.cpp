@@ -197,8 +197,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<std::endl;
 
 
-      double zrot=aside*M_PI*0.5;
-      Transform3D tr(RotationZYX(zrot,phi,M_PI*0.5),Translation3D(-m_pos_x,-m_pos_y,m_pos_z));
+
+      Transform3D tr(RotationZYX(0.,0.,0.));
       PlacedVolume pv = envelope.placeVolume(towerVol,tr);
 
 
