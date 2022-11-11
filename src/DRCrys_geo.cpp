@@ -25,6 +25,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<"Creating DRCrys"<<std::endl;
 
   static double tol = 0.001;
+
   // material to underly it all
   Material      air       = description.air();
 
@@ -55,6 +56,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<" repeat is "<<Ncount<<std::endl;
 
 
+
+  int agap = x_dim.gap();
+  std::cout<<" gap is "<<agap<<std::endl;
+
+
   // three structures, volumes, placedvolumes, and detelements
   // volumes need a setVisAttribute
   // DetElements. you can have volumes inherit attrivutesby setting them here
@@ -69,7 +75,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
   //set containment area for whole calorimeter
-  Box hedra  (10.*hwidth,10.*hwidth, 10.*hzmax);
+  Box hedra  (10.*Ncount*(hwidth+agap),10.*Ncount*(hwidth+agap), 10.*Ncount*hzmax);
   Volume        envelope  (det_name,hedra,air);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,RotationZYX(0,0,0));
 
@@ -94,7 +100,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Volume towerVol( "tower", towertrap, air);
   std::cout<<"   tower visstr is "<<x_towers.visStr()<<std::endl;
   towerVol.setVisAttributes(description, x_towers.visStr());
-  int itower=0;
+  int itower=0; 
   string t_name = _toString(itower,"towerp%d") ;
   DetElement tower_det(t_name,det_id);  // detector element for a tower
   towerVol.setSensitiveDetector(sens);
@@ -192,13 +198,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
-      double mod_x_off = (ijk1+0.5)*2*hwidth;             
-      double mod_y_off = (ijk2+0.5)*2*hwidth;
-      std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<std::endl;
+      double mod_x_off = (ijk1)*2*(hwidth+agap);             
+      double mod_y_off = (ijk2)*2*(hwidth+agap);
+      std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
 
 
-
-      Transform3D tr(RotationZYX(0.,0.,0.));
+      Transform3D tr(RotationZYX(0.,0.,0.),Position(mod_x_off,mod_y_off,0.));
       PlacedVolume pv = envelope.placeVolume(towerVol,tr);
 
 
@@ -208,21 +213,25 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       pv.addPhysVolID("iy",ijk2);
 
 
-  //DetElement sd = nPhi==0 ? tower_det : tower_det.clone(t_name+_toString(nPhi,"0%d"));
-      DetElement sd = tower_det;
+      int towernum = (ijk1+2)*(2*Ncount+1)+(ijk2+2);
+      std::cout<<"placing tower "<<towernum<<std::endl;
+      string t_name = _toString(towernum,"0%d");
+      DetElement sd = tower_det.clone(t_name,det_id);
+
+
 
       sd.setPlacement(pv);
       sdet.add(sd);
 
 
+
+
+  }
+  }
+
   // Set envelope volume attributes.
       std::cout<<" envelope visstr is "<<x_det.visStr()<<std::endl;
     envelope.setAttributes(description,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
-
-
-  }
-  }
-
 
 
 
