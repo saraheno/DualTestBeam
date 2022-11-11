@@ -188,31 +188,40 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
     // now do the placement
 
-  double mod_x_off = 0.;             
-  double mod_y_off = 0.;  
-  double mod_z_off= 0.;
 
-	  //double zrot=0.;
-  Transform3D tr(RotationZYX(0.,0.,0.));
-  PlacedVolume pv = envelope.placeVolume(towerVol,tr);
-  pv.addPhysVolID("system",det_id);
-  pv.addPhysVolID("ix",0);
-  pv.addPhysVolID("iy",0);
+
+  for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
+    for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
+      double mod_x_off = (ijk1+0.5)*2*hwidth;             
+      double mod_y_off = (ijk2+0.5)*2*hwidth;
+      std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<std::endl;
+
+
+      double zrot=aside*M_PI*0.5;
+      Transform3D tr(RotationZYX(zrot,phi,M_PI*0.5),Translation3D(-m_pos_x,-m_pos_y,m_pos_z));
+      PlacedVolume pv = envelope.placeVolume(towerVol,tr);
+
+
+
+      pv.addPhysVolID("system",det_id);
+      pv.addPhysVolID("ix",ijk1);
+      pv.addPhysVolID("iy",ijk2);
 
 
   //DetElement sd = nPhi==0 ? tower_det : tower_det.clone(t_name+_toString(nPhi,"0%d"));
-  DetElement sd = tower_det;
+      DetElement sd = tower_det;
 
-  sd.setPlacement(pv);
-  sdet.add(sd);
+      sd.setPlacement(pv);
+      sdet.add(sd);
 
 
   // Set envelope volume attributes.
-  std::cout<<" envelope visstr is "<<x_det.visStr()<<std::endl;
-  envelope.setAttributes(description,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
+      std::cout<<" envelope visstr is "<<x_det.visStr()<<std::endl;
+    envelope.setAttributes(description,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
 
 
-
+  }
+  }
 
 
 

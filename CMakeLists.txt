@@ -44,7 +44,7 @@ endif()
 if (DD4HEP_USE_GEANT4)
   #---------------------------  Plugin library for the simulation framework  ---------
   dd4hep_add_dictionary(G__DualTestBeam
-    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h src/DualCryCalorimeterHit.h 
+    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h src/DualCrystalCalorimeterHit.h 
     LINKDEF ${DD4hep_DIR}/include/ROOT/LinkDef.h
     OUTPUT  ${LIBRARY_OUTPUT_PATH}
     USES    DD4hep::DDCore DD4hep::DDG4 Geant4::Interface
@@ -76,7 +76,6 @@ dd4hep_configure_output ()
 #
 #---DualTestBeam plugin library -------------------------------------------------------
 dd4hep_add_plugin ( DualTestBeam
-#    GENERATED G__DualTestBeam.cxx G__DRcaloSiPM.cxx
     GENERATED G__DualTestBeam.cxx 
   SOURCES src/*.cpp src/plugins/*.cpp
   USES    DD4hep::DDCore DD4hep::DDAlign DD4hep::DDCond DD4hep::DDG4 DDDetectors
