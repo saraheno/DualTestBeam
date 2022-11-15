@@ -221,7 +221,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
       sd.setPlacement(pv);
-      sdet.add(sd);
+      //      sdet.add(sd);
 
 
 
