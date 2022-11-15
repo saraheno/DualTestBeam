@@ -84,7 +84,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
   dd4hep::Box hedra   (10.*Ncount*(thick+agap),10.*Ncount*(thick+agap), 10.*Ncount*zlength);
   Volume        envelope  (det_name,hedra,air);
-  Position a_pos(0.,0.,azmin);
+  Position a_pos(0.,0.,azmin+zlength);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
