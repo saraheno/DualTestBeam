@@ -20,7 +20,7 @@
 
 
   <detectors>
-    <detector id="DR_ID" name="DRSimple" type="DD4hep_DRSimple" readout="DRNoSegment" vis="Invisible">
+    <detector id="DR_ID" name="DRFiber" type="DD4hep_DRFiber" readout="DRNoSegment" vis="Invisible">
 
 
  <comment>Hadronic Calorimeter Barrel</comment>

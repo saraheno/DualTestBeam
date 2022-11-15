@@ -48,7 +48,7 @@
 
 
 <!-- <include ref="SCEPCAL_DRcal.xml"/> -->
-<include ref="SCEPCAL_DRSimple.xml"/>
+<include ref="SCEPCAL_DRFiber.xml"/>
 
 </lccdd>
 
