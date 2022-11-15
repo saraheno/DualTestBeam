@@ -50,9 +50,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   double hwidth   = x_dim.width();
   double hzmax = x_dim.z_length();
+  int Ncount = x_dim.repeat();
 
   std::cout<<"half width zmax are "<<hwidth<<" "<<hzmax<<std::endl;
-  int Ncount = x_dim.repeat();
   std::cout<<" repeat is "<<Ncount<<std::endl;
 
 
