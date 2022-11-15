@@ -28,11 +28,11 @@
 
 
 <!-- <dimensions numsides="1663" nz="382" rmin="DRinnerRadius" thickness="180" z_length="306." /> -->
-<dimensions numsides="32" rmin="DRinnerRadius" thickness="180" z_length="306." gap="1.0"/>
+<dimensions numsides="4" rmin="DRinnerRadius" thickness="5" z_length="40." gap="1.0" dz="10.0" zmin="2.*DRcrystallength"/>
 <!-- not in core and hole rmind is not used -->
       <structure>
-        <core name="core" rmax="50.0*mm" rmin="80.0*mm" material="DR_Polystyrene" vis="CerenVis" sensitive="yes"/> 
-        <hole name="hole" rmax="51.0*mm" rmin="80.0*mm" material="Air" vis="GenericVis" sensitive="no"/> 
+        <core name="core" rmax="2.0" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
+        <hole name="hole" rmax="4.0" rmin="0.0" material="Air" vis="CladVis" sensitive="no"/> 
       </structure>
  <absorb material="Copper" vis="TowerVis">
  </absorb>

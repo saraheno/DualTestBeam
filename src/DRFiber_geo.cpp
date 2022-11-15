@@ -58,7 +58,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<" gap is "<<agap<<std::endl;
 
 
-
+  double azmin = x_dim.zmin();
+  std::cout<<" placing at zmin "<<azmin<<std::endl;
 
   // these refer to different fields in the xml file for this detector
   xml_comp_t fX_struct( x_det.child( _Unicode(structure) ) );
@@ -83,7 +84,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
   dd4hep::Box hedra   (10.*Ncount*(thick+agap),10.*Ncount*(thick+agap), 10.*Ncount*zlength);
   Volume        envelope  (det_name,hedra,air);
-  PlacedVolume  env_phv   = motherVol.placeVolume(envelope,RotationZYX(0,0,0));
+  Position a_pos(0.,0.,azmin);
+  PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
 
@@ -116,7 +118,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // hole for fiber
-  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),thick/2.);
+  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength);
   dd4hep::Volume holeVol("hole", fiberhole, description.material(fX_hole.materialStr()));
   holeVol.setVisAttributes(description, fX_hole.visStr());
   string h_name = _toString(itower,"holem%d");
@@ -124,7 +126,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // fiber
-  dd4hep::Tube fiber = dd4hep::Tube(0.,fX_core.rmax(),thick/2.);
+  dd4hep::Tube fiber = dd4hep::Tube(0.,fX_core.rmax(),(zlength+x_dim.dz()));
   std::cout<<" making fiber from "<<fX_core.materialStr()<<std::endl;
   dd4hep::Volume fiberVol("fiber", fiber, description.material(fX_core.materialStr()));
   std::cout<<"fX_core.isSensitive is "<<fX_core.isSensitive()<<std::endl;
@@ -138,8 +140,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   Position tra(0.,0.,zlength/2.);
-  PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra);
-  PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra);
+  Position tra2(0.,0.,0.);
+  PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra2);
+  PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra2);
   PlacedVolume abs_phv = towerVol.placeVolume( absVol, tra);
 
 

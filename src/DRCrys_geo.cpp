@@ -52,6 +52,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double hzmax = x_dim.z_length();
   int Ncount = x_dim.repeat();
 
+
   std::cout<<"half width zmax are "<<hwidth<<" "<<hzmax<<std::endl;
   std::cout<<" repeat is "<<Ncount<<std::endl;
 
@@ -77,7 +78,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //set containment area for whole calorimeter
   Box hedra  (10.*Ncount*(hwidth+agap),10.*Ncount*(hwidth+agap), 10.*Ncount*hzmax);
   Volume        envelope  (det_name,hedra,air);
-  PlacedVolume  env_phv   = motherVol.placeVolume(envelope,RotationZYX(0,0,0));
+  Position a_pos(0.,0.,0.);
+  PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
 
