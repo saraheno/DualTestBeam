@@ -26,7 +26,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  std::cout<<"Creating DRSimple"<<std::endl;
+  std::cout<<"Creating DRFiber"<<std::endl;
 
 
   xml_det_t     x_det     = e;
@@ -198,7 +198,7 @@ TH1 the angle w.r.t. the y axis from the centre of low y edge to the centre of t
     dd4hep::Volume fiberVol("fiber", fiber, description.material(fX_core.materialStr()));
     std::cout<<"fX_core.isSensitive is "<<fX_core.isSensitive()<<std::endl;
     if ( fX_core.isSensitive() ) {
-      std::cout<<"setting DRSimple fiber sensitive "<<std::endl;
+      std::cout<<"setting DRFiber fiber sensitive "<<std::endl;
       fiberVol.setSensitiveDetector(sens);
     }
     string f_name = iside==0 ? _toString(itower,"fiberp%d") : _toString(itower,"fiberm%d");
@@ -291,11 +291,11 @@ TH1 the angle w.r.t. the y axis from the centre of low y edge to the centre of t
 
 
 
-  std::cout<<"exiting DRSimple creator"<<std::endl;
+  std::cout<<"exiting DRFiber creator"<<std::endl;
 
   return sdet;
 }
 
-DECLARE_DETELEMENT(DD4hep_DRSimple,create_detector)
+DECLARE_DETELEMENT(DD4hep_DRFiber,create_detector)
 
-DECLARE_DEPRECATED_DETELEMENT(DRSimple,create_detector)
+DECLARE_DEPRECATED_DETELEMENT(DRFiber,create_detector)
