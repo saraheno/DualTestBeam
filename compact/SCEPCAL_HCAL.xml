@@ -1,0 +1,59 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<lccdd>
+
+
+  <display>
+
+    <vis name="Invisible" showDaughers="true" visible="false"/> <!-- set showDaughters="true" to visualize -->
+    <vis name="TowerVis" alpha="1." r="0.7" g="0.4" b="0.1" showDaughters="true" visible="true"/>
+    <vis name="CerenVis" alpha="0.5" r="0.3" g="0.6" b="0.9" showDaughters="true" visible="true"/>
+    <vis name="ScintVis" alpha="0.5" r="1.0" g="0.8" b="0.1" showDaughters="true" visible="true"/>
+    <vis name="CladVis" alpha="0.5" r="0.0" g="0.5" b="0.5" showDaughters="true" visible="true"/>
+    <vis name="GenericVis" alpha="0.8" r="0.5" g="0.5" b="0.5" showDaughters="true" visible="true"/>
+    <vis name="GlassVis" alpha="0.5" r="0.0" g="0.1" b="0.9" showDaughters="true" visible="true"/>
+    <vis name="WaferVis" alpha="1." r="0.0" g="0.9" b="0.2" showDaughters="true" visible="true"/>
+    <vis name="filterVis" alpha="0.5" r="0.9" g="0.8" b="0.1" showDaughters="true" visible="true"/>
+
+  </display>
+
+  <readouts>
+<!--    <readout name="DRcaloSiPMreadout"> -->
+<!--      <segmentation type="GridDRcalo"/> -->
+  <!-- Mendatory to use the first 32 bits for tower infos & the last 32 bits for fiber/SiPM infos -->
+<!--      <id>system:5,eta:-8,phi:9,x:32:-7,y:-7,c:1,module:2</id> -->
+<!--    </readout> -->
+    <readout name="DRNoSegment">
+      <segmentation type="NoSegmentation"/>
+      <id>system:3,fiber:1,barrel:1,side:1,ieta:11,iphi:11,ifiber:1,eta:-8,phi:9</id>
+    </readout>
+  </readouts>
+
+ <regions>
+    <region name="FastSimOpFiberRegion"/>
+  </regions> 
+
+
+<!-- <include ref="SCEPCAL_DRcal.xml"/> -->
+<include ref="SCEPCAL_DRSimple.xml"/>
+
+</lccdd>
+
+
