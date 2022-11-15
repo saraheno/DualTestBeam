@@ -17,39 +17,26 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<lccdd>
 
 
-  <display>
-
-    <vis name="Invisible" showDaughers="true" visible="false"/> <!-- set showDaughters="true" to visualize -->
-    <vis name="TowerVis" alpha="1." r="0.7" g="0.4" b="0.1" showDaughters="true" visible="true"/>
-    <vis name="CerenVis" alpha="0.5" r="0.3" g="0.6" b="0.9" showDaughters="true" visible="true"/>
-    <vis name="ScintVis" alpha="0.5" r="1.0" g="0.8" b="0.1" showDaughters="true" visible="true"/>
-    <vis name="CladVis" alpha="0.5" r="0.0" g="0.5" b="0.5" showDaughters="true" visible="true"/>
-    <vis name="GenericVis" alpha="0.8" r="0.5" g="0.5" b="0.5" showDaughters="true" visible="true"/>
-    <vis name="GlassVis" alpha="0.5" r="0.0" g="0.1" b="0.9" showDaughters="true" visible="true"/>
-    <vis name="WaferVis" alpha="1." r="0.0" g="0.9" b="0.2" showDaughters="true" visible="true"/>
-    <vis name="filterVis" alpha="0.5" r="0.9" g="0.8" b="0.1" showDaughters="true" visible="true"/>
-
-  </display>
-
-  <readouts>
-
-    <readout name="DRNoSegment">
-      <segmentation type="NoSegmentation"/>
-      <id>fiber:1,ifiber:1,ix:-5,iy:-5,system:3</id>
-    </readout>
-  </readouts>
-
- <regions>
-    <region name="FastSimOpFiberRegion"/>
-  </regions> 
+  <detectors>
+    <detector id="DR_ID" name="DRSimple" type="DD4hep_DRSimple" readout="DRNoSegment" vis="Invisible">
 
 
-<!-- <include ref="SCEPCAL_DRcal.xml"/> -->
-<include ref="SCEPCAL_DRSimple.xml"/>
+ <comment>Hadronic Calorimeter Barrel</comment>
 
-</lccdd>
+
+
+<!-- <dimensions numsides="1663" nz="382" rmin="DRinnerRadius" thickness="180" z_length="306." /> -->
+<dimensions numsides="32" nz="10" rmin="DRinnerRadius" thickness="180" z_length="306." />
+<!-- not in core and hole rmind is not used -->
+      <structure>
+        <core name="core" rmax="50.0*mm" rmin="80.0*mm" material="DR_Polystyrene" vis="CerenVis" sensitive="yes"/> 
+        <hole name="hole" rmax="51.0*mm" rmin="80.0*mm" material="Air" vis="GenericVis" sensitive="no"/> 
+      </structure>
+ <barrel material="Copper" vis="TowerVis">
+ </barrel>
+    </detector>
+  </detectors>
 
 
