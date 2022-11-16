@@ -62,6 +62,7 @@
 #/vis/filtering/trajectories/particleFilter-0/add e-
 #/vis/filtering/trajectories/particleFilter-0/add e+
 /vis/filtering/trajectories/particleFilter-0/add opticalphoton
+/vis/filtering/trajectories/particleFilter-0/add neutron
 #/vis/filtering/trajectories/particleFilter-0/add mu-
 /vis/filtering/trajectories/particleFilter-0/add gamma
 
@@ -76,9 +77,14 @@
 /vis/modeling/trajectories/drawByParticleID-0/set geantino red
 /vis/modeling/trajectories/drawByParticleID-0/set e- red
 /vis/modeling/trajectories/drawByParticleID-0/set pi- brown
+/vis/modeling/trajectories/drawByParticleID-0/set pi+ brown
+/vis/modeling/trajectories/drawByParticleID-0/set pi0 brown
+/vis/modeling/trajectories/drawByParticleID-0/set nue green
 /vis/modeling/trajectories/drawByParticleID-0/set mu- blue
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ blue
 /vis/modeling/trajectories/drawByParticleID-0/set gamma yellow
+/vis/modeling/trajectories/drawByParticleID-0/set neutron green
+/vis/modeling/trajectories/drawByParticleID-0/set proton green
 /vis/modeling/trajectories/drawByParticleID-0/set opticalphoton black
 #
 # To superimpose all of the events from a given run:
