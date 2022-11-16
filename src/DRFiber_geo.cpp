@@ -25,7 +25,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   std::cout<<"Creating DRFiber"<<std::endl;
 
-  static double tol = 1.;
+  static double tol = 0.1;
 
 
   xml_det_t     x_det     = e;
@@ -48,9 +48,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   xml_comp_t    x_dim     = x_det.dimensions();
   double        thick   = x_dim.thickness();
   double        zlength   = x_dim.z_length();
+  double        zextra   = x_dim.dz();
   int Ncount  = x_dim.numsides();
 
   std::cout<<" thick "<<thick<<" zlength "<<zlength<<" Ncount "<<Ncount<<std::endl;
+  std::cout<<" extra fiber length is "<<zextra<<std::endl;
 
 
 
@@ -82,8 +84,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
-  dd4hep::Box hedra   (10.*Ncount*(thick+agap),10.*Ncount*(thick+agap), 10.*Ncount*zlength);
-  Volume        envelope  (det_name,hedra,air);
+  dd4hep::Box abox   ((2*Ncount+1)*(thick+agap+zextra+tol),(2*Ncount+1)*(thick+agap+zextra+tol), zlength+tol);
+  Volume        envelope  (det_name,abox,air);
   Position a_pos(0.,0.,azmin+zlength);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
@@ -126,7 +128,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // fiber
-  dd4hep::Tube fiber = dd4hep::Tube(0.,fX_core.rmax(),(zlength+x_dim.dz()));
+  dd4hep::Tube fiber = dd4hep::Tube(0.,fX_core.rmax(),(zlength+zextra));
   std::cout<<" making fiber from "<<fX_core.materialStr()<<std::endl;
   dd4hep::Volume fiberVol("fiber", fiber, description.material(fX_core.materialStr()));
   std::cout<<"fX_core.isSensitive is "<<fX_core.isSensitive()<<std::endl;

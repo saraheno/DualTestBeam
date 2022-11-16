@@ -76,9 +76,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
   //set containment area for whole calorimeter
-  Box hedra  (10.*Ncount*(hwidth+agap),10.*Ncount*(hwidth+agap), 10.*Ncount*hzmax);
-  Volume        envelope  (det_name,hedra,air);
-  Position a_pos(0.,0.,0.);
+  Box abox  ((2*Ncount+1)*(hwidth+agap+tol),(2*Ncount+1)*(hwidth+agap+tol), hzmax+tol);
+  Volume        envelope  (det_name,abox,air);
+  Position a_pos(0.,0.,hzmax);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
