@@ -71,7 +71,7 @@ namespace dd4hep {
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
 
 
-      bool SCEPRINT=(SCECOUNT<10000);
+      bool SCEPRINT=(SCECOUNT<100);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
 
 
