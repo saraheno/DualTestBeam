@@ -73,7 +73,7 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 ## List of patterns matching sensitive detectors of type Calorimeter.
 #SIM.action.calorimeterSDTypes = ['calorimeter']
 
-SIM.action.calo = "DualCrystalCalorimeterSDAction"
+SIM.action.calo = "DualCrysCalorimeterSDAction"
 
 ## List of patterns matching sensitive detectors of type Calorimeter.
 SIM.action.calorimeterSDTypes = [u'calorimeter']
