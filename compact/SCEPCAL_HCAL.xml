@@ -36,9 +36,9 @@
 
   <readouts>
 
-    <readout name="DRNoSegment">
+    <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>fiber:1,ifiber:1,ix:-5,iy:-5,system:3</id>
+      <id>system:3,ix:-5,iy:-5,fiber:1,ifiber:1</id>
     </readout>
   </readouts>
 
