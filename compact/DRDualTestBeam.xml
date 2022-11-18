@@ -256,7 +256,8 @@
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
-      <constant name="SCINTILLATIONYIELD" value="13.9/keV"/>
+<!-- set low because impossibly long at correct yield -->
+      <constant name="SCINTILLATIONYIELD" value="0.005/keV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
@@ -268,7 +269,8 @@
       <property name="RINDEX" ref="RI_PS"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
-      <constant name="SCINTILLATIONYIELD" value="13.9/keV"/>
+<!-- set low because impossibly long at correct yield -->
+      <constant name="SCINTILLATIONYIELD" value="0.005/keV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
