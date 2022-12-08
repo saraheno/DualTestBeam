@@ -268,23 +268,22 @@ dielectric">
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
-      <constant name="SCINTILLATIONYIELD" value="13.9/keV"/>
+      <constant name="SCINTILLATIONYIELD" value="0.005/keV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
 
-   <material name="DR_Polystyrene">
+  <material name="DR_Polystyrene">
       <D value="1.032" unit="g/cm3"/>
       <composite n="19" ref="C"/>
       <composite n="21" ref="H"/>
       <property name="RINDEX" ref="RI_PS"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
-      <constant name="SCINTILLATIONYIELD" value="13.9/keV"/>
+      <constant name="SCINTILLATIONYIELD" value="0.005/keV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
-   </material>
-
+  </material>
 
 
 
@@ -332,7 +331,8 @@ dielectric">
 
 
   <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_HCAL.xml"/> 
+  <include ref="SCEPCAL_ECAL.xml"/> 
+
 
 
 

@@ -16,6 +16,8 @@
 //==========================================================================
 #include "DD4hep/DetFactoryHelper.h"
 #include "XML/Layering.h"
+#include "DD4hep/OpticalSurfaces.h"
+
 
 using namespace std;
 using namespace dd4hep;
@@ -62,6 +64,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<" gap is "<<agap<<std::endl;
 
 
+
+  OpticalSurfaceManager surfMgr = description.surfaceManager();
+  OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+
+
+
   // three structures, volumes, placedvolumes, and detelements
   // volumes need a setVisAttribute
   // DetElements. you can have volumes inherit attrivutesby setting them here
@@ -106,6 +114,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   string t_name = _toString(itower,"towerp%d") ;
   DetElement tower_det(t_name,det_id);  // detector element for a tower
   towerVol.setSensitiveDetector(sens);
+
+
+
+
+  //SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
+  //haha.isValid();
+
+
 
     // Loop over the sets of layer elements in the detector.
   double z_bottoml  = -hzmax;
@@ -225,6 +241,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       sd.setPlacement(pv);
       //      sdet.add(sd);
 
+
+      BorderSurface haha = BorderSurface(description,sdet, "HallCrys", cryS, pv,env_phv);
+      haha.isValid();
 
 
 

@@ -216,6 +216,18 @@
   </includes>
 
 
+
+  <surfaces>
+    <opticalsurface name="/world/DRCrystal#mirrorSurface" finish="polished" model="glisur" type="dielectric_meta\
+l">
+    </opticalsurface>
+    <opticalsurface name="/world/DRCrystal#dielectricSurface" finish="polished" model="glisur" type="dielectric_\
+dielectric">
+    </opticalsurface>
+  </surfaces>
+
+
+
 <materials>
 
   <material name="Vacuum">
