@@ -34,7 +34,7 @@
         <core name="core" rmax="1.2" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
         <hole name="hole" rmax="1.0" rmin="0.0" material="Air" vis="CladVis" sensitive="no"/> 
       </structure>
- <absorb material="Copper" vis="TowerVis">
+ <absorb material="Copper" vis="TowerVis" sensitive="no">
  </absorb>
     </detector>
   </detectors>

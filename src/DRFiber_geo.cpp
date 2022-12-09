@@ -116,6 +116,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   absVol.setVisAttributes(description, fX_absorb.visStr());
   string a_name = _toString(itower,"absorberm%d");
   DetElement abs_det(tower_det,a_name,det_id);  // detector element for absorber
+  if ( fX_absorb.isSensitive() ) {
+    std::cout<<"setting DRFiber absorber sensitive "<<std::endl;
+    absVol.setSensitiveDetector(sens);
+  }
 
 
 
@@ -125,6 +129,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   holeVol.setVisAttributes(description, fX_hole.visStr());
   string h_name = _toString(itower,"holem%d");
   DetElement hole_det(abs_det,h_name,det_id);  // detector element for absorber
+  if ( fX_hole.isSensitive() ) {
+    std::cout<<"setting DRFiber hole sensitive "<<std::endl;
+    holeVol.setSensitiveDetector(sens);
+  }
 
 
     // fiber

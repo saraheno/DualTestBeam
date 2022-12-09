@@ -118,8 +118,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  //SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
-  //haha.isValid();
+  SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
+  haha.isValid();
 
 
 
@@ -214,6 +214,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
+
+
   for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
       double mod_x_off = (ijk1)*2*(hwidth+agap);             
@@ -242,12 +244,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       //      sdet.add(sd);
 
 
-      BorderSurface haha = BorderSurface(description,sdet, "HallCrys", cryS, pv,env_phv);
-      haha.isValid();
-
-
 
   }
+
   }
 
   // Set envelope volume attributes.
