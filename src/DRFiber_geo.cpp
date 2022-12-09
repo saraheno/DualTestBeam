@@ -109,11 +109,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-    //passive
+    //absorber
   dd4hep::Box absstrap(thick,thick,zlength);
   dd4hep::Volume absVol( "towerAbsorber", absstrap, description.material(fX_absorb.materialStr()) );
   std::cout<<"    material is "<<fX_absorb.materialStr()<<std::endl;
-  absVol.setVisAttributes(description, fX_absorb.visStr());
+  absVol.setAttributes(description,fX_absorb.regionStr(),fX_absorb.limitsStr(),fX_absorb.visStr());
   string a_name = _toString(itower,"absorberm%d");
   DetElement abs_det(tower_det,a_name,det_id);  // detector element for absorber
   if ( fX_absorb.isSensitive() ) {
@@ -126,7 +126,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     // hole for fiber
   dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength);
   dd4hep::Volume holeVol("hole", fiberhole, description.material(fX_hole.materialStr()));
-  holeVol.setVisAttributes(description, fX_hole.visStr());
+  holeVol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
   string h_name = _toString(itower,"holem%d");
   DetElement hole_det(abs_det,h_name,det_id);  // detector element for absorber
   if ( fX_hole.isSensitive() ) {
@@ -139,14 +139,15 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Tube fiber = dd4hep::Tube(0.,fX_core.rmax(),(zlength+zextra));
   std::cout<<" making fiber from "<<fX_core.materialStr()<<std::endl;
   dd4hep::Volume fiberVol("fiber", fiber, description.material(fX_core.materialStr()));
-  std::cout<<"fX_core.isSensitive is "<<fX_core.isSensitive()<<std::endl;
+  fiberVol.setAttributes(description,fX_core.regionStr(),fX_core.limitsStr(),fX_core.visStr());
+  string f_name = _toString(itower,"fiberm%d");
+  DetElement fiber_det(abs_det,f_name,det_id);  // detector element for absorber
+
   if ( fX_core.isSensitive() ) {
     std::cout<<"setting DRFiber fiber sensitive "<<std::endl;
     fiberVol.setSensitiveDetector(sens);
   }
-  string f_name = _toString(itower,"fiberm%d");
-  DetElement fiber_det(abs_det,f_name,det_id);  // detector element for absorber
-  fiberVol.setAttributes(description,fX_core.regionStr(),fX_core.limitsStr(),fX_core.visStr());
+
 
 
   std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
