@@ -38,7 +38,7 @@
 
     <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-5,iy:-5,fiber:1,ifiber:1</id>
+      <id>system:3,ix:-5,iy:-5,fiber:2,hole:2,abs:2</id>
     </readout>
   </readouts>
 

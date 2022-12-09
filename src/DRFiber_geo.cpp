@@ -149,19 +149,28 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   fiberVol.setAttributes(description,fX_core.regionStr(),fX_core.limitsStr(),fX_core.visStr());
 
 
+  std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
   Position tra(0.,0.,zlength/2.);
   Position tra2(0.,0.,0.);
+
   PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra2);
-  PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra2);
-  PlacedVolume abs_phv = towerVol.placeVolume( absVol, tra);
-
-
   fiber_phv.addPhysVolID("fiber",1);
-    //hole_phv.addPhysVolID("hole",1);
-    //abs_phv.addPhysVolID("abs",1);
-
+  fiber_phv.addPhysVolID("hole",0);
+  fiber_phv.addPhysVolID("abs",0);
   fiber_det.setPlacement(fiber_phv);
+
+
+  PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra2);
+  hole_phv.addPhysVolID("fiber",0);
+  hole_phv.addPhysVolID("hole",1);
+  hole_phv.addPhysVolID("abs",0);
   hole_det.setPlacement(hole_phv);
+
+
+  PlacedVolume abs_phv = towerVol.placeVolume( absVol, tra);
+  abs_phv.addPhysVolID("fiber",0);
+  abs_phv.addPhysVolID("hole",0);
+  abs_phv.addPhysVolID("abs",1);
   abs_det.setPlacement(abs_phv);
 
 
@@ -170,7 +179,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
       double mod_x_off = (ijk1)*2*(thick+agap);
       double mod_y_off = (ijk2)*2*(thick+agap);
-      std::cout<<"placing fiber cell at ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
+      std::cout<<"placing fiber cell "<<ijk1<<","<<ijk2<<" at "<<" ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
 
 
       Transform3D tr(RotationZYX(0.,0.,0.),Position(mod_x_off,mod_y_off,0.));
