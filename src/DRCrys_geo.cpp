@@ -110,10 +110,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Volume towerVol( "tower", towertrap, air);
   std::cout<<"   tower visstr is "<<x_towers.visStr()<<std::endl;
   towerVol.setVisAttributes(description, x_towers.visStr());
+  towerVol.setSensitiveDetector(sens);
+
   int itower=0; 
   string t_name = _toString(itower,"towerp%d") ;
   DetElement tower_det(t_name,det_id);  // detector element for a tower
-  towerVol.setSensitiveDetector(sens);
+
 
 
 

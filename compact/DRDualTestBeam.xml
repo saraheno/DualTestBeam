@@ -222,6 +222,8 @@
   <surfaces>
     <opticalsurface name="/world/DRCrystal#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
     </opticalsurface>
+    <opticalsurface name="/world/DRFiber#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
+    </opticalsurface>
     <opticalsurface name="/world/DRCrystal#dielectricSurface" finish="polished" model="glisur" type="dielectric_dielectric">
     </opticalsurface>
   </surfaces>

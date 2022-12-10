@@ -28,14 +28,14 @@
 
 
 <!-- <dimensions numsides="1663" nz="382" rmin="DRinnerRadius" thickness="180" z_length="306." /> -->
-<dimensions numsides="DRFiberNsize" thickness="DRFiberwidth" z_length="DRFiberlength" gap="1.0*mm" dz="10.0*mm" zmin="DRcrystallength+1*mm"/>
+<dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="30.0*mm" dz="100.0*mm" zmin="2*DRcrystallength+1*mm" z1="50*mm"/>
 <!-- not in core and hole rmind is not used -->
       <structure>
         <core name="core" rmax="1.0" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
-        <hole name="hole" rmax="1.2" rmin="0.0" material="Air" vis="CladVis" sensitive="yes"/> 
+        <hole name="hole" rmax="1.2" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
+        <absorb material="Copper" vis="AbsVis" sensitive="yes"/>
+        <phdet name="phdet" rmax="1.0" rmin="0.0" material="killMedia" vis="phdetVis" sensitive="yes"/> 
       </structure>
- <absorb material="Copper" vis="TowerVis" sensitive="yes">
- </absorb>
     </detector>
   </detectors>
 

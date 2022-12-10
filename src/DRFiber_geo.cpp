@@ -25,10 +25,18 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   std::cout<<"Creating DRFiber"<<std::endl;
 
-  static double tol = 0.1;
+  static double tol = 4.;
 
 
   xml_det_t     x_det     = e;
+
+
+  // for volume tags in detector
+  int           det_id    = x_det.id();
+  std::cout<<" det_id is "<<det_id<<std::endl;
+  string        det_name  = x_det.nameStr();
+  std::cout<<" det_name is .. "<<det_name<<std::endl;
+
 
 
 
@@ -36,11 +44,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   Material      air       = description.air();
 
 
-  // for volume tags in detector
-  int           det_id    = x_det.id();
-  std::cout<<" det_id is "<<det_id<<std::endl;
-  string        det_name  = x_det.nameStr();
-  std::cout<<" det_name is "<<det_name<<std::endl;
+
+
+  OpticalSurfaceManager surfMgr = description.surfaceManager();
+  OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+
+
+
 
 
   // pointer to finding dimensins text in xml file
@@ -49,6 +59,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double        thick   = x_dim.thickness();
   double        zlength   = x_dim.z_length();
   double        zextra   = x_dim.dz();
+  double        zph = x_dim.z1();
   int Ncount  = x_dim.numsides();
 
   std::cout<<" thick "<<thick<<" zlength "<<zlength<<" Ncount "<<Ncount<<std::endl;
@@ -65,9 +76,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   // these refer to different fields in the xml file for this detector
   xml_comp_t fX_struct( x_det.child( _Unicode(structure) ) );
-  xml_comp_t fX_absorb( x_det.child( _Unicode(absorb) ) );
+  xml_comp_t fX_absorb( fX_struct.child( _Unicode(absorb) ) );
   xml_comp_t fX_core( fX_struct.child( _Unicode(core) ) );
   xml_comp_t fX_hole( fX_struct.child( _Unicode(hole) ) );
+  xml_comp_t fX_phdet( fX_struct.child( _Unicode(phdet) ) );
 
 
 
@@ -84,9 +96,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
-  dd4hep::Box abox   ((2*Ncount+1)*(thick+agap+zextra+tol),(2*Ncount+1)*(thick+agap+zextra+tol), zlength+tol);
+  dd4hep::Box abox   ((2*Ncount+1)*(thick+agap+tol),(2*Ncount+1)*(thick+agap+tol), (zlength+zextra+zph+tol));
   Volume        envelope  (det_name,abox,air);
-  Position a_pos(0.,0.,azmin+zlength);
+  std::cout<<"setting envelope visibility to "<<x_det.visStr()<<std::endl;
+  envelope.setVisAttributes(description,x_det.visStr());
+  Position a_pos(0.,0.,azmin+zlength+zextra+zph+tol);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
@@ -98,14 +112,18 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // tower envelope
-  dd4hep::Box towertrap(thick,thick,zlength);
+  dd4hep::Box towertrap(thick,thick,zlength+zextra+zph);
   dd4hep::Volume towerVol( "tower", towertrap, air);
   towerVol.setVisAttributes(description, x_det.visStr());
-
+  towerVol.setSensitiveDetector(sens);
 
   int itower=0;
   string t_name = _toString(itower,"towerp%d");
   DetElement tower_det(t_name,det_id);  
+ 
+  SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
+  haha.isValid();
+
 
 
 
@@ -124,11 +142,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // hole for fiber
-  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength);
+  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength+zextra+zph);
   dd4hep::Volume holeVol("hole", fiberhole, description.material(fX_hole.materialStr()));
   holeVol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-  string h_name = _toString(itower,"holem%d");
-  DetElement hole_det(abs_det,h_name,det_id);  // detector element for absorber
+    string h_name = _toString(itower,"holem%d");
+  DetElement hole_det(tower_det,h_name,det_id);  // detector element for absorber
   if ( fX_hole.isSensitive() ) {
     std::cout<<"setting DRFiber hole sensitive "<<std::endl;
     holeVol.setSensitiveDetector(sens);
@@ -140,8 +158,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<" making fiber from "<<fX_core.materialStr()<<std::endl;
   dd4hep::Volume fiberVol("fiber", fiber, description.material(fX_core.materialStr()));
   fiberVol.setAttributes(description,fX_core.regionStr(),fX_core.limitsStr(),fX_core.visStr());
-  string f_name = _toString(itower,"fiberm%d");
-  DetElement fiber_det(abs_det,f_name,det_id);  // detector element for absorber
+    string f_name = _toString(itower,"fiberm%d");
+  DetElement fiber_det(tower_det,f_name,det_id);  // detector element for absorber
 
   if ( fX_core.isSensitive() ) {
     std::cout<<"setting DRFiber fiber sensitive "<<std::endl;
@@ -150,21 +168,49 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
-  Position tra(0.,0.,zlength/2.);
-  Position tra2(0.,0.,0.);
+    // photodeector
+  dd4hep::Tube photod = dd4hep::Tube(0.,fX_phdet.rmax(),(zph));
+  dd4hep::Volume photodVol("phdet", photod, description.material(fX_phdet.materialStr()));
+  photodVol.setAttributes(description,fX_phdet.regionStr(),fX_phdet.limitsStr(),fX_phdet.visStr());
+    string ph_name = _toString(itower,"phdetm%d");
+  DetElement photod_det(tower_det,ph_name,det_id);  // detector element for absorber
 
-  PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra2);
+  if ( fX_phdet.isSensitive() ) {
+    std::cout<<"setting DRFiber photodetector sensitive "<<std::endl;
+    photodVol.setSensitiveDetector(sens);
+  }
+
+
+
+  std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
+  Position tra(0.,0.,0.);
+  Position tra2(0.,0.,(zextra+zph));
+  Position tra3(0.,0.,(-zph));
+  Position tra4(0.,0.,(zextra)+(zlength));
+
+  //
+  PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra3);
   fiber_phv.addPhysVolID("fiber",1);
   fiber_phv.addPhysVolID("hole",0);
   fiber_phv.addPhysVolID("abs",0);
+  fiber_phv.addPhysVolID("phdet",0);
   fiber_det.setPlacement(fiber_phv);
+
+
+
+  PlacedVolume photod_phv = holeVol.placeVolume( photodVol, tra4);
+  photod_phv.addPhysVolID("fiber",0);
+  photod_phv.addPhysVolID("hole",0);
+  photod_phv.addPhysVolID("abs",0);
+  photod_phv.addPhysVolID("phdet",1);
+  photod_det.setPlacement(fiber_phv);
 
 
   PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra2);
   hole_phv.addPhysVolID("fiber",0);
   hole_phv.addPhysVolID("hole",1);
   hole_phv.addPhysVolID("abs",0);
+  hole_phv.addPhysVolID("phdet",0);
   hole_det.setPlacement(hole_phv);
 
 
@@ -172,12 +218,15 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   abs_phv.addPhysVolID("fiber",0);
   abs_phv.addPhysVolID("hole",0);
   abs_phv.addPhysVolID("abs",1);
+  abs_phv.addPhysVolID("phdet",0);
   abs_det.setPlacement(abs_phv);
 
 
     
-  for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
+    for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
+  //int ijk1=0;
+  //int ijk2=0;
       double mod_x_off = (ijk1)*2*(thick+agap);
       double mod_y_off = (ijk2)*2*(thick+agap);
       std::cout<<"placing fiber cell "<<ijk1<<","<<ijk2<<" at "<<" ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
@@ -193,14 +242,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       int towernum = (ijk1+2)*(2*Ncount+1)+(ijk2+2);
       std::cout<<"placing tower "<<towernum<<std::endl;
-      string t_name = _toString(towernum,"0%d");
-      DetElement sd = tower_det.clone(t_name,det_id);
+      string t_name2 = _toString(towernum,"0%d");
+      DetElement sd = tower_det.clone(t_name2,det_id);
 
       sd.setPlacement(pv);
       //      sdet.add(sd);
 
+          }
     }
-  }
 
 
     //          }
