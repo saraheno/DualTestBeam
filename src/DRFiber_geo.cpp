@@ -112,7 +112,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // tower envelope
-  dd4hep::Box towertrap(thick,thick,zlength+zextra+zph);
+  dd4hep::Box towertrap(thick+agap,thick+agap,zlength+zextra+zph);
   dd4hep::Volume towerVol( "tower", towertrap, air);
   towerVol.setVisAttributes(description, x_det.visStr());
   towerVol.setSensitiveDetector(sens);
@@ -211,10 +211,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     
-    for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
+      for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
-  //int ijk1=0;
-  //int ijk2=0;
+      // int ijk1=0;
+      // int ijk2=0;
       double mod_x_off = (ijk1)*2*(thick+agap);
       double mod_y_off = (ijk2)*2*(thick+agap);
       std::cout<<"placing fiber cell "<<ijk1<<","<<ijk2<<" at "<<" ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
@@ -236,8 +236,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       sd.setPlacement(pv);
       //      sdet.add(sd);
 
-          }
-    }
+             }
+       }
 
 
     //          }

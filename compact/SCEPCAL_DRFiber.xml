@@ -34,10 +34,10 @@ zmin is where the dtector goes
 <dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="0.1*mm" dz="10.0*mm" zmin="2*DRcrystallength+EcalHcalgap" z1="5*mm"/>
 <!-- not in core and hole rmind is not used -->
       <structure>
-        <core name="core" rmax="1.0" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
-        <hole name="hole" rmax="1.2" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
+        <core name="core" rmax="1.0*mm" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
+        <hole name="hole" rmax="1.2*mm" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
         <absorb material="Copper" vis="AbsVis" sensitive="yes"/>
-        <phdet name="phdet" rmax="1.0" rmin="0.0" material="killMedia" vis="phdetVis" sensitive="yes"/> 
+        <phdet name="phdet" rmax="1.0*mm" rmin="0.0" material="killMedia" vis="phdetVis" sensitive="yes"/> 
       </structure>
     </detector>
   </detectors>

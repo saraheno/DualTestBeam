@@ -8,14 +8,14 @@
     
  
 
-    <constant name="DRcrystalwidth" value="3.0*mm"/>
+    <constant name="DRcrystalwidth" value="10.0*mm"/>
     <constant name="DRcrystallength" value="20.*cm"/>
     <constant name="DRcrystalNsize" value="10"/>
 
 
     <constant name="EcalHcalgap" value="50*mm"/>
 
-    <constant name="DRFiberAbswidth" value="3.0*mm"/>
+    <constant name="DRFiberAbswidth" value="10.0*mm"/>
     <constant name="DRFiberlength" value="60*cm"/> 
     <constant name="DRFiberNsize" value="10"/>
     

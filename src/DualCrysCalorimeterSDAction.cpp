@@ -71,7 +71,7 @@ namespace dd4hep {
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
 
 
-      bool SCEPRINT=(SCECOUNT<100);
+      bool SCEPRINT=(SCECOUNT<1000);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
 
 
@@ -149,7 +149,7 @@ namespace dd4hep {
 
       G4Track * track =  step->GetTrack();
 
-      if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
+      //if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
 
       //photons
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
