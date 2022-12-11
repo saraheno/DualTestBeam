@@ -8,16 +8,16 @@
     
  
 
-    <constant name="DRcrystalwidth" value="1.0*cm"/>
+    <constant name="DRcrystalwidth" value="3.0*mm"/>
     <constant name="DRcrystallength" value="20.*cm"/>
-    <constant name="DRcrystalNsize" value="0"/>
+    <constant name="DRcrystalNsize" value="10"/>
 
 
-<!--    <constant name="DRFiberAbswidth" value="3.0*mm"/> -->
-    <constant name="DRFiberAbswidth" value="3.0*cm"/>
-<!--    <constant name="DRFiberlength" value="60*cm"/> -->
-    <constant name="DRFiberlength" value="15*cm"/>
-    <constant name="DRFiberNsize" value="1"/>
+    <constant name="EcalHcalgap" value="50*mm"/>
+
+    <constant name="DRFiberAbswidth" value="3.0*mm"/>
+    <constant name="DRFiberlength" value="60*cm"/> 
+    <constant name="DRFiberNsize" value="10"/>
     
     <constant name="Ecal_ID" value="5"/>
     <constant name="Hcal_ID" value="6"/>

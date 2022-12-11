@@ -20,15 +20,18 @@
 
 
   <detectors>
-    <detector id="Hcal_ID" name="DRFiber" type="DD4hep_DRFiber" readout="DRFNoSegment" vis="Invisible">
+    <detector id="Hcal_ID" name="DRFiber" type="DD4hep_DRFiber" readout="DRFNoSegment" vis="towerVis">
 
 
  <comment>Hadronic Calorimeter</comment>
 
 
 
-<!-- <dimensions numsides="1663" nz="382" rmin="DRinnerRadius" thickness="180" z_length="306." /> -->
-<dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="30.0*mm" dz="100.0*mm" zmin="2*DRcrystallength+1*mm" z1="50*mm"/>
+<!-- here z_length is the absorber length, thickness is length of an end side
+z1 is the photodetector length gap is the distance between modules, and dz is how far the fiber sticks out of the absorber.  Nsize is the number of cells to make
+zmin is where the dtector goes
+ -->
+<dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="0.1*mm" dz="10.0*mm" zmin="2*DRcrystallength+EcalHcalgap" z1="5*mm"/>
 <!-- not in core and hole rmind is not used -->
       <structure>
         <core name="core" rmax="1.0" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 

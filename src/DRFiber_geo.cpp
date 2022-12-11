@@ -25,7 +25,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   std::cout<<"Creating DRFiber"<<std::endl;
 
-  static double tol = 4.;
+  static double tol = 0.01;
 
 
   xml_det_t     x_det     = e;
@@ -128,10 +128,19 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     //absorber
-  dd4hep::Box absstrap(thick,thick,zlength);
-  dd4hep::Volume absVol( "towerAbsorber", absstrap, description.material(fX_absorb.materialStr()) );
+  dd4hep::Box absbox(thick,thick,zlength);
+  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength);
+  dd4hep::Solid tmpsolid = dd4hep::SubtractionSolid(absbox,fiberhole);
+  dd4hep::Volume absVol( "towerAbsorber", tmpsolid, description.material(fX_absorb.materialStr()) );
   std::cout<<"    material is "<<fX_absorb.materialStr()<<std::endl;
   absVol.setAttributes(description,fX_absorb.regionStr(),fX_absorb.limitsStr(),fX_absorb.visStr());
+    // hole for fiber
+
+  dd4hep::Volume holeVol("hole", fiberhole, description.material(fX_hole.materialStr()));
+
+
+
+
   string a_name = _toString(itower,"absorberm%d");
   DetElement abs_det(tower_det,a_name,det_id);  // detector element for absorber
   if ( fX_absorb.isSensitive() ) {
@@ -141,16 +150,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-    // hole for fiber
-  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),zlength+zextra+zph);
-  dd4hep::Volume holeVol("hole", fiberhole, description.material(fX_hole.materialStr()));
-  holeVol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-    string h_name = _toString(itower,"holem%d");
-  DetElement hole_det(tower_det,h_name,det_id);  // detector element for absorber
-  if ( fX_hole.isSensitive() ) {
-    std::cout<<"setting DRFiber hole sensitive "<<std::endl;
-    holeVol.setSensitiveDetector(sens);
-  }
 
 
     // fiber
@@ -183,40 +182,29 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
-  Position tra(0.,0.,0.);
-  Position tra2(0.,0.,(zextra+zph));
-  Position tra3(0.,0.,(-zph));
-  Position tra4(0.,0.,(zextra)+(zlength));
+  Position tra(0.,0.,-(zextra+zph));
+  Position tra3(0.,0.,-(zph));
+  Position tra4(0.,0.,(zextra+zlength));
 
   //
-  PlacedVolume fiber_phv = holeVol.placeVolume( fiberVol, tra3);
+  PlacedVolume fiber_phv = towerVol.placeVolume( fiberVol, tra3);
   fiber_phv.addPhysVolID("fiber",1);
-  fiber_phv.addPhysVolID("hole",0);
   fiber_phv.addPhysVolID("abs",0);
   fiber_phv.addPhysVolID("phdet",0);
   fiber_det.setPlacement(fiber_phv);
 
 
 
-  PlacedVolume photod_phv = holeVol.placeVolume( photodVol, tra4);
+  PlacedVolume photod_phv = towerVol.placeVolume( photodVol, tra4);
   photod_phv.addPhysVolID("fiber",0);
-  photod_phv.addPhysVolID("hole",0);
   photod_phv.addPhysVolID("abs",0);
   photod_phv.addPhysVolID("phdet",1);
   photod_det.setPlacement(fiber_phv);
 
 
-  PlacedVolume hole_phv = absVol.placeVolume( holeVol, tra2);
-  hole_phv.addPhysVolID("fiber",0);
-  hole_phv.addPhysVolID("hole",1);
-  hole_phv.addPhysVolID("abs",0);
-  hole_phv.addPhysVolID("phdet",0);
-  hole_det.setPlacement(hole_phv);
-
 
   PlacedVolume abs_phv = towerVol.placeVolume( absVol, tra);
   abs_phv.addPhysVolID("fiber",0);
-  abs_phv.addPhysVolID("hole",0);
   abs_phv.addPhysVolID("abs",1);
   abs_phv.addPhysVolID("phdet",0);
   abs_det.setPlacement(abs_phv);
