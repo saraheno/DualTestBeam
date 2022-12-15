@@ -24,9 +24,9 @@
 
 
     <vis name="AbsVis" alpha="0.1" r="0.0" g="1.0" b="0.0" showDaughters="true" visible="true"/>
-    <vis name="CerenVis" alpha="0.1" r="0.3" g="0.6" b="0.9" showDaughters="true" visible="true"/>
+    <vis name="CerenVis" alpha="0.5" r="0.0" g="0.0" b="1.0" showDaughters="true" visible="true"/>
     <vis name="ScintVis" alpha="0.5" r="1.0" g="0.0" b="0.0" showDaughters="true" visible="true"/>
-    <vis name="phdetVis" alpha="1.0" r="0.0" g="0.0" b="1.0" showDaughters="true" visible="true"/>
+    <vis name="phdetVis" alpha="1.0" r="1.0" g="1.0" b="1.0" showDaughters="true" visible="true"/>
     <vis name="towerVis" alpha="0.1" r="0.3" g="0.3" b="0.3" showDaughters="true" visible="true"/>
 
   </display>
@@ -35,7 +35,7 @@
 
     <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-5,iy:-5,fiber:2,abs:2,phdet:2</id>
+      <id>system:3,ix:-7,iy:-7,fiber:2,abs:2,phdet:2</id>
     </readout>
   </readouts>
 

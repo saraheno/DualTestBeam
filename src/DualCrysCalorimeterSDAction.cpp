@@ -34,6 +34,7 @@ namespace CalVision {
 
 
   int SCECOUNT=0;
+  int SCECOUNT2=0;
 
   class DualCrysCalorimeterSD {
   public:
@@ -136,7 +137,10 @@ namespace dd4hep {
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<std::endl;
+	if(SCECOUNT2<100) {
+	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<std::endl;
+	  SCECOUNT2+=1;
+	}
 
         if ( 0 == hit->cellID )  { // for debugging only!
           hit->cellID = cellID(step);
@@ -161,41 +165,28 @@ namespace dd4hep {
 	bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")||(track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
 
 	//if(track->GetParentID()!=1) SCEPRINT=1;
-	if( (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "CerenkovPhys")&&(track->GetCreatorProcess()->G4VProcess::GetProcessName() != "ScintillationPhys")  ) SCEPRINT=1;
+	if( (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "CerenkovPhys")&&(track->GetCreatorProcess()->G4VProcess::GetProcessName() != "ScintillationPhys")  ) SCEPRINT=1;  // print if less than scecount (set earlier) or if photon has weird source
 
-	if(SCEPRINT) {
-	  std::cout<<"     SCECOUNT="<<SCECOUNT<<std::endl;
-	
-	  std::cout<<"     will robinson have photon "<<track->GetCreatorProcess()->G4VProcess::GetProcessName() <<std::endl;
-	  std::cout<<"     photon mother is "<<track->GetParentID()<<std::endl;
-	  std::cout<<"     photon material is "<<(track->GetMaterial())->GetName()<<std::endl;
-	  std::cout<<"     photon creator process is "<<(track->GetCreatorProcess())->GetProcessName()<<std::endl;
-	  std::cout<<"     photon  process  type is "<<(track->GetCreatorProcess())->GetProcessType()<<std::endl;
-	  std::cout<<"     photon sub process is "<<(track->GetCreatorProcess())->GetProcessSubType()<<std::endl;
-	  std::cout<<"     photon current step number is "<<track->GetCurrentStepNumber()<<std::endl;
-	//(track->GetCreatorProcess())->DumpInfo();
-	  std::cout<<"     photon energy is "<<track->GetTotalEnergy()/eV<<std::endl;
-	  std::cout<<"     photon wavelength is "<<fromEvToNm(track->GetTotalEnergy()/eV)<<std::endl;
-	  std::cout<<"     number of cherenkov is  is "<<hit->ncerenkov<<std::endl;
-	  std::cout<<"     number of scintillation is  is "<<hit->nscintillator<<std::endl;
-	}
 
 	float wavelength=fromEvToNm(track->GetTotalEnergy()/eV);
 	int ibin=-1;
 	float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nbin;
 	ibin = (wavelength-hit->wavelenmin)/binsize;
+	int phstep = track->GetCurrentStepNumber();
 	
-
+	
 	if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
-	  if(SCEPRINT) std::cout<<" found cerenkov photon"<<std::endl;
+	  if(SCEPRINT) std::cout<<" found Cerenkov photon"<<std::endl;
 	  if(((track->GetMaterial())->GetName())=="killMedia") 
 	    { 
-	      hit->ncerenkov+=1;
-	      if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
+	      if(phstep>1) {  // don't count photons created in kill media
+		hit->ncerenkov+=1;
+		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
+	      }
 	      track->SetTrackStatus(fStopAndKill);}
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
-	    if( (track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
+	    if( (phstep==1)  ) hit->ncerenkov+=1;
 	  }
           //return false;
         } 
@@ -219,9 +210,29 @@ namespace dd4hep {
           //return false;
 	}
 
-      }
+	if(SCEPRINT) {
+	  std::cout<<"     SCECOUNT="<<SCECOUNT<<std::endl;
+	
+	  std::cout<<"     will robinson have photon "<<track->GetCreatorProcess()->G4VProcess::GetProcessName() <<std::endl;
+	  std::cout<<"     photon mother is "<<track->GetParentID()<<std::endl;
+	  std::cout<<"     photon material is "<<(track->GetMaterial())->GetName()<<std::endl;
+	  std::cout<<"     photon creator process is "<<(track->GetCreatorProcess())->GetProcessName()<<std::endl;
+	  std::cout<<"     photon  process  type is "<<(track->GetCreatorProcess())->GetProcessType()<<std::endl;
+	  std::cout<<"     photon sub process is "<<(track->GetCreatorProcess())->GetProcessSubType()<<std::endl;
+	  std::cout<<"     photon current step number is "<<track->GetCurrentStepNumber()<<std::endl;
+	  std::cout<<"     the pre volume name is "<<thePrePVName<<std::endl;
+	  std::cout<<"     the post volume name is "<<thePostPVName<<std::endl;
+	//(track->GetCreatorProcess())->DumpInfo();
+	  std::cout<<"     photon energy is "<<track->GetTotalEnergy()/eV<<std::endl;
+	  std::cout<<"     photon wavelength is "<<fromEvToNm(track->GetTotalEnergy()/eV)<<std::endl;
+	  std::cout<<"     number of cherenkov is  is "<<hit->ncerenkov<<std::endl;
+	  std::cout<<"     number of scintillation is  is "<<hit->nscintillator<<std::endl;
+	}
 
-    else {   // particles other than optical photons
+
+
+      }
+      else {   // particles other than optical photons
 	
       //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
 

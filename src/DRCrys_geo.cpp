@@ -50,18 +50,18 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  double hwidth   = x_dim.width();
-  double hzmax = x_dim.z_length();
+  double hwidth   = x_dim.width()/2.;
+  double hzmax = x_dim.z_length()/2.;
   int Ncount = x_dim.repeat();
 
 
   std::cout<<"half width zmax are "<<hwidth<<" "<<hzmax<<std::endl;
-  std::cout<<" repeat is "<<Ncount<<std::endl;
+  std::cout<<" array size is "<<Ncount<<std::endl;
 
 
 
-  int agap = x_dim.gap();
-  std::cout<<" gap is "<<agap<<std::endl;
+  double agap = x_dim.gap();
+  std::cout<<" gap between array elements is "<<agap<<std::endl;
 
 
 
@@ -106,22 +106,22 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // tower envelope
-  dd4hep::Box towertrap(hwidth,hwidth,hzmax);
+  dd4hep::Box towertrap(hwidth+tol,hwidth+tol,hzmax+tol);
   dd4hep::Volume towerVol( "tower", towertrap, air);
   std::cout<<"   tower visstr is "<<x_towers.visStr()<<std::endl;
   towerVol.setVisAttributes(description, x_towers.visStr());
   towerVol.setSensitiveDetector(sens);
 
   int itower=0; 
-  string t_name = _toString(itower,"towerp%d") ;
-  DetElement tower_det(t_name,det_id);  // detector element for a tower
+  string t_name1 = _toString(itower,"towerp%d") ;
+  DetElement tower_det(t_name1,det_id);  // detector element for a tower
 
 
 
 
 
-  SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
-  haha.isValid();
+  //  SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
+  //  haha.isValid();
 
 
 
@@ -129,14 +129,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double z_bottoml  = -hzmax;
   int l_num = 1;
   for(xml_coll_t li(x_det,_U(layer)); li; ++li)  {
-    std::cout<<"DRCrys layer "<<li<<std::endl;
+    std::cout<<"DRCrys layer (layers contain slices of material)"<<l_num<<std::endl;
     xml_comp_t x_layer = li;
     int repeat = x_layer.repeat();
       // Loop over number of repeats for this layer.
     for (int j=0; j<repeat; j++)    {
       std::cout<<"DRCrys layer "<<li<<" repeat "<<j<<std::endl;
       string l_name = _toString(l_num,"layer%d");
-      double l_hzthick = layering.layer(l_num-1)->thickness();  // Layer's thickness.
+      double l_hzthick = layering.layer(l_num-1)->thickness()/2.;  // Layer's thickness.
       std::cout<<"half  thickness is "<<l_hzthick<<std::endl;
 
 	// find top and bottom lengths at this position and center
@@ -146,7 +146,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
 
-      dd4hep::Box l_box(hwidth-tol,hwidth-tol,l_hzthick-tol);
+      dd4hep::Box l_box(hwidth,hwidth,l_hzthick);
       dd4hep::Volume     l_vol(l_name,l_box,air);
       DetElement layer(tower_det, l_name, det_id);
 
@@ -155,11 +155,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       double z_bottoms2=-l_hzthick;  
       for(xml_coll_t si(x_layer,_U(slice)); si; ++si)  {
-	std::cout<<" with slice "<<si<<std::endl;
+	std::cout<<" with slice "<<s_num<<std::endl;
 	xml_comp_t x_slice = si;
 	string     s_name  = _toString(s_num,"slice%d");
-	double     s_hzthick = x_slice.thickness();
-	std::cout<<" with half  thickness "<<s_hzthick<<std::endl;
+	double     s_hzthick = x_slice.thickness()/2.;
+	std::cout<<" with half  thickness "<<s_hzthick<<" and material "<<x_slice.materialStr()<<std::endl;
 
 	      // this is relative to tower bottom, not layer bottom
 
@@ -168,7 +168,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
 	std::cout<<" placed at "<<z_mids2<<std::endl;
-	dd4hep::Box s_box(hwidth-tol,hwidth-tol,s_hzthick);
+	dd4hep::Box s_box(hwidth,hwidth,s_hzthick);
 
 
 	dd4hep::Volume     s_vol(s_name,s_box,description.material(x_slice.materialStr()));
@@ -217,11 +217,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-
+  int towernum=-1;
   for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
-      double mod_x_off = (ijk1)*2*(hwidth+agap);             
-      double mod_y_off = (ijk2)*2*(hwidth+agap);
+      double mod_x_off = (ijk1)*2*(hwidth+tol+agap);             
+      double mod_y_off = (ijk2)*2*(hwidth+tol+agap);
       std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
 
 
@@ -235,14 +235,22 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       pv.addPhysVolID("iy",ijk2);
 
 
-      int towernum = (ijk1+2)*(2*Ncount+1)+(ijk2+2);
+      towernum +=1;
       std::cout<<"placing tower "<<towernum<<std::endl;
-      string t_name = _toString(towernum,"0%d");
-      DetElement sd = tower_det.clone(t_name,det_id);
+      string t_name2 = _toString(towernum,"0%d");
+      DetElement sd = tower_det.clone(t_name2,det_id);
 
 
 
       sd.setPlacement(pv);
+
+      string tt_name = _toString(towernum,"HallCrys%d");
+      BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, pv,env_phv);
+      haha.isValid();
+
+
+
+
       //      sdet.add(sd);
 
 

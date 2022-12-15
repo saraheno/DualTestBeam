@@ -56,14 +56,14 @@
 /vis/scene/add/hits
 #
 # To draw only specific particles:
-/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/create/particleFilter
 #/vis/filtering/trajectories/particleFilter-0/add geantino
 #/vis/filtering/trajectories/particleFilter-0/add pi-
-/vis/filtering/trajectories/particleFilter-0/add e-
-/vis/filtering/trajectories/particleFilter-0/add e+
-/vis/filtering/trajectories/particleFilter-0/add opticalphoton
-/vis/filtering/trajectories/particleFilter-0/add mu-
-/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add e-
+#/vis/filtering/trajectories/particleFilter-0/add e+
+#/vis/filtering/trajectories/particleFilter-0/add opticalphoton
+#/vis/filtering/trajectories/particleFilter-0/add mu-
+#/vis/filtering/trajectories/particleFilter-0/add gamma
 
 #
 # To invert the above, drawing all particles except gammas,
@@ -75,11 +75,15 @@
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set geantino red
 /vis/modeling/trajectories/drawByParticleID-0/set e- red
-/vis/modeling/trajectories/drawByParticleID-0/set pi- brown
+/vis/modeling/trajectories/drawByParticleID-0/set e+ red
+/vis/modeling/trajectories/drawByParticleID-0/set pi- black
+/vis/modeling/trajectories/drawByParticleID-0/set pi+ black
 /vis/modeling/trajectories/drawByParticleID-0/set mu- blue
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ blue
-/vis/modeling/trajectories/drawByParticleID-0/set gamma yellow
-/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton black
+/vis/modeling/trajectories/drawByParticleID-0/set gamma red
+/vis/modeling/trajectories/drawByParticleID-0/set neutron brown
+/vis/modeling/trajectories/drawByParticleID-0/set proton brown
+/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton yellow
 #
 # To superimpose all of the events from a given run:
 /vis/scene/endOfEventAction accumulate 1

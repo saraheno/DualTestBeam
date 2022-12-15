@@ -252,14 +252,33 @@
 
 
 
-    <material name="killMedia">
+   <material name="killMedia1">
+      <D type="density" unit="g/cm3" value="0.0012"/>
+      <fraction n="0.754" ref="N"/>
+      <fraction n="0.234" ref="O"/>
+      <fraction n="0.012" ref="Ar"/>
+      <property name="RINDEX"        ref="RINDEX__PbWO4"/>
+   </material>
+
+
+<!-- for PS -->
+    <material name="killMedia2">
+      <D type="density" unit="g/cm3" value="0.0012"/>
+      <fraction n="0.754" ref="N"/>
+      <fraction n="0.234" ref="O"/>
+      <fraction n="0.012" ref="Ar"/>
+      <property name="RINDEX"        ref="RI_PS"/>
+    </material>
+
+
+<!-- for quart (change rinde!)  -->
+    <material name="killMedia3">
       <D type="density" unit="g/cm3" value="0.0012"/>
       <fraction n="0.754" ref="N"/>
       <fraction n="0.234" ref="O"/>
       <fraction n="0.012" ref="Ar"/>
       <property name="RINDEX"        ref="RINDEX__PbWO4"/>
     </material>
-
 
 
 
@@ -272,7 +291,7 @@
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
-      <constant name="SCINTILLATIONYIELD" value="0.005/keV"/>
+      <constant name="SCINTILLATIONYIELD" value="0.02/MeV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
@@ -289,6 +308,14 @@
       <constant name="RESOLUTIONSCALE" value="1."/>
    </material>
 
+
+  <material name="DR_Quartz">
+    <D type="density" value="2.2" unit="g/cm3"/>
+    <composite n="1" ref="Si"/>
+    <composite n="2" ref="O"/>
+      <property name="RINDEX" ref="RINDEX__PbWO4"/>
+      <property name="ABSLENGTH" ref="AbsLen_PS"/>
+  </material>
 
 
 
