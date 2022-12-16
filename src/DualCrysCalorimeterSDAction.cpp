@@ -15,10 +15,12 @@
 #include "DualCrysCalorimeterHit.h"
 #include "DDG4/Geant4SensDetAction.inl"
 #include "DDG4/Factories.h"
+#include "DD4hep/InstanceCount.h"
+#include "DDG4/Geant4Random.h"
 
 
-
-
+double dialCher=0.00001;
+double dialScint=1.0;
 
 
 
@@ -71,6 +73,13 @@ namespace dd4hep {
     /// Method for generating hit(s) using the information of G4Step object.
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
 
+
+      if(SCECOUNT==1) {
+	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
+	std::cout<<"dialCher is "<<dialCher<<std::endl;
+	std::cout<<"dialScint is "<<dialScint<<std::endl;
+	std::cout<<" you need to to interpret your results"<<std::endl;
+      }
 
       bool SCEPRINT=(SCECOUNT<10);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
@@ -186,13 +195,18 @@ namespace dd4hep {
 		hit->ncerenkov+=1;
 		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
 	      }
-	      track->SetTrackStatus(fStopAndKill);}
+	      track->SetTrackStatus(fStopAndKill);
+	    }
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
-	    if( (phstep==1)  ) hit->ncerenkov+=1;
+	    if( (phstep==1)  ) {
+	      hit->ncerenkov+=1;
+	      Geant4Event&  evt = context()->event();
+	      dd4hep::sim::Geant4Random& rnd = evt.random();
+	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
+	    }
 	  }
-          //return false;
-        } 
+	}
 	else if (  track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys"  ) {
           if(SCEPRINT) std::cout<<"     scintillation photon"<<std::endl;
 	  std::string amedia = ((track->GetMaterial())->GetName());
@@ -207,7 +221,12 @@ namespace dd4hep {
 	      track->SetTrackStatus(fStopAndKill);}
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
-	    if( (track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
+	    if( (phstep==1) ) {
+	      hit->nscintillator+=1; 
+	      Geant4Event&  evt = context()->event();
+	      dd4hep::sim::Geant4Random& rnd = evt.random();
+	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);	    
+	    }
 	  }
 
           //return false;
