@@ -15,8 +15,8 @@
 
     <constant name="EcalHcalgap" value="50*mm"/>
 
-    <constant name="DRFiberAbswidth" value="3.0*mm"/>
-    <constant name="DRFiberlength" value="60*cm"/> 
+    <constant name="DRFiberAbswidth" value="6.0*mm"/>
+    <constant name="DRFiberlength" value="40*cm"/> 
     <constant name="DRFiberNsize" value="10"/>
     
     <constant name="Ecal_ID" value="5"/>
