@@ -159,6 +159,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Tube fiber1 = dd4hep::Tube(0.,fX_core1.rmax(),(zlength+zextra));
   std::cout<<" making fiber1 from "<<fX_core1.materialStr()<<std::endl;
   dd4hep::Volume fiber1Vol("fiber1", fiber1, description.material(fX_core1.materialStr()));
+  std::cout<<"    core1 material is "<<fX_core1.materialStr()<<std::endl;
   fiber1Vol.setAttributes(description,fX_core1.regionStr(),fX_core1.limitsStr(),fX_core1.visStr());
   if ( fX_core1.isSensitive() ) {
     std::cout<<"setting DRFiber fiber1 sensitive "<<std::endl;
@@ -173,6 +174,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Tube fiber2 = dd4hep::Tube(0.,fX_core2.rmax(),(zlength+zextra));
   std::cout<<" making fiber2 from "<<fX_core2.materialStr()<<std::endl;
   dd4hep::Volume fiber2Vol("fiber2", fiber2, description.material(fX_core2.materialStr()));
+  std::cout<<"    core 2material is "<<fX_core2.materialStr()<<std::endl;
   fiber2Vol.setAttributes(description,fX_core2.regionStr(),fX_core2.limitsStr(),fX_core2.visStr());
   std::cout<<"fiber2 vis is "<<fX_core2.visStr()<<std::endl;
   if ( fX_core2.isSensitive() ) {
@@ -188,6 +190,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Tube photod1 = dd4hep::Tube(0.,fX_phdet1.rmax(),(zph));
   dd4hep::Volume photod1Vol("phdet1", photod1, description.material(fX_phdet1.materialStr()));
   photod1Vol.setAttributes(description,fX_phdet1.regionStr(),fX_phdet1.limitsStr(),fX_phdet1.visStr());
+  std::cout<<"   ph 1 material is "<<fX_phdet1.materialStr()<<std::endl;
   if ( fX_phdet1.isSensitive() ) {
     std::cout<<"setting DRFiber photodetector1 sensitive "<<std::endl;
     photod1Vol.setSensitiveDetector(sens);
@@ -196,6 +199,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dd4hep::Tube photod2 = dd4hep::Tube(0.,fX_phdet2.rmax(),(zph));
   dd4hep::Volume photod2Vol("phdet2", photod2, description.material(fX_phdet2.materialStr()));
   photod2Vol.setAttributes(description,fX_phdet2.regionStr(),fX_phdet2.limitsStr(),fX_phdet2.visStr());
+  std::cout<<"    ph2 material is "<<fX_phdet2.materialStr()<<std::endl;
   if ( fX_phdet2.isSensitive() ) {
     std::cout<<"setting DRFiber photodetector2 sensitive "<<std::endl;
     photod2Vol.setSensitiveDetector(sens);

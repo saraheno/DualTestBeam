@@ -137,7 +137,7 @@ namespace dd4hep {
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	if(SCECOUNT2<100) {
+	if(SCECOUNT2<10) {
 	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<std::endl;
 	  SCECOUNT2+=1;
 	}
@@ -177,8 +177,11 @@ namespace dd4hep {
 	
 	if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
 	  if(SCEPRINT) std::cout<<" found Cerenkov photon"<<std::endl;
-	  if(((track->GetMaterial())->GetName())=="killMedia") 
+	  std::string amedia = ((track->GetMaterial())->GetName());
+	  if(amedia.find("kill")!=std::string::npos) 
 	    { 
+	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
+	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
 		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
@@ -192,10 +195,15 @@ namespace dd4hep {
         } 
 	else if (  track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys"  ) {
           if(SCEPRINT) std::cout<<"     scintillation photon"<<std::endl;
-          if(((track->GetMaterial())->GetName())=="killMedia") 
+	  std::string amedia = ((track->GetMaterial())->GetName());
+	  if(amedia.find("kill")!=std::string::npos) 
+	    //          if(((track->GetMaterial())->GetName())=="killMedia") 
 	    {
-	      hit->nscintillator+=1;
-	      if((ibin>-1)&&(ibin<hit->nbin)) ((hit->nscintwave).at(ibin))+=1;
+	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
+	      if(phstep>1) {
+		hit->nscintillator+=1;
+		if((ibin>-1)&&(ibin<hit->nbin)) ((hit->nscintwave).at(ibin))+=1;
+	      }
 	      track->SetTrackStatus(fStopAndKill);}
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
