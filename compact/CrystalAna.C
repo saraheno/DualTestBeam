@@ -23,7 +23,9 @@
 
 const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
-
+bool dogen=1;
+bool doecal=1;
+bool dohcal=1;
 
 
 
@@ -103,27 +105,32 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
     for(int ievt=0;ievt<num_evt; ++ievt) {
       std::cout<<"event number is "<<ievt<<std::endl;
 
-
+      if(dogen){
       // gen particles
-      int nbytegen = b_mc->GetEntry(ievt);
-      if( nbytegen>0) {
-      std::cout<<" gen byte "<<nbytegen<<" bytes "<<std::endl;
+	int nbytegen = b_mc->GetEntry(ievt);
+	if( nbytegen>0) {
+	  std::cout<<" gen byte "<<nbytegen<<" bytes "<<std::endl;
+	}
+
+	std::cout<<"  gen parts size "<<gens->size()<<std::endl;
+	hgenPsize->Fill(gens->size());
+	for(size_t i=0;i<gens->size(); ++i) {
+	  dd4hep::sim::Geant4Particle* agen =gens->at(i);
+	  hgenPdgID->Fill(agen->pdgID);
+	}
       }
 
-      std::cout<<"  gen parts size "<<gens->size()<<std::endl;
-     hgenPsize->Fill(gens->size());
-      for(size_t i=0;i<gens->size(); ++i) {
-	dd4hep::sim::Geant4Particle* agen =gens->at(i);
-	hgenPdgID->Fill(agen->pdgID);
-      }
 
+      float esum=0.;
+      int ncertot=0;
+      int nscinttot=0;
+
+
+      if(doecal) {
       int nbyteecal = b_ecal->GetEntry(ievt);
       if( nbyteecal>0) {
 	std::cout<<std::endl<<" Ecal Hits bytes "<<nbyteecal<<" bytes "<<std::endl;
       }
-      float esum=0.;
-      int ncertot=0;
-      int nscinttot=0;
 
       // ecal hits
       std::cout<<"   ecal size "<<ecalhits->size()<<std::endl;
@@ -135,8 +142,10 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1F -15;  // is this right?
-	int iy =(ihitchan >>8) & 0x1F -15; // is this right?
+	int ix = (ihitchan >>3) & 0x1F ;  // is this right?
+	if(ix>16) ix=ix-32;
+	int iy =(ihitchan >>8) & 0x1F ; // is this right?
+	if(iy>16) iy=iy-32;
         int  islice = (ihitchan >>13) & 0x07;
         int  ilayer = (ihitchan>> 16) & 0x07;
 	
@@ -149,6 +158,10 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	}
 	hchan->Fill(aecalhit->cellID);
       }  // end loop over ecal hits
+      }
+
+
+      if(dohcal) {
       // hcal hits
 
 
@@ -166,8 +179,10 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F -128;   // is this right?
-	int iy =(ihitchan >>10) & 0x7F  -128;   // is this right?
+	int ix = (ihitchan >>3) & 0x7F;   // is this right?
+	if(ix>64) ix=ix-128;
+	int iy =(ihitchan >>10) & 0x7F;   // is this right?
+	if(iy>64) iy=iy-128;
 	int ifiber  =(ihitchan >>17) & 0x03;
 	int iabs=(ihitchan >>19) & 0x03;
 	int iphdet=(ihitchan >>21) & 0x03;
@@ -175,7 +190,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 	hchan->Fill(aecalhit->cellID);
       }  // end loop over hcal hits
-
+      }
     
       hcEcalE->Fill(esum/1000.);
       hcEcalncer->Fill(ncertot);
