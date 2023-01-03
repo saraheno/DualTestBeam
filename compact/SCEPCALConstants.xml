@@ -10,7 +10,7 @@
 
     <constant name="DRcrystalwidth" value="10.0*mm"/>
     <constant name="DRcrystallength" value="20.0*cm"/>
-    <constant name="DRcrystalNsize" value="2"/>
+    <constant name="DRcrystalNsize" value="5"/>
 
 
     <constant name="EcalHcalgap" value="50*mm"/>
