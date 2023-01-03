@@ -21,6 +21,11 @@
 //const int nchan = 4;
 //const int ichan[nchan] = {64,73,74,75};  // channel 74 is the crystal, 73 and 75 the two kill media
 
+const int nsliceecal = 4;
+std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
+
+
+
 
 void crystalana(int num_evtsmax, const char* inputfilename) {
 
@@ -105,7 +110,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       std::cout<<" gen byte "<<nbytegen<<" bytes "<<std::endl;
       }
 
-      std::cout<<"gen parts size "<<gens->size()<<std::endl;
+      std::cout<<"  gen parts size "<<gens->size()<<std::endl;
      hgenPsize->Fill(gens->size());
       for(size_t i=0;i<gens->size(); ++i) {
 	dd4hep::sim::Geant4Particle* agen =gens->at(i);
@@ -114,27 +119,34 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
       int nbyteecal = b_ecal->GetEntry(ievt);
       if( nbyteecal>0) {
-      std::cout<<" Ecal Hits bytes "<<nbyteecal<<" bytes "<<std::endl;
+	std::cout<<std::endl<<" Ecal Hits bytes "<<nbyteecal<<" bytes "<<std::endl;
       }
       float esum=0.;
       int ncertot=0;
       int nscinttot=0;
 
       // ecal hits
-      std::cout<<"ecal size "<<ecalhits->size()<<std::endl;
+      std::cout<<"   ecal size "<<ecalhits->size()<<std::endl;
       for(size_t i=0;i<ecalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 	esum+=aecalhit->energyDeposit;
 	ncertot+=aecalhit->ncerenkov;
 	nscinttot+=aecalhit->nscintillator;
-	std::cout<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1F;
-	int iy =(ihitchan >>6) & 0x1F;
-        int  ilayer = (ihitchan >>13) & 0x07;
-        int  islice = (ihitchan>> 16) & 0x07;
-std::cout<<"idet,iy,ix,ilayer, islice is ("<<idet<<","<<std::hex<<iy<<","<<ix<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
+	int ix = (ihitchan >>3) & 0x1F -15;  // is this right?
+	int iy =(ihitchan >>8) & 0x1F -15; // is this right?
+        int  islice = (ihitchan >>13) & 0x07;
+        int  ilayer = (ihitchan>> 16) & 0x07;
+	
+	if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
+	if(islice>nsliceecal) {
+	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
+	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
+	} else {
+	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+	}
 	hchan->Fill(aecalhit->cellID);
       }  // end loop over ecal hits
       // hcal hits
@@ -142,21 +154,25 @@ std::cout<<"idet,iy,ix,ilayer, islice is ("<<idet<<","<<std::hex<<iy<<","<<ix<<"
 
       int nbytehcal = b_hcal->GetEntry(ievt);
       if( nbytehcal>0) {
-      std::cout<<" Ecal Hits  byte"<<nbytehcal<<" bytes "<<std::endl;
+	std::cout<<std::endl<<" Hcal Hits  byte"<<nbytehcal<<" bytes "<<std::endl;
       }
 
-      std::cout<<"hcal size "<<hcalhits->size()<<std::endl;
+      std::cout<<"   yhcal size "<<hcalhits->size()<<std::endl;
       for(size_t i=0;i<hcalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =hcalhits->at(i);
 	esum+=aecalhit->energyDeposit;
 	ncertot+=aecalhit->ncerenkov;
 	nscinttot+=aecalhit->nscintillator;
-	std::cout<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1F;
-	int iy =(ihitchan >>6) & 0x1F;
-std::cout<<"idet,iy,ix is ("<<idet<<","<<std::hex<<iy<<","<<ix<<","<<std::dec<<")"<<std::endl;
+	int ix = (ihitchan >>3) & 0x7F -128;   // is this right?
+	int iy =(ihitchan >>10) & 0x7F  -128;   // is this right?
+	int ifiber  =(ihitchan >>17) & 0x03;
+	int iabs=(ihitchan >>19) & 0x03;
+	int iphdet=(ihitchan >>21) & 0x03;
+	std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
+	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 	hchan->Fill(aecalhit->cellID);
       }  // end loop over hcal hits
 
@@ -165,9 +181,9 @@ std::cout<<"idet,iy,ix is ("<<idet<<","<<std::hex<<iy<<","<<ix<<","<<std::dec<<"
       hcEcalncer->Fill(ncertot);
 
 
-      std::cout<<" total energy deposit "<<esum<<std::endl;
-      std::cout<<" total number of cherenkov is "<<ncertot<<std::endl;
-      std::cout<<" total number of scintillator is "<<nscinttot<<std::endl;
+      std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
+      std::cout<<"total number of cherenkov is "<<ncertot<<std::endl;
+      std::cout<<"total number of scintillator is "<<nscinttot<<std::endl<<std::endl;
 
 
     }  //end loop over events
