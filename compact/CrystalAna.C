@@ -63,6 +63,11 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy",100,0.,100.);
   TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100,0.,10000);
 
+
+  TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+  TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+
+
   // open data and output file for histograms
 
   //  const char* inputfilename="/data/users/eno/dd4hep/DD4hep/DDDetectors/compact/testSid.root";
@@ -157,6 +162,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 	}
 	hchan->Fill(aecalhit->cellID);
+	hecal2d->Fill(ix,iy,aecalhit->energyDeposit);
       }  // end loop over ecal hits
       }
 
@@ -189,6 +195,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
 	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 	hchan->Fill(aecalhit->cellID);
+	hhcal2d->Fill(ix,iy,aecalhit->energyDeposit);
       }  // end loop over hcal hits
       }
     
@@ -217,6 +224,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   hgenPdgID->Write();
   hcEcalE->Write();
   hcEcalncer->Write();
+  hecal2d->Write();
+  hhcal2d->Write();
   out->Close();
 
 }
