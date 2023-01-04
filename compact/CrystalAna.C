@@ -127,6 +127,12 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 
       float esum=0.;
+      float esumair=0;
+      float esumcrystal=0;
+      float esumPDe=0;
+      float esumfiber=0;
+      float esumabs=0;
+      float esumPDh=0;
       int ncertot=0;
       int nscinttot=0;
 
@@ -141,7 +147,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       std::cout<<"   ecal size "<<ecalhits->size()<<std::endl;
       for(size_t i=0;i<ecalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-	esum+=aecalhit->energyDeposit;
+
 	ncertot+=aecalhit->ncerenkov;
 	nscinttot+=aecalhit->nscintillator;
 	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
@@ -161,6 +167,15 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	} else {
 	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 	}
+
+	float ae=aecalhit->energyDeposit;
+	esum+=ae;
+	if(islice==0)esumair+=ae;
+	if(islice==1)esumPDe+=ae;
+	if(islice==2)esumcrystal+=ae;
+	if(islice==3)esumPDe+=ae;
+
+
 	hchan->Fill(aecalhit->cellID);
 	hecal2d->Fill(ix,iy,aecalhit->energyDeposit);
       }  // end loop over ecal hits
@@ -179,7 +194,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       std::cout<<"   yhcal size "<<hcalhits->size()<<std::endl;
       for(size_t i=0;i<hcalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =hcalhits->at(i);
-	esum+=aecalhit->energyDeposit;
+
 	ncertot+=aecalhit->ncerenkov;
 	nscinttot+=aecalhit->nscintillator;
 	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
@@ -194,6 +209,17 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	int iphdet=(ihitchan >>21) & 0x03;
 	std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
 	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
+
+
+	float ah=aecalhit->energyDeposit;
+	esum+=ah;
+	if(ifiber==1) esumfiber+=ah;
+	if(iabs==1) esumabs+=ah;
+	if(iphdet==1) esumPDh+=ah;
+
+
+
+
 	hchan->Fill(aecalhit->cellID);
 	hhcal2d->Fill(ix,iy,aecalhit->energyDeposit);
       }  // end loop over hcal hits
@@ -204,6 +230,14 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
+      std::cout<<"       in air "<<esumair<<std::endl;
+      std::cout<<"       in photodetector ecal "<<esumPDe<<std::endl;
+      std::cout<<"       in crystal "<<esumcrystal<<std::endl;
+      std::cout<<"       in fiber "<<esumfiber<<std::endl;
+      std::cout<<"       in absorber "<<esumabs<<std::endl;
+      std::cout<<"       in photodetect hcal "<<esumPDh<<std::endl;
+      std::cout<<"       sum individual "<<esumair+esumPDe+esumcrystal+esumfiber+esumabs+esumPDh<<std::endl;
+
       std::cout<<"total number of cherenkov is "<<ncertot<<std::endl;
       std::cout<<"total number of scintillator is "<<nscinttot<<std::endl<<std::endl;
 
