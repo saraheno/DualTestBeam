@@ -59,8 +59,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
   //gen particles
   TH1F *hgenPsize = new TH1F("hgenPsize","number of generator particles",600,0.,40000);
-  TH1F *hgenPdgID = new TH1F("hgenpdgID","pdgID of generator particles",600,-200,200);
-  TH1F *hgenfrstpid = new TH1F("hgenfrstpid","pdgID of first gen",400,-200,200);
+  TH1F *hgenPdgID = new TH1F("hgenpdgID","pdgID of generator particles",1000,-500,500);
+  TH1F *hgenfrstpid = new TH1F("hgenfrstpid","pdgID of first gen",1000,-500,500);
   TH1F *hgenfrstE = new TH1F("hgenfrstE","energy of first gen",500,0.,500.);
 
 
@@ -143,9 +143,10 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  if(i==0) {
 	    mainee=ee;
 	    hgenfrstpid->Fill(agen->pdgID);
-	    hgenfrstE->Fill(ee);
+	    hgenfrstE->Fill(ee/1000);
+	    std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
 	  }
-	  std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
+
 	  hgenPdgID->Fill(agen->pdgID);
 	}
       }
