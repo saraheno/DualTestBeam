@@ -256,7 +256,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       hcEcalncer->Fill(ncertot);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
       heest->Fill((esumcrystal+esumfiber*hcalcalib)/mainee);
-      hetrue->Fill(esumfiber/mainee);
+      hetrue->Fill((esumcrystal+esumfiber+esumabs)/mainee);
 
 
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
