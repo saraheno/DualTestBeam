@@ -76,6 +76,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
   TH1F *haphcal = new TH1F("haphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
   TH1F *heest = new TH1F("heest","ratio estimated to true energy",500,0.,1.);
+  TH1F *hetrue = new TH1F("hetrue","ratio deposited to incident energy",500,0.,1.);
 
 
 
@@ -255,6 +256,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       hcEcalncer->Fill(ncertot);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
       heest->Fill((esumcrystal+esumfiber*hcalcalib)/mainee);
+      hetrue->Fill(esumfiber/mainee);
 
 
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
@@ -295,6 +297,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   heest->Write();
   hgenfrstpid->Write();
   hgenfrstE->Write();
+  hetrue->Write();
   out->Close();
 
 }
