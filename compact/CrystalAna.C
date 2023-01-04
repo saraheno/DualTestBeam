@@ -142,7 +142,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  float ee=sqrt(mass*mass+px*px+py*py+pz*pz);
 	  if(i==0) {
 	    mainee=ee;
-	    hgenfrstpid->Fill(agen->pdfID);
+	    hgenfrstpid->Fill(agen->pdgID);
 	    hgenfrstE->Fill(ee);
 	  }
 	  std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
