@@ -28,6 +28,10 @@ bool doecal=1;
 bool dohcal=1;
 
 
+// DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
+//  this must be changed whenever you change the hcalgeometry
+float hcalcalib=1./0.036;
+
 
 void crystalana(int num_evtsmax, const char* inputfilename) {
 
@@ -66,6 +70,11 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
   TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+
+
+  TH1F *haphcal = new TH1F("haphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
+  TH1F *heest = new TH1F("heest","ratio estimated to true energy",500,0.,1.);
+
 
 
   // open data and output file for histograms
@@ -110,6 +119,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
     for(int ievt=0;ievt<num_evt; ++ievt) {
       std::cout<<"event number is "<<ievt<<std::endl;
 
+
+      float mainee=-1.;
       if(dogen){
       // gen particles
 	int nbytegen = b_mc->GetEntry(ievt);
@@ -119,8 +130,16 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 	std::cout<<"  gen parts size "<<gens->size()<<std::endl;
 	hgenPsize->Fill(gens->size());
+
 	for(size_t i=0;i<gens->size(); ++i) {
 	  dd4hep::sim::Geant4Particle* agen =gens->at(i);
+	  float px=agen->psx;
+	  float py=agen->psy;
+	  float pz=agen->psz;
+	  float mass=agen->mass;
+	  float ee=sqrt(mass*mass+px*px+py*py+pz*pz);
+	  if(i==0) mainee=ee;
+	  std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
 	  hgenPdgID->Fill(agen->pdgID);
 	}
       }
@@ -227,6 +246,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
     
       hcEcalE->Fill(esum/1000.);
       hcEcalncer->Fill(ncertot);
+      if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
+      heest->Fill((esumcrystal+esumfiber*hcalcalib)/mainee);
 
 
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
@@ -244,6 +265,9 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
     }  //end loop over events
   }  // end if no events
+
+  //  float amean = hceest->GetMean();
+
     
   
 
@@ -260,6 +284,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   hcEcalncer->Write();
   hecal2d->Write();
   hhcal2d->Write();
+  haphcal->Write();
+  heest->Write();
   out->Close();
 
 }
