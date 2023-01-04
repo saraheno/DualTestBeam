@@ -60,6 +60,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   //gen particles
   TH1F *hgenPsize = new TH1F("hgenPsize","number of generator particles",600,0.,40000);
   TH1F *hgenPdgID = new TH1F("hgenpdgID","pdgID of generator particles",600,-200,200);
+  TH1F *hgenfrstpid = new TH1F("hgenfrstpid","pdgID of first gen",400,-200,200);
+  TH1F *hgenfrstE = new TH1F("hgenfrstE","energy of first gen",500,0.,500.);
 
 
   // calorimeter infor
@@ -138,7 +140,11 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  float pz=agen->psz;
 	  float mass=agen->mass;
 	  float ee=sqrt(mass*mass+px*px+py*py+pz*pz);
-	  if(i==0) mainee=ee;
+	  if(i==0) {
+	    mainee=ee;
+	    hgenfrstpid->Fill(agen->pdfID);
+	    hgenfrstE->Fill(ee);
+	  }
 	  std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
 	  hgenPdgID->Fill(agen->pdgID);
 	}
@@ -286,6 +292,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   hhcal2d->Write();
   haphcal->Write();
   heest->Write();
+  hgenfrstpid->Write();
+  hgenfrstE->Write();
   out->Close();
 
 }
