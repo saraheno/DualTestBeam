@@ -27,6 +27,8 @@ bool dogen=1;
 bool doecal=1;
 bool dohcal=1;
 bool doedge=1;
+int SCECOUNT=5;
+
 
 
 // DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
@@ -34,7 +36,7 @@ bool doedge=1;
 float hcalcalib=1./0.036;
 
 
-void crystalana(int num_evtsmax, const char* inputfilename) {
+void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
@@ -124,19 +126,18 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
-      std::cout<<"event number is "<<ievt<<std::endl;
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number is "<<ievt<<std::endl;
 
 
       float mainee=-1.;
       if(dogen){
       // gen particles
 	int nbytegen = b_mc->GetEntry(ievt);
-	if( nbytegen>0) {
-	  std::cout<<" gen byte "<<nbytegen<<" bytes "<<std::endl;
-	}
 
-	std::cout<<"  gen parts size "<<gens->size()<<std::endl;
+
+	if(ievt<SCECOUNT) std::cout<<"  gen parts size "<<gens->size()<<std::endl;
 	hgenPsize->Fill(gens->size());
+
 
 	for(size_t i=0;i<gens->size(); ++i) {
 	  dd4hep::sim::Geant4Particle* agen =gens->at(i);
@@ -145,16 +146,26 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  float pz=agen->psz;
 	  float mass=agen->mass;
 	  float ee=sqrt(mass*mass+px*px+py*py+pz*pz);
-	  if(i==0) {
+	  if(ee>mainee) {
 	    mainee=ee;
 	    hgenfrstpid->Fill(agen->pdgID);
 	    hgenfrstE->Fill(ee/1000);
-	    std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
+	    if(i<SCECOUNT) std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
 	  }
-
+	  float vsz=agen->vsz;
+	  if(vsz<-100) std::cout<<" pid "<<agen->pdgID<<" "
+				<<"vs ("<<agen->vsx<<","<<agen->vsy<<","<<agen->vsz<<") "
+				<<"ve ("<<agen->vex<<","<<agen->vey<<","<<agen->vez<<") "
+				<<"ps ("<<agen->psx<<","<<agen->psy<<","<<agen->psz<<") "
+				<<"pe ("<<agen->pex<<","<<agen->pey<<","<<agen->pez<<") "
+				<<std::endl;
 	  hgenPdgID->Fill(agen->pdgID);
 	}
       }
+
+      // kludge for now
+      mainee=beamE
+
 
 
       float esum=0.;
@@ -171,18 +182,16 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
       if(doecal) {
       int nbyteecal = b_ecal->GetEntry(ievt);
-      if( nbyteecal>0) {
-	std::cout<<std::endl<<" Ecal Hits bytes "<<nbyteecal<<" bytes "<<std::endl;
-      }
+
 
       // ecal hits
-      std::cout<<"   ecal size "<<ecalhits->size()<<std::endl;
+      if(ievt<SCECOUNT) std::cout<<"   ecal size "<<ecalhits->size()<<std::endl;
       for(size_t i=0;i<ecalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
 	ncertot+=aecalhit->ncerenkov;
 	nscinttot+=aecalhit->nscintillator;
-	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x1F ;  // is this right?
@@ -197,7 +206,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
 	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
 	} else {
-	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+	  if(i<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 	}
 
 	float ae=aecalhit->energyDeposit;
@@ -219,17 +228,15 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 
       int nbytehcal = b_hcal->GetEntry(ievt);
-      if( nbytehcal>0) {
-	std::cout<<std::endl<<" Hcal Hits  byte"<<nbytehcal<<" bytes "<<std::endl;
-      }
 
-      std::cout<<"   yhcal size "<<hcalhits->size()<<std::endl;
+
+      if(ievt<SCECOUNT) std::cout<<"   hcal size "<<hcalhits->size()<<std::endl;
       for(size_t i=0;i<hcalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
 	ncertot+=ahcalhit->ncerenkov;
 	nscinttot+=ahcalhit->nscintillator;
-	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
+	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
         int ihitchan=ahcalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x7F;   // is this right?
@@ -239,8 +246,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	int ifiber  =(ihitchan >>17) & 0x03;
 	int iabs=(ihitchan >>19) & 0x03;
 	int iphdet=(ihitchan >>21) & 0x03;
-	std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
-	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
+	if(i<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
+	if(i<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 
 
 	float ah=ahcalhit->energyDeposit;
@@ -264,9 +271,6 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
       if(doedge) {
       int nbyteedge = b_edge->GetEntry(ievt);
-      if( nbyteedge>0) {
-	std::cout<<std::endl<<" Edge Hits bytes "<<nbyteedge<<" bytes "<<std::endl;
-      }
 
       // energies escaping calroimeter
       std::cout<<"   edge size "<<edgehits->size()<<std::endl;
@@ -297,17 +301,17 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       hetrue->Fill(achecks/mainee);
 
 
-      std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
-      std::cout<<"       in air "<<esumair<<std::endl;
-      std::cout<<"       in photodetector ecal "<<esumPDe<<std::endl;
-      std::cout<<"       in crystal "<<esumcrystal<<std::endl;
-      std::cout<<"       in fiber "<<esumfiber<<std::endl;
-      std::cout<<"       in absorber "<<esumabs<<std::endl;
-      std::cout<<"       in photodetect hcal "<<esumPDh<<std::endl;
-      std::cout<<"       escaping detector "<<esumedge<<std::endl;
+      std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum/1000.<<std::endl;
+      std::cout<<"       in air "<<esumair/1000.<<std::endl;
+      std::cout<<"       in photodetector ecal "<<esumPDe/1000.<<std::endl;
+      std::cout<<"       in crystal "<<esumcrystal/1000.<<std::endl;
+      std::cout<<"       in fiber "<<esumfiber/1000.<<std::endl;
+      std::cout<<"       in absorber "<<esumabs/1000.<<std::endl;
+      std::cout<<"       in photodetect hcal "<<esumPDh/1000.<<std::endl;
+      std::cout<<"       escaping detector "<<esumedge/1000.<<std::endl;
 
-      std::cout<<"       sum individual "<<achecks<<std::endl;
-      std::cout<<"   incident energy "<<mainee<<std::endl;
+      std::cout<<"       sum individual "<<achecks/1000.<<std::endl;
+      std::cout<<"   incident energy "<<mainee/1000.<<std::endl;
       std::cout<<"   ratio to incident energy "<<achecks/mainee<<std::endl;
 
       std::cout<<"total number of cherenkov is "<<ncertot<<std::endl;

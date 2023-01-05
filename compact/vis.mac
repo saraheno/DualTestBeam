@@ -41,7 +41,7 @@
 
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 10 cm
-/vis/scene/add/axes 0 0 0
+#/vis/scene/add/axes 0 0 0
 
 
 # Draw smooth trajectories at end of event, showing trajectory points
@@ -56,20 +56,20 @@
 /vis/scene/add/hits
 #
 # To draw only specific particles:
-/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/create/particleFilter
 #/vis/filtering/trajectories/particleFilter-0/add geantino
 #/vis/filtering/trajectories/particleFilter-0/add pi-
 #/vis/filtering/trajectories/particleFilter-0/add e-
 #/vis/filtering/trajectories/particleFilter-0/add e+
 #/vis/filtering/trajectories/particleFilter-0/add opticalphoton
 #/vis/filtering/trajectories/particleFilter-0/add mu-
-/vis/filtering/trajectories/particleFilter-0/add gamma
+#/vis/filtering/trajectories/particleFilter-0/add gamma
 #/vis/filtering/trajectories/particleFilter-0/add neutron
 
 #
 # To invert the above, drawing all particles except gammas,
 # keep the above two lines but also add:
-/vis/filtering/trajectories/particleFilter-0/invert true
+#/vis/filtering/trajectories/particleFilter-0/invert true
 #
 # Many other options are available with /vis/modeling and /vis/filtering.
 # For example, to select colour by particle ID:
@@ -81,7 +81,7 @@
 /vis/modeling/trajectories/drawByParticleID-0/set pi+ black
 /vis/modeling/trajectories/drawByParticleID-0/set mu- blue
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ blue
-/vis/modeling/trajectories/drawByParticleID-0/set gamma red
+/vis/modeling/trajectories/drawByParticleID-0/set gamma orange
 /vis/modeling/trajectories/drawByParticleID-0/set neutron brown
 /vis/modeling/trajectories/drawByParticleID-0/set proton brown
 /vis/modeling/trajectories/drawByParticleID-0/set opticalphoton yellow
