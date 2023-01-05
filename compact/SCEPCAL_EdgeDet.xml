@@ -1,0 +1,44 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+
+  <detectors>
+    <detector id="EdgeDet_ID" name="EdgeDet" type="DD4hep_EdgeDet" readout="EdgeDetNoSegment" vis="Invisible">
+
+
+ <comment>Edge Detector</comment>
+
+
+
+<!-- here z_length is the absorber length, thickness is length of an end side
+z1 is the photodetector length gap is the distance between modules, and dz is how far the fiber sticks out of the absorber.  Nsize is the number of cells to make
+zmin is where the dtector goes
+ -->
+
+<dimensions z_length="world_side-10." thickness="1."/>
+
+      <structure>
+        <side name="side" material="BlackHole" vis="EDGEVis2" sensitive="yes"/>
+      </structure>
+
+
+    </detector>
+  </detectors>
+
+

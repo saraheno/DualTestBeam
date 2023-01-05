@@ -1,0 +1,45 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<lccdd>
+
+
+  <display>
+    <vis name="EDGEVis1" alpha="0.1" r="0.0" g="0.0" b="1.0" showDaughters="true" visible="true"/>
+    <vis name="EDGEVis2" alpha="0.1" r="1.0" g="0.0" b="0.0" showDaughters="true" visible="true"/>
+  </display>
+
+
+
+  <readouts>
+    <readout name="EdgeDetNoSegment">
+      <segmentation type="NoSegmentation"/>
+      <id>system:3,side:3</id>
+    </readout>
+  </readouts>
+
+
+
+
+<!-- <include ref="SCEPCAL_DRcal.xml"/> -->
+<include ref="SCEPCAL_EdgeDet.xml"/>
+
+</lccdd>
+
+

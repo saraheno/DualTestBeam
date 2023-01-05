@@ -281,6 +281,15 @@
     </material>
 
 
+<!-- for edge detector (change rinde!)  -->
+    <material name="BlackHole">
+      <D type="density" unit="g/cm3" value="0.0012"/>
+      <fraction n="0.754" ref="N"/>
+      <fraction n="0.234" ref="O"/>
+      <fraction n="0.012" ref="Ar"/>
+      <property name="RINDEX"        ref="RINDEX__PbWO4"/>
+    </material>
+
 
 
 <!-- danger danger will robinson using values for polystyrene -->
@@ -366,6 +375,7 @@
   <comment>EM Calorimeters</comment>
   <include ref="SCEPCAL_ECAL.xml"/> 
   <include ref="SCEPCAL_HCAL.xml"/> 
+  <include ref="SCEPCAL_BOUND.xml"/> 
 
 
 

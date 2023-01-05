@@ -1,5 +1,5 @@
 <define>
-    <constant name="world_side" value="600.*m"/>
+    <constant name="world_side" value="400.*cm"/>
     <constant name="world_x" value="world_side"/>
     <constant name="world_y" value="world_side"/>
     <constant name="world_z" value="world_side"/>
@@ -10,18 +10,18 @@
 
     <constant name="DRcrystalwidth" value="1.0*cm"/>
     <constant name="DRcrystallength" value="20.0*cm"/>
-    <constant name="DRcrystalNsize" value="5"/>
+    <constant name="DRcrystalNsize" value="5"/>    <!-- should be 5 -->
 
 
     <constant name="EcalHcalgap" value="5*mm"/>
 
     <constant name="DRFiberAbswidth" value="2.2*mm"/>
-    <constant name="DRFiberlength" value="130*cm"/> 
-    <constant name="DRFiberNsize" value="30"/>
+    <constant name="DRFiberlength" value="130*cm"/>   <!-- should be 130 cm -->
+    <constant name="DRFiberNsize" value="30"/>        <!-- should be 30 -->
     
     <constant name="Ecal_ID" value="5"/>
     <constant name="Hcal_ID" value="6"/>
-
+    <constant name="EdgeDet_ID" value="4"/>
 
 
 

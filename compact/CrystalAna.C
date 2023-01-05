@@ -26,6 +26,7 @@ std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
 bool dogen=1;
 bool doecal=1;
 bool dohcal=1;
+bool doedge=1;
 
 
 // DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
@@ -98,6 +99,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
   TBranch* b_mc = t->GetBranch("MCParticles");
   TBranch* b_ecal = t->GetBranch("DRCNoSegment");
   TBranch* b_hcal = t->GetBranch("DRFNoSegment");
+  TBranch* b_edge = t->GetBranch("EdgeDetNoSegment");
 
 
   int ihaha = b_mc->GetEntries();
@@ -117,6 +119,8 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
     b_ecal->SetAddress(&ecalhits);
     CalHits* hcalhits = new CalHits();
     b_hcal->SetAddress(&hcalhits);
+    CalHits* edgehits = new CalHits();
+    b_edge->SetAddress(&edgehits);
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
@@ -160,6 +164,7 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       float esumfiber=0;
       float esumabs=0;
       float esumPDh=0;
+      float esumedge=0;
       int ncertot=0;
       int nscinttot=0;
 
@@ -220,12 +225,12 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
       std::cout<<"   yhcal size "<<hcalhits->size()<<std::endl;
       for(size_t i=0;i<hcalhits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* aecalhit =hcalhits->at(i);
+	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
-	ncertot+=aecalhit->ncerenkov;
-	nscinttot+=aecalhit->nscintillator;
-	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=aecalhit->cellID;
+	ncertot+=ahcalhit->ncerenkov;
+	nscinttot+=ahcalhit->nscintillator;
+	std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
+        int ihitchan=ahcalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x7F;   // is this right?
 	if(ix>64) ix=ix-128;
@@ -238,8 +243,9 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 	std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 
 
-	float ah=aecalhit->energyDeposit;
+	float ah=ahcalhit->energyDeposit;
 	esum+=ah;
+
 	if(ifiber==1) esumfiber+=ah;
 	if(iabs==1) esumabs+=ah;
 	if(iphdet==1) esumPDh+=ah;
@@ -247,16 +253,48 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
 
 
 
-	hchan->Fill(aecalhit->cellID);
-	hhcal2d->Fill(ix,iy,aecalhit->energyDeposit);
+	hchan->Fill(ahcalhit->cellID);
+	hhcal2d->Fill(ix,iy,ahcalhit->energyDeposit);
       }  // end loop over hcal hits
       }
+
+
+
+
+
+      if(doedge) {
+      int nbyteedge = b_edge->GetEntry(ievt);
+      if( nbyteedge>0) {
+	std::cout<<std::endl<<" Edge Hits bytes "<<nbyteedge<<" bytes "<<std::endl;
+      }
+
+      // energies escaping calroimeter
+      std::cout<<"   edge size "<<edgehits->size()<<std::endl;
+      for(size_t i=0;i<edgehits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
+
+
+	float ae=aedgehit->energyDeposit;
+	esum+=ae;
+	esumedge+=ae;
+
+      }  // end loop over escaping hits
+      }
+
+
+
+
+
     
       hcEcalE->Fill(esum/1000.);
       hcEcalncer->Fill(ncertot);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
       heest->Fill((esumcrystal+esumfiber*hcalcalib)/mainee);
-      hetrue->Fill((esumcrystal+esumfiber+esumabs)/mainee);
+
+
+
+      float achecks=esumair+esumPDe+esumcrystal+esumfiber+esumabs+esumPDh+esumedge;
+      hetrue->Fill(achecks/mainee);
 
 
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum<<std::endl;
@@ -266,10 +304,21 @@ void crystalana(int num_evtsmax, const char* inputfilename) {
       std::cout<<"       in fiber "<<esumfiber<<std::endl;
       std::cout<<"       in absorber "<<esumabs<<std::endl;
       std::cout<<"       in photodetect hcal "<<esumPDh<<std::endl;
-      std::cout<<"       sum individual "<<esumair+esumPDe+esumcrystal+esumfiber+esumabs+esumPDh<<std::endl;
+      std::cout<<"       escaping detector "<<esumedge<<std::endl;
+
+      std::cout<<"       sum individual "<<achecks<<std::endl;
+      std::cout<<"   incident energy "<<mainee<<std::endl;
+      std::cout<<"   ratio to incident energy "<<achecks/mainee<<std::endl;
 
       std::cout<<"total number of cherenkov is "<<ncertot<<std::endl;
       std::cout<<"total number of scintillator is "<<nscinttot<<std::endl<<std::endl;
+
+
+
+
+
+
+
 
 
     }  //end loop over events

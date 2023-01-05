@@ -161,7 +161,7 @@ namespace dd4hep {
 
 
       G4Track * track =  step->GetTrack();
-
+      std::string amedia = ((track->GetMaterial())->GetName());
       //if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
 
       //photons
@@ -186,7 +186,7 @@ namespace dd4hep {
 	
 	if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
 	  if(SCEPRINT) std::cout<<" found Cerenkov photon"<<std::endl;
-	  std::string amedia = ((track->GetMaterial())->GetName());
+
 	  if(amedia.find("kill")!=std::string::npos) 
 	    { 
 	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
@@ -197,6 +197,13 @@ namespace dd4hep {
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	    }
+	  else if(amedia.find("BlackHole")!=std::string::npos) {
+	      if(phstep>1) {  // don't count photons created in kill media
+		hit->ncerenkov+=1;
+		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
+	      }
+	      track->SetTrackStatus(fStopAndKill);
+	  }
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
 	    if( (phstep==1)  ) {
@@ -219,6 +226,13 @@ namespace dd4hep {
 		if((ibin>-1)&&(ibin<hit->nbin)) ((hit->nscintwave).at(ibin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);}
+	  else if(amedia.find("BlackHole")!=std::string::npos) {
+	      if(phstep>1) {  // don't count photons created in kill media
+		hit->nscintillator+=1;
+		if(ibin>-1&&ibin<hit->nbin) ((hit->nscintwave).at(ibin))+=1;
+	      }
+	      track->SetTrackStatus(fStopAndKill);
+	  }
 	  else {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
 	    if( (phstep==1) ) {
@@ -263,10 +277,20 @@ namespace dd4hep {
 	
       //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
 
-        hit->energyDeposit += contrib.deposit;
-        hit->truth.emplace_back(contrib);
+
+
+
+	if(amedia.find("BlackHole")!=std::string::npos) {
+	  hit->energyDeposit += track->GetKineticEnergy();
+	  track->SetTrackStatus(fStopAndKill);
+	} else {
+	  hit->energyDeposit += contrib.deposit;
+	  hit->truth.emplace_back(contrib);
+
+	}
 
         mark(h.track);
+
         //return true;
       }
 
