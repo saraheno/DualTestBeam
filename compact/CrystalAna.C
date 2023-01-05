@@ -164,7 +164,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
       }
 
       // kludge for now
-      mainee=beamE
+      mainee=beamE*1000;
 
 
 
