@@ -27,6 +27,7 @@ typedef ROOT::Math::XYZVector Direction;
 namespace CalVision {
 
     const int wavelengthnbin=1000;
+    const int betanbin=1000;
 
   /// This is the hit definition.
   /** I took here the same definition of the default Geant4Tracker class,
@@ -52,10 +53,12 @@ namespace CalVision {
     int ncerenkov,nscintillator;
     float wavelenmin=300;
     float wavelenmax=1000;
-    int nbin=wavelengthnbin;
+    int nwlbin=wavelengthnbin;
     std::array<int,wavelengthnbin>  ncerwave;
     std::array<int,wavelengthnbin> nscintwave;
 
+    int nbetabin=betanbin;
+    std::array<float,betanbin> Ebybeta;
 
 
   public:
@@ -64,9 +67,12 @@ namespace CalVision {
     /// Initializing constructor
   DualCrysCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0) {
 
-      for( int i=0;i<nbin;i++){
+      for( int i=0;i<nwlbin;i++){
 	ncerwave[i]=0;
 	nscintwave[i]=0;
+      }
+      for( int i=0;i<nbetabin;i++) {
+	Ebybeta[i]=0.;
       }
 
 }

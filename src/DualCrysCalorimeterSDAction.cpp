@@ -19,6 +19,8 @@
 #include "DDG4/Geant4Random.h"
 
 
+// way too slow if track all photons for now
+// so randomly delete photons after creation according to this fraction
 double dialCher=0.00001;
 double dialScint=1.0;
 
@@ -78,7 +80,7 @@ namespace dd4hep {
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
 	std::cout<<"dialCher is "<<dialCher<<std::endl;
 	std::cout<<"dialScint is "<<dialScint<<std::endl;
-	std::cout<<" you need to to interpret your results"<<std::endl;
+	std::cout<<" you need to use this to interpret your results"<<std::endl;
       }
 
       bool SCEPRINT=(SCECOUNT<10);
@@ -179,7 +181,7 @@ namespace dd4hep {
 
 	float wavelength=fromEvToNm(track->GetTotalEnergy()/eV);
 	int ibin=-1;
-	float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nbin;
+	float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nwlbin;
 	ibin = (wavelength-hit->wavelenmin)/binsize;
 	int phstep = track->GetCurrentStepNumber();
 	
@@ -193,14 +195,14 @@ namespace dd4hep {
 	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
-		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
+		if(ibin>-1&&ibin<hit->nwlbin) ((hit->ncerwave).at(ibin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	    }
 	  else if(amedia.find("BlackHole")!=std::string::npos) {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
-		if(ibin>-1&&ibin<hit->nbin) ((hit->ncerwave).at(ibin))+=1;
+		if(ibin>-1&&ibin<hit->nwlbin) ((hit->ncerwave).at(ibin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	  }
@@ -223,13 +225,13 @@ namespace dd4hep {
 	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
 	      if(phstep>1) {
 		hit->nscintillator+=1;
-		if((ibin>-1)&&(ibin<hit->nbin)) ((hit->nscintwave).at(ibin))+=1;
+		if((ibin>-1)&&(ibin<hit->nwlbin)) ((hit->nscintwave).at(ibin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);}
 	  else if(amedia.find("BlackHole")!=std::string::npos) {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->nscintillator+=1;
-		if(ibin>-1&&ibin<hit->nbin) ((hit->nscintwave).at(ibin))+=1;
+		if(ibin>-1&&ibin<hit->nwlbin) ((hit->nscintwave).at(ibin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	  }
@@ -277,9 +279,6 @@ namespace dd4hep {
 	
       //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
 
-
-
-
 	if(amedia.find("BlackHole")!=std::string::npos) {
 	  hit->energyDeposit += track->GetKineticEnergy();
 	  track->SetTrackStatus(fStopAndKill);
@@ -289,7 +288,10 @@ namespace dd4hep {
 
 	}
 
-        mark(h.track);
+
+	// comment for this routine says Mark the track to be kept for MC truth propagation during hit processing
+
+        mark(h.track);  // h is a "geant4stephandler"  
 
         //return true;
       }
