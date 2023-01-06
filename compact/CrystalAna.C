@@ -27,9 +27,12 @@ bool dogen=1;
 bool doecal=1;
 bool dohcal=1;
 bool doedge=1;
-int SCECOUNT=5;
+int SCECOUNT=50;
 
 
+// this is now hardwared in DualCrysCalorimeterHit.h
+// need to figure out how to charge this
+const int HARDWIREDmax=1000;
 
 // DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
 //  this must be changed whenever you change the hcalgeometry
@@ -82,6 +85,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   TH1F *heest = new TH1F("heest","ratio estimated to true energy",500,0.,1.);
   TH1F *hetrue = new TH1F("hetrue","ratio deposited to incident energy",500,0.,1.);
 
+  TH1F *hnecalcon = new TH1F("hnecalcon","number contribs to ecal hit",1010,-10.,1000.);
 
 
   // open data and output file for histograms
@@ -223,10 +227,15 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	// get MC truth information about individual contributions to this hit
 	Contributions zxzz=aecalhit->truth;
 	float hacheck=0.;
-	for(size_t i=0;i<zxzz.size(); i++) {
+	if(i<SCECOUNT) std::cout<<"    number of contributes "<<zxzz.size()<<std::endl;
+	hnecalcon->Fill(zxzz.size());
+	if(zxzz.size()>HARDWIREDmax) std::cout<<" number of const "<<zxzz.size()<<" greater than hardwared limit in SDAction so that information is missing"<<std::endl;
+	for(size_t j=0;j<zxzz.size(); j++) {
 	  //	  std::cout<<"testing truth truth number "<<i<<" with pdgID "<<(zxzz.at(i)).pdgID<<std::endl;
 	  // other member functions are trackID, deposit, time, length, x,y,z
-	  hacheck+=(zxzz.at(i)).deposit;
+	  hacheck+=(zxzz.at(j)).deposit;
+	  // right now can only save 1000.  lose info for more
+	  if(j<HARDWIREDmax) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
 	}
 	if(i<SCECOUNT) {
 	  std::cout<<"    difference between truth sum and total deposit is "<<hacheck-ae<<" where "<<ae<<" is the hit size."<<std::endl;
@@ -366,6 +375,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   hgenfrstpid->Write();
   hgenfrstE->Write();
   hetrue->Write();
+  hnecalcon->Write();
   out->Close();
 
 }

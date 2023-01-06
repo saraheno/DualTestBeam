@@ -162,6 +162,7 @@ namespace dd4hep {
       }
 
 
+
       G4Track * track =  step->GetTrack();
       std::string amedia = ((track->GetMaterial())->GetName());
       //if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
@@ -283,19 +284,30 @@ namespace dd4hep {
 	  hit->energyDeposit += track->GetKineticEnergy();
 	  track->SetTrackStatus(fStopAndKill);
 	} else {
+      //add information about each contribution to the hit
+      hit->truth.emplace_back(contrib);
+
 	  hit->energyDeposit += contrib.deposit;
-	  hit->truth.emplace_back(contrib);
+	  int tsize = (hit->truth).size();
+	  if((tsize<hit->ntruthbin)&&(tsize>0)) {
+	    hit->contribBeta[tsize-1]=track->GetVelocity();
+	    hit->contribCharge[tsize-1]=(track->GetParticleDefinition())->GetPDGCharge();
+	    //	    std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
+	  } else {
+	    //std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
+
+	  }
 
 	}
 
 
 	// comment for this routine says Mark the track to be kept for MC truth propagation during hit processing
 
-        mark(h.track);  // h is a "geant4stephandler"  
 
         //return true;
       }
 
+      mark(h.track);
 	
       return true;
 
