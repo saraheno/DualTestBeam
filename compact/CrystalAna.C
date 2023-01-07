@@ -32,7 +32,7 @@ int SCECOUNT=50;
 
 // this is now hardwared in DualCrysCalorimeterHit.h
 // need to figure out how to charge this
-const int HARDWIREDmax=1000;
+//const int HARDWIREDmax=1000;
 
 // DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
 //  this must be changed whenever you change the hcalgeometry
@@ -229,13 +229,14 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	float hacheck=0.;
 	if(i<SCECOUNT) std::cout<<"    number of contributes "<<zxzz.size()<<std::endl;
 	hnecalcon->Fill(zxzz.size());
-	if(zxzz.size()>HARDWIREDmax) std::cout<<" number of const "<<zxzz.size()<<" greater than hardwared limit in SDAction so that information is missing"<<std::endl;
+	//	if(zxzz.size()>HARDWIREDmax) std::cout<<" number of const "<<zxzz.size()<<" greater than hardwared limit in SDAction so that information is missing"<<std::endl;
 	for(size_t j=0;j<zxzz.size(); j++) {
 	  //	  std::cout<<"testing truth truth number "<<i<<" with pdgID "<<(zxzz.at(i)).pdgID<<std::endl;
 	  // other member functions are trackID, deposit, time, length, x,y,z
 	  hacheck+=(zxzz.at(j)).deposit;
 	  // right now can only save 1000.  lose info for more
-	  if(j<HARDWIREDmax) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
+	  //if(j<HARDWIREDmax) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
+	  if((i<SCECOUNT)&&(j<10)) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
 	}
 	if(i<SCECOUNT) {
 	  std::cout<<"    difference between truth sum and total deposit is "<<hacheck-ae<<" where "<<ae<<" is the hit size."<<std::endl;

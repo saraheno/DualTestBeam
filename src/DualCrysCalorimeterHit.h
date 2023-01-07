@@ -27,7 +27,7 @@ typedef ROOT::Math::XYZVector Direction;
 namespace CalVision {
 
     const int wavelengthnbin=1000;
-    const int truthnbin=1000;
+    //const int truthnbin=1000;
 
   /// This is the hit definition.
   /** I took here the same definition of the default Geant4Tracker class,
@@ -57,9 +57,11 @@ namespace CalVision {
     std::array<int,wavelengthnbin>  ncerwave;
     std::array<int,wavelengthnbin> nscintwave;
 
-    int ntruthbin=truthnbin;
-    std::array<float,truthnbin> contribBeta;
-    std::array<float,truthnbin> contribCharge;
+    //int ntruthbin=truthnbin;
+    //std::array<float,truthnbin> contribBeta;
+    //std::array<float,truthnbin> contribCharge;
+    std::vector<float> contribBeta;
+    std::vector<float> contribCharge;
 
 
   public:
@@ -72,10 +74,10 @@ namespace CalVision {
 	ncerwave[i]=0;
 	nscintwave[i]=0;
       }
-      for( int i=0;i<ntruthbin;i++) {
-	contribBeta[i]=0.;
-	contribCharge[i]=0.;
-      }
+      //for( int i=0;i<ntruthbin;i++) {
+      //contribBeta[i]=0.;
+      //contribCharge[i]=0.;
+      //}
 
 }
 

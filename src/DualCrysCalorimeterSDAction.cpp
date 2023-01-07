@@ -12,6 +12,7 @@
 //==========================================================================
 
 // Framework include files
+#include <CLHEP/Units/PhysicalConstants.h>
 #include "DualCrysCalorimeterHit.h"
 #include "DDG4/Geant4SensDetAction.inl"
 #include "DDG4/Factories.h"
@@ -288,15 +289,18 @@ namespace dd4hep {
       hit->truth.emplace_back(contrib);
 
 	  hit->energyDeposit += contrib.deposit;
-	  int tsize = (hit->truth).size();
-	  if((tsize<hit->ntruthbin)&&(tsize>0)) {
-	    hit->contribBeta[tsize-1]=track->GetVelocity();
-	    hit->contribCharge[tsize-1]=(track->GetParticleDefinition())->GetPDGCharge();
+	  //	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light*10000.);
+	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light);
+	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
+	  //int tsize = (hit->truth).size();
+	  //if((tsize<hit->ntruthbin)&&(tsize>0)) {
+	  //hit->contribBeta[tsize-1]=track->GetVelocity();
+	  //hit->contribCharge[tsize-1]=(track->GetParticleDefinition())->GetPDGCharge();
 	    //	    std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
-	  } else {
+	  //} else {
 	    //std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
 
-	  }
+	  //}
 
 	}
 
