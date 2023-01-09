@@ -30,6 +30,7 @@ bool doedge=1;
 int SCECOUNT=50;
 
 
+
 // this is now hardwared in DualCrysCalorimeterHit.h
 // need to figure out how to charge this
 //const int HARDWIREDmax=1000;
@@ -382,3 +383,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 }
 
 
+
+void CrystalAna() {
+  crystalana(10,"out.root",50.);
+  return;
+}
