@@ -148,7 +148,7 @@ SIM.filter.filters = {'geantino': {'name': 'GeantinoRejectFilter/GeantinoRejecto
 }
 
 
-#SIM.filter.filters = {}
+SIM.filter.filters = {}
 SIM.filter.calo="wvnm"
 
 

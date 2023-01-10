@@ -24,8 +24,10 @@
 // so randomly delete photons after creation according to this fraction
 double dialCher= 0.00001;
 double dialScint=1.;
+int printlimitSCE=100;
 
-
+// this doesn't work.  it is in mks
+//double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
 
 
 
@@ -34,8 +36,8 @@ namespace CalVision {
   G4double fromEvToNm(G4double energy)
   {
     // there is some bug somewhere.  shouldn't need this facto
-    return 2.*CLHEP::pi*CLHEP::hbarc / energy*1000.;
-    //    return 1239.84187 / energy*1000.;
+    //return  conversioneVnm/ energy*1000.;
+    return 1239.84187 / energy*1000.;
 
   }
 
@@ -86,7 +88,7 @@ namespace dd4hep {
 	std::cout<<" you need to use this to interpret your results"<<std::endl;
       }
 
-      bool SCEPRINT=(SCECOUNT<10);
+      bool SCEPRINT=(SCECOUNT<printlimitSCE);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
 
 
@@ -151,7 +153,7 @@ namespace dd4hep {
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	if(SCECOUNT2<10) {
+	if(SCECOUNT2<printlimitSCE) {
 	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<std::endl;
 	  SCECOUNT2+=1;
 	}
@@ -168,7 +170,7 @@ namespace dd4hep {
 
       G4Track * track =  step->GetTrack();
       std::string amedia = ((track->GetMaterial())->GetName());
-      //if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
+      if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
 
       //photons
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
