@@ -76,6 +76,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   TH1F *hchan = new TH1F("hchan","channel ID number",1028,0.,1028);
   TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy",100,0.,100.);
   TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100,0.,10000);
+  TH1F *hcHcalncer = new TH1F("hcHcalncer","total number of cerenkov",100,0.,10000);
 
 
   TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
@@ -182,8 +183,10 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
       float esumabs=0;
       float esumPDh=0;
       float esumedge=0;
-      int ncertot=0;
-      int nscinttot=0;
+      int ncertotecal=0;
+      int nscinttotecal=0;
+      int ncertothcal=0;
+      int nscinttothcal=0;
 
 
       if(doecal) {
@@ -195,8 +198,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
       for(size_t i=0;i<ecalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
-	ncertot+=aecalhit->ncerenkov;
-	nscinttot+=aecalhit->nscintillator;
+	ncertotecal+=aecalhit->ncerenkov;
+	nscinttotecal+=aecalhit->nscintillator;
 	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
@@ -260,8 +263,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
       for(size_t i=0;i<hcalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
-	ncertot+=ahcalhit->ncerenkov;
-	nscinttot+=ahcalhit->nscintillator;
+	ncertothcal+=ahcalhit->ncerenkov;
+	nscinttothcal+=ahcalhit->nscintillator;
 	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
         int ihitchan=ahcalhit->cellID;
         int idet = (ihitchan) & 0x07;
@@ -317,7 +320,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
     
       hcEcalE->Fill(esum/1000.);
-      hcEcalncer->Fill(ncertot);
+      hcEcalncer->Fill(ncertotecal);
+      hcHcalncer->Fill(ncertothcal);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
       heest->Fill((esumcrystal+esumfiber*hcalcalib)/mainee);
 
@@ -340,8 +344,10 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
       std::cout<<"   incident energy "<<mainee/1000.<<std::endl;
       std::cout<<"   ratio to incident energy "<<achecks/mainee<<std::endl;
 
-      std::cout<<"total number of cherenkov is "<<ncertot<<std::endl;
-      std::cout<<"total number of scintillator is "<<nscinttot<<std::endl<<std::endl;
+      std::cout<<"total number of cherenkov ecal is "<<ncertotecal<<std::endl;
+      std::cout<<"total number of scintillator ecal is "<<nscinttotecal<<std::endl<<std::endl;
+      std::cout<<"total number of cherenkov hcal is "<<ncertothcal<<std::endl;
+      std::cout<<"total number of scintillator hcal is "<<nscinttothcal<<std::endl<<std::endl;
 
 
 
@@ -385,6 +391,6 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
 void CrystalAna() {
-  crystalana(10,"out.root",50.);
+  crystalana(5,"out.root",50.);
   return;
 }

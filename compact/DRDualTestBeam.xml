@@ -305,7 +305,7 @@
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
 <!-- set low because impossibly long at correct yield -->
-      <constant name="SCINTILLATIONYIELD" value="13/MeV"/>
+      <constant name="SCINTILLATIONYIELD" value="3.0/MeV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
@@ -318,7 +318,7 @@
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="FASTCOMPONENT" ref="scintFast_PS"/>
 <!-- set low because impossibly long at correct yield -->
-      <constant name="SCINTILLATIONYIELD" value="13/MeV"/>
+      <constant name="SCINTILLATIONYIELD" value="50/MeV"/>
       <constant name="FASTTIMECONSTANT" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
