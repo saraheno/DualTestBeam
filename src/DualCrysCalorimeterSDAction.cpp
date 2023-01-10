@@ -22,8 +22,8 @@
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-double dialCher=0.00001;
-double dialScint=1.0;
+double dialCher= 0.00001;
+double dialScint=1.;
 
 
 
@@ -33,8 +33,10 @@ namespace CalVision {
 
   G4double fromEvToNm(G4double energy)
   {
-    // there is some bug somewhere.  shouldn't need this factor
-    return 1239.84187 / energy*1000.;
+    // there is some bug somewhere.  shouldn't need this facto
+    return 2.*CLHEP::pi*CLHEP::hbarc / energy*1000.;
+    //    return 1239.84187 / energy*1000.;
+
   }
 
 
@@ -243,7 +245,7 @@ namespace dd4hep {
 	      hit->nscintillator+=1; 
 	      Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
-	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);	    
+	      if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
 	    }
 	  }
 
