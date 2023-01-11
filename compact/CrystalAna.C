@@ -74,7 +74,9 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
   // calorimeter infor
   TH1F *hchan = new TH1F("hchan","channel ID number",1028,0.,1028);
-  TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy",100,0.,100.);
+  TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
+  TH1F *hcHcalE = new TH1F("hcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
+  TH1F *hcEdgeE = new TH1F("hcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100000,0.,100000);
   TH1F *hcHcalncer = new TH1F("hcHcalncer","total number of cerenkov",100000,0.,100000);
 
@@ -323,7 +325,9 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
     
-      hcEcalE->Fill(esum/1000.);
+      hcEcalE->Fill(esumcrystal/1000./mainee);
+      hcHcalE->Fill(esumfiber*hcalcalib/1000./mainee);
+      hcHcalE->Fill(esumedge/1000./mainee);
       hcEcalncer->Fill(ncertotecal);
       hcHcalncer->Fill(ncertothcal);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
@@ -379,6 +383,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   hgenPsize->Write();
   hgenPdgID->Write();
   hcEcalE->Write();
+  hcHcalE->Write();
+  hcEdgeE->Write();
   hcEcalncer->Write();
   hecal2d->Write();
   hhcal2d->Write();

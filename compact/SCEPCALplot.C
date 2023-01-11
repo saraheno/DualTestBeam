@@ -1,4 +1,10 @@
-
+//
+//
+//hzvst->SetOption("leg") at linux command promopt
+//https://root.cern.ch/root/htmldoc/guides/users-guide/Histograms.html#drawing-histograms
+//
+//
+//
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
