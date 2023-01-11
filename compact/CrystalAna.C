@@ -75,8 +75,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   // calorimeter infor
   TH1F *hchan = new TH1F("hchan","channel ID number",1028,0.,1028);
   TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy",100,0.,100.);
-  TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100,0.,10000);
-  TH1F *hcHcalncer = new TH1F("hcHcalncer","total number of cerenkov",100,0.,10000);
+  TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100000,0.,100000);
+  TH1F *hcHcalncer = new TH1F("hcHcalncer","total number of cerenkov",100000,0.,100000);
 
 
   TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
@@ -88,6 +88,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   TH1F *hetrue = new TH1F("hetrue","ratio deposited to incident energy",500,0.,1.);
 
   TH1F *hnecalcon = new TH1F("hnecalcon","number contribs to ecal hit",1010,-10.,1000.);
+
+  TH2F *hzvst = new TH2F("hzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
 
 
   // open data and output file for histograms
@@ -237,10 +239,12 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	for(size_t j=0;j<zxzz.size(); j++) {
 	  //	  std::cout<<"testing truth truth number "<<i<<" with pdgID "<<(zxzz.at(i)).pdgID<<std::endl;
 	  // other member functions are trackID, deposit, time, length, x,y,z
+	  // see DDG4/include/DDG4/Geant4Data.h
 	  hacheck+=(zxzz.at(j)).deposit;
 	  // right now can only save 1000.  lose info for more
 	  //if(j<HARDWIREDmax) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
 	  if((i<SCECOUNT)&&(j<10)) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
+	  hzvst->Fill((zxzz.at(j)).z,(zxzz.at(j)).time);
 	}
 	if(i<SCECOUNT) {
 	  std::cout<<"    difference between truth sum and total deposit is "<<hacheck-ae<<" where "<<ae<<" is the hit size."<<std::endl;
@@ -384,6 +388,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   hgenfrstE->Write();
   hetrue->Write();
   hnecalcon->Write();
+  hzvst->Write();
   out->Close();
 
 }
@@ -391,6 +396,6 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
 void CrystalAna() {
-  crystalana(5,"out.root",50.);
+  crystalana(5,"out.root",10.);
   return;
 }
