@@ -325,9 +325,9 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
     
-      hcEcalE->Fill(esumcrystal/1000./mainee);
-      hcHcalE->Fill(esumfiber*hcalcalib/1000./mainee);
-      hcEdgeE->Fill(esumedge/1000./mainee);
+      hcEcalE->Fill(esumcrystal/mainee);
+      hcHcalE->Fill(esumfiber*hcalcalib/mainee);
+      hcEdgeE->Fill(esumedge/mainee);
       hcEcalncer->Fill(ncertotecal);
       hcHcalncer->Fill(ncertothcal);
       if(esumfiber>0) haphcal->Fill(esumfiber/(esumabs+esumfiber));
