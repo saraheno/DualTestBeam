@@ -223,8 +223,7 @@ namespace dd4hep {
 		hit->ncerenkov+=1;
                 if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->\
-											cerhitpos).at(xbin).at(ybin))+=1;
+		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
                 if(SCEPRINT) std::cout<<" cer photon kill pre time "<<pretime<<std::endl;
                 if(SCEPRINT) std::cout<<" cer photon kill post time "<<posttime<<std::endl;
 	      }
@@ -235,7 +234,7 @@ namespace dd4hep {
 		hit->ncerenkov+=1;
 	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
+	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	  }
@@ -245,7 +244,7 @@ namespace dd4hep {
 	      hit->ncerenkov+=1;
 	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
+	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 
 	      Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
@@ -264,7 +263,7 @@ namespace dd4hep {
 		hit->nscintillator+=1;
 		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
+		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
                 if(SCEPRINT) std::cout<<" scint photon kill pre time "<<pretime<<std::endl;
                 if(SCEPRINT) std::cout<<" scint photon kill post time "<<posttime<<std::endl;
@@ -275,7 +274,7 @@ namespace dd4hep {
 		hit->nscintillator+=1;
 		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
+		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 	      }
 	      track->SetTrackStatus(fStopAndKill);
@@ -286,7 +285,7 @@ namespace dd4hep {
 	      hit->nscintillator+=1; 
 		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
+		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 
 	      Geant4Event&  evt = context()->event();

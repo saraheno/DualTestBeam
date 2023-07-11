@@ -27,7 +27,7 @@ typedef ROOT::Math::XYZVector Direction;
 namespace CalVision {
 
 
-  const int finenbin=6000;
+  const int finenbin=600;
   const int coarsenbin=40;
 
 
@@ -71,8 +71,8 @@ namespace CalVision {
     float xmin=-10;
     float ymin=-10;
     int ncoarsebin=coarsenbin;
-    std::array<std::array<int,coarsenbin>,coarsenbin> cerhitpos;
-    std::array<std::array<int,coarsenbin>,coarsenbin> scinthitpos;
+    // std::array<std::array<int,coarsenbin>,coarsenbin> cerhitpos;
+    //std::array<std::array<int,coarsenbin>,coarsenbin> scinthitpos;
 
 
 
@@ -97,12 +97,12 @@ namespace CalVision {
         ncertime[i]=0;
         nscinttime[i]=0;
       }
-      for( int i=0;i<coarsenbin;i++ ) {
-        for( int j=0;j<coarsenbin;j++ ) {
-          cerhitpos[i][j]=0;
-          scinthitpos[i][j]=0;
-        }
-      }
+      //      for( int i=0;i<coarsenbin;i++ ) {
+      //  for( int j=0;j<coarsenbin;j++ ) {
+      //    cerhitpos[i][j]=0;
+      //    scinthitpos[i][j]=0;
+      //  }
+      // }
 
 }
 

@@ -35,7 +35,7 @@
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-5,iy:-5,slice:3,layer:3</id>
+      <id>system:3,ix:-6,iy:-6,slice:3,layer:3</id>
  </readout>
 
 

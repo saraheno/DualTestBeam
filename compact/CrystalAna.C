@@ -202,12 +202,12 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1F ;  // is this right?
-	if(ix>16) ix=ix-32;
-	int iy =(ihitchan >>8) & 0x1F ; // is this right?
-	if(iy>16) iy=iy-32;
-        int  islice = (ihitchan >>13) & 0x07;
-        int  ilayer = (ihitchan>> 16) & 0x07;
+	int ix = (ihitchan >>3) & 0x3F ;  // is this right?
+	if(ix>32) ix=ix-64;
+	int iy =(ihitchan >>9) & 0x3F ; // is this right?
+	if(iy>32) iy=iy-64;
+        int  islice = (ihitchan >>15) & 0x07;
+        int  ilayer = (ihitchan>> 18) & 0x07;
 	
 	if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
 	if(islice>nsliceecal) {
@@ -269,13 +269,13 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
         int ihitchan=ahcalhit->cellID;
         int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   // is this right?
-	if(ix>64) ix=ix-128;
-	int iy =(ihitchan >>10) & 0x7F;   // is this right?
-	if(iy>64) iy=iy-128;
-	int ifiber  =(ihitchan >>17) & 0x03;
-	int iabs=(ihitchan >>19) & 0x03;
-	int iphdet=(ihitchan >>21) & 0x03;
+	int ix = (ihitchan >>3) & 0xFF;   // is this right?
+	if(ix>128) ix=ix-256;
+	int iy =(ihitchan >>10) & 0xFF;   // is this right?
+	if(iy>128) iy=iy-256;
+	int ifiber  =(ihitchan >>19) & 0x03;
+	int iabs=(ihitchan >>21) & 0x03;
+	int iphdet=(ihitchan >>23) & 0x03;
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 
