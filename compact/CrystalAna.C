@@ -28,7 +28,7 @@ bool dogen=1;
 bool doecal=1;
 bool dohcal=1;
 bool doedge=1;
-int SCECOUNT=50;
+int SCECOUNT=1;
 
 
 
@@ -162,15 +162,9 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	    mainee=ee;
 	    hgenfrstpid->Fill(agen->pdgID);
 	    hgenfrstE->Fill(ee/1000);
-	    if(i<SCECOUNT) std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
+	    if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  gen pid "<<agen->pdgID<<" energy "<<ee<<std::endl;
 	  }
 	  float vsz=agen->vsz;
-	  if(vsz<-100) std::cout<<" pid "<<agen->pdgID<<" "
-				<<"vs ("<<agen->vsx<<","<<agen->vsy<<","<<agen->vsz<<") "
-				<<"ve ("<<agen->vex<<","<<agen->vey<<","<<agen->vez<<") "
-				<<"ps ("<<agen->psx<<","<<agen->psy<<","<<agen->psz<<") "
-				<<"pe ("<<agen->pex<<","<<agen->pey<<","<<agen->pez<<") "
-				<<std::endl;
 	  hgenPdgID->Fill(agen->pdgID);
 	}
       }
@@ -205,7 +199,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 	ncertotecal+=aecalhit->ncerenkov;
 	nscinttotecal+=aecalhit->nscintillator;
-	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
         int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x1F ;  // is this right?
@@ -220,7 +214,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
 	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
 	} else {
-	  if(i<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 	}
 
 	float ae=aecalhit->energyDeposit;
@@ -236,7 +230,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	// get MC truth information about individual contributions to this hit
 	Contributions zxzz=aecalhit->truth;
 	float hacheck=0.;
-	if(i<SCECOUNT) std::cout<<"    number of contributes "<<zxzz.size()<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"    number of contributes "<<zxzz.size()<<std::endl;
 	hnecalcon->Fill(zxzz.size());
 	//	if(zxzz.size()>HARDWIREDmax) std::cout<<" number of const "<<zxzz.size()<<" greater than hardwared limit in SDAction so that information is missing"<<std::endl;
 	for(size_t j=0;j<zxzz.size(); j++) {
@@ -246,10 +240,10 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	  hacheck+=(zxzz.at(j)).deposit;
 	  // right now can only save 1000.  lose info for more
 	  //if(j<HARDWIREDmax) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
-	  if((i<SCECOUNT)&&(j<10)) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
+	  if((i<SCECOUNT)&&(j<10)&&ievt<SCECOUNT) std::cout<<"     contrib charge ["<<j<<"] "<<aecalhit->contribCharge[j]<<" pid is "<<(zxzz.at(j)).pdgID<<" velo "<<aecalhit->contribBeta[j]<<std::endl;
 	  hzvst->Fill((zxzz.at(j)).z,(zxzz.at(j)).time);
 	}
-	if(i<SCECOUNT) {
+	if(i<SCECOUNT&&ievt<SCECOUNT) {
 	  std::cout<<"    difference between truth sum and total deposit is "<<hacheck-ae<<" where "<<ae<<" is the hit size."<<std::endl;
 	  if(ae>0) std::cout<<"      percent diff is "<<(hacheck-ae)/ae<<std::endl;
 	}
@@ -272,7 +266,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 	ncertothcal+=ahcalhit->ncerenkov;
 	nscinttothcal+=ahcalhit->nscintillator;
-	if(i<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
         int ihitchan=ahcalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x7F;   // is this right?
@@ -282,8 +276,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 	int ifiber  =(ihitchan >>17) & 0x03;
 	int iabs=(ihitchan >>19) & 0x03;
 	int iphdet=(ihitchan >>21) & 0x03;
-	if(i<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
-	if(i<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 
 
 	float ah=ahcalhit->energyDeposit;
