@@ -836,7 +836,7 @@
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PS"/>
 <!-- set low because impossibly long at correct yield -->
 <!--      <constant name="SCINTILLATIONYIELD" value="50/MeV"/> -->
-      <constant name="SCINTILLATIONYIELD" value="50/GeV"/>
+      <constant name="SCINTILLATIONYIELD" value="50/MeV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
