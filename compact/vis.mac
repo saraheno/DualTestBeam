@@ -75,12 +75,12 @@
 # For example, to select colour by particle ID:
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set geantino red
-/vis/modeling/trajectories/drawByParticleID-0/set e- red
-/vis/modeling/trajectories/drawByParticleID-0/set e+ red
+/vis/modeling/trajectories/drawByParticleID-0/set e- blue
+/vis/modeling/trajectories/drawByParticleID-0/set e+ blue
 /vis/modeling/trajectories/drawByParticleID-0/set pi- black
 /vis/modeling/trajectories/drawByParticleID-0/set pi+ black
-/vis/modeling/trajectories/drawByParticleID-0/set mu- blue
-/vis/modeling/trajectories/drawByParticleID-0/set mu+ blue
+/vis/modeling/trajectories/drawByParticleID-0/set mu- red
+/vis/modeling/trajectories/drawByParticleID-0/set mu+ red
 /vis/modeling/trajectories/drawByParticleID-0/set gamma orange
 /vis/modeling/trajectories/drawByParticleID-0/set neutron brown
 /vis/modeling/trajectories/drawByParticleID-0/set proton brown
