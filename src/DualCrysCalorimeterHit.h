@@ -26,7 +26,11 @@ typedef ROOT::Math::XYZVector Direction;
 
 namespace CalVision {
 
-    const int wavelengthnbin=1000;
+
+  const int finenbin=6000;
+  const int coarsenbin=40;
+
+
     //const int truthnbin=1000;
 
   /// This is the hit definition.
@@ -53,9 +57,25 @@ namespace CalVision {
     int ncerenkov,nscintillator;
     float wavelenmin=300;
     float wavelenmax=1000;
-    int nwlbin=wavelengthnbin;
-    std::array<int,wavelengthnbin>  ncerwave;
-    std::array<int,wavelengthnbin> nscintwave;
+
+
+    int nfinebin=finenbin;
+    float timemin=0;
+    float timemax=300;
+    std::array<int,finenbin>  ncerwave;
+    std::array<int,finenbin> nscintwave;
+    std::array<int,finenbin>  ncertime;
+    std::array<int,finenbin> nscinttime;
+    float xmax=10;
+    float ymax=10;
+    float xmin=-10;
+    float ymin=-10;
+    int ncoarsebin=coarsenbin;
+    std::array<std::array<int,coarsenbin>,coarsenbin> cerhitpos;
+    std::array<std::array<int,coarsenbin>,coarsenbin> scinthitpos;
+
+
+
 
     //int ntruthbin=truthnbin;
     //std::array<float,truthnbin> contribBeta;
@@ -70,14 +90,19 @@ namespace CalVision {
     /// Initializing constructor
   DualCrysCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0) {
 
-      for( int i=0;i<nwlbin;i++){
-	ncerwave[i]=0;
-	nscintwave[i]=0;
+
+      for( int i=0;i<finenbin;i++){
+        ncerwave[i]=0;
+        nscintwave[i]=0;
+        ncertime[i]=0;
+        nscinttime[i]=0;
       }
-      //for( int i=0;i<ntruthbin;i++) {
-      //contribBeta[i]=0.;
-      //contribCharge[i]=0.;
-      //}
+      for( int i=0;i<coarsenbin;i++ ) {
+        for( int j=0;j<coarsenbin;j++ ) {
+          cerhitpos[i][j]=0;
+          scinthitpos[i][j]=0;
+        }
+      }
 
 }
 
