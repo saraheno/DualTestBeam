@@ -396,6 +396,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   hetrue->Write();
   hnecalcon->Write();
   hzvst->Write();
+  hchan->Write();
   out->Close();
 
 }

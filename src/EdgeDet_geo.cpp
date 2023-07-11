@@ -51,9 +51,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // look in DDCore/include/Parsers/detail/Dimension.h for arguments
   xml_comp_t    x_dim     = x_det.dimensions();
   double        hzlength   = x_dim.z_length()/2.;
+  double        hxlength   = x_dim.height()/2.;
+  double        hylength   = x_dim.width()/2.;
   double        thickness   = x_dim.thickness();
 
-  std::cout<<" half zlength "<<hzlength<<" thickness "<<thickness<<std::endl;
+  std::cout<<" half zlength "<<hzlength<<
+    " half height "<<hxlength<<
+    " half width "<<hylength<<
+" thickness "<<thickness<<std::endl;
 
 
 
@@ -75,8 +80,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   Position a_pos(0.,0.,0.);
 
 
-  dd4hep::Box abox1   (hzlength,hzlength,hzlength);
-  dd4hep::Box abox2   (hzlength-2*thickness,hzlength-2*thickness,hzlength-2*thickness);
+  dd4hep::Box abox1   (hxlength,hylength,hzlength);
+  dd4hep::Box abox2   (hxlength-2*thickness,hylength-2*thickness,hzlength-2*thickness);
   dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,a_pos);
   Volume        envelope  (det_name,tmps,air);
   std::cout<<"setting envelope visibility to "<<x_det.visStr()<<std::endl;
@@ -93,8 +98,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  dd4hep::Box absbox1(hzlength-tol,hzlength-tol,hzlength-tol);
-  dd4hep::Box absbox2(hzlength-tol-thickness,hzlength-tol-thickness,hzlength-tol-thickness);
+  dd4hep::Box absbox1(hxlength-tol,hylength-tol,hzlength-tol);
+  dd4hep::Box absbox2(hxlength-tol-thickness,hylength-tol-thickness,hzlength-tol-thickness);
   dd4hep::Solid tmpsolid = dd4hep::SubtractionSolid(absbox1,absbox2,a_pos);
   Volume        Vside  ("side",tmpsolid,description.material(fX_side.materialStr()));
   Vside.setAttributes(description,fX_side.regionStr(),fX_side.limitsStr(),fX_side.visStr());

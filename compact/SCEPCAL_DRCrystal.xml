@@ -28,7 +28,8 @@
 
 
 
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" repeat="DRcrystalNsize" gap="0.01"/>
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" repeat="DRcrystalNsize" gap="0.01" z1="-world_side/2.+DRcrystallength+0.4+1."
+/>
 
 
 
