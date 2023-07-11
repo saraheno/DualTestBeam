@@ -1,5 +1,5 @@
 <define>
-    <constant name="world_side" value="400.*cm"/>
+    <constant name="world_side" value="200.*cm"/>
 
     <constant name="world_x" value="world_side/4."/>
     <constant name="world_y" value="world_side/4."/>
