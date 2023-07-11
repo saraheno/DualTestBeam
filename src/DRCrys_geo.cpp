@@ -24,7 +24,7 @@ using namespace dd4hep;
 using namespace dd4hep::detail;
 
 static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens)  {
-  std::cout<<"Creating DRCrys"<<std::endl;
+  std::cout<<"Creating DRCrys "<<std::endl;
 
   static double tol = 0.001;
 
