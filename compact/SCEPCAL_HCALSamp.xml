@@ -32,9 +32,13 @@
   </display>
 
 
+ <regions>
+    <region name="FastSimOpFiberRegion"/>
+  </regions> 
+
 
 <!-- <include ref="SCEPCAL_DRcal.xml"/> -->
-<include ref="SCEPCAL_DRFiber.xml"/>
+<include ref="SCEPCAL_DRSampling.xml"/>
 
 </lccdd>
 
