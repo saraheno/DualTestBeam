@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRSampxy" repeat="DRSampNsize" gap="0.01" z1="DRcrystallength+EcalHcalgap-world_side/2.+DRcrystallength+0.4+1."
+<dimensions width="DRSampxy" repeat="DRSampNsize" gap="0.01" z1="-world_side/2.+2*killthick+edgeoffset+DRcrystallength+EcalHcalgap"
 />
 
 
@@ -43,11 +43,11 @@ the assembled tower is a Stave
  <staves vis="InvisibleWithDaughters"/>
 <layer repeat="DRSampNlayer" vis="InvisibleWithDaughters">
       <slice material = "Copper" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
-      <slice material = "killMedia2" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
       <slice material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
-      <slice material = "killMedia2" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
       <slice material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
-      <slice material = "killMedia2" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
 </layer>
     </detector>
   </detectors>

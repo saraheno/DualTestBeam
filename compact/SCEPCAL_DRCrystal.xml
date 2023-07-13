@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength+0.4" repeat="DRcrystalNsize" gap="0.01" z1="-world_side/2.+DRcrystallength+0.4+1."
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength+2*killthick" repeat="DRcrystalNsize" gap="0.01" z1="-world_z/2.+edgeoffset"
 />
 
 
@@ -43,9 +43,9 @@ the assembled tower is a Stave
 
  <staves vis="Invisible"/>
 <layer repeat="1" vis="Invisible">
-      <slice material = "killMedia1" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-      <slice material = "killMedia1" thickness = "0.2" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/> 
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/> 
 </layer>
     </detector>
   </detectors>

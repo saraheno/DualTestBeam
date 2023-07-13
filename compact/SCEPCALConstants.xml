@@ -1,9 +1,4 @@
 <define>
-    <constant name="world_side" value="500.*cm"/>
-
-    <constant name="world_x" value="world_side/3.5"/>  <!-- should be /4 -->
-    <constant name="world_y" value="world_side/3.5"/>  <!-- should be /4 -->
-    <constant name="world_z" value="world_side"/>
 
 
 
@@ -11,11 +6,11 @@
  
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength" value="20.0*cm"/>  <!-- should be 20 -->
+    <constant name="DRcrystallength" value="20.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
     <constant name="DRcrystalNsize" value="30"/>    <!-- should be 5 -->
 
 <!-- gap between ecal and hcal  -->
-    <constant name="EcalHcalgap" value="0.1*mm"/>
+    <constant name="EcalHcalgap" value="10*mm"/> <!-- should be small 0.1 mm -->
 
 
 <!-- constants for dual readout spagetti fiber hcal calorimeter -->
@@ -38,7 +33,14 @@
     <constant name="EdgeDet_ID" value="4"/>
 
 
+    <constant name="killthick" value="0.2"/>
+    <constant name="edgeoffset" value="10"/>
 
+
+    <constant name="world_side" value="DRcrystallength+DRFiberlength+EcalHcalgap+edgeoffset+10."/>
+    <constant name="world_x" value="world_side/1.5"/>  <!-- should be /4 -->
+    <constant name="world_y" value="world_side/1.5"/>  <!-- should be /4 -->
+    <constant name="world_z" value="world_side"/>
 
     
 
