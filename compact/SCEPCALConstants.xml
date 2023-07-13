@@ -34,7 +34,7 @@
 
 
     <constant name="killthick" value="0.2"/>
-    <constant name="edgeoffset" value="10"/>
+    <constant name="edgeoffset" value="10*cm"/>
 
 
     <constant name="world_side" value="DRcrystallength+DRFiberlength+EcalHcalgap+edgeoffset+10."/>
