@@ -8,7 +8,7 @@ echo "started at $START_TIME"
 
 # setup software environment at UMD
 #
-source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos7-gcc11-opt/setup.sh
+source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos7-gcc11-opt/setup.sh
 echo "ran setup"
 source  /data/users/eno/CalVision/dd4hep/DD4hep/bin/thisdd4hep.sh
 echo "ran thisdd4hep"
@@ -17,7 +17,9 @@ echo "ran thisdd4hep"
 #
 
 
-ddsim --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --compact /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRDualTestBeam.xml --runType batch --part.userParticleHandler='' -G --gun.position="0.,0.,-850." --gun.direction "0 0 1" --gun.energy "30*GeV" --gun.particle="pi-" --gun.distribution=uniform -N 50 -O out.root >& haha.log
+ ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRConly.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile=out_conly_100.root --part.userParticleHandler='' -G --gun.position="0.,0.,-2690." --gun.direction "0 0 1" --gun.energy "30*GeV" --gun.particle="pi-" -N 100 >& haha.log
+
+
 
 exitcode=$?
 

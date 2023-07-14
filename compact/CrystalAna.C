@@ -24,10 +24,10 @@
 
 const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
-bool dogen=1;
-bool doecal=1;
-bool dohcal=1;
-bool doedge=1;
+//bool dogen=1;
+//bool doecal=1;
+//bool dohcal=1;
+//bool doedge=1;
 int SCECOUNT=1;
 
 
@@ -41,7 +41,7 @@ int SCECOUNT=1;
 float hcalcalib=1./0.036;
 
 
-void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
+void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, bool dogen, bool doecal, bool dohcal, bool doedge) {
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
@@ -108,12 +108,15 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   TTree* t = (TTree*)f->Get("EVENT;1");
   t->Print();
 
-  
+  TBranch* b_mc;
+  TBranch*  b_ecal;
+  TBranch* b_hcal;
+  TBranch* b_edge;
 
-  TBranch* b_mc = t->GetBranch("MCParticles");
-  TBranch* b_ecal = t->GetBranch("DRCNoSegment");
-  TBranch* b_hcal = t->GetBranch("DRFNoSegment");
-  TBranch* b_edge = t->GetBranch("EdgeDetNoSegment");
+  if(dogen) b_mc = t->GetBranch("MCParticles");
+  if(doecal) b_ecal = t->GetBranch("DRCNoSegment");
+  if(dohcal) b_hcal = t->GetBranch("DRFNoSegment");
+  if(doedge) b_edge = t->GetBranch("EdgeDetNoSegment");
 
 
   int ihaha = b_mc->GetEntries();
@@ -128,13 +131,13 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
   if(num_evt>0) {
 
     GenParts* gens = new GenParts();
-    b_mc->SetAddress(&gens);
+    if(dogen) b_mc->SetAddress(&gens);
     CalHits* ecalhits = new CalHits();
-    b_ecal->SetAddress(&ecalhits);
+    if(doecal) b_ecal->SetAddress(&ecalhits);
     CalHits* hcalhits = new CalHits();
-    b_hcal->SetAddress(&hcalhits);
+    if(dohcal) b_hcal->SetAddress(&hcalhits);
     CalHits* edgehits = new CalHits();
-    b_edge->SetAddress(&edgehits);
+    if(doedge) b_edge->SetAddress(&edgehits);
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
@@ -398,6 +401,6 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE) {
 
 
 void CrystalAna() {
-  crystalana(5,"out.root",10.);
+  crystalana(5,"out.root",10.,1,1,1,1);
   return;
 }
