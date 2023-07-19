@@ -17,7 +17,7 @@ echo "ran thisdd4hep"
 #
 
 
- ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRConly.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile=out_conly_100.root --part.userParticleHandler='' -G --gun.position="0.,0.,-2690." --gun.direction "0 0 1" --gun.energy "30*GeV" --gun.particle="pi-" -N 100 >& haha.log
+ ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRConly.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile=out_conly_30GeV_pi-_100.root --part.userParticleHandler='' -G --gun.position="0.,0.,-2690." --gun.direction "0 0 1" --gun.energy "30*GeV" --gun.particle="pi-" -N 100 >& haha.log
 
 
 

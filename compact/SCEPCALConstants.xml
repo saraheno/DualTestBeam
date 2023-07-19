@@ -6,7 +6,7 @@
  
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength" value="20.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
+    <constant name="DRcrystallength" value="400.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
     <constant name="DRcrystalNsize" value="45"/>    <!-- should be 5 -->
 
 <!-- gap between ecal and hcal  -->
