@@ -41,7 +41,7 @@ int SCECOUNT=1;
 float hcalcalib=1./0.036;
 
 
-void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, bool dogen, bool doecal, bool dohcal, bool doedge) {
+void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, bool dogen, bool doecal, bool dohcal, bool doedge, const char* outputfilename) {
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
@@ -98,7 +98,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
   // open data and output file for histograms
 
   //  const char* inputfilename="/data/users/eno/dd4hep/DD4hep/DDDetectors/compact/testSid.root";
-  const char* outputfilename="hist.root";
+  //  const char* outputfilename="hist.root";
 
   // get Tree
   //  TFile *f = new TFile(inputfilename);
