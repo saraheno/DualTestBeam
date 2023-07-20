@@ -35,7 +35,8 @@ int SCECOUNT=1;
 //  this must be changed whenever you change the hcalgeometry
 float hcalcalib=1./0.036;
 
-void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile);
+void SCEDraw1 (TCanvas* canv, TH1F* h1, const char* outfile);
+void SCEDraw2 (TCanvas* canv, TH1F* h1, TH1F* h2, const char* outfile);
 void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
 
 
@@ -207,8 +208,11 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
   ef->Close();
 
+  TCanvas* c1;
+  SCEDraw1(c1,ehetrue,"junk1.png");
 
-  SCEDraw2(ehcEcalE,ehetrue,"junk.png");
+  TCanvas* c2;
+  SCEDraw2(c2,ehcEcalE,ehcHcalE,"junk2.png");
 
 
   //***********************************************************************************************************
@@ -258,9 +262,33 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
 }
 
-void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile) {
+void SCEDraw1 (TCanvas* canv, TH1F* h1, const char* outfile) {
 
-  TCanvas* canv= new TCanvas("Canvas","Canvas",200,10,700,500);
+  canv= new TCanvas("Canvas1","Canvas1",200,10,700,500);
+
+
+  //canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+
+  h1->SetLineColor(3);
+  h1->SetLineWidth(3);
+  h1->SetStats(0);  
+  h1->Draw("HIST");
+
+
+
+  canv->Print(outfile,".png");
+
+  return;
+}
+void SCEDraw2 (TCanvas* canv, TH1F* h1, TH1F* h2, const char* outfile) {
+
+  canv= new TCanvas("Canvas2","Canvas2",200,10,700,500);
 
 
   //canv = new TCanvas(canvName,canvName,50,50,W,H);
