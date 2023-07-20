@@ -47,9 +47,9 @@ void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TB
 
 
 
-void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamE, bool doecal, bool dohcal, bool doedge, const char* outputfilename) {
+void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamEE, bool doecal, bool dohcal, bool doedge, const char* outputfilename) {
 
-
+  float beamE=beamEE*1000.;  // convert to MeV
 
   // read in libraries that define the classes
   Long_t result;
@@ -208,7 +208,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   ef->Close();
 
 
-  SCEDraw2(ehcEcalE,ehcHcalE,"junk.png");
+  SCEDraw2(ehcEcalE,ehetrue,"junk.png");
 
 
   //***********************************************************************************************************
