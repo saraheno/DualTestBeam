@@ -113,6 +113,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   TFile* ef = TFile::Open(einputfilename);
   TTree* et = (TTree*)ef->Get("EVENT;1");
 
+  b_mc= et->GetBranch("MCParticles");
   if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
   if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
@@ -289,7 +290,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   ef->Close();
 
 
-  SCEDraw2(ehcEcalE,ehcHcalE,"junk");
+  SCEDraw2(ehcEcalE,ehcHcalE,"junk.png");
 
 
   //***********************************************************************************************************
