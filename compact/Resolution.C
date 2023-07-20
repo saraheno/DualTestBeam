@@ -345,23 +345,26 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   //***********************************************************************************************************************
 
   TCanvas* c1;
-  SCEDraw1(c1,"c1",ehetrue,"junk1.png");
+  SCEDraw1(c1,"c1",phetrue,"junk1.png");
 
   TCanvas* c2;
-  SCEDraw2(c2,"c2",ehcEcalE,ehcHcalE,"junk2.png");
+  SCEDraw2(c2,"c2",ehcEcalE,phcEcalE,"junk2.png");
 
 
   TCanvas* c3;
   SCEDraw2(c3,"c3",ehcEcalncer,ehcEcalnscint,"junk3.png");
 
-
   TCanvas* c4;
-  SCEDraw1_2D(c4,"c4",ehcEcalNsNc,"junk4.png");
-
+  SCEDraw2(c4,"c4",phcEcalncer,phcEcalnscint,"junk4.png");
 
 
   TCanvas* c5;
-  SCEDraw1_2D(c5,"c5",phcEcalNsNc,"junk5.png");
+  SCEDraw1_2D(c5,"c5",ehcEcalNsNc,"junk5.png");
+
+
+
+  TCanvas* c6;
+  SCEDraw1_2D(c6,"c6",phcEcalNsNc,"junk6.png");
 
 
   //***********************************************************************************************************
