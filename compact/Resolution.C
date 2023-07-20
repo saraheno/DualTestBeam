@@ -36,17 +36,20 @@ int SCECOUNT=1;
 float hcalcalib=1./0.036;
 
 void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile);
+void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
 
-
-
-
-void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamE, bool doecal, bool dohcal, bool doedge, const char* outputfilename) {
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
   typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
   typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
   typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
+
+
+
+void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamE, bool doecal, bool dohcal, bool doedge, const char* outputfilename) {
+
+
 
   // read in libraries that define the classes
   Long_t result;
@@ -62,16 +65,13 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   result = gSystem->Load("libDualTestBeam");
   result = gSystem->Load("libDDG4Plugins");
 
+  int ihaha,num_evt;
+
 
   TBranch* b_mc;
   TBranch*  b_ecal;
   TBranch* b_hcal;
   TBranch* b_edge;
-  int ihaha,num_evt;
-  CalHits* ecalhits;
-  CalHits* hcalhits;
-  CalHits* edgehits;
-  int nbyteecal, nbytehcal, nbyteedge;
    
 
 
@@ -79,18 +79,44 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
   // calorimeter infor
   TH1F *ehchan = new TH1F("ehchan","channel ID number",1028,0.,1028);
+  TH1F *pihchan = new TH1F("pihchan","channel ID number",1028,0.,1028);
+
   TH1F *ehcEcalE = new TH1F("ehcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
+  TH1F *pihcEcalE = new TH1F("pihcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
+
   TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
+  TH1F *pihcHcalE = new TH1F("pihcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
+
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
+  TH1F *pihcEdgeE = new TH1F("pihcEdgeE","sum escaping / beam E",100,0.,1.5);
+
   TH1F *ehcEcalncer = new TH1F("ehcEcalncer","total number of cerenkov",100000,0.,100000);
+  TH1F *pihcEcalncer = new TH1F("pihcEcalncer","total number of cerenkov",100000,0.,100000);
+
   TH1F *ehcHcalncer = new TH1F("ehcHcalncer","total number of cerenkov",100000,0.,100000);
+  TH1F *pihcHcalncer = new TH1F("pihcHcalncer","total number of cerenkov",100000,0.,100000);
+
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+  TH2F *pihecal2d = new TH2F("pihecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+
   TH2F *ehhcal2d = new TH2F("ehhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+  TH2F *pihhcal2d = new TH2F("pihhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+
   TH1F *ehaphcal = new TH1F("ehaphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
+  TH1F *pihaphcal = new TH1F("pihaphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
+
   TH1F *eheest = new TH1F("eheest","ratio estimated to true energy",500,0.,1.);
+  TH1F *piheest = new TH1F("piheest","ratio estimated to true energy",500,0.,1.);
+
   TH1F *ehetrue = new TH1F("ehetrue","ratio deposited to incident energy",500,0.,1.);
+  TH1F *pihetrue = new TH1F("pihetrue","ratio deposited to incident energy",500,0.,1.);
+
   TH1F *ehnecalcon = new TH1F("ehnecalcon","number contribs to ecal hit",1010,-10.,1000.);
+  TH1F *pihnecalcon = new TH1F("pihnecalcon","number contribs to ecal hit",1010,-10.,1000.);
+
   TH2F *ehzvst = new TH2F("ehzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
+  TH2F *pihzvst = new TH2F("pihzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
+
 
   //****************************************************************************************************************************
   // process electrons
@@ -112,12 +138,6 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   
   if(num_evt>0) {  
 
-    ecalhits = new CalHits();
-    if(doecal) b_ecal->SetAddress(&ecalhits);
-    hcalhits = new CalHits();
-    if(dohcal) b_hcal->SetAddress(&hcalhits);
-    edgehits = new CalHits();
-    if(doedge) b_edge->SetAddress(&edgehits);
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
@@ -137,102 +157,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
       int nescinttothcal=0;
 
 
-      if(doecal) {
-	nbyteecal = b_ecal->GetEntry(ievt);
-
-      // ecal hits
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
-      for(size_t i=0;i<ecalhits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-
-	necertotecal+=aecalhit->ncerenkov;
-	nescinttotecal+=aecalhit->nscintillator;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=aecalhit->cellID;
-        int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x3F ;  // is this right?
-	if(ix>32) ix=ix-64;
-	int iy =(ihitchan >>10) & 0x3F ; // is this right?
-	if(iy>32) iy=iy-64;
-        int  islice = (ihitchan >>17) & 0x07;
-        int  ilayer = (ihitchan>> 20) & 0x07;
-	
-	if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
-	if(islice>nsliceecal) {
-	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
-	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
-	} else {
-	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
-	}
-
-	float ae=aecalhit->energyDeposit;
-	eesum+=ae;
-	if(islice==0)eesumair+=ae;
-	if(islice==1)eesumPDe+=ae;
-	if(islice==2)eesumcrystal+=ae;
-	if(islice==3)eesumPDe+=ae;
-
-	ehchan->Fill(aecalhit->cellID);
-	ehecal2d->Fill(ix,iy,aecalhit->energyDeposit);
-
-
-      }  // end loop over ecal hits
-      }
-
-
-      if(dohcal) {
-	nbytehcal = b_hcal->GetEntry(ievt);
-
-
-      // hcal hits
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
-      for(size_t i=0;i<hcalhits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
-
-	necertothcal+=ahcalhit->ncerenkov;
-	nescinttothcal+=ahcalhit->nscintillator;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=ahcalhit->cellID;
-        int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0xFF;   // is this right?
-	if(ix>128) ix=ix-256;
-	int iy =(ihitchan >>11) & 0xFF;   // is this right?
-	if(iy>128) iy=iy-256;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
-
-
-	float ah=ahcalhit->energyDeposit;
-	eesum+=ah;
-
-	if(ifiber==1) eesumfiber+=ah;
-	if(iabs==1) eesumabs+=ah;
-	if(iphdet==1) eesumPDh+=ah;
-
-	ehchan->Fill(ahcalhit->cellID);
-	ehhcal2d->Fill(ix,iy,ahcalhit->energyDeposit);
-      }  // end loop over hcal hits
-      }
-
-      if(doedge) {
-	nbyteedge = b_edge->GetEntry(ievt);
-
-
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of edge hits is "<<edgehits->size()<<std::endl;
-      for(size_t i=0;i<edgehits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
-
-
-	float ae=aedgehit->energyDeposit;
-	eesum+=ae;
-	eesumedge+=ae;
-
-      }  // end loop over escaping hits
-      }
-
+      getStuff(ievt, doecal, dohcal, doedge, b_ecal,b_hcal,b_edge,eesum,eesumair,eesumcrystal,eesumPDe,eesumfiber,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal);
 
     
       ehcEcalE->Fill(eesumcrystal/beamE);
@@ -291,17 +216,41 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   TFile * out = new TFile(outputfilename,"RECREATE");
 
   ehcEcalE->Write();
+  pihcEcalE->Write();
+
   ehcHcalE->Write();
+  pihcHcalE->Write();
+
   ehcEdgeE->Write();
-  ehcEcalncer->Write();
+  pihcEdgeE->Write();
+
+   ehcEcalncer->Write();
+   pihcEcalncer->Write();
+
   ehecal2d->Write();
+  pihecal2d->Write();
+
   ehhcal2d->Write();
+  pihhcal2d->Write();
+
   ehaphcal->Write();
+  pihaphcal->Write();
+
   eheest->Write();
+  piheest->Write();
+
+
   ehetrue->Write();
+  pihetrue->Write();
+
   ehnecalcon->Write();
+  pihnecalcon->Write();
+
   ehzvst->Write();
-  ehchan->Write();
+  pihzvst->Write();
+
+   ehchan->Write();
+   pihchan->Write();
 
 
 
@@ -338,4 +287,120 @@ void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile) {
   canv->Print(outfile,".png");
 
   return;
+}
+
+
+void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal)
+{
+
+
+
+
+  int nbyteecal, nbytehcal, nbyteedge;
+
+    CalHits* ecalhits = new CalHits();
+    if(doecal) b_ecal->SetAddress(&ecalhits);
+    CalHits* hcalhits = new CalHits();
+    if(dohcal) b_hcal->SetAddress(&hcalhits);
+    CalHits* edgehits = new CalHits();
+    if(doedge) b_edge->SetAddress(&edgehits);
+
+
+      if(doecal) {
+	nbyteecal = b_ecal->GetEntry(ievt);
+
+      // ecal hits
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+      for(size_t i=0;i<ecalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+
+	necertotecal+=aecalhit->ncerenkov;
+	nescinttotecal+=aecalhit->nscintillator;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+        int ihitchan=aecalhit->cellID;
+        int idet = (ihitchan) & 0x07;
+	int ix = (ihitchan >>3) & 0x3F ;  // is this right?
+	if(ix>32) ix=ix-64;
+	int iy =(ihitchan >>10) & 0x3F ; // is this right?
+	if(iy>32) iy=iy-64;
+        int  islice = (ihitchan >>17) & 0x07;
+        int  ilayer = (ihitchan>> 20) & 0x07;
+	
+	if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
+	if(islice>nsliceecal) {
+	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
+	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
+	} else {
+	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+	}
+
+	float ae=aecalhit->energyDeposit;
+	eesum+=ae;
+	if(islice==0)eesumair+=ae;
+	if(islice==1)eesumPDe+=ae;
+	if(islice==2)eesumcrystal+=ae;
+	if(islice==3)eesumPDe+=ae;
+
+	//ehchan->Fill(aecalhit->cellID);
+	//ehecal2d->Fill(ix,iy,aecalhit->energyDeposit);
+
+
+      }  // end loop over ecal hits
+      }
+
+
+      if(dohcal) {
+	nbytehcal = b_hcal->GetEntry(ievt);
+
+
+      // hcal hits
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+      for(size_t i=0;i<hcalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
+
+	necertothcal+=ahcalhit->ncerenkov;
+	nescinttothcal+=ahcalhit->nscintillator;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
+        int ihitchan=ahcalhit->cellID;
+        int idet = (ihitchan) & 0x07;
+	int ix = (ihitchan >>3) & 0xFF;   // is this right?
+	if(ix>128) ix=ix-256;
+	int iy =(ihitchan >>11) & 0xFF;   // is this right?
+	if(iy>128) iy=iy-256;
+	int ifiber  =(ihitchan >>21) & 0x03;
+	int iabs=(ihitchan >>23) & 0x03;
+	int iphdet=(ihitchan >>25) & 0x03;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
+
+
+	float ah=ahcalhit->energyDeposit;
+	eesum+=ah;
+
+	if(ifiber==1) eesumfiber+=ah;
+	if(iabs==1) eesumabs+=ah;
+	if(iphdet==1) eesumPDh+=ah;
+
+	//ehchan->Fill(ahcalhit->cellID);
+	//ehhcal2d->Fill(ix,iy,ahcalhit->energyDeposit);
+      }  // end loop over hcal hits
+      }
+
+      if(doedge) {
+	nbyteedge = b_edge->GetEntry(ievt);
+
+
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of edge hits is "<<edgehits->size()<<std::endl;
+      for(size_t i=0;i<edgehits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
+
+
+	float ae=aedgehit->energyDeposit;
+	eesum+=ae;
+	eesumedge+=ae;
+
+      }  // end loop over escaping hits
+      }
+
+
 }
