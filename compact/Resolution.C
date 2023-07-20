@@ -24,7 +24,6 @@
 
 const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
-
 int SCECOUNT=1;
 
 
@@ -36,22 +35,7 @@ int SCECOUNT=1;
 //  this must be changed whenever you change the hcalgeometry
 float hcalcalib=1./0.036;
 
-
-
-
-
-
-
-
-
-void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile) {
-
-  auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
-  h1->Draw();
-  h2->Draw("s");
-  Canvas->Print(outfile,".png");
-  return;
-}
+void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile);
 
 
 
@@ -87,6 +71,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   CalHits* ecalhits;
   CalHits* hcalhits;
   CalHits* edgehits;
+  int nbyteecal, nbytehcal, nbyteedge;
    
 
 
@@ -121,7 +106,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
-  std::cout<<"num_evt for electrons is is  "<<num_evt<<std::endl;
+  std::cout<<"num_evt for electron file is  "<<num_evt<<std::endl;
   
   // loop over events 
   
@@ -153,8 +138,10 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
       if(doecal) {
+	nbyteecal = b_ecal->GetEntry(ievt);
 
       // ecal hits
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
       for(size_t i=0;i<ecalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
@@ -194,8 +181,11 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
       if(dohcal) {
-      // hcal hits
+	nbytehcal = b_hcal->GetEntry(ievt);
 
+
+      // hcal hits
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
       for(size_t i=0;i<hcalhits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
@@ -228,7 +218,10 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
       }
 
       if(doedge) {
+	nbyteedge = b_edge->GetEntry(ievt);
 
+
+	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of edge hits is "<<edgehits->size()<<std::endl;
       for(size_t i=0;i<edgehits->size(); ++i) {
 	CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
 
@@ -316,3 +309,33 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
 }
 
+void SCEDraw2 (TH1F* h1, TH1F* h2, const char* outfile) {
+
+  TCanvas* canv= new TCanvas("Canvas","Canvas",200,10,700,500);
+
+
+  //canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+
+  h1->SetLineColor(3);
+  h1->SetLineWidth(3);
+  h1->SetStats(0);  
+  h1->Draw("HIST");
+
+
+
+  h2->SetLineColor(2);
+  h2->SetLineWidth(3);
+  h2->SetStats(0);  
+  h2->Draw("HIST same");
+
+
+  canv->Print(outfile,".png");
+
+  return;
+}
