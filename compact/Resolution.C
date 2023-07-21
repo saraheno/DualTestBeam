@@ -33,14 +33,22 @@ int SCECOUNT=1;
 
 // DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
 //  this must be changed whenever you change the hcalgeometry
-float hcalcalib=1./0.036;
+
 
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile);
+void SCEDrawp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
 void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile);
 void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char* outfile);
-void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
-void getMeanPhot(int ievt, bool doecal, bool dohcal,TBranch* b_ecal,TBranch* b_hcal,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
+void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile);
 
+
+void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
+
+
+void getStuffDualCorr(float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, TBranch* b_ecal,TBranch* b_hcal, float &EEcal, float &EHcal);
+
+void getMeanPhot(int ievt, bool doecal, bool dohcal,TBranch* b_ecal,TBranch* b_hcal,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
+double EOVERH(double b, double m);
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
@@ -106,10 +114,17 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   TH1F *ehcHcalnscint = new TH1F("ehcHcalnscint","total number of hcal scintillation", 500,0.,1.5);
   TH1F *phcHcalnscint = new TH1F("phcHcalnscint","total number of hcal scitillation", 500,0.,1.5);
 
-  TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal nscint versus ncer",500,0.,1.5,500,0.,1.5);
-  TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal nscint versus ncer",500,0.,1.5,500,0.,1.5);
-  TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","ecal nscint versus ncer",500,0.,1.5,500,0.,1.5);
-  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","ecal nscint versus ncer",500,0.,1.5,500,0.,1.5);
+  TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","total number of ecal scintillation", 500,0.,1.5);
+  TH1F *phcEcalcorr = new TH1F("phcEcalcorr","total number of ecal scitillation", 500,0.,1.5);
+
+  TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","total number of hcal scintillation", 500,0.,1.5);
+  TH1F *phcHcalcorr = new TH1F("phcHcalcorr","total number of hcal scitillation", 500,0.,1.5);
+
+
+  TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
 
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *phecal2d = new TH2F("phecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
@@ -133,6 +148,8 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   TH2F *phzvst = new TH2F("phzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
 
 
+
+
   //****************************************************************************************************************************
   // process electrons
 
@@ -152,6 +169,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   // loop over events 
 
   float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
+  float hcalSampf;
 
   
   if(num_evt>0) {  
@@ -171,6 +189,8 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
     std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
     std::cout<<"mean cer ecal is "<<meancerEcal<<std::endl;
     std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+    hcalSampf=0.01;  // THIS IS WRONG!!!!!!!!
+    std::cout<<"hcal sampling fraction is "<<hcalSampf<<std::endl;
 
 
     // second pass through file
@@ -195,18 +215,16 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
     
       ehcEcalE->Fill(eesumcrystal/beamE);
-      ehcHcalE->Fill(eesumfiber*hcalcalib/beamE);
+      ehcHcalE->Fill(eesumfiber*hcalSampf/beamE);
       ehcEdgeE->Fill(eesumedge/beamE);
       ehcEcalncer->Fill(necertotecal/meancerEcal);
       ehcHcalncer->Fill(necertothcal/meancerHcal);
       ehcEcalnscint->Fill(nescinttotecal/meanscinEcal);
       ehcHcalnscint->Fill(nescinttothcal/meanscinHcal);
       if(eesumfiber>0) ehaphcal->Fill(eesumfiber/(eesumabs+eesumfiber));
-      eheest->Fill((eesumcrystal+eesumfiber*hcalcalib)/beamE);
-      ehcEcalNsNc->Fill(necertotecal/meancerEcal,nescinttotecal/meanscinEcal);  
-      ehcHcalNsNc->Fill(necertothcal/meancerHcal,nescinttothcal/meanscinHcal);  
-
-
+      eheest->Fill((eesumcrystal+eesumfiber*hcalSampf)/beamE);
+      ehcEcalNsNc->Fill(nescinttotecal/meanscinEcal,necertotecal/meancerEcal);  
+      ehcHcalNsNc->Fill(nescinttothcal/meanscinHcal,necertothcal/meancerHcal);  
 
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber+eesumabs+eesumPDh+eesumedge;
@@ -290,16 +308,16 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
     
       phcEcalE->Fill(pesumcrystal/beamE);
-      phcHcalE->Fill(pesumfiber*hcalcalib/beamE);
+      phcHcalE->Fill(pesumfiber*hcalSampf/beamE);
       phcEdgeE->Fill(pesumedge/beamE);
       phcEcalncer->Fill(npcertotecal/meancerEcal);
       phcHcalncer->Fill(npcertothcal/meancerHcal);
       phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
       phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
       if(pesumfiber>0) phaphcal->Fill(pesumfiber/(pesumabs+pesumfiber));
-      pheest->Fill((pesumcrystal+pesumfiber*hcalcalib)/beamE);
-      phcEcalNsNc->Fill(npcertotecal/meancerEcal,npscinttotecal/meanscinEcal);  
-      phcHcalNsNc->Fill(npcertothcal/meancerHcal,npscinttothcal/meanscinHcal);  
+      pheest->Fill((pesumcrystal+pesumfiber*hcalSampf)/beamE);
+      phcEcalNsNc->Fill(npscinttotecal/meanscinEcal,npcertotecal/meancerEcal);  
+      phcHcalNsNc->Fill(npscinttothcal/meanscinHcal,npcertothcal/meancerHcal);  
 
 
 
@@ -339,13 +357,78 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
 
   //  float amean = hceest->GetMean();
 
+
+
+
+
+  //** fits
+  TF1 *gEcale = new TF1("gEcale","pol1",0.,1.);
+  TF1 *gHcale = new TF1("gHcale","pol1",0.,1.);
+  TF1 *gEcalp = new TF1("gEcalp","pol1",0.,1.);
+  TF1 *gHcalp = new TF1("gHcalp","pol1",0.,1.);
+
+
+      // fit to get e/h
+  TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
+  ehcEcalNsNc_pfx->Fit("gEcale","W");
+  TProfile* ehcHcalNsNc_pfx = ehcHcalNsNc->ProfileX();
+  ehcHcalNsNc_pfx->Fit("gHcale","W");
+
+
+  TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
+  phcEcalNsNc_pfx->Fit("gEcalp","W");
+  float b1Ecal=gEcalp->GetParameter(0);
+  float m1Ecal=gEcalp->GetParameter(1);
+  std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
+  double eohSEcal = EOVERH(b1Ecal,m1Ecal);
+  double eohCEcal = 1/(1-(1-(1/eohSEcal))*m1Ecal);
+  std::cout<<"Ecal eohS eohC are "<<eohSEcal<<" "<<eohCEcal<<std::endl;
+  double kappaEcal = (1-eohSEcal)/(1-eohCEcal);
+
+
+  TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
+  phcEcalNsNc_pfx->Fit("gHcalp","W");
+  float b1Hcal=gHcalp->GetParameter(0);
+  float m1Hcal=gHcalp->GetParameter(1);
+  std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
+  double eohSHcal = EOVERH(b1Ecal,m1Ecal);
+  double eohCHcal = 1/(1-(1-(1/eohSHcal))*m1Hcal);
+  std::cout<<"Hcal eohS eohC are "<<eohSHcal<<" "<<eohCHcal<<std::endl;
+  double kappaHcal = (1-eohSHcal)/(1-eohCHcal);
+
+      
+  // no calculate with dual readout correction  
+
+
+
+
+  if(num_evt>0) {  
+    for(int ievt=0;ievt<num_evt; ++ievt) {
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
+
+      float EcorEcal(0),EcorHcal(0);
+
+      std::cout<<" meanscinEcal is "<<meanscinEcal<<std::endl;
+      getStuffDualCorr(kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal, ievt, doecal, dohcal, b_ecal, b_hcal, EcorEcal, EcorHcal);
+
+      phcEcalcorr->Fill(EcorEcal);
+      phcHcalcorr->Fill(EcorHcal);
+
+
+
+    }  //end loop over events
+  }  // end if no events
+
+
+
+  // close pion file
   pif->Close();
 
 
   //***********************************************************************************************************************
 
   TCanvas* c1;
-  SCEDraw1(c1,"c1",phetrue,"junk1.png");
+  SCEDraw2(c1,"c1",ehetrue,phetrue,"junk1.png");
 
   TCanvas* c2;
   SCEDraw2(c2,"c2",ehcEcalE,phcEcalE,"junk2.png");
@@ -355,7 +438,7 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   SCEDraw2(c3,"c3",ehcEcalncer,ehcEcalnscint,"junk3.png");
 
   TCanvas* c4;
-  SCEDraw2(c4,"c4",phcEcalncer,phcEcalnscint,"junk4.png");
+  SCEDraw3(c4,"c4",phcEcalncer,phcEcalnscint,phcEcalcorr,"junk4.png");
 
 
   TCanvas* c5;
@@ -366,6 +449,11 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   TCanvas* c6;
   SCEDraw1_2D(c6,"c6",phcEcalNsNc,"junk6.png");
 
+  std::cout<<"haha0"<<std::endl;
+  //TCanvas* c7;
+  //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
+
+  std::cout<<"haha1"<<std::endl;
 
   //***********************************************************************************************************
 
@@ -380,11 +468,20 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
   ehcEdgeE->Write();
   phcEdgeE->Write();
 
+  std::cout<<"haha2"<<std::endl;;
+
    ehcEcalncer->Write();
    phcEcalncer->Write();
 
    ehcHcalncer->Write();
    phcHcalncer->Write();
+
+   ehcEcalcorr->Write();
+   phcEcalcorr->Write();
+
+   ehcHcalcorr->Write();
+   phcHcalcorr->Write();
+
 
   ehecal2d->Write();
   phecal2d->Write();
@@ -425,6 +522,12 @@ void crystalana(int num_evtsmax, const char* einputfilename, const char* piinput
    ehcHcalNsNc->Write();
    phcHcalNsNc->Write();
 
+   //ehcEcalNsNc_pfx->Write();
+   //ehcHcalNsNc_pfx->Write();
+   //phcEcalNsNc_pfx->Write();
+   //phcHcalNsNc_pfx->Write();
+
+
 
   out->Close();
 
@@ -447,6 +550,35 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile) {
   h1->SetLineWidth(3);
   h1->SetStats(111111);  
   h1->Draw("HIST");
+
+
+
+  canv->Print(outfile,".png");
+
+  return;
+}
+
+void SCEDrawp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfile) {
+
+  canv= new TCanvas(name,name,200,10,700,500);
+
+
+  //canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+
+  h1->SetLineColor(3);
+  h1->SetLineWidth(3);
+  h1->SetStats(111111);  
+  h1->SetMarkerSize(20);
+  h1->SetMarkerStyle(4);
+  h1->SetMarkerColor(3);
+  gStyle->SetOptFit();
+  h1->Draw("*");
 
 
 
@@ -518,6 +650,52 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 
   return;
 }
+
+
+void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile) {
+
+  canv= new TCanvas(name,name,200,10,700,500);
+
+
+  //canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+
+
+  float max = std::max(h1->GetMaximum(),h2->GetMaximum());
+  h1->SetMaximum(max*1.3);
+
+
+
+  h1->SetLineColor(3);
+  h1->SetLineWidth(3);
+  h1->SetStats(111111);  
+  h1->Draw("HIST");
+
+
+
+  h2->SetLineColor(2);
+  h2->SetLineWidth(3);
+  h2->SetStats(111111);  
+  h2->Draw("HIST same");
+
+
+
+  h3->SetLineColor(4);
+  h3->SetLineWidth(3);
+  h3->SetStats(111111);  
+  h3->Draw("HIST same");
+
+
+  canv->Print(outfile,".png");
+
+  return;
+}
+
 
 void getMeanPhot(int ievt, bool doecal, bool dohcal, TBranch* b_ecal,TBranch* b_hcal,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal){
   int nbyteecal, nbytehcal, nbyteedge;
@@ -679,4 +857,84 @@ void getStuff(int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TB
       }
 
 
+}
+
+
+void getStuffDualCorr(float kappaEcal, float kappaHcal,float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal,TBranch* b_ecal,TBranch* b_hcal, float &EEcal,float &EHcal)
+{
+  int necertotecal,nescinttotecal,necertothcal,nescinttothcal;
+  int nbyteecal, nbytehcal, nbyteedge;
+
+  CalHits* ecalhits = new CalHits();
+  if(doecal) b_ecal->SetAddress(&ecalhits);
+  CalHits* hcalhits = new CalHits();
+  if(dohcal) b_hcal->SetAddress(&hcalhits);
+
+  std::cout<<" getstuff meanscinEcal is "<<meanscinEcal<<std::endl;
+
+
+  if(doecal) {
+    nbyteecal = b_ecal->GetEntry(ievt);
+
+      // ecal hits
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+    for(size_t i=0;i<ecalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+
+	necertotecal+=aecalhit->ncerenkov;
+	nescinttotecal+=aecalhit->nscintillator;
+
+      }  // end loop over ecal hits
+    std::cout<<"  getstuffdual cer scint count "<<necertotecal<<" "<<nescinttotecal<<std::endl;
+    float anecertotecal=necertotecal/meancerEcal;
+    float anescinttotecal=nescinttotecal/meanscinEcal;
+    std::cout<<"  getstuffdual cer scint count "<<anecertotecal<<" "<<anescinttotecal<<std::endl;
+    EEcal=(anescinttotecal-kappaEcal*anecertotecal)/(1-kappaEcal);
+  }
+
+  if(dohcal) {
+    nbytehcal = b_hcal->GetEntry(ievt);
+
+
+      // hcal hits
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+    for(size_t i=0;i<hcalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
+
+	necertothcal+=ahcalhit->ncerenkov;
+	nescinttothcal+=ahcalhit->nscintillator;
+
+    }  // end loop over hcal hits
+    float anecertothcal=necertothcal/meancerHcal;
+    float anescinttothcal=nescinttothcal/meanscinHcal;
+    EHcal=(anescinttothcal-kappaHcal*anecertothcal)/(1-kappaHcal);
+  }
+  
+  std::cout<<"getstuffdual outputing ecal hcal "<<EEcal<<" "<<EHcal<<std::endl;
+
+}
+
+
+double EOVERH(double b,double m) {
+  std::cout<<"in EOVERH"<<std::endl;
+ std:cout<<" in;puts are b m "<<b<<" "<<m<<std::endl;
+
+  double eoh=1.;
+  double A = m;
+  double B=-2.*m;
+  double C= m-1-(b/m);
+  double rt=B*B-4*A*C;
+  double s1(0),s2(0);
+  if(rt>0) {
+    rt=sqrt(rt);
+    s1=(-B+rt)/2/A;
+    s2=(-B-rt)/2/A;
+  }
+  else{std::cout<<"bad quad A B C rt are "<<A<<" "<<B<<" "<<C<<" "<<rt<<std::endl;}
+  std::cout<<"s1 s2 are "<<s1<<" "<<s2<<std::endl;
+  
+  eoh=1/s1;
+  std::cout<<"choosing larger one so invert is less than one "<<eoh<<std::endl;
+
+  return eoh;
 }
