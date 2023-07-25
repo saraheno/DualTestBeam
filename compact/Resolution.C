@@ -37,6 +37,12 @@ int SCECOUNT=5;
 //  this must be changed whenever you change the hcalgeometry
 
 
+  typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
+  typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
+  typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
+  typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
+
+
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile);
 void SCEDrawp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
 void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile);
@@ -44,20 +50,21 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile);
 
 
-void getStuff(map<string, int> mapecalslice, int gendet, int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
+void getStuff(map<string, int> mapecalslice, int gendet, int ievt, bool doecal, bool dohcal, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
+	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
+float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
 
 
-void getStuffDualCorr(map<string, int> mapecalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, TBranch* b_ecal,TBranch* b_hcal, float &EEcal, float &EHcal);
+void getStuffDualCorr(map<string, int> mapecalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, TBranch* &b_ecal,TBranch* &b_hcal, 
+		      CalHits* &ecalhits, CalHits* &hcalhits,
+float &EEcal, float &EHcal);
 
-void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal,TBranch* b_ecal,TBranch* b_hcal,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
+void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal,TBranch* &b_ecal,TBranch* &b_hcal,
+	      CalHits* &ecalhits, CalHits* &hcalhits, 
+float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
 
 double EOVERH(double b, double m);
 
-
-  typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
-  typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
-  typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
-  typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
 
 
 
@@ -176,6 +183,9 @@ mapecalslice["PD2"]=3;
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
+
+
+
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<"num_evt for electron file is  "<<num_evt<<std::endl;
@@ -188,12 +198,18 @@ mapecalslice["PD2"]=3;
   
   if(num_evt>0) {  
 
+    CalHits* ecalhits = new CalHits();
+    if(doecal) b_ecal->SetAddress(&ecalhits);
+    CalHits* hcalhits = new CalHits();
+    if(dohcal) b_hcal->SetAddress(&hcalhits);
+    CalHits* edgehits = new CalHits();
+    if(doedge) b_edge->SetAddress(&edgehits);
 
     // first pass through file
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number first pass is "<<ievt<<std::endl;
-      getMeanPhot(mapecalslice, gendet, ievt, doecal, dohcal, b_ecal,b_hcal, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
+      getMeanPhot(mapecalslice, gendet, ievt, doecal, dohcal, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
     }
     meanscinEcal=meanscinEcal/num_evt;
     meanscinHcal=meanscinHcal/num_evt;
@@ -225,7 +241,7 @@ mapecalslice["PD2"]=3;
       int necertothcal=0;
       int nescinttothcal=0;
 
-      getStuff(mapecalslice,  gendet, ievt, doecal, dohcal, doedge, b_ecal,b_hcal,b_edge,eesum,eesumair,eesumcrystal,eesumPDe,eesumfiber,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal);
+      getStuff(mapecalslice,  gendet, ievt, doecal, dohcal, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumcrystal,eesumPDe,eesumfiber,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal);
 
     
       ehcEcalE->Fill(eesumcrystal/beamE);
@@ -286,6 +302,9 @@ mapecalslice["PD2"]=3;
   TTree* pit = (TTree*)pif->Get("EVENT;1");
 
   b_mc= pit->GetBranch("MCParticles");
+  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
+  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
+  if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
   ihaha = b_mc->GetEntries();
@@ -297,9 +316,13 @@ mapecalslice["PD2"]=3;
   if(num_evt>0) {  
 
 
-  if(doecal) b_ecal = pit->GetBranch("DRCNoSegment");
-  if(dohcal) b_hcal = pit->GetBranch("DRFNoSegment");
-  if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
+    CalHits* ecalhits = new CalHits();
+    if(doecal) b_ecal->SetAddress(&ecalhits);
+    CalHits* hcalhits = new CalHits();
+    if(dohcal) b_hcal->SetAddress(&hcalhits);
+    CalHits* edgehits = new CalHits();
+    if(doedge) b_edge->SetAddress(&edgehits);
+
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
@@ -319,7 +342,7 @@ mapecalslice["PD2"]=3;
       int npcertothcal=0;
       int npscinttothcal=0;
 
-      getStuff(mapecalslice,  gendet, ievt, doecal, dohcal, doedge, b_ecal,b_hcal,b_edge,pesum,pesumair,pesumcrystal,pesumPDe,pesumfiber,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal);
+      getStuff(mapecalslice,  gendet, ievt, doecal, dohcal, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumcrystal,pesumPDe,pesumfiber,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal);
 
     
       phcEcalE->Fill(pesumcrystal/beamE);
@@ -418,10 +441,13 @@ mapecalslice["PD2"]=3;
 
 
   if(num_evt>0) {  
+    CalHits* ecalhits = new CalHits();
+    if(doecal) b_ecal->SetAddress(&ecalhits);
+    CalHits* hcalhits = new CalHits();
+    if(dohcal) b_hcal->SetAddress(&hcalhits);
+    CalHits* edgehits = new CalHits();
+    if(doedge) b_edge->SetAddress(&edgehits);
 
-  if(doecal) b_ecal = pit->GetBranch("DRCNoSegment");
-  if(dohcal) b_hcal = pit->GetBranch("DRFNoSegment");
-  if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
@@ -429,7 +455,7 @@ mapecalslice["PD2"]=3;
       float EcorEcal(0),EcorHcal(0);
 
       std::cout<<" meanscinEcal is "<<meanscinEcal<<std::endl;
-      getStuffDualCorr(mapecalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, b_ecal,b_hcal, EcorEcal, EcorHcal);
+      getStuffDualCorr(mapecalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal);
 
       phcEcalcorr->Fill(EcorEcal);
       phcHcalcorr->Fill(EcorHcal);
@@ -717,14 +743,12 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 }
 
 
-void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal, TBranch* b_ecal,TBranch* b_hcal,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal){
+void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal, TBranch* &b_ecal,TBranch* &b_hcal,
+	      CalHits* &ecalhits, CalHits* &hcalhits, 
+float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal){
   int nbyteecal, nbytehcal, nbyteedge;
 
-  CalHits* ecalhits = new CalHits();
-  if(doecal) b_ecal->SetAddress(&ecalhits);
-  CalHits* hcalhits = new CalHits();
-  if(dohcal) b_hcal->SetAddress(&hcalhits);
-  CalHits* edgehits = new CalHits();
+
   
 
   if(doecal) {
@@ -811,25 +835,24 @@ void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doec
     }  // end loop over hcal hits
   }
 
+
+
+
 }
 
 
 
 
 
-void getStuff(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal, bool doedge,TBranch* b_ecal,TBranch* b_hcal,TBranch*  b_edge,float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal){
+void getStuff(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal, bool dohcal, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
+	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
+float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal){
 
 
     if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
 
   int nbyteecal, nbytehcal, nbyteedge;
 
-    CalHits* ecalhits = new CalHits();
-    if(doecal) b_ecal->SetAddress(&ecalhits);
-    CalHits* hcalhits = new CalHits();
-    if(dohcal) b_hcal->SetAddress(&hcalhits);
-    CalHits* edgehits = new CalHits();
-    if(doedge) b_edge->SetAddress(&edgehits);
 
 
       if(doecal) {
@@ -937,21 +960,20 @@ void getStuff(map<string, int> mapecalslice,  int gendet, int ievt, bool doecal,
       }
 
 
+
+
 }
 
 
-void getStuffDualCorr(map<string, int> mapecalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, TBranch* b_ecal,TBranch* b_hcal, float &EEcal, float &EHcal)
+void getStuffDualCorr(map<string, int> mapecalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, TBranch* &b_ecal,TBranch* &b_hcal, 
+	      CalHits* &ecalhits, CalHits* &hcalhits, 
+float &EEcal, float &EHcal)
 {
   int necertotecal(0),nescinttotecal(0),necertothcal(0),nescinttothcal(0);
   int nbyteecal, nbytehcal, nbyteedge;
 
   std::cout<<" getstuff meanscinEcal is "<<meanscinEcal<<std::endl;
   if(ievt<SCECOUNT) std::cout<<"getstuffdualcorr phot ievt is "<<ievt<<std::endl;
-
-  CalHits* ecalhits = new CalHits();
-  if(doecal) b_ecal->SetAddress(&ecalhits);
-  CalHits* hcalhits = new CalHits();
-  if(dohcal) b_hcal->SetAddress(&hcalhits);
 
 
   if(doecal) {
@@ -1056,6 +1078,11 @@ void getStuffDualCorr(map<string, int> mapecalslice, int gendet, float kappaEcal
 
   
   std::cout<<"getstuffdual outputing ecal hcal "<<EEcal<<" "<<EHcal<<std::endl;
+
+
+
+
+
 
 }
 
