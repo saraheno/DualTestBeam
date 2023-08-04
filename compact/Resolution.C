@@ -45,7 +45,7 @@ int SCECOUNT=5;
 
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile);
 void SCEDrawp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
-void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile);
+void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile,float eohS,float eohC);
 void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char* outfile);
 void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile);
 
@@ -418,10 +418,11 @@ mapecalslice["PD2"]=3;
   float b1Ecal=gEcalp->GetParameter(0);
   float m1Ecal=gEcalp->GetParameter(1);
   std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-  double eohSEcal = EOVERH(b1Ecal,m1Ecal);
-  double eohCEcal = 1/(1-(1-(1/eohSEcal))*m1Ecal);
-  std::cout<<"Ecal eohS eohC are "<<eohSEcal<<" "<<eohCEcal<<std::endl;
-  double kappaEcal = (1-eohSEcal)/(1-eohCEcal);
+  //double eohSEcal = EOVERH(b1Ecal,m1Ecal);
+  //double eohCEcal = 1/(1-(1-(1/eohSEcal))*m1Ecal);
+  //std::cout<<"Ecal eohS eohC are "<<eohSEcal<<" "<<eohCEcal<<std::endl;
+  double kappaEcal = 1+(b1Ecal/m1Ecal);
+  std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
 
   TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
@@ -429,10 +430,11 @@ mapecalslice["PD2"]=3;
   float b1Hcal=gHcalp->GetParameter(0);
   float m1Hcal=gHcalp->GetParameter(1);
   std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
-  double eohSHcal = EOVERH(b1Ecal,m1Ecal);
-  double eohCHcal = 1/(1-(1-(1/eohSHcal))*m1Hcal);
-  std::cout<<"Hcal eohS eohC are "<<eohSHcal<<" "<<eohCHcal<<std::endl;
-  double kappaHcal = (1-eohSHcal)/(1-eohCHcal);
+  //double eohSHcal = EOVERH(b1Ecal,m1Ecal);
+  //double eohCHcal = 1/(1-(1-(1/eohSHcal))*m1Hcal);
+  //std::cout<<"Hcal eohS eohC are "<<eohSHcal<<" "<<eohCHcal<<std::endl;
+  double kappaHcal = 1+(b1Hcal/m1Hcal);
+  std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
 
       
   // no calculate with dual readout correction  
@@ -488,12 +490,12 @@ mapecalslice["PD2"]=3;
 
 
   TCanvas* c5;
-  SCEDraw1_2D(c5,"c5",ehcEcalNsNc,"junk5.png");
+  SCEDraw1_2D(c5,"c5",ehcEcalNsNc,"junk5.png",0.,0.);
 
 
 
   TCanvas* c6;
-  SCEDraw1_2D(c6,"c6",phcEcalNsNc,"junk6.png");
+  SCEDraw1_2D(c6,"c6",phcEcalNsNc,"junk6.png",-b1Ecal/m1Ecal,0.);
 
   std::cout<<"haha0"<<std::endl;
   //TCanvas* c7;
@@ -634,7 +636,7 @@ void SCEDrawp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfil
 }
 
 
-void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile) {
+void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile, float eohS, float eohC) {
 
   canv= new TCanvas(name,name,200,10,700,500);
 
@@ -652,6 +654,10 @@ void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile
   h1->SetStats(111111);  
   h1->Draw("");
 
+  TLine line = TLine(eohS,eohC,1.,1.);
+  line.SetLineColor(kYellow);
+  line.SetLineWidth(2);
+  line.Draw("same");
 
 
   canv->Print(outfile,".png");
