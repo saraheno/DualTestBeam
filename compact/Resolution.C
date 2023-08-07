@@ -63,7 +63,7 @@ void getMeanPhot(map<string, int> mapecalslice,  int gendet, int ievt, bool doec
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
 
-double EOVERH(double b, double m);
+
 
 
 
@@ -418,9 +418,6 @@ mapecalslice["PD2"]=3;
   float b1Ecal=gEcalp->GetParameter(0);
   float m1Ecal=gEcalp->GetParameter(1);
   std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-  //double eohSEcal = EOVERH(b1Ecal,m1Ecal);
-  //double eohCEcal = 1/(1-(1-(1/eohSEcal))*m1Ecal);
-  //std::cout<<"Ecal eohS eohC are "<<eohSEcal<<" "<<eohCEcal<<std::endl;
   double kappaEcal = 1+(b1Ecal/m1Ecal);
   std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
@@ -430,9 +427,6 @@ mapecalslice["PD2"]=3;
   float b1Hcal=gHcalp->GetParameter(0);
   float m1Hcal=gHcalp->GetParameter(1);
   std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
-  //double eohSHcal = EOVERH(b1Ecal,m1Ecal);
-  //double eohCHcal = 1/(1-(1-(1/eohSHcal))*m1Hcal);
-  //std::cout<<"Hcal eohS eohC are "<<eohSHcal<<" "<<eohCHcal<<std::endl;
   double kappaHcal = 1+(b1Hcal/m1Hcal);
   std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
 
@@ -1093,26 +1087,3 @@ float &EEcal, float &EHcal)
 }
 
 
-double EOVERH(double b,double m) {
-  std::cout<<"in EOVERH"<<std::endl;
- std:cout<<" in;puts are b m "<<b<<" "<<m<<std::endl;
-
-  double eoh=1.;
-  double A = m;
-  double B=-2.*m;
-  double C= m-1-(b/m);
-  double rt=B*B-4*A*C;
-  double s1(0),s2(0);
-  if(rt>0) {
-    rt=sqrt(rt);
-    s1=(-B+rt)/2/A;
-    s2=(-B-rt)/2/A;
-  }
-  else{std::cout<<"bad quad A B C rt are "<<A<<" "<<B<<" "<<C<<" "<<rt<<std::endl;}
-  std::cout<<"s1 s2 are "<<s1<<" "<<s2<<std::endl;
-  
-  eoh=1/s1;
-  std::cout<<"choosing larger one so invert is less than one "<<eoh<<std::endl;
-
-  return eoh;
-}
