@@ -824,7 +824,7 @@
       <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
       <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
-      <constant name="SCINTILLATIONYIELD1" value="0.3"/>
+      <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fract in component 1 -->
   </material>
 
   <material name="DR_Polystyrene">
@@ -835,6 +835,7 @@
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PS"/>
 <!-- set low because impossibly long at correct yield -->
+<!--      <constant name="SCINTILLATIONYIELD" value="50/MeV"/> -->
       <constant name="SCINTILLATIONYIELD" value="8/MeV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
@@ -883,7 +884,7 @@
 
   
   <define>
-    <include ref="SCEPCALConstants_hugeECAL.xml"/>
+    <include ref="SCEPCALConstants.xml"/>
   </define>
 
 <limits>
@@ -904,21 +905,22 @@
   </display>
 
 
-
 <comment> some generic readouts </comment>
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id>
-<!--      <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id> -->
- </readout>
+</readout>
 <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:3,ix:-9,iy:-9,fiber:2,abs:2,phdet:2</id>
 </readout>
+ <readout name="DRSNoSegment">
+      <segmentation type="NoSegmentation"/>
+      <id>system:3,ix:-7,iy:-7,slice:6,layer:6</id>
+</readout>
 
-  </readouts>
-
+ </readouts>
 
 
 
@@ -929,9 +931,8 @@
 
 
   <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_ECAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
-
+  <include ref="SCEPCAL_HCALSamp.xml"/>
+  <include ref="SCEPCAL_BOUND.xml"/> 
 
 
 

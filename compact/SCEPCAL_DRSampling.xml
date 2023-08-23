@@ -42,7 +42,7 @@ the assembled tower is a Stave
 
  <staves vis="InvisibleWithDaughters"/>
 <layer repeat="DRSampNlayer" vis="InvisibleWithDaughters">
-      <slice material = "Copper" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
+      <slice material = "Iron" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
       <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
       <slice material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
       <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 

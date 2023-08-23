@@ -6,25 +6,25 @@
  
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength" value="20.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
+    <constant name="DRcrystallength" value="400.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
     <constant name="DRcrystalNsize" value="45"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
-    <constant name="EcalHcalgap" value="0.1*cm"/> <!-- should be small 0.1 mm -->
+    <constant name="EcalHcalgap" value="1*cm"/> <!-- should be small 0.1 mm -->
 
 
 <!-- constants for dual readout spagetti fiber hcal calorimeter -->
-    <constant name="DRFiberAbswidth" value=".22*cm"/>  <!-- should be 2.2 mm -->
+    <constant name="DRFiberAbswidth" value=".22*cm"/>  <!-- should be 2.2 -->
     <constant name="DRFiberlength" value="130*cm"/>   <!-- should be 130 cm -->
     <constant name="DRFiberNsize" value="136"/>        <!-- should be 30 -->
 
 <!-- constants for dual readout sampling hcal calorimeter -->
-    <constant name="DRSampAthick" value="18.*mm"/> 
+    <constant name="DRSampAthick" value="5.*mm"/> 
     <constant name="DRSampSthick" value="5.*mm"/> 
     <constant name="DRSampQthick" value="5.*mm"/> 
     <constant name="DRSampxy" value="20.*mm"/> 
     <constant name="DRSampNsize" value="5"/>        
-    <constant name="DRSampNlayer" value="40"/>
+    <constant name="DRSampNlayer" value="20"/>
 
 <!-- detector numbering scheme -->
     
@@ -33,7 +33,7 @@
     <constant name="EdgeDet_ID" value="4"/>
 
 
-    <constant name="killthick" value="0.1*cm"/>
+    <constant name="killthick" value="0.2"/>
     <constant name="edgeoffset" value="10*cm"/>
 
 
