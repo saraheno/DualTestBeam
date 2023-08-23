@@ -1,5 +1,5 @@
 universe = vanilla
-Executable = condor-executable-fonly-20.sh
+Executable = condor-executable-conly-20.sh
 should_transfer_files = NO
 Requirements = TARGET.FileSystemDomain == "privnet"
 Output = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/sce_20-$(cluster)_$(process).stdout
