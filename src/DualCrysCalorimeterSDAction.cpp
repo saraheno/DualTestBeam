@@ -12,8 +12,10 @@
 //==========================================================================
 
 // Framework include files
+
 #include <CLHEP/Units/PhysicalConstants.h>
 #include "DualCrysCalorimeterHit.h"
+#include "DDG4/EventParameters.h"
 #include "DDG4/Geant4SensDetAction.inl"
 #include "DDG4/Factories.h"
 #include "DD4hep/InstanceCount.h"
@@ -25,6 +27,7 @@
 double dialCher= 0.00001;
 double dialScint=0.00001;
 int printlimitSCE=100;
+int MAXEVENT=200;
 
 // this doesn't work.  it is in mks
 //double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
@@ -44,6 +47,8 @@ namespace CalVision {
 
   int SCECOUNT=0;
   int SCECOUNT2=0;
+  int OLDEVENTNUMBER=0;
+
 
   class DualCrysCalorimeterSD {
   public:
@@ -79,6 +84,23 @@ namespace dd4hep {
 
     /// Method for generating hit(s) using the information of G4Step object.
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
+
+
+      Geant4Event&  evt = context()->event();
+
+      EventParameters* parameters = context()->event().extension<EventParameters>(false);
+      int eventNumber = parameters->eventNumber();
+      if(eventNumber != OLDEVENTNUMBER) {
+	if(eventNumber<MAXEVENT) {
+        OLDEVENTNUMBER=eventNumber;
+        SCECOUNT=0;
+        SCECOUNT2=0;
+	}
+      }
+
+
+
+      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
 
 
       if(SCECOUNT==1) {
@@ -246,7 +268,7 @@ namespace dd4hep {
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
 	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 
-	      Geant4Event&  evt = context()->event();
+	      //Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
 	    }
@@ -288,7 +310,7 @@ namespace dd4hep {
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 
-	      Geant4Event&  evt = context()->event();
+		//Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
 	    }

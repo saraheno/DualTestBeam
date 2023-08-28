@@ -68,7 +68,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 
 
 
-void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamEE, bool doecal, bool dohcal, bool doedge, int gendet, const char* outputfilename) {
+void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamEE, bool doecal, bool dohcal, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
 
 
 map<string, int> mapecalslice; 
@@ -178,8 +178,10 @@ mapecalslice["PD2"]=3;
   TTree* et = (TTree*)ef->Get("EVENT;1");
 
   b_mc= et->GetBranch("MCParticles");
-  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
-  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
+  //  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
+  //  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
+  if(doecal) b_ecal = et->GetBranch(ECALleaf);
+  if(dohcal) b_hcal = et->GetBranch(HCALleaf);
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
@@ -302,8 +304,8 @@ mapecalslice["PD2"]=3;
   TTree* pit = (TTree*)pif->Get("EVENT;1");
 
   b_mc= pit->GetBranch("MCParticles");
-  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
-  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
+  if(doecal) b_ecal = et->GetBranch(ECALleaf);
+  if(dohcal) b_hcal = et->GetBranch(HCALleaf);
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
@@ -882,14 +884,15 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
       map<string,int>::iterator ii3 = mapecalslice.find("PD2");
 
 
-	
-	if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
+      	
+      if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
 	if(islice>nsliceecal) {
 	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
 	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
 	} else {
 	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 	}
+      
 
 	float ae=aecalhit->energyDeposit;
 	eesum+=ae;
