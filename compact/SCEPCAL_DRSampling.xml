@@ -46,6 +46,7 @@ the assembled tower is a Stave
       <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
       <slice material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
       <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
       <slice material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
       <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
 </layer>

@@ -241,14 +241,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   //  quartz
   PlacedVolume fiber2_phv = tower2Vol.placeVolume( fiber2Vol, tra3);
-  fiber2_phv.addPhysVolID("fiber",1);
+  fiber2_phv.addPhysVolID("fiber",2);
   fiber2_phv.addPhysVolID("abs",0);
   fiber2_phv.addPhysVolID("phdet",0);
   fiber2_det.setPlacement(fiber2_phv);
   PlacedVolume photod2_phv = tower2Vol.placeVolume( photod2Vol, tra4);
   photod2_phv.addPhysVolID("fiber",0);
   photod2_phv.addPhysVolID("abs",0);
-  photod2_phv.addPhysVolID("phdet",1);
+  photod2_phv.addPhysVolID("phdet",2);
   photod2_det.setPlacement(photod2_phv);
   PlacedVolume abs2_phv = tower2Vol.placeVolume( absVol, tra);
   abs2_phv.addPhysVolID("fiber",0);

@@ -20,6 +20,7 @@
 #include "DDG4/Factories.h"
 #include "DD4hep/InstanceCount.h"
 #include "DDG4/Geant4Random.h"
+#include <G4Event.hh>
 
 
 // way too slow if track all photons for now
@@ -47,7 +48,7 @@ namespace CalVision {
 
   int SCECOUNT=0;
   int SCECOUNT2=0;
-  int OLDEVENTNUMBER=0;
+  int OLDEVENTNUMBER=-1;
 
 
   class DualCrysCalorimeterSD {
@@ -86,12 +87,17 @@ namespace dd4hep {
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
 
 
+
       Geant4Event&  evt = context()->event();
 
-      EventParameters* parameters = context()->event().extension<EventParameters>(false);
-      int eventNumber = parameters->eventNumber();
+
+
+      int eventNumber = static_cast<G4Event const&>(context()->event()).GetEventID();
+
+
       if(eventNumber != OLDEVENTNUMBER) {
 	if(eventNumber<MAXEVENT) {
+        std::cout<<" SDAction event number is "<<eventNumber<<std::endl;
         OLDEVENTNUMBER=eventNumber;
         SCECOUNT=0;
         SCECOUNT2=0;
@@ -100,7 +106,7 @@ namespace dd4hep {
 
 
 
-      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
+      //      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
 
 
       if(SCECOUNT==1) {
