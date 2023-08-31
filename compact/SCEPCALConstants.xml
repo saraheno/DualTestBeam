@@ -23,8 +23,8 @@
     <constant name="DRSampSthick" value="5.*mm"/> 
     <constant name="DRSampQthick" value="5.*mm"/> 
     <constant name="DRSampxy" value="20.*mm"/> 
-    <constant name="DRSampNsize" value="5"/>        
-    <constant name="DRSampNlayer" value="40"/>
+    <constant name="DRSampNsize" value="5"/>        <!-- should be 5 -->
+    <constant name="DRSampNlayer" value="40"/>  <!-- should be 40 -->
 
 <!-- detector numbering scheme -->
     

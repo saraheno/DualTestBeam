@@ -223,7 +223,10 @@ mapsampcalslice["PD4"]=7;
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
+
+
+
+ getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
     }
     meanscinEcal=meanscinEcal/num_evt;
     meanscinHcal=meanscinHcal/num_evt;
@@ -274,7 +277,7 @@ mapsampcalslice["PD4"]=7;
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber+eesumabs+eesumPDh+eesumedge;
       ehetrue->Fill(eachecks/beamE);
 
-
+      std::cout<<"GETSTUFF electrons"<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
       std::cout<<"       in air "<<eesumair/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
@@ -377,7 +380,7 @@ mapsampcalslice["PD4"]=7;
       float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber+pesumabs+pesumPDh+pesumedge;
       phetrue->Fill(pachecks/beamE);
 
-
+      std::cout<<"GETSTUFF pions"<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<pesum/1000.<<std::endl;
       std::cout<<"       in air "<<pesumair/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
@@ -411,7 +414,7 @@ mapsampcalslice["PD4"]=7;
 
 
 
-
+  std::cout<<" starting fits"<<std::endl;
 
   //** fits
   TF1 *gEcale = new TF1("gEcale","pol1",0.,1.);
@@ -421,28 +424,37 @@ mapsampcalslice["PD4"]=7;
 
 
       // fit to get e/h
-  TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
-  ehcEcalNsNc_pfx->Fit("gEcale","W");
-  TProfile* ehcHcalNsNc_pfx = ehcHcalNsNc->ProfileX();
-  ehcHcalNsNc_pfx->Fit("gHcale","W");
+  if(doecal) {
+    TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
+    ehcEcalNsNc_pfx->Fit("gEcale","W");
+  }
+  if(dohcal) {
+    TProfile* ehcHcalNsNc_pfx = ehcHcalNsNc->ProfileX();
+    ehcHcalNsNc_pfx->Fit("gHcale","W");
+  }
 
 
-  TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
-  phcEcalNsNc_pfx->Fit("gEcalp","W");
-  float b1Ecal=gEcalp->GetParameter(0);
-  float m1Ecal=gEcalp->GetParameter(1);
-  std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-  double kappaEcal = 1+(b1Ecal/m1Ecal);
-  std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
+  float b1Ecal=0.;float m1Ecal=1.;
+  if(doecal) {
+    TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
+    phcEcalNsNc_pfx->Fit("gEcalp","W");
+    b1Ecal=gEcalp->GetParameter(0);
+    m1Ecal=gEcalp->GetParameter(1);
+    std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
+  }
+    double kappaEcal = 1+(b1Ecal/m1Ecal);
+    std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
-
-  TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
-  phcEcalNsNc_pfx->Fit("gHcalp","W");
-  float b1Hcal=gHcalp->GetParameter(0);
-  float m1Hcal=gHcalp->GetParameter(1);
-  std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
-  double kappaHcal = 1+(b1Hcal/m1Hcal);
-  std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
+    float b1Hcal=0.; float m1Hcal=1.;
+  if(dohcal) {
+    TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
+    phcHcalNsNc_pfx->Fit("gHcalp","W");
+    b1Hcal=gHcalp->GetParameter(0);
+    m1Hcal=gHcalp->GetParameter(1);
+    std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
+  }
+    double kappaHcal = 1+(b1Hcal/m1Hcal);
+    std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
 
       
   // no calculate with dual readout correction  
@@ -464,7 +476,7 @@ mapsampcalslice["PD4"]=7;
 
       float EcorEcal(0),EcorHcal(0);
 
-      std::cout<<" meanscinEcal is "<<meanscinEcal<<std::endl;
+
       getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal);
 
       phcEcalcorr->Fill(EcorEcal);
@@ -827,17 +839,17 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
     
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
-    if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
+    //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
       int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0xFF;   // is this right?
-	if(ix>128) ix=ix-256;
-	int iy =(ihitchan >>11) & 0xFF;   // is this right?
-	if(iy>128) iy=iy-256;
+	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
+	if(ix>255) ix=ix-512;
+	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
+	if(iy>255) iy=iy-512;
 	int ifiber  =(ihitchan >>21) & 0x03;
 	int iabs=(ihitchan >>23) & 0x03;
 	int iphdet=(ihitchan >>25) & 0x03;
@@ -861,13 +873,13 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
       }
       else {  // sampling
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   // is this right?
-	if(ix>64) ix=ix-64;
-	int iy =(ihitchan >>9) & 0x7F;   // is this right?
-	if(iy>64) iy=iy-64;
-	int islice  =(ihitchan >>15) & 0x3F;
-	int ilayer=(ihitchan >>21) & 0x3F;
-	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	int ix = (ihitchan >>3) & 0x7F;   
+	if(ix>63) {ix=ix-128;} 
+	int iy =(ihitchan >>10) & 0x7F;   
+	if(iy>63) {iy=iy-128;};
+	int islice  =(ihitchan >>17) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3F;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
  
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
 	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
@@ -878,13 +890,15 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
 
 
-	//WHAT GOES HERE????????????????????????????????????????????????????????????????????
+
 	if(gendet==1) {  // take light as generated in fiber
 	  if(islice==(*ii3).second) {
 	    meanscinHcal+=ahcalhit->nscintillator;
+	    //	    std::cout<<"add scint"<<std::endl;
 	  }
 	  if(islice==(*ii6).second) {  // quartz fibers
 	    meancerHcal+=ahcalhit->ncerenkov;
+	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else {
@@ -899,14 +913,9 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 
       }
 
-      
-
-      
 
     }  // end loop over hcal hits
   }
-
-
 
 
 }
@@ -920,31 +929,31 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal){
 
 
-    if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
+  if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
 
   int nbyteecal, nbytehcal, nbyteedge;
 
 
 
-      if(doecal) {
-	nbyteecal = b_ecal->GetEntry(ievt);
+  if(doecal) {
+    nbyteecal = b_ecal->GetEntry(ievt);
 
       // ecal hits
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
-      for(size_t i=0;i<ecalhits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+    for(size_t i=0;i<ecalhits->size(); ++i) {
+      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
-	necertotecal+=aecalhit->ncerenkov;
-	nescinttotecal+=aecalhit->nscintillator;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=aecalhit->cellID;
-        int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x3F ;  // is this right?
-	if(ix>32) ix=ix-64;
-	int iy =(ihitchan >>10) & 0x3F ; // is this right?
-	if(iy>32) iy=iy-64;
-        int  islice = (ihitchan >>17) & 0x07;
-        int  ilayer = (ihitchan>> 20) & 0x07;
+      necertotecal+=aecalhit->ncerenkov;
+      nescinttotecal+=aecalhit->nscintillator;
+      //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
+      int ihitchan=aecalhit->cellID;
+      int idet = (ihitchan) & 0x07;
+      int ix = (ihitchan >>3) & 0x3F ;  // is this right?
+      if(ix>32) ix=ix-64;
+      int iy =(ihitchan >>10) & 0x3F ; // is this right?
+      if(iy>32) iy=iy-64;
+      int  islice = (ihitchan >>17) & 0x07;
+      int  ilayer = (ihitchan>> 20) & 0x07;
 
 
       map<string,int>::iterator ii0 = mapecalslice.find("air");
@@ -952,54 +961,54 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
       map<string,int>::iterator ii2 = mapecalslice.find("PD1");
       map<string,int>::iterator ii3 = mapecalslice.find("PD2");
 
-
       	
       if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
-	if(islice>nsliceecal) {
-	  std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
-	  std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
-	} else {
-	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
-	}
+      if(islice>nsliceecal) {
+	std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
+	std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
+      } else {
+	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+      }
       
 
-	float ae=aecalhit->energyDeposit;
-	eesum+=ae;
-	if(islice==(*ii0).second)eesumair+=ae;
-	if(islice==(*ii1).second)eesumPDe+=ae;
-	if(islice==(*ii2).second)eesumcrystal+=ae;
-	if(islice==(*ii3).second)eesumPDe+=ae;
+      float ae=aecalhit->energyDeposit;
+      eesum+=ae;
+      if(islice==(*ii0).second)eesumair+=ae;
+      if(islice==(*ii1).second)eesumPDe+=ae;
+      if(islice==(*ii2).second)eesumcrystal+=ae;
+      if(islice==(*ii3).second)eesumPDe+=ae;
 
 	//ehchan->Fill(aecalhit->cellID);
 	//ehecal2d->Fill(ix,iy,aecalhit->energyDeposit);
 
 
-      }  // end loop over ecal hits
-      }
+    }  // end loop over ecal hits
+  }
 
-
-      if(dohcal) {
-	nbytehcal = b_hcal->GetEntry(ievt);
+  if(dohcal) {
+    nbytehcal = b_hcal->GetEntry(ievt);
 
 
       // hcal hits
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
-      for(size_t i=0;i<hcalhits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
-
-
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+    for(size_t i=0;i<hcalhits->size(); ++i) {
+      CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
+      float ah=ahcalhit->energyDeposit;
+      eesum+=ah;
 
       int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0xFF;   // is this right?
-	if(ix>128) ix=ix-256;
-	int iy =(ihitchan >>11) & 0xFF;   // is this right?
-	if(iy>128) iy=iy-256;
+	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
+	if(ix>255) ix=ix-512;
+	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
+	if(iy>255) iy=iy-512;
 	int ifiber  =(ihitchan >>21) & 0x03;
 	int iabs=(ihitchan >>23) & 0x03;
 	int iphdet=(ihitchan >>25) & 0x03;
-	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+
+
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
 	    nescinttothcal+=ahcalhit->nscintillator;
@@ -1010,74 +1019,85 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	}
 	else {
 	  if(iphdet==1) {  // take light that hits photodetectors
-	    meancerHcal+=ahcalhit->ncerenkov;
-	    meanscinHcal+=ahcalhit->nscintillator;
+	    nescinttothcal+=ahcalhit->nscintillator;
+	  }
+	  if(iphdet==2) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
+
+	if(ifiber>1) eesumfiber+=ah;
+	if(iabs==1) eesumabs+=ah;
+	if(iphdet>1) eesumPDh+=ah;
+
+
       }
       else {  // sampling
 	int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x7F;   // is this right?
-	if(ix>64) ix=ix-64;
-	int iy =(ihitchan >>9) & 0x7F;   // is this right?
-	if(iy>64) iy=iy-64;
-	int islice  =(ihitchan >>15) & 0x3F;
-	int ilayer=(ihitchan >>21) & 0x3F;
-	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
- 
-	//WHAT GOES HERE????????????????????????????????????????????????????????????????????
+	if(ix>63) {ix=ix-128;} 
+	int iy =(ihitchan >>10) & 0x7F;   // is this right?
+	if(iy>63) {iy=iy-128;};
+	int islice  =(ihitchan >>17) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3F;
+
+
+	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
+	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
+	map<string,int>::iterator ii3 = mapsampcalslice.find("PS");
+	map<string,int>::iterator ii4 = mapsampcalslice.find("PD2");
+	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
+	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
+	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
+
+
+	if(gendet==1) {  // take light as generated in fiber
+	  if(islice==(*ii3).second) {
+	    nescinttothcal+=ahcalhit->nscintillator;
+	    //	    std::cout<<"add scint"<<std::endl;
+	  }
+	  if(islice==(*ii6).second) {  // quartz fibers
+	    necertothcal+=ahcalhit->ncerenkov;
+	    //	    std::cout<<"add ceren"<<std::endl;
+	  }
+	}
+	else {
+	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
+	    nescinttothcal+=ahcalhit->nscintillator;
+	  }
+	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	if( (islice==(*ii3).second) || (islice==(*ii6).second) ) eesumfiber+=ah;
+	if(islice==(*ii1).second) eesumabs+=ah;
+	if(  (islice==(*ii2).second) || (islice==(*ii4).second) ||  (islice==(*ii5).second) || (islice==(*ii7).second)) eesumPDh+=ah;
 
 
       }
-
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
-
-
-
-
-
-
-
-        int ihitchan=ahcalhit->cellID;
-        int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0xFF;   // is this right?
-	if(ix>128) ix=ix-256;
-	int iy =(ihitchan >>11) & 0xFF;   // is this right?
-	if(iy>128) iy=iy-256;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
-
-
-	float ah=ahcalhit->energyDeposit;
-	eesum+=ah;
-
-	if(ifiber>01) eesumfiber+=ah;
-	if(iabs==1) eesumabs+=ah;
-	if(iphdet==1) eesumPDh+=ah;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<std::endl;
+ 
 
 	//ehchan->Fill(ahcalhit->cellID);
 	//ehhcal2d->Fill(ix,iy,ahcalhit->energyDeposit);
-      }  // end loop over hcal hits
-      }
 
-      if(doedge) {
-	nbyteedge = b_edge->GetEntry(ievt);
+    }  // end loop over hcal hits
+  }
 
-
-	if(ievt<SCECOUNT) std::cout<<std::endl<<" number of edge hits is "<<edgehits->size()<<std::endl;
-      for(size_t i=0;i<edgehits->size(); ++i) {
-	CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
+  if(doedge) {
+    nbyteedge = b_edge->GetEntry(ievt);
 
 
-	float ae=aedgehit->energyDeposit;
-	eesum+=ae;
-	eesumedge+=ae;
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of edge hits is "<<edgehits->size()<<std::endl;
+    for(size_t i=0;i<edgehits->size(); ++i) {
+      CalVision::DualCrysCalorimeterHit* aedgehit =edgehits->at(i);
 
-      }  // end loop over escaping hits
-      }
+      float ae=aedgehit->energyDeposit;
+      eesum+=ae;
+      eesumedge+=ae;
+
+    }  // end loop over escaping hits
+  }
 
 
 
@@ -1135,56 +1155,92 @@ float &EEcal, float &EHcal)
 	  std::cout<<" illegal gendet"<<std::endl;
 	  return;
 	}
-
-
-
-      }  // end loop over ecal hits
-    }
-  }
+      } 
+    }  // end loop over ecal hits
+  }  // end do ecal
 
   if(dohcal) {
     nbytehcal = b_hcal->GetEntry(ievt);
     
-
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+
+    nbytehcal = b_hcal->GetEntry(ievt);
+    
+      // hcal hits
+    if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+    //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
+
       int ihitchan=ahcalhit->cellID;
-      int idet = (ihitchan) & 0x07;
-      int ix = (ihitchan >>3) & 0xFF;   // is this right?
-      if(ix>128) ix=ix-256;
-      int iy =(ihitchan >>11) & 0xFF;   // is this right?
-      if(iy>128) iy=iy-256;
-      int ifiber  =(ihitchan >>21) & 0x03;
-      int iabs=(ihitchan >>23) & 0x03;
-      int iphdet=(ihitchan >>25) & 0x03;
-
-      
-      if(gendet==1) {   // use photons as generated in otical material
-	if(ifiber==1) {
-	  necertothcal+=ahcalhit->ncerenkov;
-	  nescinttothcal+=ahcalhit->nscintillator;
+      if(hcaltype==0) { // fiber
+	int idet = (ihitchan) & 0x07;
+	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
+	if(ix>255) ix=ix-512;
+	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
+	if(iy>255) iy=iy-512;
+	int ifiber  =(ihitchan >>21) & 0x03;
+	int iabs=(ihitchan >>23) & 0x03;
+	int iphdet=(ihitchan >>25) & 0x03;
+	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	if(gendet==1) {  // take light as generated in fiber
+	  if(ifiber==1) {  // scintillating fibers
+	    nescinttothcal+=ahcalhit->nscintillator;
+	  }
+	  if(ifiber==2) {  // quartz fibers
+	    necertothcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else {
+	  if(iphdet==1) {  // take light that hits photodetectors
+	    nescinttothcal+=ahcalhit->nscintillator;
+	  }
+	  if(iphdet==2) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->ncerenkov;
+	  }
 	}
       }
-      else if(gendet==2) {
-	if( iabs==1) {
-	  necertothcal+=ahcalhit->ncerenkov;
-	  nescinttothcal+=ahcalhit->nscintillator;
+      else {  // sampling
+	int idet = (ihitchan) & 0x07;
+	int ix = (ihitchan >>3) & 0x7F;   
+	if(ix>63) {ix=ix-128;} 
+	int iy =(ihitchan >>10) & 0x7F;   
+	if(iy>63) {iy=iy-128;};
+	int islice  =(ihitchan >>17) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3F;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
+ 
+	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
+	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
+	map<string,int>::iterator ii3 = mapsampcalslice.find("PS");
+	map<string,int>::iterator ii4 = mapsampcalslice.find("PD2");
+	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
+	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
+	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
+
+	if(gendet==1) {  // take light as generated in fiber
+	  if(islice==(*ii3).second) {
+	    nescinttothcal+=ahcalhit->nscintillator;
+	    //	    std::cout<<"add scint"<<std::endl;
+	  }
+	  if(islice==(*ii6).second) {  // quartz fibers
+	    necertothcal+=ahcalhit->ncerenkov;
+	    //	    std::cout<<"add ceren"<<std::endl;
+	  }
 	}
-
+	else {
+	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
+	    nescinttothcal+=ahcalhit->nscintillator;
+	  }
+	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->ncerenkov;
+	  }
+	}
       }
-      else {   // use photons detected in photodetectors  
-	std::cout<<" illegal gendet"<<std::endl;
-	return;
-      }
 
-    }  // end loop over hcal hits
-  }
-
-
-
-
+    }  // do hcal 
+  }  // end d
   std::cout<<"  getstuffdual cer scint count "<<necertotecal<<" "<<nescinttotecal<<std::endl;
   float anecertotecal=necertotecal/meancerEcal;
   float anescinttotecal=nescinttotecal/meanscinEcal;
@@ -1198,10 +1254,6 @@ float &EEcal, float &EHcal)
 
   
   std::cout<<"getstuffdual outputing ecal hcal "<<EEcal<<" "<<EHcal<<std::endl;
-
-
-
-
 
 
 }
