@@ -128,8 +128,8 @@ mapsampcalslice["PD4"]=7;
   TH1F *ehcEcalE = new TH1F("ehcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
   TH1F *phcEcalE = new TH1F("phcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
 
-  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
-  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
+  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,0.01);
+  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",100,0.,0.01);
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
@@ -156,8 +156,8 @@ mapsampcalslice["PD4"]=7;
 
   TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
-  TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
-  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","jcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
 
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *phecal2d = new TH2F("phecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
