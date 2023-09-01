@@ -827,10 +827,11 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	  std::cout<<" illegal gendet"<<std::endl;
 	  return;
 	}
-
-
-
-      }  // end loop over ecal hits
+      } 
+      else if(gendet==3){
+	meanscinEcal+=aecalhit->energyDeposit;
+	meancerEcal+=aecalhit->energyDeposit;
+      }
     }
   }
 
@@ -862,12 +863,20 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	    meancerHcal+=ahcalhit->ncerenkov;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if(iphdet==1) {  // take light that hits photodetectors
 	    meanscinHcal+=ahcalhit->nscintillator;
 	  }
 	  if(iphdet==2) {  // take light that hits photodetectors
 	    meancerHcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==3) {
+	  if(ifiber==1) {
+	    meanscinHcal+=ahcalhit->energyDeposit;
+	  }
+	  if(ifiber==2) {
+	    meancerHcal+=ahcalhit->energyDeposit;
 	  }
 	}
       }
@@ -901,12 +910,20 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
 	    meanscinHcal+=ahcalhit->nscintillator;
 	  }
 	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
 	    meancerHcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==3) {
+	  if( islice==(*ii3).second) { // either photo detector
+	    meanscinHcal+=ahcalhit->energyDeposit;
+	  }
+	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
+	    meancerHcal+=ahcalhit->energyDeposit;
 	  }
 	}
 
@@ -1017,12 +1034,20 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if(iphdet==1) {  // take light that hits photodetectors
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
 	  if(iphdet==2) {  // take light that hits photodetectors
 	    necertothcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==3) {
+	  if(ifiber==1) {
+	    nescinttothcal+=ahcalhit->energyDeposit;
+	  }
+	  if(ifiber==2) {
+	    necertothcal+=ahcalhit->energyDeposit;
 	  }
 	}
 
@@ -1061,7 +1086,7 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
@@ -1069,6 +1094,15 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
+	else if(gendet==3) {
+	  if( islice==(*ii3).second) { // either photo detector
+	    nescinttothcal+=ahcalhit->energyDeposit;
+	  }
+	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->energyDeposit;
+	  }
+	}
+
 	if( (islice==(*ii3).second) || (islice==(*ii6).second) ) eesumfiber+=ah;
 	if(islice==(*ii1).second) eesumabs+=ah;
 	if(  (islice==(*ii2).second) || (islice==(*ii4).second) ||  (islice==(*ii5).second) || (islice==(*ii7).second)) eesumPDh+=ah;
@@ -1133,13 +1167,13 @@ float &EEcal, float &EHcal)
       int  ilayer = (ihitchan>> 20) & 0x07;
       
 
-	  if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 
 
       map<string,int>::iterator ii1 = mapecalslice.find("crystal");
       map<string,int>::iterator ii2 = mapecalslice.find("PD1");
       map<string,int>::iterator ii3 = mapecalslice.find("PD2");
-
+      
       if(gendet==1) {   // use photons as generated in otical material
 	if(islice==(*ii1).second) {
 	  necertotecal+=aecalhit->ncerenkov;
@@ -1156,6 +1190,11 @@ float &EEcal, float &EHcal)
 	  return;
 	}
       } 
+      else if(gendet==3){
+	necertotecal+=aecalhit->energyDeposit;
+	nescinttotecal+=aecalhit->energyDeposit;
+      }
+      
     }  // end loop over ecal hits
   }  // end do ecal
 
@@ -1192,7 +1231,7 @@ float &EEcal, float &EHcal)
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if(iphdet==1) {  // take light that hits photodetectors
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
@@ -1200,6 +1239,17 @@ float &EEcal, float &EHcal)
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
+	else if(gendet==3) {
+	  if(ifiber==1) {
+	    nescinttothcal+=ahcalhit->energyDeposit;
+	  }
+	  if(ifiber==2) {
+	    necertothcal+=ahcalhit->energyDeposit;
+	  }
+	}
+
+
+
       }
       else {  // sampling
 	int idet = (ihitchan) & 0x07;
@@ -1229,7 +1279,7 @@ float &EEcal, float &EHcal)
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
-	else {
+	else if(gendet==2) {
 	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
@@ -1237,6 +1287,15 @@ float &EEcal, float &EHcal)
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
+	else if(gendet==3) {
+	  if( islice==(*ii3).second ) { // either photo detector
+	    nescinttothcal+=ahcalhit->energyDeposit;
+	  }
+	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
+	    necertothcal+=ahcalhit->energyDeposit;
+	  }
+	}
+
       }
 
     }  // do hcal 
