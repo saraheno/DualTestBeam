@@ -498,6 +498,9 @@ mapsampcalslice["PD4"]=7;
   TCanvas* c1;
   SCEDraw2(c1,"c1",ehetrue,phetrue,"junk1.png");
 
+  TCanvas* c1b;
+  SCEDraw2(c1b,"c1b",ehcEdgeE,phcEdgeE,"junk1b.png");
+
   
   if(doecal) {
     TCanvas* ce2;
