@@ -16,7 +16,7 @@
 <!-- constants for dual readout spagetti fiber hcal calorimeter -->
     <constant name="DRFiberAbswidth" value=".22*cm"/>  <!-- should be 2.2 mm -->
     <constant name="DRFiberlength" value="130*cm"/>   <!-- should be 130 cm -->
-    <constant name="DRFiberNsize" value="136"/>        <!-- should be 30 -->
+    <constant name="DRFiberNsize" value="30"/>        <!-- should be 136 -->
 
 <!-- constants for dual readout sampling hcal calorimeter -->
     <constant name="DRSampAthick" value="18.*mm"/> 

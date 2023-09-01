@@ -26,7 +26,7 @@
 // LOOK AT THE DECLARATION JUST AT THE crystalana def!!!!!!!!!!!!!!!!!!!!
 const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
-int SCECOUNT=5;
+int SCECOUNT=1;
 
 
 // this is now hardwared in DualCrysCalorimeterHit.h
@@ -52,7 +52,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype,  bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal);
+float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal);
 
 
 void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal, 
@@ -171,8 +171,8 @@ mapsampcalslice["PD4"]=7;
   TH1F *eheest = new TH1F("eheest","ratio estimated to true energy",500,0.,1.);
   TH1F *pheest = new TH1F("pheest","ratio estimated to true energy",500,0.,1.);
 
-  TH1F *ehetrue = new TH1F("ehetrue","ratio deposited to incident energy",500,0.,1.);
-  TH1F *phetrue = new TH1F("phetrue","ratio deposited to incident energy",500,0.,1.);
+  TH1F *ehetrue = new TH1F("ehetrue","ratio deposited to incident energy",500,0.,1.1);
+  TH1F *phetrue = new TH1F("phetrue","ratio deposited to incident energy",500,0.,1.1);
 
   TH1F *ehnecalcon = new TH1F("ehnecalcon","number contribs to ecal hit",1010,-10.,1000.);
   TH1F *phnecalcon = new TH1F("phnecalcon","number contribs to ecal hit",1010,-10.,1000.);
@@ -253,10 +253,10 @@ mapsampcalslice["PD4"]=7;
       float eesumabs=0;
       float eesumPDh=0;
       float eesumedge=0;
-      int necertotecal=0;
-      int nescinttotecal=0;
-      int necertothcal=0;
-      int nescinttothcal=0;
+      float necertotecal=0;
+      float nescinttotecal=0;
+      float necertothcal=0;
+      float nescinttothcal=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumcrystal,eesumPDe,eesumfiber,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal);
 
@@ -354,10 +354,10 @@ mapsampcalslice["PD4"]=7;
       float pesumabs=0;
       float pesumPDh=0;
       float pesumedge=0;
-      int npcertotecal=0;
-      int npscinttotecal=0;
-      int npcertothcal=0;
-      int npscinttothcal=0;
+      float npcertotecal=0;
+      float npscinttotecal=0;
+      float npcertothcal=0;
+      float npscinttothcal=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumcrystal,pesumPDe,pesumfiber,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal);
 
@@ -943,7 +943,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 
 void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,int &necertotecal,int &nescinttotecal,int &necertothcal,int &nescinttothcal){
+float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal){
 
 
   if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
@@ -1102,6 +1102,8 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	    necertothcal+=ahcalhit->energyDeposit;
 	  }
 	}
+
+
 
 	if( (islice==(*ii3).second) || (islice==(*ii6).second) ) eesumfiber+=ah;
 	if(islice==(*ii1).second) eesumabs+=ah;
