@@ -55,6 +55,7 @@ namespace CalVision {
 
   public:
     int ncerenkov,nscintillator;
+    float edeprelativistic;
     float wavelenmin=300;
     float wavelenmax=1000;
 
@@ -88,7 +89,7 @@ namespace CalVision {
     /// Default constructor
     DualCrysCalorimeterHit() = default;
     /// Initializing constructor
-  DualCrysCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0) {
+  DualCrysCalorimeterHit(const Position& cell_pos):dd4hep::sim::Geant4Calorimeter::Hit(cell_pos),ncerenkov(0),nscintillator(0),edeprelativistic(0.) {
 
 
       for( int i=0;i<finenbin;i++){

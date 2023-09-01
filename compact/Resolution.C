@@ -830,7 +830,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
       } 
       else if(gendet==3){
 	meanscinEcal+=aecalhit->energyDeposit;
-	meancerEcal+=aecalhit->energyDeposit;
+	meancerEcal+=aecalhit->edeprelativistic;
       }
     }
   }
@@ -876,7 +876,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	    meanscinHcal+=ahcalhit->energyDeposit;
 	  }
 	  if(ifiber==2) {
-	    meancerHcal+=ahcalhit->energyDeposit;
+	    meancerHcal+=ahcalhit->edeprelativistic;
 	  }
 	}
       }
@@ -919,11 +919,11 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	  }
 	}
 	else if(gendet==3) {
-	  if( islice==(*ii3).second) { // either photo detector
+	  if( islice==(*ii3).second) { // PS
 	    meanscinHcal+=ahcalhit->energyDeposit;
 	  }
-	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
-	    meancerHcal+=ahcalhit->energyDeposit;
+	  if( islice==(*ii6).second ) {  // quartz
+	    meancerHcal+=ahcalhit->edeprelativistic;
 	  }
 	}
 
@@ -1047,7 +1047,7 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
 	  if(ifiber==2) {
-	    necertothcal+=ahcalhit->energyDeposit;
+	    necertothcal+=ahcalhit->edeprelativistic;
 	  }
 	}
 
@@ -1095,11 +1095,11 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	  }
 	}
 	else if(gendet==3) {
-	  if( islice==(*ii3).second) { // either photo detector
+	  if( islice==(*ii3).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
-	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
-	    necertothcal+=ahcalhit->energyDeposit;
+	  if( islice==(*ii6).second ) {  // quartz
+	    necertothcal+=ahcalhit->edeprelativistic;
 	  }
 	}
 
@@ -1193,7 +1193,7 @@ float &EEcal, float &EHcal)
 	}
       } 
       else if(gendet==3){
-	necertotecal+=aecalhit->energyDeposit;
+	necertotecal+=aecalhit->edeprelativistic;
 	nescinttotecal+=aecalhit->energyDeposit;
       }
       
@@ -1246,7 +1246,7 @@ float &EEcal, float &EHcal)
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
 	  if(ifiber==2) {
-	    necertothcal+=ahcalhit->energyDeposit;
+	    necertothcal+=ahcalhit->edeprelativistic;
 	  }
 	}
 
@@ -1290,11 +1290,11 @@ float &EEcal, float &EHcal)
 	  }
 	}
 	else if(gendet==3) {
-	  if( islice==(*ii3).second ) { // either photo detector
+	  if( islice==(*ii3).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
-	  if( islice==(*ii6).second ) {  // take light that hits photodetectors
-	    necertothcal+=ahcalhit->energyDeposit;
+	  if( islice==(*ii6).second ) {  // quartz
+	    necertothcal+=ahcalhit->edeprelativistic;
 	  }
 	}
 

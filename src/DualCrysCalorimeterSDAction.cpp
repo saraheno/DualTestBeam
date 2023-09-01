@@ -27,6 +27,7 @@
 // so randomly delete photons after creation according to this fraction
 double dialCher= 0.00001;
 double dialScint=0.00001;
+float betarel=0.9;
 int printlimitSCE=100;
 int MAXEVENT=200;
 
@@ -114,6 +115,7 @@ namespace dd4hep {
 	std::cout<<"dialCher is "<<dialCher<<std::endl;
 	std::cout<<"dialScint is "<<dialScint<<std::endl;
 	std::cout<<" you need to use this to interpret your results"<<std::endl;
+	std::cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
       }
 
       bool SCEPRINT=(SCECOUNT<printlimitSCE);
@@ -365,8 +367,13 @@ namespace dd4hep {
 
 	  hit->energyDeposit += contrib.deposit;
 	  //	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light*10000.);
-	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light);
+	  float aabeta=track->GetVelocity()/CLHEP::c_light;
+	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
+	  if(aabeta>betarel) hit->edeprelativistic+=contrib.deposit;
+
+	  
+
 	  //int tsize = (hit->truth).size();
 	  //if((tsize<hit->ntruthbin)&&(tsize>0)) {
 	  //hit->contribBeta[tsize-1]=track->GetVelocity();
