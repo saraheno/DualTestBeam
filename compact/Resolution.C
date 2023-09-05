@@ -228,6 +228,8 @@ mapsampcalslice["PD4"]=7;
 
  getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
     }
+
+    std::cout<<"done with getMeanPhot"<<std::endl;
     meanscinEcal=meanscinEcal/num_evt;
     meanscinHcal=meanscinHcal/num_evt;
     meancerEcal=meancerEcal/num_evt;
@@ -310,7 +312,7 @@ mapsampcalslice["PD4"]=7;
   //  float amean = hceest->GetMean();
 
   ef->Close();
-
+  std::cout<<"done with getstuff electrons"<<std::endl;
 
   //****************************************************************************************************************************
   // process pions
@@ -318,10 +320,17 @@ mapsampcalslice["PD4"]=7;
   TFile* pif = TFile::Open(piinputfilename);
   TTree* pit = (TTree*)pif->Get("EVENT;1");
 
+
+  if(pif==0) std::cout<<" no file "<<std::endl;
+  if(pit==0) std::cout<<" no event "<<std::endl;
+  std::cout<<"pion file open"<<std::endl;
+
   b_mc= pit->GetBranch("MCParticles");
-  if(doecal) b_ecal = et->GetBranch(ECALleaf);
-  if(dohcal) b_hcal = et->GetBranch(HCALleaf);
-  if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
+  if(doecal) b_ecal = pit->GetBranch(ECALleaf);
+  if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
+  if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
+
+  std::cout<<"pion branches found"<<std::endl;
 
 
   ihaha = b_mc->GetEntries();
