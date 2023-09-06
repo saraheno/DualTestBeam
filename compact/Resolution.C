@@ -542,11 +542,11 @@ mapsampcalslice["PD4"]=7;
 
 
 
-  std::cout<<"haha0"<<std::endl;
+
   //TCanvas* c7;
   //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
 
-  std::cout<<"haha1"<<std::endl;
+
 
   //***********************************************************************************************************
 
@@ -561,7 +561,7 @@ mapsampcalslice["PD4"]=7;
   ehcEdgeE->Write();
   phcEdgeE->Write();
 
-  std::cout<<"haha2"<<std::endl;;
+
 
    ehcEcalncer->Write();
    phcEcalncer->Write();
@@ -835,10 +835,6 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
-	else{   // use photons detected in photodetectors  
-	  std::cout<<" illegal gendet"<<std::endl;
-	  return;
-	}
       } 
       else if(gendet==3){
 	meanscinEcal+=aecalhit->energyDeposit;
@@ -866,7 +862,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	int ifiber  =(ihitchan >>21) & 0x03;
 	int iabs=(ihitchan >>23) & 0x03;
 	int iphdet=(ihitchan >>25) & 0x03;
-	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
 	    meanscinHcal+=ahcalhit->nscintillator;
@@ -972,8 +968,6 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
-      necertotecal+=aecalhit->ncerenkov;
-      nescinttotecal+=aecalhit->nscintillator;
       //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
       int ihitchan=aecalhit->cellID;
       int idet = (ihitchan) & 0x07;
@@ -1003,9 +997,27 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
       float ae=aecalhit->energyDeposit;
       eesum+=ae;
       if(islice==(*ii0).second)eesumair+=ae;
-      if(islice==(*ii1).second)eesumPDe+=ae;
-      if(islice==(*ii2).second)eesumcrystal+=ae;
+      if(islice==(*ii2).second)eesumPDe+=ae;
+      if(islice==(*ii1).second)eesumcrystal+=ae;
       if(islice==(*ii3).second)eesumPDe+=ae;
+
+
+      if(gendet==1) {   // use photons as generated in otical material
+	if(islice==(*ii1).second) {  // crystal
+	  necertotecal+=aecalhit->ncerenkov;
+	  nescinttotecal+=aecalhit->nscintillator;
+	}
+      }
+      else if(gendet==2) {
+	if( (islice==(*ii2).second)||(islice==(*ii3).second) ) { // either photo detector
+	  necertotecal+=aecalhit->ncerenkov;
+	  nescinttotecal+=aecalhit->nscintillator;
+	}
+      } 
+      else if(gendet==3){
+	nescinttotecal+=aecalhit->energyDeposit;
+	necertotecal+=aecalhit->edeprelativistic;
+      }
 
 	//ehchan->Fill(aecalhit->cellID);
 	//ehecal2d->Fill(ix,iy,aecalhit->energyDeposit);
@@ -1024,6 +1036,7 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
       eesum+=ah;
+      //std::cout<<"eesum now "<<eesum<<std::endl;
 
       int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
@@ -1035,7 +1048,7 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	int ifiber  =(ihitchan >>21) & 0x03;
 	int iabs=(ihitchan >>23) & 0x03;
 	int iphdet=(ihitchan >>25) & 0x03;
-	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 
 
 	if(gendet==1) {  // take light as generated in fiber
@@ -1063,9 +1076,10 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	  }
 	}
 
-	if(ifiber>1) eesumfiber+=ah;
-	if(iabs==1) eesumabs+=ah;
-	if(iphdet>1) eesumPDh+=ah;
+	if(ifiber>1) {eesumfiber+=ah;}
+	if(iabs==1) {eesumabs+=ah;}
+	if(iphdet>1) {eesumPDh+=ah;}
+	//std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<" "<<eesumfiber<<" "<<eesumabs<<" "<<eesumPDh<<std::endl;
 
 
       }
@@ -1181,7 +1195,7 @@ float &EEcal, float &EHcal)
       int  ilayer = (ihitchan>> 20) & 0x07;
       
 
-      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+      //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 
 
       map<string,int>::iterator ii1 = mapecalslice.find("crystal");
@@ -1198,10 +1212,6 @@ float &EEcal, float &EHcal)
 	if( (islice==(*ii2).second)||(islice==(*ii3).second) ) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
-	}
-	else{   // use photons detected in photodetectors  
-	  std::cout<<" illegal gendet"<<std::endl;
-	  return;
 	}
       } 
       else if(gendet==3){
@@ -1236,7 +1246,7 @@ float &EEcal, float &EHcal)
 	int ifiber  =(ihitchan >>21) & 0x03;
 	int iabs=(ihitchan >>23) & 0x03;
 	int iphdet=(ihitchan >>25) & 0x03;
-	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
 	    nescinttothcal+=ahcalhit->nscintillator;
