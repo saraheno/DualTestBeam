@@ -64,11 +64,14 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal);
 
 
+// hcal type 0=fiber, 1 = sampling
+// gendet 1=active media photons, 2 = photodetector, 3=energy deposit
 
 
 
-
-void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
+void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
+		const char* hcalonlyefilename,
+ const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
 
 
 map<string, int> mapecalslice; 
@@ -157,7 +160,7 @@ mapsampcalslice["PD4"]=7;
   TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
-  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","jcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+  TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
 
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *phecal2d = new TH2F("phecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
@@ -313,6 +316,61 @@ mapsampcalslice["PD4"]=7;
 
   ef->Close();
   std::cout<<"done with getstuff electrons"<<std::endl;
+
+
+
+  //****************************************************************************************************************************
+  // for calibration of hcal,  if have both an ecal and hcal
+
+
+  if(doecal&&dohcal ) {
+  TFile* efa = TFile::Open(hcalonlyefilename);
+  TTree* eta = (TTree*)efa->Get("EVENT;1");
+
+  b_mc= eta->GetBranch("MCParticles");
+  b_hcal = eta->GetBranch(HCALleaf);
+  std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
+
+
+  ihaha = b_mc->GetEntries();
+  num_evt= std::min(ihaha,num_evtsmax);
+  std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+
+  float meanscinEcala(0),meanscinHcala(0),meancerEcala(0),meancerHcala(0);
+
+  
+  if(num_evt>0) {  
+
+    CalHits* ecalhitsa = new CalHits();
+    CalHits* hcalhitsa = new CalHits();
+    b_hcal->SetAddress(&hcalhitsa);
+
+    std::cout<<" branches set"<<std::endl;
+
+    // first pass through file
+
+    for(int ievt=0;ievt<num_evt; ++ievt) {
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
+
+
+
+ getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal);
+    }
+
+    std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
+    meanscinHcal=meanscinHcal/num_evt;
+    meancerHcal=meancerHcal/num_evt;
+    std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
+    std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+
+  }
+
+  efa->Close();
+  std::cout<<"done with with electron calibration of hcal"<<std::endl;
+
+  }
 
   //****************************************************************************************************************************
   // process pions
