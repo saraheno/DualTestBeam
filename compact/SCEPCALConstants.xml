@@ -19,7 +19,7 @@
     <constant name="DRFiberNsize" value="136"/>        <!-- should be 136 -->
 
 <!-- constants for dual readout sampling hcal calorimeter -->
-    <constant name="DRSampAthick" value="18.*mm"/> 
+    <constant name="DRSampAthick" value="20.*mm"/> 
     <constant name="DRSampSthick" value="5.*mm"/> 
     <constant name="DRSampQthick" value="5.*mm"/> 
     <constant name="DRSampxy" value="20.*mm"/> 
@@ -33,7 +33,7 @@
     <constant name="EdgeDet_ID" value="4"/>
 
 
-    <constant name="killthick" value="0.1*cm"/>
+    <constant name="killthick" value="0.01*cm"/>
     <constant name="edgeoffset" value="10*cm"/>
 
 

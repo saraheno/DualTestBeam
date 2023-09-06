@@ -826,21 +826,21 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 
 
-  h1->SetLineColor(3);
+  h1->SetLineColor(kGreen);
   h1->SetLineWidth(3);
   h1->SetStats(111111);  
   h1->Draw("HIST");
 
 
 
-  h2->SetLineColor(2);
+  h2->SetLineColor(kRed);
   h2->SetLineWidth(3);
   h2->SetStats(111111);  
   h2->Draw("HIST same");
 
 
 
-  h3->SetLineColor(4);
+  h3->SetLineColor(kBlue);
   h3->SetLineWidth(3);
   h3->SetStats(111111);  
   h3->Draw("HIST same");
