@@ -275,8 +275,14 @@ mapsampcalslice["PD4"]=7;
       ehcHcalnscint->Fill(nescinttothcal/meanscinHcal);
       if(eesumfiber>0) ehaphcal->Fill(eesumfiber/(eesumabs+eesumfiber));
       eheest->Fill((eesumcrystal+eesumfiber*hcalSampf)/beamE);
-      ehcEcalNsNc->Fill(nescinttotecal/meanscinEcal,necertotecal/meancerEcal);  
-      ehcHcalNsNc->Fill(nescinttothcal/meanscinHcal,necertothcal/meancerHcal);  
+      float ttt=nescinttotecal/meanscinEcal;
+      float ttt2=necertotecal/meancerEcal;
+      float tty=nescinttothcal/meanscinHcal;
+      float tty2=necertothcal/meancerHcal;
+      if( (ttt>0.2)&& (ttt2>0.2) )
+      ehcEcalNsNc->Fill(ttt,ttt2);  
+      if( (tty>0.2)&& (tty2>0.2) )
+      ehcHcalNsNc->Fill(tty,tty2);  
 
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber+eesumabs+eesumPDh+eesumedge;
@@ -438,8 +444,15 @@ mapsampcalslice["PD4"]=7;
       phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
       if(pesumfiber>0) phaphcal->Fill(pesumfiber/(pesumabs+pesumfiber));
       pheest->Fill((pesumcrystal+pesumfiber*hcalSampf)/beamE);
-      phcEcalNsNc->Fill(npscinttotecal/meanscinEcal,npcertotecal/meancerEcal);  
-      phcHcalNsNc->Fill(npscinttothcal/meanscinHcal,npcertothcal/meancerHcal);  
+
+      float rrr=npscinttotecal/meanscinEcal;
+      float rrr2=npcertotecal/meancerEcal;
+      float rrx=npscinttothcal/meanscinHcal;
+      float rrx2=npcertothcal/meancerHcal;
+      if( (rrr>0.2)&&(rrr2>0.2) )
+      phcEcalNsNc->Fill(rrr,rrr2);  
+      if( (rrx>0.2)&&(rrx2>0.2) )
+      phcHcalNsNc->Fill(rrx,rrx2);  
 
 
 
@@ -594,7 +607,7 @@ mapsampcalslice["PD4"]=7;
     TCanvas* ch5;
     SCEDraw1_2D(ch5,"ch5",ehcHcalNsNc,"junkh5.png",0.,0.);
     TCanvas* ch6;
-    SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Ecal/m1Ecal,0.);
+    SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
   }
 
 
@@ -1286,7 +1299,7 @@ float &EEcal, float &EHcal)
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
 
-    nbytehcal = b_hcal->GetEntry(ievt);
+
     
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
@@ -1380,8 +1393,8 @@ float &EEcal, float &EHcal)
 
       }
 
-    }  // do hcal 
-  }  // end d
+    }  // end hit loop
+  }  // end do hcal
   std::cout<<"  getstuffdual cer scint count "<<necertotecal<<" "<<nescinttotecal<<std::endl;
   float anecertotecal=necertotecal/meancerEcal;
   float anescinttotecal=nescinttotecal/meanscinEcal;
@@ -1392,7 +1405,7 @@ float &EEcal, float &EHcal)
   float anecertothcal=necertothcal/meancerHcal;
   float anescinttothcal=nescinttothcal/meanscinHcal;
   EHcal=(anescinttothcal-kappaHcal*anecertothcal)/(1-kappaHcal);
-
+  std::cout<<"necertothcal nescinttothcal meancerhcal meanscinhcal anecertothcal anescinttothcal kappahcal "<<necertothcal<<" "<<nescinttothcal<<" "<<meancerHcal<<" "<<meanscinHcal<<" "<<anecertothcal<<" "<<anescinttothcal<<" "<<kappaHcal<<std::endl;
   
   std::cout<<"getstuffdual outputing ecal hcal "<<EEcal<<" "<<EHcal<<std::endl;
 
