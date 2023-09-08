@@ -44,7 +44,7 @@ int SCECOUNT=1;
 
 
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile);
-void SCEDrawp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
+void SCEDraw1tp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
 void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile,float eohS,float eohC);
 void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char* outfile);
 void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile);
@@ -279,9 +279,9 @@ mapsampcalslice["PD4"]=7;
       float ttt2=necertotecal/meancerEcal;
       float tty=nescinttothcal/meanscinHcal;
       float tty2=necertothcal/meancerHcal;
-      if( (ttt>0.2)&& (ttt2>0.2) )
+      if( (ttt>0.4)&& (ttt2>0.2) )
       ehcEcalNsNc->Fill(ttt,ttt2);  
-      if( (tty>0.2)&& (tty2>0.2) )
+      if( (tty>0.4)&& (tty2>0.2) )
       ehcHcalNsNc->Fill(tty,tty2);  
 
 
@@ -449,9 +449,9 @@ mapsampcalslice["PD4"]=7;
       float rrr2=npcertotecal/meancerEcal;
       float rrx=npscinttothcal/meanscinHcal;
       float rrx2=npcertothcal/meancerHcal;
-      if( (rrr>0.2)&&(rrr2>0.2) )
+      if( (rrr>0.4)&&(rrr2>0.2) )
       phcEcalNsNc->Fill(rrr,rrr2);  
-      if( (rrx>0.2)&&(rrx2>0.2) )
+      if( (rrx>0.4)&&(rrx2>0.2) )
       phcHcalNsNc->Fill(rrx,rrx2);  
 
 
@@ -497,10 +497,11 @@ mapsampcalslice["PD4"]=7;
   std::cout<<" starting fits"<<std::endl;
 
   //** fits
-  TF1 *gEcale = new TF1("gEcale","pol1",0.,1.);
-  TF1 *gHcale = new TF1("gHcale","pol1",0.,1.);
-  TF1 *gEcalp = new TF1("gEcalp","pol1",0.,1.);
-  TF1 *gHcalp = new TF1("gHcalp","pol1",0.,1.);
+  TF1 *gEcale = new TF1("gEcale","[0]*(x-1.)+1",0.,1.);
+  TF1 *gHcale = new TF1("gHcale","[0]*(x-1.)+1",0.,1.);
+  TF1 *gEcalp = new TF1("gEcalp","[0]*(x-1.)+1",0.,1.);
+  TF1 *gHcalp = new TF1("gHcalp","[0]*(x-1.)+1",0.,1.);
+
 
 
       // fit to get e/h
@@ -532,6 +533,8 @@ mapsampcalslice["PD4"]=7;
     b1Hcal=gHcalp->GetParameter(0);
     m1Hcal=gHcalp->GetParameter(1);
     std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
+    TCanvas* cyuck;
+    SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
   }
     double kappaHcal = 1+(b1Hcal/m1Hcal);
     std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
@@ -622,6 +625,8 @@ mapsampcalslice["PD4"]=7;
   //***********************************************************************************************************
 
   TFile * out = new TFile(outputfilename,"RECREATE");
+
+
 
   ehcEcalE->Write();
   phcEcalE->Write();
@@ -718,6 +723,32 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile) {
 
 
   canv->Print(outfile,".png");
+  canv->Update();
+
+  return;
+}
+void SCEDraw1tp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfile) {
+
+  canv= new TCanvas(name,name,200,10,700,500);
+
+
+  //canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+
+  h1->SetLineColor(3);
+  h1->SetLineWidth(3);
+  h1->SetStats(111111);  
+  h1->Draw("HIST");
+
+
+
+  canv->Print(outfile,".png");
+  canv->Update();
 
   return;
 }
@@ -747,6 +778,7 @@ void SCEDrawp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfil
 
 
   canv->Print(outfile,".png");
+  canv->Update();
 
   return;
 }
@@ -777,6 +809,7 @@ void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile
 
 
   canv->Print(outfile,".png");
+  canv->Update();
 
   return;
 }
@@ -815,6 +848,7 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 
 
   canv->Print(outfile,".png");
+  canv->Update();
 
   return;
 }
@@ -860,6 +894,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 
   canv->Print(outfile,".png");
+  canv->Update();
 
   return;
 }
