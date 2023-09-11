@@ -279,9 +279,9 @@ mapsampcalslice["PD4"]=7;
       float ttt2=necertotecal/meancerEcal;
       float tty=nescinttothcal/meanscinHcal;
       float tty2=necertothcal/meancerHcal;
-      if( (ttt>0.4)&& (ttt2>0.2) )
+      if( (ttt>0.1)&& (ttt2>0.2) )
       ehcEcalNsNc->Fill(ttt,ttt2);  
-      if( (tty>0.4)&& (tty2>0.2) )
+      if( (tty>0.1)&& (tty2>0.2) )
       ehcHcalNsNc->Fill(tty,tty2);  
 
 
@@ -449,9 +449,9 @@ mapsampcalslice["PD4"]=7;
       float rrr2=npcertotecal/meancerEcal;
       float rrx=npscinttothcal/meanscinHcal;
       float rrx2=npcertothcal/meancerHcal;
-      if( (rrr>0.4)&&(rrr2>0.2) )
+      if( (rrr>0.1)&&(rrr2>0.2) )
       phcEcalNsNc->Fill(rrr,rrr2);  
-      if( (rrx>0.4)&&(rrx2>0.2) )
+      if( (rrx>0.1)&&(rrx2>0.2) )
       phcHcalNsNc->Fill(rrx,rrx2);  
 
 
@@ -497,6 +497,14 @@ mapsampcalslice["PD4"]=7;
   std::cout<<" starting fits"<<std::endl;
 
   //** fits
+  /*
+  TF1 *gEcale = new TF1("gEcale","p1",0.,1.);
+  TF1 *gHcale = new TF1("gHcale","p1",0.,1.);
+  TF1 *gEcalp = new TF1("gEcalp","p1",0.,1.);
+  TF1 *gHcalp = new TF1("gHcalp","p1",0.,1.);
+  */ 
+
+
   TF1 *gEcale = new TF1("gEcale","[0]*(x-1.)+1",0.,1.);
   TF1 *gHcale = new TF1("gHcale","[0]*(x-1.)+1",0.,1.);
   TF1 *gEcalp = new TF1("gEcalp","[0]*(x-1.)+1",0.,1.);
@@ -519,8 +527,10 @@ mapsampcalslice["PD4"]=7;
   if(doecal) {
     TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
     phcEcalNsNc_pfx->Fit("gEcalp","W");
-    b1Ecal=gEcalp->GetParameter(0);
-    m1Ecal=gEcalp->GetParameter(1);
+    //b1Ecal=gEcalp->GetParameter(0);
+    //m1Ecal=gEcalp->GetParameter(1);
+    m1Ecal=gEcalp->GetParameter(0);
+    b1Ecal=1-m1Ecal;
     std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
   }
     double kappaEcal = 1+(b1Ecal/m1Ecal);
@@ -530,8 +540,11 @@ mapsampcalslice["PD4"]=7;
   if(dohcal) {
     TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
     phcHcalNsNc_pfx->Fit("gHcalp","W");
-    b1Hcal=gHcalp->GetParameter(0);
-    m1Hcal=gHcalp->GetParameter(1);
+    //    b1Hcal=gHcalp->GetParameter(0);
+    //    m1Hcal=gHcalp->GetParameter(1);
+    m1Hcal=gHcalp->GetParameter(0);
+    b1Hcal=1-m1Hcal;
+
     std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
     TCanvas* cyuck;
     SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
@@ -1001,7 +1014,7 @@ float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal
 	int iy =(ihitchan >>10) & 0x7F;   
 	if(iy>63) {iy=iy-128;};
 	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3FF;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
  
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
@@ -1196,7 +1209,7 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
 	int iy =(ihitchan >>10) & 0x7F;   // is this right?
 	if(iy>63) {iy=iy-128;};
 	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3FF;
 
 
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
@@ -1388,7 +1401,7 @@ float &EEcal, float &EHcal)
 	int iy =(ihitchan >>10) & 0x7F;   
 	if(iy>63) {iy=iy-128;};
 	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3F;
+	int ilayer=(ihitchan >>23) & 0x3FF;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
  
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");

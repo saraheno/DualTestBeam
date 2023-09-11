@@ -928,7 +928,7 @@
 
 
   <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_HCAL.xml"/>
+  <include ref="IDEA_HCAL.xml"/>
   <include ref="SCEPCAL_BOUND.xml"/>
 
 

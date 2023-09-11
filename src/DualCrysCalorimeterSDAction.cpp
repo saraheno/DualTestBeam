@@ -27,7 +27,8 @@
 // so randomly delete photons after creation according to this fraction
 double dialCher= 0.00001;
 double dialScint=0.00001;
-float betarel=1/1.544;
+//float betarel=1/1.544;
+float betarel=0.95;
 int printlimitSCE=100;
 int MAXEVENT=200;
 
