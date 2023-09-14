@@ -4,7 +4,7 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 
 
-njobs=2
+njobs=10
 names=[
 "condor-executable-sampling-20_e",
 "condor-executable-sampling-20_pi",
@@ -20,7 +20,7 @@ names=[
 
 i=0
 while (i<njobs):
-    print i
+    print(i)
     jdlfile = open(names[i]+'.jdl',"w")
     jdlfile.write("universe = vanilla"+'\n')
     jdlfile.write("Executable ="+names[i]+".sh"+'\n')
@@ -33,7 +33,7 @@ while (i<njobs):
     jdlfile.write("Queue 1"+'\n')
     jdlfile.close()
     i=i+1
-    print "file closed"
+    print("file closed")
 
 
 f = open("massjobs.sh",'w')
