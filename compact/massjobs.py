@@ -5,7 +5,18 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 
 njobs=2
-names=["condor-executable-sampling-20_e","condor-executable-sampling-20_pi"]
+names=[
+"condor-executable-sampling-20_e",
+"condor-executable-sampling-20_pi",
+"condor-executable-conly-20_e",
+"condor-executable-conly-20_pi",
+"condor-executable-fIDEAonly-20_e",
+"condor-executable-fIDEAonly-20_pi",
+"condor-executable-fSCEPonly-20_e",
+"condor-executable-fSCEPonly-20_pi",
+"condor-executable-ecalplusf-20_e",
+"condor-executable-ecalplusf-20_pi"
+]
 
 i=0
 while (i<njobs):
