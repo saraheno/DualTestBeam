@@ -24,8 +24,8 @@
 <!-- constants for dual readout spagetti fiber hcal calorimeter in IDEA -->
     <constant name="DRFiberAbswidthIDEA" value="1.0*mm"/>  <!-- should be 1.0 mm -->
     <constant name="DRFiberFibwidthIDEA" value="0.5*mm"/>  <!-- should be 0.5 mm -->
-    <constant name="DRFiberlengthIDEA" value="130*cm"/>   <!-- should be 130 cm -->
-    <constant name="DRFiberNsizeIDEA" value="136"/>        <!-- should be 136 -->
+    <constant name="DRFiberlengthIDEA" value="200*cm"/>   <!-- should be 130 cm -->
+    <constant name="DRFiberNsizeIDEA" value="160"/>        <!-- should be 136 -->
 
 
 <!-- constants for dual readout sampling hcal calorimeter -->
@@ -47,7 +47,7 @@
     <constant name="edgeoffset" value="10*cm"/>
 
 
-    <constant name="world_side" value="DRcrystallength+DRFiberlengthSCE+EcalHcalgap+edgeoffset+10."/>
+    <constant name="world_side" value="DRcrystallength+2*DRFiberlengthIDEA+EcalHcalgap+edgeoffset+10."/>
     <constant name="world_x" value="world_side/1.5"/>  <!-- should be /4 -->
     <constant name="world_y" value="world_side/1.5"/>  <!-- should be /4 -->
     <constant name="world_z" value="world_side"/>

@@ -24,6 +24,7 @@ using namespace dd4hep::detail;
 static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens)  {
 
   std::cout<<"Creating DRFiber"<<std::endl;
+  std::cout<<"DANGER DANGER WILL ROBINSON:  if the beam is aimed directly at a fiber, you will get lots of punch through.  need to add some tilt to this geometry to prevent this"<<stnd::endl;
 
   static double tol = 0.0;
   double yuck = 0.001;  // unit is cm
