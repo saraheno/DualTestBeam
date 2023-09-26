@@ -19,7 +19,7 @@ echo "ran thisdd4hep"
 
 
 
- ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRDualTestBeam.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile=./output/out_ecalplusf_20GeV_e-_100.root --part.userParticleHandler='' -G --gun.position="0.,0.,-210*cm" --gun.direction "0 0 1" --gun.energy "20*GeV" --gun.particle="pi-" -N 1000 >& ./output/sce_pi_ecalplusf_20.log
+ ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DRDualTestBeam.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile=./output/out_ecalplusf_20GeV_e-_100.root --part.userParticleHandler='' -G --gun.position="0.,0.,-210*cm" --gun.direction "0 0 1" --gun.energy "20*GeV" --gun.particle="pi-" -N 100 >& ./output/sce_pi_ecalplusf_20.log
 
 
 

@@ -67,6 +67,8 @@ namespace CalVision {
     std::array<int,finenbin> nscintwave;
     std::array<int,finenbin>  ncertime;
     std::array<int,finenbin> nscinttime;
+    std::array<float,finenbin> edeptime;
+    std::array<float,finenbin> ereldeptime;
     float xmax=10;
     float ymax=10;
     float xmin=-10;
@@ -97,6 +99,8 @@ namespace CalVision {
         nscintwave[i]=0;
         ncertime[i]=0;
         nscinttime[i]=0;
+	edeptime[i]=0.;
+	ereldeptime[i]=0.;
       }
       //      for( int i=0;i<coarsenbin;i++ ) {
       //  for( int j=0;j<coarsenbin;j++ ) {

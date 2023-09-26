@@ -1114,6 +1114,20 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
       
 
       float ae=aecalhit->energyDeposit;
+
+      // check contribs
+      Contributions zxzz=aecalhit->truth;
+      float hacheck=0.;
+      for(size_t j=0;j<zxzz.size(); j++) {
+	hacheck+=(zxzz.at(j)).deposit;
+      }
+      if(ae>0.001) {
+	if(hacheck/ae<0.99999) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
+      }
+
+
+
+
       eesum+=ae;
       if(islice==(*ii0).second)eesumair+=ae;
       if(islice==(*ii2).second)eesumPDe+=ae;
@@ -1154,6 +1168,21 @@ float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfi
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
+
+
+      // check contribs
+      Contributions zxzz=ahcalhit->truth;
+      float hacheck=0.;
+      for(size_t j=0;j<zxzz.size(); j++) {
+	hacheck+=(zxzz.at(j)).deposit;
+      }
+      if(ah>0.001) {
+	if(hacheck/ah<0.99999) std::cout<<"missing contribs: hcal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ah is "<<ah<<" ratio "<<hacheck/ah<<std::endl;
+      }
+
+
+
+
       eesum+=ah;
       //std::cout<<"eesum now "<<eesum<<std::endl;
 

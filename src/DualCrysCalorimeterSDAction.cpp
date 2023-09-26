@@ -13,6 +13,7 @@
 
 // Framework include files
 
+#include <algorithm>
 #include <CLHEP/Units/PhysicalConstants.h>
 #include "DualCrysCalorimeterHit.h"
 #include "DDG4/EventParameters.h"
@@ -205,6 +206,14 @@ namespace dd4hep {
       std::string amedia = ((track->GetMaterial())->GetName());
       if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
 
+      float avearrival=(pretime+posttime)/2.;
+      int jbin=-1;
+      float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
+      jbin = (avearrival-hit->timemin)/tbinsize;
+      jbin = std::min(jbin,(hit->nfinebin)-1);
+
+
+
       //photons
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
 	if(SCEPRINT) std::cout<<"     in volume ID "<<cell<<std::endl;
@@ -222,12 +231,9 @@ namespace dd4hep {
         int ibin=-1;
         float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nfinebin;
         ibin = (wavelength-hit->wavelenmin)/binsize;
+	ibin = std::min(ibin,(hit->nfinebin)-1);
 
 
-        float avearrival=(pretime+posttime)/2.;
-        int jbin=-1;
-        float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
-        jbin = (avearrival-hit->timemin)/tbinsize;
 
 
         int xbin=-1;
@@ -361,19 +367,21 @@ namespace dd4hep {
 
 	if(amedia.find("BlackHole")!=std::string::npos) {
 	  hit->energyDeposit += track->GetKineticEnergy();
-	  track->SetTrackStatus(fStopAndKill);
+	  //track->SetTrackStatus(fStopAndKill);
 	} else {
       //add information about each contribution to the hit
-      hit->truth.emplace_back(contrib);
+	  hit->truth.emplace_back(contrib);
 
 	  hit->energyDeposit += contrib.deposit;
 	  //	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light*10000.);
 	  float aabeta=track->GetVelocity()/CLHEP::c_light;
 	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
-	  if(aabeta>betarel) hit->edeprelativistic+=contrib.deposit;
-
-	  
+	  if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
+	  if(aabeta>betarel) {
+	    hit->edeprelativistic+=contrib.deposit;	  
+	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
+	  }
 
 	  //int tsize = (hit->truth).size();
 	  //if((tsize<hit->ntruthbin)&&(tsize>0)) {
