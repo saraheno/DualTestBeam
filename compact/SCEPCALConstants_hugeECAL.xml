@@ -26,7 +26,7 @@
     <constant name="DRFiberAbswidthIDEA" value="1.0*mm"/>  <!-- should be 1.0 mm -->
     <constant name="DRFiberFibwidthIDEA" value="0.5*mm"/>  <!-- should be 0.5 mm -->
     <constant name="DRFiberlengthIDEA" value="200*cm"/>   <!-- should be 130 cm -->
-    <constant name="DRFiberNsizeIDEA" value="160"/>        <!-- should be 136 -->
+    <constant name="DRFiberNsizeIDEA" value="150"/>        <!-- should be 150 -->
 
 
 
