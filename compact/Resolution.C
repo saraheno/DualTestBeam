@@ -984,10 +984,12 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	}
       } 
       else if(gendet==3){
+	if(idet==5) {
 	meanscinEcal+=aecalhit->energyDeposit;
 	meancerEcal+=aecalhit->edeprelativistic;
 	for(size_t j=0;j<zxzz.size(); j++) {
 	  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	}
 	}
       }
     }
@@ -1034,6 +1036,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if(ifiber==1) {
 	    meanscinHcal+=ahcalhit->energyDeposit;
 	  }
@@ -1043,7 +1046,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  }
-
+	  }
 	}
       }
       else {  // sampling
@@ -1085,6 +1088,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if( islice==(*ii3).second) { // PS
 	    meanscinHcal+=ahcalhit->energyDeposit;
 	  }
@@ -1093,6 +1097,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
+	  }
 	  }
 	}
 
@@ -1195,10 +1200,12 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	}
       } 
       else if(gendet==3){
+	if(idet==5) {
 	nescinttotecal+=aecalhit->energyDeposit;
 	necertotecal+=aecalhit->edeprelativistic;
 	for(size_t j=0;j<zxzz.size(); j++) {
 	  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	}
 	}
       }
 
@@ -1269,6 +1276,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if(ifiber==1) {
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
@@ -1278,7 +1286,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  for(size_t j=0;j<zxzz.size(); j++) { 
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  }
-
+	  }
 	}
 
 	if(ifiber>1) {eesumfiber+=ah;}
@@ -1326,6 +1334,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if( islice==(*ii3).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
@@ -1335,7 +1344,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  }
-
+	  }
 	}
 
 
@@ -1427,12 +1436,13 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	}
       } 
       else if(gendet==3){
+	if(idet==5) {
 	necertotecal+=aecalhit->edeprelativistic;
 	nescinttotecal+=aecalhit->energyDeposit;
 	for(size_t j=0;j<zxzz.size(); j++) {
 	  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
 	}
-
+	}
       }
       
     }  // end loop over ecal hits
@@ -1481,6 +1491,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if(ifiber==1) {
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
@@ -1490,7 +1501,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  }
-
+	  }
 	}
 
 
@@ -1533,6 +1544,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  }
 	}
 	else if(gendet==3) {
+	  if(idet==6) {
 	  if( islice==(*ii3).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
@@ -1542,7 +1554,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  }
-
+	  }
 	}
 
       }
