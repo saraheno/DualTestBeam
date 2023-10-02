@@ -365,7 +365,8 @@ namespace dd4hep {
 	
       //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
 
-	if(amedia.find("BlackHole")!=std::string::npos) {
+	if(amedia.find("BlackHole")!=std::string::npos) {  //edge detector
+	  // note this is the edge detector, not the kill media of photodetector
 	  hit->energyDeposit += track->GetKineticEnergy();
 	  track->SetTrackStatus(fStopAndKill);
 	} else {
