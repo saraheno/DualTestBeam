@@ -222,7 +222,8 @@ mapsampcalslice["PD4"]=7;
 
   float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
   float hcalSampf;
-  float timecut,eecaltimecut,ehcaltimecut;
+  float eecaltimecut(0),ehcaltimecut(0);
+  float timecut=10;
   
   if(num_evt>0) {  
 
