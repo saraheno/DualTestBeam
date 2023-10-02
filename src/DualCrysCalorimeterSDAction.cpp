@@ -335,7 +335,7 @@ namespace dd4hep {
         }
 	else {
           if(SCEPRINT) std::cout<<"      other photon"<<std::endl;
-          //track->SetTrackStatus(fStopAndKill);
+          track->SetTrackStatus(fStopAndKill);
           //return false;
 	}
 
