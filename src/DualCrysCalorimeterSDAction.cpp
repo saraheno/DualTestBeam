@@ -367,7 +367,7 @@ namespace dd4hep {
 
 	if(amedia.find("BlackHole")!=std::string::npos) {
 	  hit->energyDeposit += track->GetKineticEnergy();
-	  //track->SetTrackStatus(fStopAndKill);
+	  track->SetTrackStatus(fStopAndKill);
 	} else {
       //add information about each contribution to the hit
 	  hit->truth.emplace_back(contrib);
