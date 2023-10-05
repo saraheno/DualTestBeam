@@ -238,10 +238,7 @@ mapsampcalslice["PD4"]=7;
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-
-
-
- getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, eecaltimecut, ehcaltimecut);
+      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, eecaltimecut, ehcaltimecut);
     }
 
     std::cout<<"done with getMeanPhot"<<std::endl;
@@ -342,51 +339,48 @@ mapsampcalslice["PD4"]=7;
 
 
   if(doecal&&dohcal ) {
-  TFile* efa = TFile::Open(hcalonlyefilename);
-  TTree* eta = (TTree*)efa->Get("EVENT;1");
+    TFile* efa = TFile::Open(hcalonlyefilename);
+    TTree* eta = (TTree*)efa->Get("EVENT;1");
 
-  b_mc= eta->GetBranch("MCParticles");
-  b_hcal = eta->GetBranch(HCALleaf);
-  std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
+    b_mc= eta->GetBranch("MCParticles");
+    b_hcal = eta->GetBranch(HCALleaf);
+    std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
 
 
-  ihaha = b_mc->GetEntries();
-  num_evt= std::min(ihaha,num_evtsmax);
-  std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
+    ihaha = b_mc->GetEntries();
+    num_evt= std::min(ihaha,num_evtsmax);
+    std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
   
   // loop over events 
 
-  float meanscinEcala(0),meanscinHcala(0),meancerEcala(0),meancerHcala(0);
+    float meanscinEcala(0),meanscinHcala(0),meancerEcala(0),meancerHcala(0);
 
   
-  if(num_evt>0) {  
+    if(num_evt>0) {  
 
-    CalHits* ecalhitsa = new CalHits();
-    CalHits* hcalhitsa = new CalHits();
-    b_hcal->SetAddress(&hcalhitsa);
+      CalHits* ecalhitsa = new CalHits();
+      CalHits* hcalhitsa = new CalHits();
+      b_hcal->SetAddress(&hcalhitsa);
 
-    std::cout<<" branches set"<<std::endl;
+      std::cout<<" branches set"<<std::endl;
 
     // first pass through file
 
-    for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
+	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,eecaltimecut,ehcaltimecut);
+      }
 
+      std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
+      meanscinHcal=meanscinHcal/num_evt;
+      meancerHcal=meancerHcal/num_evt;
+      std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
+      std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
 
-
-      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,eecaltimecut,ehcaltimecut);
     }
 
-    std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
-    meanscinHcal=meanscinHcal/num_evt;
-    meancerHcal=meancerHcal/num_evt;
-    std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
-    std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
-
-  }
-
-  efa->Close();
-  std::cout<<"done with with electron calibration of hcal"<<std::endl;
+    efa->Close();
+    std::cout<<"done with with electron calibration of hcal"<<std::endl;
 
   }
 
@@ -407,6 +401,9 @@ mapsampcalslice["PD4"]=7;
   if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
 
   std::cout<<"pion branches found"<<std::endl;
+
+  float b1Ecal=0.;float m1Ecal=1.;
+  float b1Hcal=0.;float m1Hcal=1.;
 
 
   ihaha = b_mc->GetEntries();
@@ -500,7 +497,7 @@ mapsampcalslice["PD4"]=7;
 
 
     }  //end loop over events
-  }  // end if no events
+    //}  // end if no events
 
   //  float amean = hceest->GetMean();
 
@@ -535,7 +532,7 @@ mapsampcalslice["PD4"]=7;
   }
 
 
-  float b1Ecal=0.;float m1Ecal=1.;
+
   if(doecal) {
     TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
     phcEcalNsNc_pfx->Fit("gEcalp","W");
@@ -555,7 +552,7 @@ mapsampcalslice["PD4"]=7;
 
     std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
-    float b1Hcal=0.; float m1Hcal=1.;
+
   if(dohcal) {
     TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
     phcHcalNsNc_pfx->Fit("gHcalp","W");
@@ -586,13 +583,13 @@ mapsampcalslice["PD4"]=7;
 
 
 
-  if(num_evt>0) {  
-    CalHits* ecalhits = new CalHits();
-    if(doecal) b_ecal->SetAddress(&ecalhits);
-    CalHits* hcalhits = new CalHits();
-    if(dohcal) b_hcal->SetAddress(&hcalhits);
-    CalHits* edgehits = new CalHits();
-    if(doedge) b_edge->SetAddress(&edgehits);
+  //if(num_evt>0) {  
+    //CalHits* ecalhits = new CalHits();
+    //if(doecal) b_ecal->SetAddress(&ecalhits);
+    //CalHits* hcalhits = new CalHits();
+    //if(dohcal) b_hcal->SetAddress(&hcalhits);
+    //CalHits* edgehits = new CalHits();
+    //if(doedge) b_edge->SetAddress(&edgehits);
 
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
@@ -1353,9 +1350,11 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  if(idet==6) {
 	  if( islice==(*ii3).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
+	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
 	  if( islice==(*ii6).second ) {  // quartz
 	    necertothcal+=ahcalhit->edeprelativistic;
+	    if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
@@ -1405,7 +1404,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 		      float &EEcal, float &EHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut)
 {
-  int necertotecal(0),nescinttotecal(0),necertothcal(0),nescinttothcal(0);
+  float necertotecal(0),nescinttotecal(0),necertothcal(0),nescinttothcal(0);
   int nbyteecal, nbytehcal, nbyteedge;
 
   std::cout<<" getstuff meanscinEcal is "<<meanscinEcal<<std::endl;
@@ -1563,9 +1562,11 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  if(idet==6) {
 	  if( islice==(*ii3).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
+	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
 	  if( islice==(*ii6).second ) {  // quartz
 	    necertothcal+=ahcalhit->edeprelativistic;
+	    if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
@@ -1577,10 +1578,10 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 
     }  // end hit loop
   }  // end do hcal
-  std::cout<<"  getstuffdual cer scint count "<<necertotecal<<" "<<nescinttotecal<<std::endl;
+  std::cout<<"  getstuffdual ecal cer scint count "<<necertotecal<<" "<<nescinttotecal<<std::endl;
   float anecertotecal=necertotecal/meancerEcal;
   float anescinttotecal=nescinttotecal/meanscinEcal;
-  std::cout<<"  getstuffdual cer scint count "<<anecertotecal<<" "<<anescinttotecal<<std::endl;
+  std::cout<<"  getstuffdual norm ecal cer scint count "<<anecertotecal<<" "<<anescinttotecal<<std::endl;
   EEcal=(anescinttotecal-kappaEcal*anecertotecal)/(1-kappaEcal);
 
 
