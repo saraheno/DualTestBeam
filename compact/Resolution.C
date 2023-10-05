@@ -1350,11 +1350,11 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  if(idet==6) {
 	  if( islice==(*ii3).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
-	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
+	    //	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
 	  if( islice==(*ii6).second ) {  // quartz
 	    necertothcal+=ahcalhit->edeprelativistic;
-	    if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
+	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
@@ -1562,11 +1562,11 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	  if(idet==6) {
 	  if( islice==(*ii3).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
-	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
+	    //if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
 	  if( islice==(*ii6).second ) {  // quartz
 	    necertothcal+=ahcalhit->edeprelativistic;
-	    if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
+	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
