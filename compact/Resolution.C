@@ -546,6 +546,13 @@ mapsampcalslice["PD4"]=7;
     std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
   }
     double kappaEcal = 1+(b1Ecal/m1Ecal);
+
+
+    double hovereecalscint=phcEcalnscint->GetMean();;
+    double hovereecalcer=phcEcalncer->GetMean();
+    kappaEcal= (1-hovereecalscint)/(1.-hovereecalcer);
+
+
     std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
     float b1Hcal=0.; float m1Hcal=1.;
@@ -562,6 +569,15 @@ mapsampcalslice["PD4"]=7;
     SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
   }
     double kappaHcal = 1+(b1Hcal/m1Hcal);
+
+
+    double hoverehcalscint=phcHcalnscint->GetMean();;
+    double hoverehcalcer=phcHcalncer->GetMean();
+    kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
+
+
+
+
     std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
 
       
