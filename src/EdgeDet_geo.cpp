@@ -79,7 +79,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   Position a_pos(0.,0.,0.);
 
-
+  // an air box
   dd4hep::Box abox1   (hxlength,hylength,hzlength);
   dd4hep::Box abox2   (hxlength-2*thickness,hylength-2*thickness,hzlength-2*thickness);
   dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,a_pos);
@@ -97,23 +97,77 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
+  // make 6 sides of the edge detector
+  DetElement edge_det("side",det_id);
+  PlacedVolume  edge_phv;
+  Transform3D tr;
 
-  dd4hep::Box absbox1(hxlength-tol,hylength-tol,hzlength-tol);
-  dd4hep::Box absbox2(hxlength-tol-thickness,hylength-tol-thickness,hzlength-tol-thickness);
-  dd4hep::Solid tmpsolid = dd4hep::SubtractionSolid(absbox1,absbox2,a_pos);
-  Volume        Vside  ("side",tmpsolid,description.material(fX_side.materialStr()));
-  Vside.setAttributes(description,fX_side.regionStr(),fX_side.limitsStr(),fX_side.visStr());
+
+  dd4hep::Box absbox1(hxlength-tol,hylength-tol,thickness);
+  Volume        Vside1  ("side",absbox1,description.material(fX_side.materialStr()));
+  Vside1.setAttributes(description,fX_side.regionStr(),fX_side.limitsStr(),fX_side.visStr());
   if ( fX_side.isSensitive() ) {
     std::cout<<"setting EdgeDet side sensitive "<<std::endl;
-    Vside.setSensitiveDetector(sens);
+    Vside1.setSensitiveDetector(sens);
   }
-  DetElement edge_det("side",det_id);
 
-
-  PlacedVolume  edge_phv   = envelope.placeVolume(Vside,a_pos);
+  tr={RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+tol)};
+  edge_phv   = envelope.placeVolume(Vside1,tr);
   edge_phv.addPhysVolID("side",1);
   edge_det.setPlacement(edge_phv);
   edge_phv.addPhysVolID("system",det_id);
+
+  tr={RotationZYX(0.,0.,0.),Position(0.,0.,hzlength-tol)};
+  edge_phv   = envelope.placeVolume(Vside1,tr);
+  edge_phv.addPhysVolID("side",2);
+  edge_det.setPlacement(edge_phv);
+  edge_phv.addPhysVolID("system",det_id);
+
+
+
+  dd4hep::Box absbox2(hxlength-tol,hzlength-tol,thickness);
+  Volume        Vside2  ("side",absbox2,description.material(fX_side.materialStr()));
+  Vside2.setAttributes(description,fX_side.regionStr(),fX_side.limitsStr(),fX_side.visStr());
+  if ( fX_side.isSensitive() ) {
+    std::cout<<"setting EdgeDet side sensitive "<<std::endl;
+    Vside2.setSensitiveDetector(sens);
+  }
+
+  tr={RotationZYX(0.,0.,M_PI/2.),Position(0.,-hylength+tol,0.)};
+  edge_phv   = envelope.placeVolume(Vside2,tr);
+  edge_phv.addPhysVolID("side",3);
+  edge_det.setPlacement(edge_phv);
+  edge_phv.addPhysVolID("system",det_id);
+
+  tr={RotationZYX(0.,0.,M_PI/2.),Position(0.,hylength-tol,0.)};
+  edge_phv   = envelope.placeVolume(Vside2,tr);
+  edge_phv.addPhysVolID("side",4);
+  edge_det.setPlacement(edge_phv);
+  edge_phv.addPhysVolID("system",det_id);
+
+
+
+
+  dd4hep::Box absbox3(thickness,hylength-tol,hzlength-tol);
+  Volume        Vside3  ("side",absbox3,description.material(fX_side.materialStr()));
+  Vside3.setAttributes(description,fX_side.regionStr(),fX_side.limitsStr(),fX_side.visStr());
+  if ( fX_side.isSensitive() ) {
+    std::cout<<"setting EdgeDet side sensitive "<<std::endl;
+    Vside3.setSensitiveDetector(sens);
+  }
+
+  tr={RotationZYX(0.,0.,0.),Position(-hxlength+tol,0.,0.)};
+  edge_phv   = envelope.placeVolume(Vside3,tr);
+  edge_phv.addPhysVolID("side",5);
+  edge_det.setPlacement(edge_phv);
+  edge_phv.addPhysVolID("system",det_id);
+
+  tr={RotationZYX(0.,0.,0.),Position(hxlength-tol,0.,0.)};
+  edge_phv   = envelope.placeVolume(Vside3,tr);
+  edge_phv.addPhysVolID("side",6);
+  edge_det.setPlacement(edge_phv);
+  edge_phv.addPhysVolID("system",det_id);
+
 
 
 
