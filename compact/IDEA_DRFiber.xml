@@ -32,18 +32,18 @@ z1 is the photodetector length gap is the distance between modules, and dz is ho
 zmin is where the dtector goes
  -->
 
-<dimensions numsides="DRFiberNsizeIDEA" thickness="DRFiberAbswidthIDEA" z_length="DRFiberlengthIDEA" gap="0.1*mm" dz="0.0*mm" zmin="-world_side/2.+2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z1="killthick"/>
-<!-- <dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="0.1*mm" dz="0.0*mm" zmin="0." z1="5*mm"/> -->
+<dimensions numsides="DRFiberNsizeIDEA" thickness="DRFiberAbswidthIDEA" z_length="DRFiberlengthIDEA" gap="gapIDEA"  zmin="-world_side/2.+2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z1="killthick"/>
+
 
 
 <!-- not in core and hole rmind is not used -->
       <structure>
-        <core1 name="core1" rmax="DRFiberFibwidthIDEA" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
-        <core2 name="core2" rmax="DRFiberFibwidthIDEA" rmin="0.0" material="DR_Quartz" vis="CerenVis" sensitive="yes"/> 
-        <hole name="hole" rmax="DRFiberFibwidthIDEA+0.05*mm" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
+        <core1 name="core1" rmax="DRFiberFibwidthIDEA/2." rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
+        <core2 name="core2" rmax="DRFiberFibwidthIDEA/2." rmin="0.0" material="DR_Quartz" vis="CerenVis" sensitive="yes"/> 
+        <hole name="hole" rmax="(DRFiberFibwidthIDEA+holeoverIDEA)/2." rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
         <absorb material="Copper" vis="AbsVis" sensitive="yes"/>
-        <phdet1 name="phdet1" rmax="DRFiberFibwidthIDEA" rmin="0.0" material="killMedia2" vis="phdetVis" sensitive="yes"/> 
-        <phdet2 name="phdet2" rmax="DRFiberFibwidthIDEA" rmin="0.0" material="killMedia3" vis="phdetVis" sensitive="yes"/> 
+        <phdet1 name="phdet1" rmax="DRFiberFibwidthIDEA/2." rmin="0.0" material="killMedia2" vis="phdetVis" sensitive="yes"/> 
+        <phdet2 name="phdet2" rmax="DRFiberFibwidthIDEA/2." rmin="0.0" material="killMedia3" vis="phdetVis" sensitive="yes"/> 
       </structure>
     </detector>
   </detectors>

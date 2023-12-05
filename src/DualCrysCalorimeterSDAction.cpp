@@ -28,8 +28,9 @@
 // so randomly delete photons after creation according to this fraction
 double dialCher= 0.00001;
 double dialScint=0.00001;
-//float betarel=1/1.544;
-float betarel=0.95;
+float betarel=1/1.544;
+//float betarel=0.;
+//float betarel=0.95;
 int printlimitSCE=100;
 int MAXEVENT=200;
 
@@ -204,7 +205,7 @@ namespace dd4hep {
 
       G4Track * track =  step->GetTrack();
       std::string amedia = ((track->GetMaterial())->GetName());
-      if(SCEPRINT) std::cout<< (track->GetDefinition())->GetParticleName()<<std::endl;
+      //      if(SCEPRINT) std::cout<<"track name is "<< (track->GetDefinition())->GetParticleName()<<std::endl;
 
       float avearrival=(pretime+posttime)/2.;
       int jbin=-1;

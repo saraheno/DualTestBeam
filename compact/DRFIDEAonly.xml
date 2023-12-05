@@ -841,6 +841,15 @@
   </material>
 
 
+
+  <material name="NS_Polystyrene">
+      <D value="1.032" unit="g/cm3"/>
+      <composite n="19" ref="C"/>
+      <composite n="21" ref="H"/>
+      <property name="ABSLENGTH" ref="AbsLen_PS"/>
+  </material>
+
+
   <material name="DR_Quartz">
     <D type="density" value="2.2" unit="g/cm3"/>
     <composite n="1" ref="Si"/>
@@ -929,7 +938,7 @@
 
   <comment>EM Calorimeters</comment>
   <include ref="IDEA_HCAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
+ <include ref="SCEPCAL_BOUND.xml"/>  
 
 
 

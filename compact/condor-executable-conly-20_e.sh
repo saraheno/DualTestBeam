@@ -4,7 +4,7 @@ cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 START_TIME=`/bin/date`
 echo "started at $START_TIME"
-
+ echo "started at $START_TIME on ${HOSTNAME}"
 
 # setup software environment at UMD
 #

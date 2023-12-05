@@ -27,7 +27,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<"DANGER DANGER WILL ROBINSON:  if the beam is aimed directly at a fiber, you will get lots of punch through.  need to add some tilt to this geometry to prevent this"<<std::endl;
 
   static double tol = 0.0;
-  double yuck = 0.001;  // unit is cm
+
 
   xml_det_t     x_det     = e;
 
@@ -59,12 +59,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   xml_comp_t    x_dim     = x_det.dimensions();
   double        hthick   = x_dim.thickness()/2.;
   double        hzlength   = x_dim.z_length()/2.;
-  double        hzextra   = x_dim.dz()/2.;
   double        hzph = x_dim.z1();
   int Ncount  = x_dim.numsides();
 
   std::cout<<"half  thick "<<hthick<<" half zlength "<<hzlength<<" Ncount "<<Ncount<<std::endl;
-  std::cout<<" half extra fiber length is "<<hzextra<<std::endl;
   std::cout<<" half kill media length is "<<hzph<<std::endl;
 
 
@@ -100,11 +98,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
-  dd4hep::Box abox   ((2*Ncount+1)*(hthick+agap+tol),(2*Ncount+1)*(hthick+agap+tol), (hzlength+hzextra+hzph+tol));
+  dd4hep::Box abox   ((2*Ncount+1)*(hthick+agap+tol),(2*Ncount+1)*(hthick+agap+tol), (hzlength+hzph+tol));
   Volume        envelope  (det_name,abox,air);
   std::cout<<"setting envelope visibility to "<<x_det.visStr()<<std::endl;
   envelope.setVisAttributes(description,x_det.visStr());
-  Position a_pos(0.,0.,azmin+hzlength+hzextra+hzph+tol);
+  Position a_pos(0.,0.,azmin+hzlength+hzph+tol);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);
@@ -118,7 +116,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   int itower=0;
 
     // tower envelope for scint fiber
-  dd4hep::Box tower1trap(hthick,hthick,hzlength+hzextra+hzph);
+  dd4hep::Box tower1trap(hthick,hthick,hzlength+hzph);
   dd4hep::Volume tower1Vol( "tower1", tower1trap, air);
   tower1Vol.setVisAttributes(description, x_det.visStr());
   tower1Vol.setSensitiveDetector(sens);
@@ -128,7 +126,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //haha1.isValid();
 
     // tower envelope for quartz fiber
-  dd4hep::Box tower2trap(hthick,hthick,hzlength+hzextra+hzph);
+  dd4hep::Box tower2trap(hthick,hthick,hzlength+hzph);
   dd4hep::Volume tower2Vol( "tower2", tower2trap, air);
   tower2Vol.setVisAttributes(description, x_det.visStr());
   tower2Vol.setSensitiveDetector(sens);
@@ -142,23 +140,41 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
     //absorber
   dd4hep::Box absbox(hthick,hthick,hzlength);
-  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),hzlength-yuck);
-  dd4hep::Solid tmpsolid = dd4hep::SubtractionSolid(absbox,fiberhole,Position(0.,0.,yuck));
-  dd4hep::Volume absVol( "towerAbsorber", tmpsolid, description.material(fX_absorb.materialStr()) );
+  dd4hep::Volume abs1Vol( "towerAbsorber", absbox, description.material(fX_absorb.materialStr()) );
+  dd4hep::Volume abs2Vol( "towerAbsorber", absbox, description.material(fX_absorb.materialStr()) );
   std::cout<<"    material is "<<fX_absorb.materialStr()<<std::endl;
-  absVol.setAttributes(description,fX_absorb.regionStr(),fX_absorb.limitsStr(),fX_absorb.visStr());
+  abs1Vol.setAttributes(description,fX_absorb.regionStr(),fX_absorb.limitsStr(),fX_absorb.visStr());
+  abs2Vol.setAttributes(description,fX_absorb.regionStr(),fX_absorb.limitsStr(),fX_absorb.visStr());
   if ( fX_absorb.isSensitive() ) {
     std::cout<<"setting DRFiber absorber sensitive "<<std::endl;
-    absVol.setSensitiveDetector(sens);
+    abs1Vol.setSensitiveDetector(sens);
+    abs2Vol.setSensitiveDetector(sens);
   }
   string a_name1 = _toString(itower,"absorber1m%d");
   DetElement abs1_det(tower1_det,a_name1,det_id);  // detector element for absorber
   string a_name2 = _toString(itower,"absorber2m%d");
   DetElement abs2_det(tower2_det,a_name2,det_id);  // detector element for absorber
 
+    //hole is absorber
+  dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),hzlength);
+  dd4hep::Volume absh1Vol( "towerAbsorberHole", fiberhole, air);
+  dd4hep::Volume absh2Vol( "towerAbsorberHole", fiberhole, air);
+  std::cout<<"    material is hardcoded to air"<<std::endl;
+  absh1Vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
+  absh2Vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
+  if ( fX_hole.isSensitive() ) {
+    std::cout<<"setting DRFiber absorber hole sensitive "<<std::endl;
+    absh1Vol.setSensitiveDetector(sens);
+    absh2Vol.setSensitiveDetector(sens);
+  }
+  string a_name3= _toString(itower,"absorberhole1m%d");
+  DetElement absh1_det(tower1_det,a_name3,det_id);  // detector element for absorber
+  string a_name4 = _toString(itower,"absorberhole2m%d");
+  DetElement absh2_det(tower2_det,a_name4,det_id);  // detector element for absorber
+
 
     // scint fiber
-  dd4hep::Tube fiber1 = dd4hep::Tube(0.,fX_core1.rmax(),(hzlength+-yuck+hzextra));
+  dd4hep::Tube fiber1 = dd4hep::Tube(0.,fX_core1.rmax(),(hzlength));
   std::cout<<" making fiber1 from "<<fX_core1.materialStr()<<std::endl;
   dd4hep::Volume fiber1Vol("fiber1", fiber1, description.material(fX_core1.materialStr()));
   std::cout<<"    core1 material is "<<fX_core1.materialStr()<<std::endl;
@@ -173,7 +189,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // quartz fiber
-  dd4hep::Tube fiber2 = dd4hep::Tube(0.,fX_core2.rmax(),(hzlength-yuck+hzextra));
+  dd4hep::Tube fiber2 = dd4hep::Tube(0.,fX_core2.rmax(),(hzlength));
   std::cout<<" making fiber2 from "<<fX_core2.materialStr()<<std::endl;
   dd4hep::Volume fiber2Vol("fiber2", fiber2, description.material(fX_core2.materialStr()));
   std::cout<<"    core 2material is "<<fX_core2.materialStr()<<std::endl;
@@ -217,12 +233,24 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   std::cout<<"placing DRFiber tower subvolumes"<<std::endl;
-  Position tra(0.,0.,-(hzextra+hzph));
-  Position tra3(0.,0.,-(hzph));
-  Position tra4(0.,0.,(hzextra+hzlength-yuck));
+  Transform3D tra(RotationZYX(0.,0.,0.),Position(0.,0.,-(hzph)));
+  Transform3D tra2(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  Transform3D tra3(RotationZYX(0.,0.,0.),Position(0.,0.,-(hzph)));
+  Transform3D tra4(RotationZYX(0.,0.,0.),Position(0.,0.,(hzlength)));
+
 
   //  scint
-  PlacedVolume fiber1_phv = tower1Vol.placeVolume( fiber1Vol, tra3);
+  PlacedVolume abs1_phv = tower1Vol.placeVolume( abs1Vol, tra);
+  abs1_phv.addPhysVolID("fiber",0);
+  abs1_phv.addPhysVolID("abs",1);
+  abs1_phv.addPhysVolID("phdet",0);
+  abs1_det.setPlacement(abs1_phv);
+  PlacedVolume absh1_phv = abs1Vol.placeVolume( absh1Vol, tra2);
+  absh1_phv.addPhysVolID("fiber",0);
+  absh1_phv.addPhysVolID("abs",2);
+  absh1_phv.addPhysVolID("phdet",0);
+  absh1_det.setPlacement(absh1_phv);
+  PlacedVolume fiber1_phv = absh1Vol.placeVolume( fiber1Vol, tra2);
   fiber1_phv.addPhysVolID("fiber",1);
   fiber1_phv.addPhysVolID("abs",0);
   fiber1_phv.addPhysVolID("phdet",0);
@@ -232,31 +260,30 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   photod1_phv.addPhysVolID("abs",0);
   photod1_phv.addPhysVolID("phdet",1);
   photod1_det.setPlacement(photod1_phv);
-  PlacedVolume abs1_phv = tower1Vol.placeVolume( absVol, tra);
-  abs1_phv.addPhysVolID("fiber",0);
-  abs1_phv.addPhysVolID("abs",1);
-  abs1_phv.addPhysVolID("phdet",0);
-  abs1_det.setPlacement(abs1_phv);
 
 
 
   //  quartz
-  PlacedVolume fiber2_phv = tower2Vol.placeVolume( fiber2Vol, tra3);
-  fiber2_phv.addPhysVolID("fiber",2);
-  fiber2_phv.addPhysVolID("abs",0);
-  fiber2_phv.addPhysVolID("phdet",0);
-  fiber2_det.setPlacement(fiber2_phv);
-  PlacedVolume photod2_phv = tower2Vol.placeVolume( photod2Vol, tra4);
-  photod2_phv.addPhysVolID("fiber",0);
-  photod2_phv.addPhysVolID("abs",0);
-  photod2_phv.addPhysVolID("phdet",2);
-  photod2_det.setPlacement(photod2_phv);
-  PlacedVolume abs2_phv = tower2Vol.placeVolume( absVol, tra);
+  PlacedVolume abs2_phv = tower2Vol.placeVolume( abs2Vol, tra);
   abs2_phv.addPhysVolID("fiber",0);
   abs2_phv.addPhysVolID("abs",1);
   abs2_phv.addPhysVolID("phdet",0);
   abs2_det.setPlacement(abs2_phv);
-
+  PlacedVolume absh2_phv = abs2Vol.placeVolume( absh2Vol, tra2);
+  absh2_phv.addPhysVolID("fiber",0);
+  absh2_phv.addPhysVolID("abs",2);
+  absh2_phv.addPhysVolID("phdet",0);
+  absh2_det.setPlacement(absh2_phv);
+  PlacedVolume fiber2_phv = absh2Vol.placeVolume( fiber2Vol, tra2);
+  fiber2_phv.addPhysVolID("fiber",2);
+  fiber2_phv.addPhysVolID("abs",0);
+  fiber2_phv.addPhysVolID("phdet",0);
+  fiber2_det.setPlacement(fiber2_phv);
+  PlacedVolume photod2_phv = tower1Vol.placeVolume( photod2Vol, tra4);
+  photod2_phv.addPhysVolID("fiber",0);
+  photod2_phv.addPhysVolID("abs",0);
+  photod2_phv.addPhysVolID("phdet",2);
+  photod2_det.setPlacement(photod2_phv);
 
 
   for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
