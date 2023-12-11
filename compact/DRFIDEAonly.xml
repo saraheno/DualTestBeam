@@ -734,7 +734,7 @@
     </opticalsurface>
     <opticalsurface name="/world/DRCrystal#dielectricSurface" finish="polished" model="glisur" type="dielectric_dielectric">
     </opticalsurface>
-    <opticalsurface name="/world/DRFiber#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
+    <opticalsurface name="/world/DRFtubeFiber#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
     </opticalsurface>
   </surfaces>
 

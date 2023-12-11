@@ -20,7 +20,7 @@
 
 
   <detectors>
-    <detector id="Hcal_ID" name="DRFiber" type="DD4hep_DRFiber" readout="DRFNoSegment" vis="towerVis">
+    <detector id="Hcal_ID" name="DRFtubeFiber" type="DD4hep_DRFtubeFiber" readout="DRFNoSegment" vis="towerVis">
 
 
  <comment>Hadronic Calorimeter</comment>
