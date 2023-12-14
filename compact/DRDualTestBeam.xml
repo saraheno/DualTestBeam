@@ -889,6 +889,15 @@
   </material>
 
 
+
+  <material name="Brass">
+    <D value="8.73" unit="g/cm3" />
+    <fraction n="0.75" ref="Cu"/>
+    <fraction n="0.25" ref="Zn"/>
+  </material>
+
+
+
 </materials>
 
 
