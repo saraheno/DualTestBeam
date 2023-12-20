@@ -6,16 +6,16 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 njobs=10
 names=[
-"condor-executable-sampling-20_e",
-"condor-executable-sampling-20_pi",
-"condor-executable-conly-20_e",
-"condor-executable-conly-20_pi",
-"condor-executable-fIDEAonly-20_e",
-"condor-executable-fIDEAonly-20_pi",
-"condor-executable-fSCEPonly-20_e",
-"condor-executable-fSCEPonly-20_pi",
-"condor-executable-ecalplusf-20_e",
-"condor-executable-ecalplusf-20_pi"
+"./jobs/condor-executable-sampling-20_e",
+"./jobs/condor-executable-sampling-20_pi",
+"./jobs/condor-executable-conly-20_e",
+"./jobs/condor-executable-conly-20_pi",
+"./jobs/condor-executable-fIDEAonly-20_e",
+"./jobs/condor-executable-fIDEAonly-20_pi",
+"./jobs/condor-executable-fSCEPonly-20_e",
+"./jobs/condor-executable-fSCEPonly-20_pi",
+"./jobs/condor-executable-ecalplusf-20_e",
+"./jobs/condor-executable-ecalplusf-20_pi"
 ]
 
 i=0
