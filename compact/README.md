@@ -1,5 +1,7 @@
 condor_submit jdl_file
 condor_q
-codor_rm
+condor_rm
+condor_q -hold
+condor_release -all
 
 haha
