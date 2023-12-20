@@ -13,8 +13,9 @@ print("args=%s" % args)
 print("args.name=%s" % args.geometry)
 
 
-hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/"
+
 outputarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/"
+hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/"
 
 
 
@@ -27,7 +28,7 @@ name="condor-executable-"+args.geometry+"-"
 i=0
 while (i<nenergy):
     print(i)
-    shfile = open(name+str(energies[i])+'_GeV-e.sh',"w")
+    shfile = open(hostarea+name+str(energies[i])+'_GeV-e.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
     shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
@@ -53,7 +54,7 @@ while (i<nenergy):
 i=0
 while (i<nenergy):
     print(i)
-    shfile = open(name+str(energies[i])+'_GeV-pi.sh',"w")
+    shfile = open(hostarea+name+str(energies[i])+'_GeV-pi.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
     shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
@@ -80,9 +81,9 @@ while (i<nenergy):
 i=0
 while (i<nenergy):
     print(i)
-    jdlfile = open(name+str(energies[i])+'-e.jdl',"w")
+    jdlfile = open(hostarea+name+str(energies[i])+'-e.jdl',"w")
     jdlfile.write("universe = vanilla"+'\n')
-    jdlfile.write("Executable ="+name+str(energies[i])+"_GeV-e.sh"+'\n')
+    jdlfile.write("Executable ="+hostarea+name+str(energies[i])+"_GeV-e.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
     jdlfile.write("Requirements = TARGET.FileSystemDomain == \"privnet\""+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stdout"+'\n')
@@ -98,9 +99,9 @@ while (i<nenergy):
 i=0
 while (i<nenergy):
     print(i)
-    jdlfile = open(name+str(energies[i])+'-pi.jdl',"w")
+    jdlfile = open(hostarea+name+str(energies[i])+'-pi.jdl',"w")
     jdlfile.write("universe = vanilla"+'\n')
-    jdlfile.write("Executable ="+name+str(energies[i])+"_GeV-pi.sh"+'\n')
+    jdlfile.write("Executable ="+hostarea+name+str(energies[i])+"_GeV-pi.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
     jdlfile.write("Requirements = TARGET.FileSystemDomain == \"privnet\""+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).stdout"+'\n')
@@ -116,10 +117,11 @@ while (i<nenergy):
 
 # create the submitter file
 f = open("massjobs.sh",'w')
+f.write('chmod 777 '+hostarea+'*'+'\n')
 i=0
 while (i<nenergy):
-    f.write("condor_submit "+name+str(energies[i])+'-e.jdl'+'\n')
-    f.write("condor_submit "+name+str(energies[i])+'-pi.jdl'+'\n')
+    f.write("condor_submit "+hostarea+name+str(energies[i])+'-e.jdl'+'\n')
+    f.write("condor_submit "+hostarea+name+str(energies[i])+'-pi.jdl'+'\n')
     i=i+1
 f.write("condor_q")
 f.close()
