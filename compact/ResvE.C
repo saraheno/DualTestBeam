@@ -65,16 +65,25 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=2;
+  const int npoints=6;
   const char* filenames[npoints];
 
   filenames[0]="hists_10GeV.root"; 
-  filenames[1]="hists_30GeV.root"; 
+  filenames[1]="hists_20GeV.root"; 
+  filenames[2]="hists_30GeV.root"; 
+  filenames[3]="hists_40GeV.root"; 
+  filenames[4]="hists_50GeV.root"; 
+  filenames[5]="hists_100GeV.root"; 
 
   
 
   double aatruemean[npoints];
-  aatruemean[0]=10;aatruemean[1]=30;
+  aatruemean[0]=10;
+  aatruemean[1]=20;
+  aatruemean[2]=30;
+  aatruemean[3]=40;
+  aatruemean[4]=50;
+  aatruemean[5]=1000;
 
   const int nhst=4;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
