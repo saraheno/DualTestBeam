@@ -193,7 +193,7 @@ void res() {
   g4->SetMarkerStyle(23);
   g4->SetMarkerSize(1.5);
   g4->Draw("P");
-  lgd->AddEntry(g3, "escaping", "P");
+  lgd->AddEntry(g4, "escaping", "P");
 
   
 
