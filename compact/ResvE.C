@@ -105,6 +105,16 @@ void res() {
   TF1 *f2 = new TF1("f2","sqrt([0]*[0]/x+[1]*[1]/x/x+[2]*[2])");
   TF1 *calice = new TF1("calice","sqrt(0.57*0.57/x+0.016*0.016)",5,100);  // arXiv:1507.05892 taken from pg 21 but needs to be checked
 
+
+  // digitization of Marco's pure hcal resolution
+  double Marco_y[7]={0.11217,0.076845,0.064773,0.046040,0.030399,0.024674,0.019147};;
+  double Marco_x[7]={5.206,10.528,15.944,31.143,61.259,121.14,288.60};
+  auto marco_g = new TGraph(7,Marco_x,Marco_y);
+  marco_g->Fit("f2");
+  TF1 *marcoF = marco_g->GetFunction("macroF");
+  TF1 *marcoH = new TF1("marco","marcoF",5,100);  
+
+
   double arrres[npoints];
   for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][0];}
   auto g1 = new TGraph(npoints,aatruemean,arrres);
@@ -149,24 +159,29 @@ void res() {
   calice->Draw("same");
   lgd->AddEntry(calice, "calice detector resolution", "l");
 
+  marcoH->SetLineColor(kPink);
+  marcoH->Draw("same");
+  lgd->AddEntry(marcoH, "Marco's detector resolution", "l");
+
+
   g1->SetMarkerColor(kBlue);
   g1->SetMarkerStyle(21);
   g1->SetMarkerSize(1.5);
   g1->Draw("P");
-  lgd->AddEntry(g1, "ncer", "l");
+  lgd->AddEntry(g1, "ncer", "P");
 
   g2->SetMarkerColor(kGreen);
   g2->SetMarkerStyle(23);
   g2->SetMarkerSize(1.5);
   g2->Draw("P");
-  lgd->AddEntry(g2, "nscint", "l");
+  lgd->AddEntry(g2, "nscint", "P");
 
 
   g3->SetMarkerColor(kRed);
   g3->SetMarkerStyle(23);
   g3->SetMarkerSize(1.5);
   g3->Draw("P");
-  lgd->AddEntry(g3, "dual", "l");
+  lgd->AddEntry(g3, "dual", "P");
 
   
 
