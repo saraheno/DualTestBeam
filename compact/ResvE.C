@@ -68,8 +68,8 @@ void res() {
   const int npoints=2;
   const char* filenames[npoints];
 
-  filenames[0]="hists_10.root"; 
-  filenames[1]="hists_30.root"; 
+  filenames[0]="hists_10GeV.root"; 
+  filenames[1]="hists_30GeV.root"; 
 
   
 
