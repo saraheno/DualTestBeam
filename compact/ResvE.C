@@ -44,7 +44,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   std::cout<<"hist max at "<<amax<<std::endl;
   Double_t arms = nhist->GetRMS();
   std::cout<<"hist rms is "<<arms<<std::endl;
-  TF1 *f1 = new TF1("f1","gaus",amax-2*arms,amax+2*arms);
+  TF1 *f1 = new TF1("f1","gaus",amax-2*arms,amax+3*arms);
   nhist->Fit("f1","R");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
@@ -76,13 +76,14 @@ void res() {
   double aatruemean[npoints];
   aatruemean[0]=10;aatruemean[1]=30;
 
-  const int nhst=3;
+  const int nhst=4;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
   hnam[0]="phcHcalncer";
   hnam[1]="phcHcalnscint";
   hnam[2]="phcHcalcorr";
+  hnam[3]="phcEdgeE";
 
 
 
@@ -111,8 +112,8 @@ void res() {
   double Marco_x[7]={5.206,10.528,15.944,31.143,61.259,121.14,288.60};
   auto marco_g = new TGraph(7,Marco_x,Marco_y);
   marco_g->Fit("f2");
-  TF1 *marcoF = marco_g->GetFunction("macroF");
-  TF1 *marcoH = new TF1("marco","marcoF",5,100);  
+  TF1 *marcoF = marco_g->GetFunction("f2");
+
 
 
   double arrres[npoints];
@@ -129,6 +130,11 @@ void res() {
   for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][2];}
   auto g3 = new TGraph(npoints,aatruemean,arrres);
   g3->Fit("f2");
+
+
+  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][3];}
+  auto g4 = new TGraph(npoints,aatruemean,arrres);
+  g4->Fit("f2");
 
 
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
@@ -159,9 +165,9 @@ void res() {
   calice->Draw("same");
   lgd->AddEntry(calice, "calice detector resolution", "l");
 
-  marcoH->SetLineColor(kPink);
-  marcoH->Draw("same");
-  lgd->AddEntry(marcoH, "Marco's detector resolution", "l");
+  marcoF->SetLineColor(kPink);
+  marcoF->Draw("same");
+  lgd->AddEntry(marcoF, "Marco's detector resolution", "l");
 
 
   g1->SetMarkerColor(kBlue);
@@ -182,6 +188,12 @@ void res() {
   g3->SetMarkerSize(1.5);
   g3->Draw("P");
   lgd->AddEntry(g3, "dual", "P");
+
+  g4->SetMarkerColor(kMagenta);
+  g4->SetMarkerStyle(23);
+  g4->SetMarkerSize(1.5);
+  g4->Draw("P");
+  lgd->AddEntry(g3, "escaping", "P");
 
   
 

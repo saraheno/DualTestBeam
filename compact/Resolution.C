@@ -75,8 +75,8 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit
 // ECALleaf is 
 // crystalana(100,"./output/out_fSCEPonly_30GeV_e-_100.root",
-//"./output/out_fSCEPonly_30GeV_pi-_100.root","./output/out_fSCEPonly_30GeV_pi-_100.root",
-//20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment")
+// "./output/out_fSCEPonly_30GeV_pi-_100.root","./output/out_fSCEPonly_30GeV_pi-_100.root",
+// 20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment")
 
 
 
@@ -147,6 +147,11 @@ mapsampcalslice["PD4"]=7;
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
+
+
+  TH1F *ehcEdgeR = new TH1F("ehcEdgeR","beam - sum escaping / beam E",100,0.,1.5);
+  TH1F *phcEdgeR = new TH1F("phcEdgeR","beam - sum escaping / beam E",100,0.,1.5);
+
 
   TH1F *ehcEcalncer = new TH1F("ehcEcalncer","total number of ecal cerenkov",  500,0.,1.5);
   TH1F *phcEcalncer = new TH1F("phcEcalncer","total number of ecal cerenkov", 500,0.,1.5);
@@ -288,6 +293,7 @@ mapsampcalslice["PD4"]=7;
       ehcEcalE->Fill(eesumcrystal/beamE);
       ehcHcalE->Fill((eesumfiber1+eesumfiber2)*hcalSampf/beamE);
       ehcEdgeE->Fill(eesumedge/beamE);
+      ehcEdgeR->Fill((beamE-eesumedge)/beamE);
       ehcEcalncer->Fill(necertotecal/meancerEcal);
       ehcHcalncer->Fill(necertothcal/meancerHcal);
       ehcEcalnscint->Fill(nescinttotecal/meanscinEcal);
@@ -463,6 +469,7 @@ mapsampcalslice["PD4"]=7;
       phcEcalE->Fill(pesumcrystal/beamE);
       phcHcalE->Fill((pesumfiber1+pesumfiber2)*hcalSampf/beamE);
       phcEdgeE->Fill(pesumedge/beamE);
+      phcEdgeR->Fill((beamE-pesumedge)/beamE);
       phcEcalncer->Fill(npcertotecal/meancerEcal);
       phcHcalncer->Fill(npcertothcal/meancerHcal);
       phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
@@ -642,6 +649,9 @@ mapsampcalslice["PD4"]=7;
   TCanvas* c1b;
   SCEDraw2(c1b,"c1b",ehcEdgeE,phcEdgeE,"junk1b.png",0);
 
+  TCanvas* c1c;
+  SCEDraw2(c1c,"c1c",ehcEdgeR,phcEdgeR,"junk1c.png",0);
+
   
   if(doecal) {
     TCanvas* ce2;
@@ -705,6 +715,11 @@ mapsampcalslice["PD4"]=7;
 
   ehcEdgeE->Write();
   phcEdgeE->Write();
+
+
+
+  ehcEdgeR->Write();
+  phcEdgeR->Write();
 
 
 
@@ -1392,8 +1407,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 
-	if( (islice==(*ii6).second) ) eesumfiber1+=ah;
-	if( (islice==(*ii3).second) ) eesumfiber2+=ah;
+	if( islice==(*ii6).second ) eesumfiber1+=ah;
+	if( islice==(*ii3).second ) eesumfiber2+=ah;
 	if(islice==(*ii1).second) eesumabs+=ah;
 	if(  (islice==(*ii2).second) || (islice==(*ii4).second) ||  (islice==(*ii5).second) || (islice==(*ii7).second)) eesumPDh+=ah;
 
