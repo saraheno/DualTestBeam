@@ -83,7 +83,7 @@ void res() {
   hnam[0]="phcHcalncer";
   hnam[1]="phcHcalnscint";
   hnam[2]="phcHcalcorr";
-  hnam[3]="phcEdgeE";
+  hnam[3]="phcEdgeR";
 
 
 
