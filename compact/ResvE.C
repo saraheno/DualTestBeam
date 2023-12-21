@@ -23,6 +23,19 @@ Int_t           fCurrent; //!current Tree number in a TChain
 
 void resolution(const char* inputfilename,const char* histname,double* aamean,double* aarms) {
 
+  std::string name1(histname);
+  std::string name2(inputfilename);
+  std::string name=name1+name2;
+  TCanvas* canv= new TCanvas(name.c_str(),name.c_str(),200,10,700,500);
+  canv->SetFillColor(0);
+  canv->SetBorderMode(0);
+  canv->SetFrameFillStyle(0);
+  canv->SetFrameBorderMode(0);
+  canv->SetTickx(0);
+  canv->SetTicky(0);
+  gStyle->SetOptFit();
+
+
   std::cout<<"file name is "<<inputfilename<<std::endl;
   TFile *f = new TFile(inputfilename);
   TH1F* nhist = static_cast<TH1F*>(f->Get(histname)->Clone());
@@ -32,7 +45,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   Double_t arms = nhist->GetRMS();
   std::cout<<"hist rms is "<<arms<<std::endl;
   TF1 *f1 = new TF1("f1","gaus",amax-2*arms,amax+2*arms);
-  nhist->Fit("f1","R0");
+  nhist->Fit("f1","R");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
   Double_t p1= f1->GetParameter(1);
@@ -40,30 +53,36 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   std::cout<<"fit parameters are "<<p0<<" "<<p1<<" "<<p2<<std::endl;
   *aamean=p1;
   *aarms=p2;
+
+  nhist->Draw("");
+  canv->Print(name.c_str(),".png");
+  canv->Update();
+
+
 }
 
 
 
 void res() {
 
-  const int npoints=3;
+  const int npoints=2;
   const char* filenames[npoints];
-  //  filenames[0]="pions_5GeV_hists.root"; 
-  filenames[0]="pions_10GeV_hists.root"; 
-  filenames[1]="pions_20GeV_hists.root"; 
-  filenames[2]="pions_50GeV_hists.root"; 
-  //filenames[4]="pions_100GeV_hists.root"; 
+
+  filenames[0]="hists_10.root"; 
+  filenames[1]="hists_30.root"; 
+
   
 
   double aatruemean[npoints];
-  aatruemean[0]=10;aatruemean[1]=20;aatruemean[2]=50;
+  aatruemean[0]=10;aatruemean[1]=30;
 
-  const int nhst=2;
+  const int nhst=3;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
-  hnam[0]="hTotalE";
-  hnam[1]="hestE";
+  hnam[0]="phcHcalncer";
+  hnam[1]="phcHcalnscint";
+  hnam[2]="phcHcalcorr";
 
 
 
@@ -71,7 +90,7 @@ void res() {
   double abc,dej;
   for(int k=0;k<nhst;k++) {
     for(int j=0;j<npoints;j++){
-      std::cout<<"fitting "<<hnam[k]<<" at energy "<<aatruemean[j]<<std::endl;
+      std::cout<<"k j are "<<k<<" "<<j<<" fitting "<<hnam[k]<<" at energy "<<aatruemean[j]<<std::endl;
       resolution(filenames[j],hnam[k].c_str(),&abc,&dej);
       aaamean[j][k]=abc;
       aarms[j][k]=dej;
@@ -97,6 +116,11 @@ void res() {
   g2->Fit("f2");
 
 
+  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][2];}
+  auto g3 = new TGraph(npoints,aatruemean,arrres);
+  g3->Fit("f2");
+
+
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
   //  gStyle->SetOptStat(111111);
   //gStyle->SetOptFit();
@@ -113,7 +137,7 @@ void res() {
 
   TH1 *frame = new TH1F("frame","",1000,0,120);
   frame->SetMinimum(0.);
-  frame->SetMaximum(0.5);
+  frame->SetMaximum(1.0);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
@@ -128,14 +152,21 @@ void res() {
   g1->SetMarkerColor(kBlue);
   g1->SetMarkerStyle(21);
   g1->SetMarkerSize(1.5);
-  g1->Draw("CP");
-  lgd->AddEntry(g1, "total energy in calorimeter", "l");
+  g1->Draw("P");
+  lgd->AddEntry(g1, "ncer", "l");
 
-  g2->SetMarkerColor(kRed);
+  g2->SetMarkerColor(kGreen);
   g2->SetMarkerStyle(23);
   g2->SetMarkerSize(1.5);
-  g2->Draw("CP");
-  lgd->AddEntry(g2, "estimated energy in calorimeter", "l");
+  g2->Draw("P");
+  lgd->AddEntry(g2, "nscint", "l");
+
+
+  g3->SetMarkerColor(kRed);
+  g3->SetMarkerStyle(23);
+  g3->SetMarkerSize(1.5);
+  g3->Draw("P");
+  lgd->AddEntry(g3, "dual", "l");
 
   
 

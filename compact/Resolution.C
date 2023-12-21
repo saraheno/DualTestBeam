@@ -74,7 +74,9 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 // hcal type 0=fiber, 1 = sampling
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit
 // ECALleaf is 
-// crystalana(100,"./output/out_fSCEPonly_20GeV_e-_100.root","./output/out_fSCEPonly_20GeV_pi-_100.root","./output/out_fSCEPonly_20GeV_pi-_100.root",20,0,1,0,1,3,"hists.root","DRFNoSegment","DRFNoSegment")
+// crystalana(100,"./output/out_fSCEPonly_30GeV_e-_100.root",
+//"./output/out_fSCEPonly_30GeV_pi-_100.root","./output/out_fSCEPonly_30GeV_pi-_100.root",
+//20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment")
 
 
 
