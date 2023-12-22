@@ -80,7 +80,7 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 
 
 
-void crystalana(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
+void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
 		const char* hcalonlyefilename,
  const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
 
