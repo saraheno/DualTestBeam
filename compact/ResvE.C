@@ -65,7 +65,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=6;
+  const int npoints=5;
   const char* filenames[npoints];
 
   filenames[0]="hists_10GeV.root"; 
@@ -73,7 +73,7 @@ void res() {
   filenames[2]="hists_30GeV.root"; 
   filenames[3]="hists_40GeV.root"; 
   filenames[4]="hists_50GeV.root"; 
-  filenames[5]="hists_100GeV.root"; 
+  //  filenames[5]="hists_100GeV.root"; 
 
   
 
@@ -83,7 +83,7 @@ void res() {
   aatruemean[2]=30;
   aatruemean[3]=40;
   aatruemean[4]=50;
-  aatruemean[5]=1000;
+  //  aatruemean[5]=100;
 
   const int nhst=4;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
@@ -157,7 +157,7 @@ void res() {
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
   TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
-  lgd->SetBorderSize(0); lgd->SetTextSize(0.04); lgd->SetTextFont(62); lgd->SetFillColor(0);
+  lgd->SetBorderSize(0); lgd->SetTextSize(0.03); lgd->SetTextFont(62); lgd->SetFillColor(0);
 
 
   TH1 *frame = new TH1F("frame","",1000,0,120);
@@ -181,26 +181,26 @@ void res() {
 
   g1->SetMarkerColor(kBlue);
   g1->SetMarkerStyle(21);
-  g1->SetMarkerSize(1.5);
+  g1->SetMarkerSize(1.0);
   g1->Draw("P");
   lgd->AddEntry(g1, "ncer", "P");
 
   g2->SetMarkerColor(kGreen);
   g2->SetMarkerStyle(23);
-  g2->SetMarkerSize(1.5);
+  g2->SetMarkerSize(1.0);
   g2->Draw("P");
   lgd->AddEntry(g2, "nscint", "P");
 
 
   g3->SetMarkerColor(kRed);
   g3->SetMarkerStyle(23);
-  g3->SetMarkerSize(1.5);
+  g3->SetMarkerSize(1.0);
   g3->Draw("P");
   lgd->AddEntry(g3, "dual", "P");
 
   g4->SetMarkerColor(kMagenta);
   g4->SetMarkerStyle(23);
-  g4->SetMarkerSize(1.5);
+  g4->SetMarkerSize(1.0);
   g4->Draw("P");
   lgd->AddEntry(g4, "escaping", "P");
 

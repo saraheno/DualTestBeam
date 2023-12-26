@@ -57,7 +57,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // pointer to finding dimensins text in xml file
   // look in DDCore/include/Parsers/detail/Dimension.h for arguments
   xml_comp_t    x_dim     = x_det.dimensions();
-  double        hthick   = x_dim.thickness()/2.;
+  double        hthick   = x_dim.thickness();
   double        hzlength   = x_dim.z_length()/2.;
   double        hzph = x_dim.z1();
   int Ncount  = x_dim.numsides();
