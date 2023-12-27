@@ -19,7 +19,7 @@
     <constant name="DRFiberFibwidthSCE" value=".5025*mm"/>  <!-- should be 0.5025 mm -->
     <constant name="holeoverSCE" value="0.025*mm"/> 
     <constant name="gapSCE" value="0.0001*mm"/>
-    <constant name="DRFiberlengthSCE" value="0.6*cm"/>   <!-- should be 200 cm -->
+    <constant name="DRFiberlengthSCE" value="200.*cm"/>   <!-- should be 200 cm -->
     <constant name="DRFiberNsizeSCE" value="136"/>        <!-- should be 136 -->
 
 

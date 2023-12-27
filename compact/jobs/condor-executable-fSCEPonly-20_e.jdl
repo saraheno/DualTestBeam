@@ -1,9 +1,0 @@
-universe = vanilla
-Executable =condor-executable-fSCEPonly-20_e.sh
-should_transfer_files = NO
-Requirements = TARGET.FileSystemDomain == "privnet"
-Output = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/condor-executable-fSCEPonly-20_e_sce_$(cluster)_$(process).stdout
-Error = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/condor-executable-fSCEPonly-20_e_sce_$(cluster)_$(process).stderr
-Log = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/condor-executable-fSCEPonly-20_e_sce_$(cluster)_$(process).condor
-Arguments = SCE
-Queue 1

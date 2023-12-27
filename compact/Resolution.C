@@ -142,12 +142,12 @@ mapsampcalslice["PD4"]=7;
   TH1F *ehcEcalE = new TH1F("ehcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
   TH1F *phcEcalE = new TH1F("phcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
 
-  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,0.04);
-  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",100,0.,0.04);
-  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.04);
-  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.04);
-  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.04);
-  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.04);
+  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,0.08);
+  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",100,0.,0.08);
+  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.08);
+  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.08);
+  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.08);
+  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.08);
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
@@ -1120,10 +1120,10 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	int iphdet=(ihitchan >>25) & 0x03;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
-	  if(ifiber==2) {  // scintillating fibers
+	  if(ifiber==1) {  // scintillating fibers
 	    meanscinHcal+=ahcalhit->nscintillator;
 	  }
-	  if(ifiber==1) {  // quartz fibers
+	  if(ifiber==2) {  // quartz fibers
 	    meancerHcal+=ahcalhit->ncerenkov;
 	  }
 	}
@@ -1137,10 +1137,10 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if(ifiber==2) {
+	  if(ifiber==1) {
 	    meanscinHcal+=ahcalhit->energyDeposit;
 	  }
-	  if(ifiber==1) {
+	  if(ifiber==2) {
 	    if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
 	  }
@@ -1363,10 +1363,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 	if(gendet==1) {  // take light as generated in fiber
-	  if(ifiber==2) {  // scintillating fibers
+	  if(ifiber==1) {  // scintillating fibers
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if(ifiber==1) {  // quartz fibers
+	  if(ifiber==2) {  // quartz fibers
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
@@ -1380,10 +1380,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if(ifiber==2) {
+	  if(ifiber==1) {
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
-	  if(ifiber==1) {
+	  if(ifiber==2) {
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	  }
@@ -1586,10 +1586,10 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	int iphdet=(ihitchan >>25) & 0x03;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
-	  if(ifiber==2) {  // scintillating fibers
+	  if(ifiber==1) {  // scintillating fibers
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if(ifiber==1) {  // quartz fibers
+	  if(ifiber==2) {  // quartz fibers
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
@@ -1603,10 +1603,10 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if(ifiber==2) {
+	  if(ifiber==1) {
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	  }
-	  if(ifiber==1) {
+	  if(ifiber==2) {
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	  }
