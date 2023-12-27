@@ -117,11 +117,14 @@ void res() {
 
 
   // digitization of Marco's pure hcal resolution
-  double Marco_y[7]={0.11217,0.076845,0.064773,0.046040,0.030399,0.024674,0.019147};;
-  double Marco_x[7]={5.206,10.528,15.944,31.143,61.259,121.14,288.60};
-  auto marco_g = new TGraph(7,Marco_x,Marco_y);
-  marco_g->Fit("f2");
-  TF1 *marcoF = marco_g->GetFunction("f2");
+  //double Marco_y[7]={0.11217,0.076845,0.064773,0.046040,0.030399,0.024674,0.019147};;
+  //double Marco_x[7]={5.206,10.528,15.944,31.143,61.259,121.14,288.60};
+  //auto marco_g = new TGraph(7,Marco_x,Marco_y);
+  //marco_g->Fit("f2");
+  TF1 *mC = new TF1("MC","sqrt(0.7*0.7/x+0.11*0.11)",10,110);
+  TF1 *mS = new TF1("MS","sqrt(0.32*0.32/x+0.08*0.08)",10,110);
+  TF1 *mD = new TF1("MD","sqrt(0.25*0.25/x+0.01*0.01)",10,110);
+
 
 
 
@@ -160,9 +163,9 @@ void res() {
   lgd->SetBorderSize(0); lgd->SetTextSize(0.03); lgd->SetTextFont(62); lgd->SetFillColor(0);
 
 
-  TH1 *frame = new TH1F("frame","",1000,0,120);
+  TH1 *frame = new TH1F("frame","",1000,0,70);
   frame->SetMinimum(0.);
-  frame->SetMaximum(1.0);
+  frame->SetMaximum(0.7);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
@@ -171,12 +174,19 @@ void res() {
   frame->GetYaxis()->SetLabelSize(0.03);
   frame->Draw("");
 
-  calice->Draw("same");
-  lgd->AddEntry(calice, "calice detector resolution", "l");
+  //calice->Draw("same");
+  //lgd->AddEntry(calice, "calice detector resolution", "l");
 
-  marcoF->SetLineColor(kPink);
-  marcoF->Draw("same");
-  lgd->AddEntry(marcoF, "Marco's detector resolution", "l");
+
+  mC->SetLineColor(kBlue);
+  mC->Draw("same");
+  lgd->AddEntry(mC, "Marco's C resolution", "l");
+  mS->SetLineColor(kGreen);
+  mS->Draw("same");
+  lgd->AddEntry(mS, "Marco's S resolution", "l");
+  mD->SetLineColor(kRed);
+  mD->Draw("same");
+  lgd->AddEntry(mD, "Marco's dual resolution", "l");
 
 
   g1->SetMarkerColor(kBlue);
