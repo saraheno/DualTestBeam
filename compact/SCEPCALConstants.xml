@@ -19,8 +19,8 @@
     <constant name="DRFiberFibwidthSCE" value=".5025*mm"/>  <!-- should be 0.5025 mm -->
     <constant name="holeoverSCE" value="0.025*mm"/> 
     <constant name="gapSCE" value="0.0001*mm"/>
-    <constant name="DRFiberlengthSCE" value="200.*cm"/>   <!-- should be 200 cm -->
-    <constant name="DRFiberNsizeSCE" value="136"/>        <!-- should be 136 -->
+    <constant name="DRFiberlengthSCE" value="400.*cm"/>   <!-- should be 200 cm -->
+    <constant name="DRFiberNsizeSCE" value="200"/>        <!-- should be 136 -->
 
 
 <!-- constants for dual readout spagetti fiber hcal calorimeter in IDEA -->
@@ -28,8 +28,8 @@
     <constant name="DRFiberFibwidthIDEA" value="0.5025*mm"/>  <!-- should be 0.5025 mm -->
     <constant name="holeoverIDEA" value="0.025*mm"/> 
     <constant name="gapIDEA" value="0.0001*mm"/>
-    <constant name="DRFiberlengthIDEA" value="200.*cm"/>   <!-- should be 200 cm -->
-    <constant name="DRFiberNsizeIDEA" value="150"/>        <!-- should be 150 -->
+    <constant name="DRFiberlengthIDEA" value="400.*cm"/>   <!-- should be 200 cm -->
+    <constant name="DRFiberNsizeIDEA" value="280"/>        <!-- should be 150 -->
 
 
 <!-- constants for dual readout sampling hcal calorimeter -->
