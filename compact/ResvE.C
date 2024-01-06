@@ -43,8 +43,9 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   Double_t amax = nhist->GetBinCenter(imax);
   std::cout<<"hist max at "<<amax<<std::endl;
   Double_t arms = nhist->GetRMS();
-  std::cout<<"hist rms is "<<arms<<std::endl;
-  TF1 *f1 = new TF1("f1","gaus",amax-2*arms,amax+3*arms);
+  Double_t amean = nhist->GetMean();
+  std::cout<<"hist mean rms is "<<amean<<" "<<arms<<std::endl;
+  TF1 *f1 = new TF1("f1","gaus",amean-1.5*arms,amean+1.5*arms);
   nhist->Fit("f1","R");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
@@ -65,14 +66,17 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=5;
+  const int npoints=7;
   const char* filenames[npoints];
 
-  filenames[0]="hists_10GeV.root"; 
-  filenames[1]="hists_20GeV.root"; 
-  filenames[2]="hists_30GeV.root"; 
-  filenames[3]="hists_40GeV.root"; 
-  filenames[4]="hists_50GeV.root"; 
+  filenames[0]="hists_10GeV_4.root"; 
+  filenames[1]="hists_20GeV_4.root"; 
+  filenames[2]="hists_25GeV_4.root"; 
+  filenames[3]="hists_30GeV_4.root"; 
+  filenames[4]="hists_35GeV_4.root"; 
+  filenames[5]="hists_40GeV_4.root"; 
+  filenames[6]="hists_45GeV_4.root"; 
+  //filenames[7]="hists_50GeV_3.root"; 
   //  filenames[5]="hists_100GeV.root"; 
 
   
@@ -80,9 +84,12 @@ void res() {
   double aatruemean[npoints];
   aatruemean[0]=10;
   aatruemean[1]=20;
-  aatruemean[2]=30;
-  aatruemean[3]=40;
-  aatruemean[4]=50;
+  aatruemean[2]=25;
+  aatruemean[3]=30;
+  aatruemean[4]=35;
+  aatruemean[5]=40;
+  aatruemean[6]=45;
+  //aatruemean[7]=50;
   //  aatruemean[5]=100;
 
   const int nhst=4;
@@ -165,7 +172,7 @@ void res() {
 
   TH1 *frame = new TH1F("frame","",1000,0,70);
   frame->SetMinimum(0.);
-  frame->SetMaximum(0.7);
+  frame->SetMaximum(0.25);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
