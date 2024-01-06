@@ -307,16 +307,16 @@ SIM.meta.runNumberOffset = 0
 ################################################################################
 
 ## Output level for input sources
-SIM.output.inputStage = 3
+SIM.output.inputStage = 1
 
 ## Output level for Geant4 kernel
 SIM.output.kernel = 1
 
 ## Output level for ParticleHandler
-SIM.output.part = 3
+SIM.output.part = 1
 
 ## Output level for Random Number Generator setup
-SIM.output.random = 3
+SIM.output.random = 1
 
 
 ################################################################################
