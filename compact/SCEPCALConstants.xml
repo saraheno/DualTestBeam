@@ -19,10 +19,10 @@
     <constant name="DRFiberFibwidthSCE" value=".5025*mm"/>  <!-- should be 0.5025 mm -->
     <constant name="holeoverSCE" value="0.025*mm"/> 
     <constant name="gapSCE" value="0.0001*mm"/>
-    <constant name="DRFiberlengthSCE" value="400.*cm"/>   <!-- should be 200 cm -->
-    <constant name="DRFiberNsizeSCE" value="200"/>        <!-- should be 136 -->
+    <constant name="DRFiberlengthSCE" value="200.*cm"/>   <!-- should be 200 cm -->
+    <constant name="DRFiberNsizeSCE" value="50"/>        <!-- should be 136 -->
 <!-- 200 crash  190 no crash 195 no crash  197 no crash 199 no crash-->
-
+<!-- crashes when make fiber size smaller -->
 
 <!-- constants for dual readout spagetti fiber hcal calorimeter in IDEA -->
     <constant name="DRFiberAbswidthIDEA" value="1.0*mm"/>  <!-- should be 1.0 mm -->

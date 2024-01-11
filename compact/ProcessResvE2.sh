@@ -17,16 +17,16 @@ echo "ran thisdd4hep"
 #
 
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_15GeV_e-.root","./output/out_FSCEPonly_15GeV_pi-.root","./output/out_FSCEPonly_15GeV_pi-.root",15,0,1,0,1,1,"hists_10GeV.root","DRFNoSegment","DRFNoSegment")' > 15GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_15GeV_e-.root","./output/out_FSCEPonly_15GeV_pi-.root","./output/out_FSCEPonly_15GeV_pi-.root",15,0,1,0,1,4,"hists_10GeV.root","DRFNoSegment","DRFNoSegment")' > 15GeV.log
 
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_25GeV_e-.root","./output/out_FSCEPonly_25GeV_pi-.root","./output/out_FSCEPonly_25GeV_pi-.root",25,0,1,0,1,1,"hists_25GeV.root","DRFNoSegment","DRFNoSegment")' >25GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_25GeV_e-.root","./output/out_FSCEPonly_25GeV_pi-.root","./output/out_FSCEPonly_25GeV_pi-.root",25,0,1,0,1,4,"hists_25GeV.root","DRFNoSegment","DRFNoSegment")' >25GeV.log
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_35GeV_e-.root","./output/out_FSCEPonly_35GeV_pi-.root","./output/out_FSCEPonly_35GeV_pi-.root",35,0,1,0,1,1,"hists_35GeV.root","DRFNoSegment","DRFNoSegment")' >35GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_35GeV_e-.root","./output/out_FSCEPonly_35GeV_pi-.root","./output/out_FSCEPonly_35GeV_pi-.root",35,0,1,0,1,4,"hists_35GeV.root","DRFNoSegment","DRFNoSegment")' >35GeV.log
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_45GeV_e-.root","./output/out_FSCEPonly_45GeV_pi-.root","./output/out_FSCEPonly_45GeV_pi-.root",45,0,1,0,1,1,"hists_45GeV.root","DRFNoSegment","DRFNoSegment")' >45GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_45GeV_e-.root","./output/out_FSCEPonly_45GeV_pi-.root","./output/out_FSCEPonly_45GeV_pi-.root",45,0,1,0,1,4,"hists_45GeV.root","DRFNoSegment","DRFNoSegment")' >45GeV.log
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_55GeV_e-.root","./output/out_FSCEPonly_55GeV_pi-.root","./output/out_FSCEPonly_55GeV_pi-.root",55,0,1,0,1,1,"hists_55GeV.root","DRFNoSegment","DRFNoSegment")' >55GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_55GeV_e-.root","./output/out_FSCEPonly_55GeV_pi-.root","./output/out_FSCEPonly_55GeV_pi-.root",55,0,1,0,1,4,"hists_55GeV.root","DRFNoSegment","DRFNoSegment")' >55GeV.log
 
 
 
