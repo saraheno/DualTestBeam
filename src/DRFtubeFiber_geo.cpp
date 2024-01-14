@@ -256,12 +256,17 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //  scint
   PlacedVolume abs1_phv = tower1Vol.placeVolume( abs1Vol, tra);
   abs1_phv.addPhysVolID("type",0);
+  abs1_det.setPlacement(abs1_phv);
   PlacedVolume absh1_phv = abs1Vol.placeVolume( absh1Vol, tra2);
   absh1_phv.addPhysVolID("type",5);
+  absh1_det.setPlacement(absh1_phv);
   PlacedVolume fiber1_phv = absh1Vol.placeVolume( fiber1Vol, tra2);
   fiber1_phv.addPhysVolID("type",2);
+  fiber1_det.setPlacement(fiber1_phv);
   PlacedVolume photod1_phv = tower1Vol.placeVolume( photod1Vol, tra4);
   photod1_phv.addPhysVolID("type",4);
+  photod1_det.setPlacement(photod1_phv);
+
 
 
 
@@ -269,12 +274,16 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //  quartz
   PlacedVolume abs2_phv = tower2Vol.placeVolume( abs2Vol, tra);
   abs2_phv.addPhysVolID("type",0);
+  abs2_det.setPlacement(abs2_phv);
   PlacedVolume absh2_phv = abs2Vol.placeVolume( absh2Vol, tra2);
   absh2_phv.addPhysVolID("type",5);
+  absh2_det.setPlacement(absh2_phv);
   PlacedVolume fiber2_phv = absh2Vol.placeVolume( fiber2Vol, tra2);
   fiber2_phv.addPhysVolID("type",1);
+  fiber2_det.setPlacement(fiber2_phv);
   PlacedVolume photod2_phv = tower1Vol.placeVolume( photod2Vol, tra4);
   photod2_phv.addPhysVolID("fiber",3);
+  photod2_det.setPlacement(photod2_phv);
 
 
   // clone towers and place in row
