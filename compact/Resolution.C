@@ -1115,9 +1115,16 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	if(ix>255) ix=ix-512;
 	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
 	if(iy>255) iy=iy-512;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
+	int itype=(ihitchan >>21) & 0x07;	
+	int ifiber=0; int iabs=0; int iphdet=0;
+	if(itype==0) iabs=1;
+	if(itype==1) ifiber==2; 
+	if(itype==2) ifiber==1; 
+	if(itype==3) iphdet==2; 
+	if(itype==4) iphdet==1; 
+	//int ifiber  =(ihitchan >>21) & 0x03;
+	//int iabs=(ihitchan >>23) & 0x03;
+	//int iphdet=(ihitchan >>25) & 0x03;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
@@ -1356,9 +1363,17 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	if(ix>255) ix=ix-512;
 	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
 	if(iy>255) iy=iy-512;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
+	int itype=(ihitchan >>21) & 0x07;	
+	int ifiber=0; int iabs=0; int iphdet=0;
+	if(itype==0) iabs=1;
+	if(itype==1) ifiber==2; 
+	if(itype==2) ifiber==1; 
+	if(itype==3) iphdet==2; 
+	if(itype==4) iphdet==1; 
+
+	//int ifiber  =(ihitchan >>21) & 0x03;
+	//int iabs=(ihitchan >>23) & 0x03;
+	//int iphdet=(ihitchan >>25) & 0x03;
 	//if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 
 
@@ -1581,9 +1596,17 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	if(ix>255) ix=ix-512;
 	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
 	if(iy>255) iy=iy-512;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
+	int itype=(ihitchan >>21) & 0x07;	
+	int ifiber=0; int iabs=0; int iphdet=0;
+	if(itype==0) iabs=1;
+	if(itype==1) ifiber==2; 
+	if(itype==2) ifiber==1; 
+	if(itype==3) iphdet==2; 
+	if(itype==4) iphdet==1; 
+
+	//int ifiber  =(ihitchan >>21) & 0x03;
+	//int iabs=(ihitchan >>23) & 0x03;
+	//int iphdet=(ihitchan >>25) & 0x03;
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
