@@ -21,7 +21,7 @@
 <!-- please note these are half lengths and widths -->
 
   <detectors>
-    <detector id="Hcal_ID" name="DRSampling" type="DD4hep_DRSamp" readout="DRSNoSegment" vis="InvisibleWithDaughers">
+    <detector id="Hcal_ID" name="DRSampling" type="DRSamp" readout="DRSNoSegment" vis="InvisibleWithDaughers">
 
 
  <comment>Electromagnetic Calorimeter </comment>

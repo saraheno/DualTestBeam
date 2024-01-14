@@ -334,6 +334,5 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   return sdet;
 }
 
-DECLARE_DETELEMENT(DD4hep_DRFiber,create_detector)
+DECLARE_DETELEMENT(DRFiber,create_detector)
 
-DECLARE_DEPRECATED_DETELEMENT(DRFiber,create_detector)

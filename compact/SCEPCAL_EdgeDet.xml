@@ -19,7 +19,7 @@
 
 
   <detectors>
-    <detector id="EdgeDet_ID" name="EdgeDet" type="DD4hep_EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1">
+    <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1">
 
 
  <comment>Edge Detector</comment>

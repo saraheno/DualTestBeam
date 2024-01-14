@@ -273,6 +273,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   return sdet;
 }
 
-DECLARE_DETELEMENT(DD4hep_DRCrys,create_detector)
+DECLARE_DETELEMENT(DRCrys,create_detector)
 
-DECLARE_DEPRECATED_DETELEMENT(DRCrys,create_detector)
+
