@@ -20,7 +20,7 @@
     <constant name="holeoverSCE" value="0.025*mm"/> 
     <constant name="gapSCE" value="0.0001*mm"/>
     <constant name="DRFiberlengthSCE" value="200.*cm"/>   <!-- should be 200 cm -->
-    <constant name="DRFiberNsizeSCE" value="50"/>        <!-- should be 136 -->
+    <constant name="DRFiberNsizeSCE" value="5"/>        <!-- should be 136 -->
 <!-- 200 crash  190 no crash 195 no crash  197 no crash 199 no crash-->
 <!-- crashes when make fiber size smaller -->
 

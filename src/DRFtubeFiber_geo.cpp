@@ -27,10 +27,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<"DANGER DANGER WILL ROBINSON:  if the beam is aimed directly at a fiber, you will get lots of punch through.  need to add some tilt to this geometry to prevent this"<<std::endl;
 
   static double tol = 0.0;
-
-
   xml_det_t     x_det     = e;
-
 
   // for volume tags in detector
   int           det_id    = x_det.id();
@@ -38,20 +35,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   string        det_name  = x_det.nameStr();
   std::cout<<" det_name is .. "<<det_name<<std::endl;
 
-
-
-
   // material to underly it all
   Material      air       = description.air();
 
 
-
-  /*
+  /*  //optical surfaces
   OpticalSurfaceManager surfMgr = description.surfaceManager();
   OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
   */
-
-
 
 
   // pointer to finding dimensins text in xml file
@@ -61,17 +52,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double        hzlength   = x_dim.z_length()/2.;
   double        hzph = x_dim.z1();
   int Ncount  = x_dim.numsides();
+  double agap = x_dim.gap();
+  double azmin = x_dim.zmin();
 
   std::cout<<"half  thick "<<hthick<<" half zlength "<<hzlength<<" Ncount "<<Ncount<<std::endl;
   std::cout<<" half kill media length is "<<hzph<<std::endl;
-
-
-
-  double agap = x_dim.gap();
   std::cout<<" gap is "<<agap<<std::endl;
-
-
-  double azmin = x_dim.zmin();
   std::cout<<" placing at zmin "<<azmin<<std::endl;
 
   // these refer to different fields in the xml file for this detector
@@ -82,35 +68,19 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   xml_comp_t fX_hole( fX_struct.child( _Unicode(hole) ) );
   xml_comp_t fX_phdet1( fX_struct.child( _Unicode(phdet1) ) );
   xml_comp_t fX_phdet2( fX_struct.child( _Unicode(phdet2) ) );
-
-
-
-  // three structures, volumes, placedvolumes, and detelements
-  // volumes need a setVisAttribute
-  // DetElements. you can have volumes inherit attrivutesby setting them here
-  //              instead of in the volumes
-  // placed volumes need a physvolid, a setplacement in a detelement,
-  //                and are created with a mother.placevolume
   
   // detector element for entire detector.  
   DetElement    sdet      (det_name,det_id);
   Volume        motherVol = description.pickMotherVolume(sdet);
-
-
-  //PolyhedraRegular hedra  (nphi,inner_r,outer_r+tol*2e0,zmaxt);
   dd4hep::Box abox   ((2*Ncount+1)*(hthick+agap+tol),(2*Ncount+1)*(hthick+agap+tol), (hzlength+hzph+tol));
   Volume        envelopeVol  (det_name,abox,air);
   std::cout<<"setting envelope visibility to "<<x_det.visStr()<<std::endl;
   envelopeVol.setVisAttributes(description,x_det.visStr());
   Position a_pos(0.,0.,azmin+hzlength+hzph+tol);
   PlacedVolume  env_phv   = motherVol.placeVolume(envelopeVol,a_pos);
-
   env_phv.addPhysVolID("system",det_id);
-
   sdet.setPlacement(env_phv);  // associate the placed volume to the detector element
-
   sens.setType("calorimeter");
-
 
 
   // setup the prototype detelements.  will need to clone later to put towers into rows
@@ -142,15 +112,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   string ph2_name = "phdet2";
   DetElement photod2_det(tower2_det,ph2_name,det_id);  
 
-
-
   // setup the volumes with the shapes and properties
 
   dd4hep::Box RowTubes(hthick,hthick,hzlength+hzph);
   dd4hep::Volume RowTubesVol( "tower1", RowTubes, air);
   RowTubesVol.setVisAttributes(description, x_det.visStr());
   RowTubesVol.setSensitiveDetector(sens);
-
 
     // tower  for scint fiber
   dd4hep::Box tower1trap(hthick,hthick,hzlength+hzph);
@@ -221,8 +188,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     fiber2Vol.setSensitiveDetector(sens);
   }
 
-
-
     // photodeectors
   dd4hep::Tube photod1 = dd4hep::Tube(0.,fX_phdet1.rmax(),(hzph));
   dd4hep::Volume photod1Vol("phdet1", photod1, description.material(fX_phdet1.materialStr()));
@@ -266,10 +231,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   PlacedVolume photod1_phv = tower1Vol.placeVolume( photod1Vol, tra4);
   photod1_phv.addPhysVolID("type",4);
   photod1_det.setPlacement(photod1_phv);
-
-
-
-
 
   //  quartz
   PlacedVolume abs2_phv = tower2Vol.placeVolume( abs2Vol, tra);
@@ -332,20 +293,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       sd.setPlacement(pv);
   }
 
-
-
-
-
   // Set envelope volume attributes.
   envelopeVol.setAttributes(description,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
-
-
-
-
-
-
-
-
   std::cout<<"exiting DRFtubeFiber creator"<<std::endl;
 
   return sdet;
