@@ -152,14 +152,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     //hole is absorber
   dd4hep::Tube fiberhole = dd4hep::Tube(0.,fX_hole.rmax(),hzlength);
   dd4hep::Volume absh1Vol( "towerAbsorberHole", fiberhole, air);
-  //dd4hep::Volume absh2Vol( "towerAbsorberHole", fiberhole, air);
+  dd4hep::Volume absh2Vol( "towerAbsorberHole", fiberhole, air);
   std::cout<<"    material is hardcoded to air"<<std::endl;
   absh1Vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-  //absh2Vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
+  absh2Vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
   if ( fX_hole.isSensitive() ) {
     std::cout<<"setting DRFtubeFiber absorber hole sensitive "<<std::endl;
     absh1Vol.setSensitiveDetector(sens);
-    //absh2Vol.setSensitiveDetector(sens);
+    absh2Vol.setSensitiveDetector(sens);
   }
 
 
@@ -224,13 +224,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //abs1_det.setPlacement(abs1_phv);
   PlacedVolume absh1_phv = abs1Vol.placeVolume( absh1Vol, tra2);
   absh1_phv.addPhysVolID("type",5);
-  absh1_phv.setPlacement(absh1_phv);
+  //absh1_phv.setPlacement(absh1_phv);
   PlacedVolume fiber1_phv = absh1Vol.placeVolume( fiber1Vol, tra2);
   fiber1_phv.addPhysVolID("type",2);
-  fiber1_phv.setPlacement(fiber1_phv);
-  PlacedVolume photod1_phv = tower1Vol.placeVolume( photod1Vol, tra4);
+  //fiber1_phv.setPlacement(fiber1_phv);
+  PlacedVolume photod1_phv = absh1Vol.placeVolume( photod1Vol, tra4);
   photod1_phv.addPhysVolID("type",4);
-  photod1_phv.setPlacement(photod1_phv);
+  //photod1_phv.setPlacement(photod1_phv);
 
   //  quartz
   //PlacedVolume abs2_phv = tower2Vol.placeVolume( abs2Vol, tra);
@@ -238,13 +238,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //abs2_det.setPlacement(abs2_phv);
   PlacedVolume absh2_phv = abs2Vol.placeVolume( absh2Vol, tra2);
   absh2_phv.addPhysVolID("type",5);
-  absh2_phv.setPlacement(absh2_phv);
+  //absh2_phv.setPlacement(absh2_phv);
   PlacedVolume fiber2_phv = absh2Vol.placeVolume( fiber2Vol, tra2);
   fiber2_phv.addPhysVolID("type",1);
-  fiber2_phv.setPlacement(fiber2_phv);
-  PlacedVolume photod2_phv = tower1Vol.placeVolume( photod2Vol, tra4);
+  //fiber2_phv.setPlacement(fiber2_phv);
+  PlacedVolume photod2_phv = absh2Vol.placeVolume( photod2Vol, tra4);
   photod2_phv.addPhysVolID("fiber",3);
-  photod2_phv.setPlacement(photod2_phv);
+  //photod2_phv.setPlacement(photod2_phv);
 
 
   // clone towers and place in row
@@ -261,17 +261,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	pv = RowTubesVol.placeVolume(abs1Vol,tr);
 	pv.addPhysVolID("system",det_id);
 	pv.addPhysVolID("ix",ijk);
-	// YIKES YIKES HOW DO I LABEL THE SUBVOLUMES???
-	string t_name3 = _toString(towernum,"0%d");
-	sd = tower1_det.clone(t_name3,det_id);
+
       } else {
 	pv = RowTubesVol.placeVolume(abs2Vol,tr);
 	pv.addPhysVolID("system",det_id);
 	pv.addPhysVolID("ix",ijk);
-	string t_name3 = _toString(towernum,"0%d");
-	sd = tower2_det.clone(t_name3,det_id);
+
       }
-      sd.setPlacement(pv);
+      //sd.setPlacement(pv);
   }
 
 
