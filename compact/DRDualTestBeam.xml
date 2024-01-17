@@ -937,7 +937,7 @@
  </readout>
 <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-9,iy:-9,type:4</id>
+      <id>system:8,layer:12,tube:12,hole:3,type:3</id>
 </readout>
 
   </readouts>
