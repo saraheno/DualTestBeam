@@ -1055,7 +1055,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
     eecaltimecut=0.;
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-      int ihitchan=aecalhit->cellID;
+      long long int ihitchan=aecalhit->cellID;
       int idet = (ihitchan) & 0x07;
       int ix = (ihitchan >>3) & 0x3F ;  // is this right?
       if(ix>32) ix=ix-64;
@@ -1105,27 +1105,32 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
-      int ihitchan=ahcalhit->cellID;
+      long long int ihitchan=ahcalhit->cellID;
 
       Contributions zxzz=ahcalhit->truth;
 
       if(hcaltype==0) { // fiber
-	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
-	if(ix>255) ix=ix-512;
-	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
-	if(iy>255) iy=iy-512;
-	int itype=(ihitchan >>21) & 0x07;	
-	int ifiber=0; int iabs=0; int iphdet=0;
-	if(itype==0) iabs=1;
-	if(itype==1) ifiber==2; 
-	if(itype==2) ifiber==1; 
-	if(itype==3) iphdet==2; 
-	if(itype==4) iphdet==1; 
-	//int ifiber  =(ihitchan >>21) & 0x03;
-	//int iabs=(ihitchan >>23) & 0x03;
-	//int iphdet=(ihitchan >>25) & 0x03;
-	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	int idet = (ihitchan) & 0xFF;
+	int ilayer = (ihitchan >>8) & 0xFFF;  
+	int itube = (ihitchan >>20) & 0xFFF;  
+	int iair = (ihitchan >>32) & 0x3;  
+	int itype = (ihitchan >>35) & 0x3;  
+	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
+
+        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
+        if(itype==2) ifiber=2; // quartz
+        if(itype==1) ifiber=1; // scint
+        if(itype==999) iphdet=1; //scint pt
+        if(itype==999) iphdet=2; // quartz pt
+        if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
+        if(itube==0) ihole=1;
+
+
+
+	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+
+
+
 	if(gendet==1) {  // take light as generated in fiber
 	  if(ifiber==1) {  // scintillating fibers
 	    meanscinHcal+=ahcalhit->nscintillator;
@@ -1247,7 +1252,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
       //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
-      int ihitchan=aecalhit->cellID;
+      long long int ihitchan=aecalhit->cellID;
       int idet = (ihitchan) & 0x07;
       int ix = (ihitchan >>3) & 0x3F ;  // is this right?
       if(ix>32) ix=ix-64;
@@ -1356,20 +1361,25 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       eesum+=ah;
       //std::cout<<"eesum now "<<eesum<<std::endl;
 
-      int ihitchan=ahcalhit->cellID;
+      long long int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
-	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
-	if(ix>255) ix=ix-512;
-	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
-	if(iy>255) iy=iy-512;
-	int itype=(ihitchan >>21) & 0x07;	
-	int ifiber=0; int iabs=0; int iphdet=0;
-	if(itype==0) iabs=1;
-	if(itype==1) ifiber==2; 
-	if(itype==2) ifiber==1; 
-	if(itype==3) iphdet==2; 
-	if(itype==4) iphdet==1; 
+
+	int idet = (ihitchan) & 0xFF;
+	int ilayer = (ihitchan >>8) & 0xFFF;  
+	int itube = (ihitchan >>20) & 0xFFF;  
+	//int iair=0; int itype=0;
+	int iair = (ihitchan >>32) & 0x3;  
+	int itype = (ihitchan >>35) & 0x3;  
+	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
+        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
+        if(itype==2) ifiber=2; // quartz
+        if(itype==1) ifiber=1; // scint
+        if(itype==999) iphdet=1; //scint pt
+        if(itype==999) iphdet=2; // quartz pt
+        if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
+        if(itube==0) ihole=1;
+
+
 
 	//int ifiber  =(ihitchan >>21) & 0x03;
 	//int iabs=(ihitchan >>23) & 0x03;
@@ -1528,7 +1538,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
     eecaltimecut=0.;
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-      int ihitchan=aecalhit->cellID;
+      long long int ihitchan=aecalhit->cellID;
       int idet = (ihitchan) & 0x07;
       int ix = (ihitchan >>3) & 0x3F ;  // is this right?
       if(ix>32) ix=ix-64;
@@ -1589,20 +1599,26 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       Contributions zxzz=ahcalhit->truth;
-      int ihitchan=ahcalhit->cellID;
+      long long int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
-	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x1FF;   // is this right?
-	if(ix>255) ix=ix-512;
-	int iy =(ihitchan >>12) & 0x1FF;   // is this right?
-	if(iy>255) iy=iy-512;
-	int itype=(ihitchan >>21) & 0x07;	
-	int ifiber=0; int iabs=0; int iphdet=0;
-	if(itype==0) iabs=1;
-	if(itype==1) ifiber==2; 
-	if(itype==2) ifiber==1; 
-	if(itype==3) iphdet==2; 
-	if(itype==4) iphdet==1; 
+
+
+	int idet = (ihitchan) & 0xFF;
+	int ilayer = (ihitchan >>8) & 0xFFF;  
+	int itube = (ihitchan >>20) & 0xFFF; 
+	//int iair=0; int itype=0; 
+	int iair = (ihitchan >>32) & 0x3;  
+	int itype = (ihitchan >>35) & 0x3;  
+	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
+        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
+        if(itype==2) ifiber=2; // quartz
+        if(itype==1) ifiber=1; // scint
+        if(itype==999) iphdet=1; //scint pt
+        if(itype==999) iphdet=2; // quartz pt
+        if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
+        if(itube==0) ihole=1;
+
+
 
 	//int ifiber  =(ihitchan >>21) & 0x03;
 	//int iabs=(ihitchan >>23) & 0x03;

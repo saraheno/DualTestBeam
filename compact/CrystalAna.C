@@ -83,7 +83,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 
 
   TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
-  TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
+  TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 41,0.,41.,41,0.,41.);
 
 
   TH1F *haphcal = new TH1F("haphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
@@ -120,6 +120,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 
 
   int ihaha = b_mc->GetEntries();
+  std::cout<<" events in file is "<<ihaha<<std::endl;
   int num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<"num_evt is  "<<num_evt<<std::endl;
   
@@ -203,7 +204,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 	ncertotecal+=aecalhit->ncerenkov;
 	nscinttotecal+=aecalhit->nscintillator;
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<aecalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<aecalhit->energyDeposit<<","<<aecalhit->ncerenkov<<","<<aecalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=aecalhit->cellID;
+        long long int ihitchan=aecalhit->cellID;
         int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x3F ;  // is this right?
 	if(ix>32) ix=ix-64;
@@ -270,27 +271,53 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 	ncertothcal+=ahcalhit->ncerenkov;
 	nscinttothcal+=ahcalhit->nscintillator;
 	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<std::endl<<" hit channel (hex) is "<< std::hex<<ahcalhit->cellID<<std::dec<<" (energy,nceren,nscin)=("<<ahcalhit->energyDeposit<<","<<ahcalhit->ncerenkov<<","<<ahcalhit->nscintillator<<")"<<std::endl;
-        int ihitchan=ahcalhit->cellID;
-        int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0xFF;   // is this right?
-	if(ix>128) ix=ix-256;
-	int iy =(ihitchan >>11) & 0xFF;   // is this right?
-	if(iy>128) iy=iy-256;
-	int ifiber  =(ihitchan >>21) & 0x03;
-	int iabs=(ihitchan >>23) & 0x03;
-	int iphdet=(ihitchan >>25) & 0x03;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
-	if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
+        long long int ihitchan=ahcalhit->cellID;
+
+
+	//        int idet = (ihitchan) & 0x07;
+	//int ix = (ihitchan >>3) & 0xFF;   // is this right?
+	//if(ix>128) ix=ix-256;
+	//int iy =(ihitchan >>11) & 0xFF;   // is this right?
+	//if(iy>128) iy=iy-256;
+	//int ifiber  =(ihitchan >>21) & 0x03;
+	//int iabs=(ihitchan >>23) & 0x03;
+	//int iphdet=(ihitchan >>25) & 0x03;
+
+        int idet = (ihitchan) & 0xFF;
+        int ilayer = (ihitchan >>8) & 0xFFF;
+        int itube = (ihitchan >>20) & 0xFFF;
+        int iair = (ihitchan >>32) & 0x3;
+        int itype = (ihitchan >>35) & 0x3;
+        int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0; int ix=0; int iy=0;
+        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
+        if(itype==2) ifiber=2; // quartz
+        if(itype==1) ifiber=1; // scint
+        if(itype==999) iphdet=1; //scint pt
+        if(itype==999) iphdet=2; // quartz pt
+        if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
+	if(itube==0) ihole=1;
+	ix=itube;
+	iy=ilayer;
+
+
+        if(ievt<SCECOUNT&&ievt<SCECOUNT) std::cout<<" ihitchan  "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" idet "<<idet<<" ilayer "<<ilayer<<" itube "<<itube<<" iair "<<iair<<" itype "<<itype<<std::endl;
+
+	if(ievt<SCECOUNT&&ievt<SCECOUNT) std::cout<<" ifiber  "<<ifiber<<" iabs "<<iabs<<" ihole "<<ihole<<" iphdet "<<iphdet<<" energy "<<ahcalhit->energyDeposit<<std::endl;
+
+
+
+
+	//if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy is ("<<idet<<","<<ix<<","<<iy<<")"<<std::endl;
+	//if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  ifiber,iabs,iphdet is ("<<ifiber<<","<<iabs<<","<<iphdet<<")"<<std::endl;
 
 
 	float ah=ahcalhit->energyDeposit;
 	esum+=ah;
 
-	if(ifiber==1) esumfiber+=ah;
-	if(iabs==1) esumabs+=ah;
-	if(iphdet==1) esumPDh+=ah;
-
-
+	if(ifiber>0) esumfiber+=ah;
+	if(iabs>0) esumabs+=ah;
+	if(iphdet>0) esumPDh+=ah;
+	if(ihole==1) esumair+=ah;
 
 
 	hchan->Fill(ahcalhit->cellID);
@@ -303,6 +330,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 
 
       if(doedge) {
+	
       int nbyteedge = b_edge->GetEntry(ievt);
 
       // energies escaping calroimeter
@@ -315,7 +343,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 	esum+=ae;
 	esumedge+=ae;
 
-      }  // end loop over escaping hits
+	}  // end loop over escaping hits
+	
       }
 
 
@@ -337,7 +366,7 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
       hetrue->Fill(achecks/mainee);
 
 
-      std::cout<<std::endl<<std::endl<<"total energy deposit "<<esum/1000.<<std::endl;
+      std::cout<<std::endl<<std::endl<<"AFTER EDGE total energy deposit "<<esum/1000.<<std::endl;
       std::cout<<"       in air "<<esumair/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<esumPDe/1000.<<std::endl;
       std::cout<<"       in crystal "<<esumcrystal/1000.<<std::endl;
@@ -399,8 +428,8 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
 }
 
 
-
+//void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, bool dogen, bool doecal, bool dohcal, bool doedge, const char* outputfilename) 
 void CrystalAna() {
-  crystalana(5,"out.root",10.,1,1,1,1);
+  crystalana(5,"condor_testjob.root",20.,1,1,1,1,"hist.root");
   return;
 }

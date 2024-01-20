@@ -116,7 +116,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   scint_hole_vol.setAttributes(description, fX_hole.regionStr(), fX_hole.limitsStr(), fX_hole.visStr());
   trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
   pv    = scint_hole_vol.placeVolume(fiber_scint_vol, trafo);
-  pv.addPhysVolID("type",1);
+  pv.addPhysVolID("type",1); // label fiber volume (in hole)
   cout << setw(28) << left << scint_hole_vol.name()
        << " mat: " << setw(15) << left << mat.name()
        << " vis: " << setw(15) << left << fX_hole.visStr()
@@ -130,7 +130,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   Volume quartz_hole_vol( fX_core2.nameStr()+"_hole", sol, mat);
   quartz_hole_vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
   pv = quartz_hole_vol.placeVolume(fiber_quartz_vol);
-  pv.addPhysVolID("type",2);
+  pv.addPhysVolID("type",2);  // label quartz volume (in hole)
   cout << setw(28) << left << quartz_hole_vol.name()
        << " mat: " << setw(15) << left << mat.name()
        << " vis: " << setw(15) << left << fX_hole.visStr()
