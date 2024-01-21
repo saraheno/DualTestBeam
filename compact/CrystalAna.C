@@ -76,14 +76,14 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
   // calorimeter infor
   TH1F *hchan = new TH1F("hchan","channel ID number",1028,0.,1028);
   TH1F *hcEcalE = new TH1F("hcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
-  TH1F *hcHcalE = new TH1F("hcHcalE","sum fiber hcal energy / beam E",100,0.,1.5);
+  TH1F *hcHcalE = new TH1F("hcHcalE","sum fiber hcal energy / beam E",100,0.,10.);
   TH1F *hcEdgeE = new TH1F("hcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *hcEcalncer = new TH1F("hcEcalncer","total number of cerenkov",100000,0.,100000);
   TH1F *hcHcalncer = new TH1F("hcHcalncer","total number of cerenkov",100000,0.,100000);
 
 
   TH2F *hecal2d = new TH2F("hecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
-  TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 41,0.,41.,41,0.,41.);
+  TH2F *hhcal2d = new TH2F("hhcal2d","lego of ecal", 50,0.,500.,50,0.,500.);
 
 
   TH1F *haphcal = new TH1F("haphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
