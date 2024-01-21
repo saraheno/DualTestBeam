@@ -72,12 +72,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  // three structures, volumes, placedvolumes, and detelements
-  // volumes need a setVisAttribute
-  // DetElements. you can have volumes inherit attrivutesby setting them here
-  //              instead of in the volumes
-  // placed volumes need a physvolid, a setplacement in a detelement,
-  //                and are created with a mother.placevolume
   
   // detector element for entire detector.  
   DetElement    sdet      (det_name,det_id);
@@ -88,7 +82,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //set containment area for whole calorimeter
   Box abox  ((2*Ncount+1)*(hwidth+agap+tol),(2*Ncount+1)*(hwidth+agap+tol), hzmax+tol);
   Volume        envelope  (det_name,abox,air);
-  Position a_pos(0.,0.,hzmax+zoffset);
+  Position a_pos(0.,0.,(hzmax+zoffset));
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);

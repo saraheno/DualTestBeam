@@ -288,21 +288,23 @@ void crystalana(int num_evtsmax, const char* inputfilename, const float beamE, b
         int itube = (ihitchan >>20) & 0xFFF;
         int iair = (ihitchan >>32) & 0x3;
         int itype = (ihitchan >>35) & 0x3;
+	if(itype>2) std::cout<<"will robinson itype="<<itype<<std::endl;
         int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0; int ix=0; int iy=0;
         if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
-        if(itype==2) ifiber=2; // quartz
         if(itype==1) ifiber=1; // scint
-        if(itype==999) iphdet=1; //scint pt
-        if(itype==999) iphdet=2; // quartz pt
+        if(itype==2) ifiber=2; // quartz
+        if(itype==3) iphdet=1; //scint pt
+        if(itype==4) iphdet=2; // quartz pt
         if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
 	if(itube==0) ihole=1;
 	ix=itube;
 	iy=ilayer;
 
+	if(itype>2) {
+           std::cout<<" ihitchan  "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" idet "<<idet<<" ilayer "<<ilayer<<" itube "<<itube<<" iair "<<iair<<" itype "<<itype<<std::endl;
 
-        if(ievt<SCECOUNT&&ievt<SCECOUNT) std::cout<<" ihitchan  "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" idet "<<idet<<" ilayer "<<ilayer<<" itube "<<itube<<" iair "<<iair<<" itype "<<itype<<std::endl;
-
-	if(ievt<SCECOUNT&&ievt<SCECOUNT) std::cout<<" ifiber  "<<ifiber<<" iabs "<<iabs<<" ihole "<<ihole<<" iphdet "<<iphdet<<" energy "<<ahcalhit->energyDeposit<<std::endl;
+	   std::cout<<" ifiber  "<<ifiber<<" iabs "<<iabs<<" ihole "<<ihole<<" iphdet "<<iphdet<<" energy "<<ahcalhit->energyDeposit<<std::endl;
+	}
 
 
 

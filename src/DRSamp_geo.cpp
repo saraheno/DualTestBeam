@@ -92,7 +92,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //set containment area for whole calorimeter
   Box abox  ((2*Ncount+1)*(hwidth+agap+tol),(2*Ncount+1)*(hwidth+agap+tol), hzmax+tol);
   Volume        envelope  (det_name,abox,air);
-  Position a_pos(0.,0.,hzmax+zoffset);
+  Position a_pos(0.,0.,(hzmax+zoffset));
   PlacedVolume  env_phv   = motherVol.placeVolume(envelope,a_pos);
 
   env_phv.addPhysVolID("system",det_id);

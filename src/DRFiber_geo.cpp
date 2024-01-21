@@ -221,7 +221,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   // detector element for entire detector.  
   Volume        motherVol = description.pickMotherVolume(sdet);
-  pv = motherVol.placeVolume(envelopeVol, Position(0.,0.,azmin+hzlength+hzph+tol));
+  pv = motherVol.placeVolume(envelopeVol, Position(0.,0.,(azmin+hzlength+hzph+tol)));
   pv.addPhysVolID("system", det_id);
   sdet.setPlacement(pv);  // associate the placed volume to the detector element
   return sdet;

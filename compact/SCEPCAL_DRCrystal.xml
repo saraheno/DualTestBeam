@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength+2*killthick" repeat="DRcrystalNsize" gap="0.01" z1="-world_z/2.+edgeoffset"
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength+2*killthick" repeat="DRcrystalNsize" gap="0.01" z1="edgeoffset"
 />
 
 

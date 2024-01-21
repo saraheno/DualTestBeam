@@ -26,8 +26,10 @@
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-double dialCher= 0.00001;
-double dialScint=0.00001;
+//double dialCher= 0.00001;
+//double dialScint=0.00001;
+double dialCher= 0.01;
+double dialScint=0.01;
 float betarel=1/1.544;
 //float betarel=0.;
 //float betarel=0.95;
@@ -256,6 +258,7 @@ namespace dd4hep {
 	  if(amedia.find("kill")!=std::string::npos) 
 	    { 
 	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
+	      //std::cout<<"killing photon"<<std::endl;
 	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
@@ -297,6 +300,7 @@ namespace dd4hep {
 	    //          if(((track->GetMaterial())->GetName())=="killMedia") 
 	    {
 	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
+	      //std::cout<<"killing photon"<<std::endl;
 	      if(phstep>1) {
 		hit->nscintillator+=1;
 		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;

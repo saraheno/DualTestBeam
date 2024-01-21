@@ -69,13 +69,13 @@ void res() {
   const int npoints=7;
   const char* filenames[npoints];
 
-  filenames[0]="hists_10GeV_4.root"; 
-  filenames[1]="hists_20GeV_4.root"; 
-  filenames[2]="hists_25GeV_4.root"; 
-  filenames[3]="hists_30GeV_4.root"; 
-  filenames[4]="hists_35GeV_4.root"; 
-  filenames[5]="hists_40GeV_4.root"; 
-  filenames[6]="hists_45GeV_4.root"; 
+  filenames[0]="hists_10GeV.root"; 
+  filenames[1]="hists_20GeV.root"; 
+  filenames[2]="hists_25GeV.root"; 
+  filenames[3]="hists_30GeV.root"; 
+  filenames[4]="hists_35GeV.root"; 
+  filenames[5]="hists_40GeV.root"; 
+  filenames[6]="hists_45GeV.root"; 
   //filenames[7]="hists_50GeV_3.root"; 
   //  filenames[5]="hists_100GeV.root"; 
 
