@@ -1,4 +1,4 @@
-//
+/
 // force update
 #include "TROOT.h"
 #include "TFile.h"
@@ -1163,14 +1163,12 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	}
       }
       else {  // sampling
+
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   
-	if(ix>63) {ix=ix-128;} 
-	int iy =(ihitchan >>10) & 0x7F;   
-	if(iy>63) {iy=iy-128;};
-	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3FF;
-	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
+	int iy = (ihitchan >>3) & 0xFFF;  
+	int ix = (ihitchan >>15) & 0xFFF;  
+	int ilayer = (ihitchan >>27) & 0xFFF;  
+	int islice = (ihitchan >>39) & 0xF;  
  
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
 	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
@@ -1179,8 +1177,6 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
 	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
 	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
-
-
 
 	if(gendet==1) {  // take light as generated in media
 	  if(islice==(*ii3).second) {
@@ -1427,13 +1423,12 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
       }
       else {  // sampling
+
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   // is this right?
-	if(ix>63) {ix=ix-128;} 
-	int iy =(ihitchan >>10) & 0x7F;   // is this right?
-	if(iy>63) {iy=iy-128;};
-	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3FF;
+	int iy = (ihitchan >>3) & 0xFFF;  
+	int ix = (ihitchan >>15) & 0xFFF;  
+	int ilayer = (ihitchan >>27) & 0xFFF;  
+	int islice = (ihitchan >>39) & 0xF;  
 
 
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
@@ -1659,13 +1654,20 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 
       }
       else {  // sampling
+
+
+
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   
+	int ix = (ihitchan >>3) & 0x7F;   // is this right?
 	if(ix>63) {ix=ix-128;} 
-	int iy =(ihitchan >>10) & 0x7F;   
+	int iy =(ihitchan >>10) & 0x7F;   // is this right?
 	if(iy>63) {iy=iy-128;};
 	int islice  =(ihitchan >>17) & 0x3F;
 	int ilayer=(ihitchan >>23) & 0x3FF;
+
+
+
+
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
  
 	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
