@@ -925,22 +925,23 @@
   </display>
 
 
+
 <comment> some generic readouts </comment>
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id>
-</readout>
+ </readout>
 <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:8,layer:12,tube:12,hole:3,type:3</id>
 </readout>
  <readout name="DRSNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-7,iy:-7,slice:6,layer:10</id>
-</readout>
+      <id>system:3,iy:12,ix:12,layer:12,type:4</id>
+ </readout>
 
- </readouts>
+  </readouts>
 
 
 

@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRSampxy" repeat="DRSampNsize" gap="0.01" z1="-world_side/2.+2*killthick+edgeoffset+DRcrystallength+EcalHcalgap"
+<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.01*mm" z1="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap"
 />
 
 
@@ -40,16 +40,19 @@ within a layer is a slice os the Pb and scint are slices
 the assembled tower is a Stave 
 -->
 
- <staves vis="InvisibleWithDaughters"/>
-<layer repeat="DRSampNlayer" vis="InvisibleWithDaughters">
-      <slice material = "Iron" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
-      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
-      <slice material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
-      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
-      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
-      <slice material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
-      <slice material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
-</layer>
+<structure>
+  <absorb  name="absorb" material = "Iron" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
+      <kill1  name="kill1"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <scint  name="scint"  material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
+      <kill2  name="kill2"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <kill3  name="kill3"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <ceren   name="ceren" material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
+      <kill4   name="kill4" material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <unitbox  name="unitbox"  material = "unitbox" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
+      <tower  name="tower"  material = "tower"  sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughers"/>
+</structure>
+
+
     </detector>
   </detectors>
 

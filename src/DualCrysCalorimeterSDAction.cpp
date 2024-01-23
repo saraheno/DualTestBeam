@@ -26,14 +26,14 @@
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-//double dialCher= 0.00001;
-//double dialScint=0.00001;
-double dialCher= 0.01;
-double dialScint=0.01;
+double dialCher= 0.00001;
+double dialScint=0.00001;
+//double dialCher= 0.001;
+//double dialScint=0.001;
 float betarel=1/1.544;
 //float betarel=0.;
 //float betarel=0.95;
-int printlimitSCE=100;
+int printlimitSCE=10;
 int MAXEVENT=200;
 
 // this doesn't work.  it is in mks
