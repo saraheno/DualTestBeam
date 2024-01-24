@@ -17,7 +17,7 @@ echo "ran thisdd4hep"
 #
 
 
-root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_15GeV_e-.root","./output/out_FSCEPonly_15GeV_pi-.root","./output/out_FSCEPonly_15GeV_pi-.root",15,0,1,0,1,4,"hists_10GeV.root","DRFNoSegment","DRFNoSegment")' > 15GeV.log
+root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_15GeV_e-.root","./output/out_FSCEPonly_15GeV_pi-.root","./output/out_FSCEPonly_15GeV_pi-.root",15,0,1,0,1,4,"hists_15GeV.root","DRFNoSegment","DRFNoSegment")' > 15GeV.log
 
 
 root -b -l -q 'Resolution.C(500,"./output/out_FSCEPonly_25GeV_e-.root","./output/out_FSCEPonly_25GeV_pi-.root","./output/out_FSCEPonly_25GeV_pi-.root",25,0,1,0,1,4,"hists_25GeV.root","DRFNoSegment","DRFNoSegment")' >25GeV.log

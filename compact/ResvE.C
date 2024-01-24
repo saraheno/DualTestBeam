@@ -66,7 +66,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=4;
+  const int npoints=8;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
@@ -74,19 +74,19 @@ void res() {
   filenames[1]="hists_20GeV.root"; 
   filenames[2]="hists_25GeV.root"; 
   filenames[3]="hists_30GeV.root"; 
-  //filenames[4]="hists_35GeV.root"; 
-  //filenames[5]="hists_40GeV.root"; 
-  //filenames[6]="hists_45GeV.root"; 
-  //filenames[7]="hists_50GeV_3.root"; 
+  filenames[4]="hists_35GeV.root"; 
+  filenames[5]="hists_40GeV.root"; 
+  filenames[6]="hists_45GeV.root"; 
+  filenames[7]="hists_50GeV.root"; 
   //  filenames[5]="hists_100GeV.root"; 
   aatruemean[0]=10;
   aatruemean[1]=20;
   aatruemean[2]=25;
   aatruemean[3]=30;
-  //aatruemean[4]=35;
-  //aatruemean[5]=40;
-  //aatruemean[6]=45;
-  //aatruemean[7]=50;
+  aatruemean[4]=35;
+  aatruemean[5]=40;
+  aatruemean[6]=45;
+  aatruemean[7]=50;
   //  aatruemean[5]=100;
 
 
@@ -185,7 +185,7 @@ void res() {
   //calice->Draw("same");
   //lgd->AddEntry(calice, "calice detector resolution", "l");
 
-
+  /*
   mC->SetLineColor(kBlue);
   mC->Draw("same");
   lgd->AddEntry(mC, "Marco's C resolution", "l");
@@ -195,28 +195,43 @@ void res() {
   mD->SetLineColor(kRed);
   mD->Draw("same");
   lgd->AddEntry(mD, "Marco's dual resolution", "l");
-
-
+  */
+  f2 = g1->GetFunction("f2");
+  f2->SetLineColor(kBlue);
+  f2->SetLineWidth(1);
   g1->SetMarkerColor(kBlue);
+  g1->SetLineColor(kBlue);
   g1->SetMarkerStyle(21);
   g1->SetMarkerSize(1.0);
   g1->Draw("P");
   lgd->AddEntry(g1, "ncer", "P");
 
+  f2 = g2->GetFunction("f2");
+  f2->SetLineColor(kGreen);
+  f2->SetLineWidth(1);
   g2->SetMarkerColor(kGreen);
+  g2->SetLineColor(kGreen);
   g2->SetMarkerStyle(23);
   g2->SetMarkerSize(1.0);
   g2->Draw("P");
   lgd->AddEntry(g2, "nscint", "P");
 
-
+  f2 = g3->GetFunction("f2");
+  f2->SetLineColor(kRed);
+  f2->SetLineWidth(1);
   g3->SetMarkerColor(kRed);
+  g3->SetLineColor(kRed);
   g3->SetMarkerStyle(23);
   g3->SetMarkerSize(1.0);
   g3->Draw("P");
   lgd->AddEntry(g3, "dual", "P");
 
+
+  f2 = g4->GetFunction("f2");
+  f2->SetLineColor(kMagenta);
+  f2->SetLineWidth(1);
   g4->SetMarkerColor(kMagenta);
+  g4->SetLineColor(kMagenta);
   g4->SetMarkerStyle(23);
   g4->SetMarkerSize(1.0);
   g4->Draw("P");
