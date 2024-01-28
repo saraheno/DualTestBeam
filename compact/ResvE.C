@@ -66,28 +66,30 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=8;
+  const int npoints=3;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
-  filenames[0]="hists_fiber_10GeV_3.root"; 
-  filenames[1]="hists_fiber_20GeV_3.root"; 
-  filenames[2]="hists_fiber_25GeV_3.root"; 
-  filenames[3]="hists_fiber_30GeV_3.root"; 
-  filenames[4]="hists_fiber_35GeV_3.root"; 
-  filenames[5]="hists_fiber_40GeV_3.root"; 
-  filenames[6]="hists_fiber_45GeV_3.root"; 
-  filenames[7]="hists_fiber_50GeV_3.root"; 
-  //  filenames[5]="hists_100GeV.root"; 
+  filenames[0]="hists_10GeV.root"; 
+  filenames[1]="hists_15GeV.root"; 
+  filenames[2]="hists_20GeV.root"; 
+  filenames[3]="hists_25GeV.root"; 
+  //filenames[4]="hists_Samp_30GeV_3.root"; 
+  //filenames[5]="hists_Samp_35GeV_3.root"; 
+  //filenames[6]="hists_Samp_40GeV_3.root"; 
+  //filenames[7]="hists_Samp_45GeV_3.root"; 
+  //filenames[8]="hists_Samp_50GeV_3.root"; 
+  //  filenames[9]="hists_100GeV.root"; 
   aatruemean[0]=10;
-  aatruemean[1]=20;
-  aatruemean[2]=25;
-  aatruemean[3]=30;
-  aatruemean[4]=35;
-  aatruemean[5]=40;
-  aatruemean[6]=45;
-  aatruemean[7]=50;
-  //  aatruemean[5]=100;
+  aatruemean[1]=15;
+  aatruemean[2]=20;
+  aatruemean[3]=25;
+  //aatruemean[4]=30;
+  //aatruemean[5]=35;
+  //aatruemean[6]=40;
+  //aatruemean[7]=45;
+  //aatruemean[8]=50;
+  //  aatruemean[9]=100;
 
 
 
