@@ -173,8 +173,8 @@ mapsampcalslice["PD4"]=7;
   TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalcorr = new TH1F("phcEcalcorr","total number of ecal scitillation", 500,0.,1.5);
 
-  TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","total number of hcal scintillation", 500,0.,1.5);
-  TH1F *phcHcalcorr = new TH1F("phcHcalcorr","total number of hcal scitillation", 500,0.,1.5);
+  TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","e hcal dual", 500,0.,1.5);
+  TH1F *phcHcalcorr = new TH1F("phcHcalcorr","pi hcal dual", 500,0.,1.5);
 
  
   TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
@@ -207,6 +207,11 @@ mapsampcalslice["PD4"]=7;
 
   TH1F *ehetrue = new TH1F("ehetrue","ratio deposited to incident energy",500,0.,1.1);
   TH1F *phetrue = new TH1F("phetrue","ratio deposited to incident energy",500,0.,1.1);
+
+
+//  TH1F *hedepcal = new TH1F("hedepcal","all deposited energies",500,0.,1.1);
+
+
 
   TH1F *ehnecalcon = new TH1F("ehnecalcon","number contribs to ecal hit",1010,-10.,1000.);
   TH1F *phnecalcon = new TH1F("phnecalcon","number contribs to ecal hit",1010,-10.,1000.);
@@ -330,6 +335,9 @@ mapsampcalslice["PD4"]=7;
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge;
       ehetrue->Fill(eachecks/beamE);
+
+      //      float edepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
+      //      hedepcal->Fill(edepcal/beamE);
 
       std::cout<<"GETSTUFF electrons"<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
@@ -620,7 +628,7 @@ mapsampcalslice["PD4"]=7;
 
 
 
-    std::cout<<" kappa hcal is "<<kappaHcal<<std::endl;
+    std::cout<<" hoverehcalscint hoverehcalcer kappa hcal are "<<hoverehcalscint<<" "<<hoverehcalcer<<" "<<kappaHcal<<std::endl;
 
       
   // no calculate with dual readout correction  
@@ -670,7 +678,12 @@ mapsampcalslice["PD4"]=7;
   TCanvas* c1c;
   SCEDraw2(c1c,"c1c",ehcEdgeR,phcEdgeR,"junk1c.png",0);
 
+
+  //  TCanvas* c1d;
+  //SCEDraw1(c1d,"c1d",hedepcal,"junk1d.png",0);
+
   
+
   if(doecal) {
     TCanvas* ce2;
     SCEDraw2(ce2,"ce2",ehcEcalE,phcEcalE,"junke2.png",0);
@@ -799,6 +812,8 @@ mapsampcalslice["PD4"]=7;
   ehetrue->Write();
   phetrue->Write();
 
+  //  hedepcal->Write();
+
   ehnecalcon->Write();
   phnecalcon->Write();
 
@@ -850,8 +865,8 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, b
   canv->SetTicky(0);
   if(logy) canv->SetLogy();
 
-  h1->SetLineColor(3);
-  h1->SetLineWidth(3);
+  h1->SetLineColor(kGreen);
+  h1->SetLineWidth(kGreen);
   h1->SetStats(111111);  
   h1->Draw("HIST");
 
@@ -875,8 +890,8 @@ void SCEDraw1tp (TCanvas* canv,  const char* name,TProfile* h1, const char* outf
   canv->SetTickx(0);
   canv->SetTicky(0);
 
-  h1->SetLineColor(3);
-  h1->SetLineWidth(3);
+  h1->SetLineColor(kGreen);
+  h1->SetLineWidth(kGreen);
   h1->SetStats(111111);  
   h1->Draw("HIST");
 
@@ -901,8 +916,8 @@ void SCEDrawp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfil
   canv->SetTickx(0);
   canv->SetTicky(0);
 
-  h1->SetLineColor(3);
-  h1->SetLineWidth(3);
+  h1->SetLineColor(kGreen);
+  h1->SetLineWidth(kGreen);
   h1->SetStats(111111);  
   h1->SetMarkerSize(20);
   h1->SetMarkerStyle(4);
@@ -932,8 +947,8 @@ void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile
   canv->SetTickx(0);
   canv->SetTicky(0);
 
-  h1->SetLineColor(3);
-  h1->SetLineWidth(3);
+  h1->SetLineColor(kGreen);
+  h1->SetLineWidth(kGreen);
   h1->SetStats(111111);  
   h1->Draw("");
 
@@ -969,14 +984,14 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 
 
 
-  h1->SetLineColor(3);
+  h1->SetLineColor(kGreen);
   h1->SetLineWidth(3);
   h1->SetStats(111111);  
   h1->Draw("HIST");
 
 
 
-  h2->SetLineColor(2);
+  h2->SetLineColor(kRed);
   h2->SetLineWidth(3);
   h2->SetStats(111111);  
   h2->Draw("HIST same");
@@ -1116,14 +1131,18 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	int iair = (ihitchan >>32) & 0x3;  
 	int itype = (ihitchan >>35) & 0x3;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
+	int ix=0; int iy=0;
 
-        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
-        if(itype==2) ifiber=2; // quartz
+	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
         if(itype==1) ifiber=1; // scint
-        if(itype==999) iphdet=1; //scint pt
-        if(itype==999) iphdet=2; // quartz pt
+        if(itype==2) ifiber=2; // quartz
+        if(itype==3) iphdet=1; //scint pt
+        if(itype==4) iphdet=2; // quartz pt
         if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
         if(itube==0) ihole=1;
+        ix=itube;
+        iy=ilayer;
+
 
 
 
@@ -1367,13 +1386,17 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	int iair = (ihitchan >>32) & 0x3;  
 	int itype = (ihitchan >>35) & 0x3;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
-        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
-        if(itype==2) ifiber=2; // quartz
+	int ix=0; int iy=0;
+	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
         if(itype==1) ifiber=1; // scint
-        if(itype==999) iphdet=1; //scint pt
-        if(itype==999) iphdet=2; // quartz pt
+        if(itype==2) ifiber=2; // quartz
+        if(itype==3) iphdet=1; //scint pt
+        if(itype==4) iphdet=2; // quartz pt
         if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
         if(itube==0) ihole=1;
+        ix=itube;
+        iy=ilayer;
+
 
 
 
@@ -1583,11 +1606,6 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
     nbytehcal = b_hcal->GetEntry(ievt);
     
       // hcal hits
-    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
-
-
-    
-      // hcal hits
     if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
     //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
     ehcaltimecut=0.;
@@ -1605,15 +1623,16 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	int iair = (ihitchan >>32) & 0x3;  
 	int itype = (ihitchan >>35) & 0x3;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
-        if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
-        if(itype==2) ifiber=2; // quartz
+	int ix=0; int iy=0;
+	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
         if(itype==1) ifiber=1; // scint
-        if(itype==999) iphdet=1; //scint pt
-        if(itype==999) iphdet=2; // quartz pt
+        if(itype==2) ifiber=2; // quartz
+        if(itype==3) iphdet=1; //scint pt
+        if(itype==4) iphdet=2; // quartz pt
         if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
         if(itube==0) ihole=1;
-
-
+        ix=itube;
+        iy=ilayer;
 
 	//int ifiber  =(ihitchan >>21) & 0x03;
 	//int iabs=(ihitchan >>23) & 0x03;
@@ -1654,8 +1673,6 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 
       }
       else {  // sampling
-
-
 
 	int idet = (ihitchan) & 0x07;
 	int ix = (ihitchan >>3) & 0x7F;   // is this right?

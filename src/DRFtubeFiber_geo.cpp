@@ -115,7 +115,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   // scint fiber
-  sol = Tube(0.,fX_core1.rmax(), hzlength-2*hzph);
+  sol = Tube(0.,fX_core1.rmax(), hzlength-hzph);
   mat = description.material(fX_core1.materialStr());
   Volume fiber_scint_vol(fX_core1.nameStr(), sol, mat);
   fiber_scint_vol.setAttributes(description,fX_core1.regionStr(),fX_core1.limitsStr(),fX_core1.visStr());
@@ -129,7 +129,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " sensitive: " << yes_no(fX_core1.isSensitive()) << endl;
   
   // quartz fiber
-  sol = Tube(0.,fX_core2.rmax(), hzlength-2*hzph);
+  sol = Tube(0.,fX_core2.rmax(), hzlength-hzph);
   mat = description.material(fX_core2.materialStr());
   Volume  fiber_quartz_vol(fX_core2.nameStr(), sol, mat);
   fiber_quartz_vol.setAttributes(description,fX_core2.regionStr(),fX_core2.limitsStr(),fX_core2.visStr());
@@ -147,7 +147,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   sol = Tube(0.,fX_hole.rmax(),hzlength);
   Volume scint_hole_vol( fX_core1.nameStr()+"_hole", sol, mat);
   scint_hole_vol.setAttributes(description, fX_hole.regionStr(), fX_hole.limitsStr(), fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzph));
   pv    = scint_hole_vol.placeVolume(fiber_scint_vol, trafo);
   pv.addPhysVolID("type",1); // label fiber volume (in hole)
   cout << setw(28) << left << scint_hole_vol.name()
@@ -156,7 +156,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+0.5*hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+hzph));
   pv = scint_hole_vol.placeVolume(phdet1_vol, trafo);
   pv.addPhysVolID("type",3);
 
@@ -167,7 +167,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // absorberhole with a quartz inside
   Volume quartz_hole_vol( fX_core2.nameStr()+"_hole", sol, mat);
   quartz_hole_vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzph));
   pv = quartz_hole_vol.placeVolume(fiber_quartz_vol,trafo);
   pv.addPhysVolID("type",2);  // label quartz volume (in hole)
   cout << setw(28) << left << quartz_hole_vol.name()
@@ -176,7 +176,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+0.5*hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+hzph));
   pv = quartz_hole_vol.placeVolume(phdet2_vol, trafo);
   pv.addPhysVolID("type",4);
 
@@ -243,18 +243,20 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
          << endl;
   }
 
-  dy = 2*(Ncount + Ncount+1)/2e0 * (hthick+agap) + tol;
+  double dddd = 1.5*(2*(Ncount + Ncount+1)/2e0 * (hthick+agap) + tol);
   DetElement    sdet      (det_name, det_id);
-  Box           env_box   (dx+tol, dy+tol, dz+tol);
+  Box           env_box   (dddd+tol, dddd+tol, dz+tol);
   Volume        envelopeVol  (det_name, env_box, air);
   envelopeVol.setAttributes(description, x_det.regionStr(), x_det.limitsStr(), x_det.visStr());
 
   // Now stack multiple horizontal layers to form the final box
   for (int ijk=-Ncount; ijk<Ncount+1; ijk++) {
+    int towernum = Ncount + ijk + 1;
     double mod_y_off = (ijk) * 2 * (tube_row_box.y() + agap);
-    Transform3D tr(RotationZYX(0.,0.,0.), Position(0.,mod_y_off,0.));
+    double mod_x_off = towernum%2 ? 0. : hthick;
+    Transform3D tr(RotationZYX(0.,0.,0.), Position(mod_x_off,mod_y_off,0.));
     pv = envelopeVol.placeVolume(tube_row_vol, tr);
-    pv.addPhysVolID("layer", Ncount+ijk+1);
+    pv.addPhysVolID("layer", towernum);
 
     DetElement de_layer(_toString(Ncount+ijk, "layer_%d"), det_id);
     de_layer.setPlacement(pv);

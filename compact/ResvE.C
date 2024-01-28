@@ -70,14 +70,14 @@ void res() {
   const char* filenames[npoints];
   double aatruemean[npoints];
 
-  filenames[0]="hists_10GeV.root"; 
-  filenames[1]="hists_20GeV.root"; 
-  filenames[2]="hists_25GeV.root"; 
-  filenames[3]="hists_30GeV.root"; 
-  filenames[4]="hists_35GeV.root"; 
-  filenames[5]="hists_40GeV.root"; 
-  filenames[6]="hists_45GeV.root"; 
-  filenames[7]="hists_50GeV.root"; 
+  filenames[0]="hists_fiber_10GeV_3.root"; 
+  filenames[1]="hists_fiber_20GeV_3.root"; 
+  filenames[2]="hists_fiber_25GeV_3.root"; 
+  filenames[3]="hists_fiber_30GeV_3.root"; 
+  filenames[4]="hists_fiber_35GeV_3.root"; 
+  filenames[5]="hists_fiber_40GeV_3.root"; 
+  filenames[6]="hists_fiber_45GeV_3.root"; 
+  filenames[7]="hists_fiber_50GeV_3.root"; 
   //  filenames[5]="hists_100GeV.root"; 
   aatruemean[0]=10;
   aatruemean[1]=20;
@@ -93,7 +93,7 @@ void res() {
 
 
 
-  const int nhst=4;
+  const int nhst=5;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
@@ -101,6 +101,7 @@ void res() {
   hnam[1]="phcHcalnscint";
   hnam[2]="phcHcalcorr";
   hnam[3]="phcEdgeR";
+  hnam[4]="hedepcal";
 
 
 
@@ -135,35 +136,43 @@ void res() {
 
 
 
-
+  // cerenkov
   double arrres[npoints];
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][0];}
+  for (int k=0;k<npoints;k++) {
+    arrres[k]=rrres[k][0];
+    std::cout<<" cerenkov point "<<k<<" = "<<arrres[k]<<std::endl;
+  }
   auto g1 = new TGraph(npoints,aatruemean,arrres);
   g1->Fit("f2");
 
-
+  // scintillator
   for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][1];}
   auto g2 = new TGraph(npoints,aatruemean,arrres);
   g2->Fit("f2");
 
-
+  // dual
   for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][2];}
   auto g3 = new TGraph(npoints,aatruemean,arrres);
   g3->Fit("f2");
 
-
+  // only escaping
   for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][3];}
   auto g4 = new TGraph(npoints,aatruemean,arrres);
   g4->Fit("f2");
+
+  // all deposited energies
+  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
+  auto g5 = new TGraph(npoints,aatruemean,arrres);
+  g5->Fit("f2");
 
 
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
   //  gStyle->SetOptStat(111111);
   //gStyle->SetOptFit();
 
-  float x1_l = 0.9;
+  float x1_l = 1.0;
   float y1_l = 0.80;
-  float dx_l = 0.60;
+  float dx_l = 0.40;
   float dy_l = 0.1;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
@@ -173,7 +182,7 @@ void res() {
 
   TH1 *frame = new TH1F("frame","",1000,0,70);
   frame->SetMinimum(0.);
-  frame->SetMaximum(0.25);
+  frame->SetMaximum(0.30);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
@@ -185,17 +194,21 @@ void res() {
   //calice->Draw("same");
   //lgd->AddEntry(calice, "calice detector resolution", "l");
 
-  /*
+  
   mC->SetLineColor(kBlue);
+  mC->SetLineStyle(2);
   mC->Draw("same");
   lgd->AddEntry(mC, "Marco's C resolution", "l");
   mS->SetLineColor(kGreen);
+  mS->SetLineStyle(2);
   mS->Draw("same");
   lgd->AddEntry(mS, "Marco's S resolution", "l");
   mD->SetLineColor(kRed);
+  mD->SetLineStyle(2);
   mD->Draw("same");
   lgd->AddEntry(mD, "Marco's dual resolution", "l");
-  */
+  
+
   f2 = g1->GetFunction("f2");
   f2->SetLineColor(kBlue);
   f2->SetLineWidth(1);
@@ -236,6 +249,17 @@ void res() {
   g4->SetMarkerSize(1.0);
   g4->Draw("P");
   lgd->AddEntry(g4, "escaping", "P");
+
+
+  f2 = g5->GetFunction("f2");
+  f2->SetLineColor(kYellow);
+  f2->SetLineWidth(1);
+  g5->SetMarkerColor(kYellow);
+  g5->SetLineColor(kYellow);
+  g5->SetMarkerStyle(23);
+  g5->SetMarkerSize(1.0);
+  g5->Draw("P");
+  lgd->AddEntry(g5, "all deposit truth", "P");
 
   
 
