@@ -66,7 +66,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=3;
+  const int npoints=6;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
@@ -74,18 +74,18 @@ void res() {
   filenames[1]="hists_15GeV.root"; 
   filenames[2]="hists_20GeV.root"; 
   filenames[3]="hists_25GeV.root"; 
-  //filenames[4]="hists_Samp_30GeV_3.root"; 
-  //filenames[5]="hists_Samp_35GeV_3.root"; 
-  //filenames[6]="hists_Samp_40GeV_3.root"; 
-  //filenames[7]="hists_Samp_45GeV_3.root"; 
-  //filenames[8]="hists_Samp_50GeV_3.root"; 
+  filenames[4]="hists_30GeV.root"; 
+  filenames[5]="hists_35GeV.root"; 
+  //filenames[6]="hists_40GeV.root"; 
+  //filenames[7]="hists_45GeV.root"; 
+  //filenames[8]="hists_50GeV.root"; 
   //  filenames[9]="hists_100GeV.root"; 
   aatruemean[0]=10;
   aatruemean[1]=15;
   aatruemean[2]=20;
   aatruemean[3]=25;
-  //aatruemean[4]=30;
-  //aatruemean[5]=35;
+  aatruemean[4]=30;
+  aatruemean[5]=35;
   //aatruemean[6]=40;
   //aatruemean[7]=45;
   //aatruemean[8]=50;
@@ -95,7 +95,7 @@ void res() {
 
 
 
-  const int nhst=4;
+  const int nhst=5;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
@@ -103,7 +103,7 @@ void res() {
   hnam[1]="phcHcalnscint";
   hnam[2]="phcHcalcorr";
   hnam[3]="phcEdgeR";
-  //  hnam[4]="hedepcal";
+  hnam[4]="hpdepcal";
 
 
 
@@ -163,9 +163,9 @@ void res() {
   g4->Fit("f2");
 
   // all deposited energies
-  //  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
-  //auto g5 = new TGraph(npoints,aatruemean,arrres);
-  //g5->Fit("f2");
+  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
+  auto g5 = new TGraph(npoints,aatruemean,arrres);
+  g5->Fit("f2");
 
 
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
@@ -252,7 +252,7 @@ void res() {
   g4->Draw("P");
   lgd->AddEntry(g4, "escaping", "P");
 
-  /*
+  
   f2 = g5->GetFunction("f2");
   f2->SetLineColor(kYellow);
   f2->SetLineWidth(1);
@@ -262,8 +262,7 @@ void res() {
   g5->SetMarkerSize(1.0);
   g5->Draw("P");
   lgd->AddEntry(g5, "all deposit truth", "P");
-  */
-  
+    
 
   lgd->Draw();
   Canvas->Print("resolution.png",".png");
