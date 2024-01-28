@@ -755,9 +755,9 @@ mapsampcalslice["PD4"]=7;
 
 
     TCanvas* ch9a;
-    SCEDraw1_2D(ch9a,"ch9a",pinscvni,"junkh9a.png",0.,0.);
+    SCEDraw1_2D(ch9a,"ch9a",enscvni,"junkh9a.png",0.,0.);
     TCanvas* ch9b;
-    SCEDraw1_2D(ch9b,"ch9b",enscvni,"junkh9b.png",0.,0.);
+    SCEDraw1_2D(ch9b,"ch9b",pinscvni,"junkh9by.png",0.,0.);
 
 
 
