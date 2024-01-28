@@ -93,7 +93,7 @@ void res() {
 
 
 
-  const int nhst=5;
+  const int nhst=4;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
@@ -101,7 +101,7 @@ void res() {
   hnam[1]="phcHcalnscint";
   hnam[2]="phcHcalcorr";
   hnam[3]="phcEdgeR";
-  hnam[4]="hedepcal";
+  //  hnam[4]="hedepcal";
 
 
 
@@ -161,9 +161,9 @@ void res() {
   g4->Fit("f2");
 
   // all deposited energies
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
-  auto g5 = new TGraph(npoints,aatruemean,arrres);
-  g5->Fit("f2");
+  //  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
+  //auto g5 = new TGraph(npoints,aatruemean,arrres);
+  //g5->Fit("f2");
 
 
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
@@ -250,7 +250,7 @@ void res() {
   g4->Draw("P");
   lgd->AddEntry(g4, "escaping", "P");
 
-
+  /*
   f2 = g5->GetFunction("f2");
   f2->SetLineColor(kYellow);
   f2->SetLineWidth(1);
@@ -260,7 +260,7 @@ void res() {
   g5->SetMarkerSize(1.0);
   g5->Draw("P");
   lgd->AddEntry(g5, "all deposit truth", "P");
-
+  */
   
 
   lgd->Draw();

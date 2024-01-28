@@ -216,6 +216,9 @@ namespace dd4hep {
       jbin = std::min(jbin,(hit->nfinebin)-1);
 
 
+      if(thePostPoint->GetProcessDefinedStep()->GetProcessName().contains("Inelast")){
+	hit->n_inelastic+=1;
+      }
 
       //photons
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {

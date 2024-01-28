@@ -209,7 +209,7 @@ mapsampcalslice["PD4"]=7;
   TH1F *phetrue = new TH1F("phetrue","ratio deposited to incident energy",500,0.,1.1);
 
 
-//  TH1F *hedepcal = new TH1F("hedepcal","all deposited energies",500,0.,1.1);
+  TH1F *hedepcal = new TH1F("hedepcal","all deposited energies",500,0.,1.1);
 
 
 
@@ -336,8 +336,8 @@ mapsampcalslice["PD4"]=7;
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge;
       ehetrue->Fill(eachecks/beamE);
 
-      //      float edepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
-      //      hedepcal->Fill(edepcal/beamE);
+      float edepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
+      hedepcal->Fill(edepcal/beamE);
 
       std::cout<<"GETSTUFF electrons"<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
@@ -679,8 +679,8 @@ mapsampcalslice["PD4"]=7;
   SCEDraw2(c1c,"c1c",ehcEdgeR,phcEdgeR,"junk1c.png",0);
 
 
-  //  TCanvas* c1d;
-  //SCEDraw1(c1d,"c1d",hedepcal,"junk1d.png",0);
+  TCanvas* c1d;
+  SCEDraw1(c1d,"c1d",hedepcal,"junk1d.png",0);
 
   
 
@@ -812,7 +812,7 @@ mapsampcalslice["PD4"]=7;
   ehetrue->Write();
   phetrue->Write();
 
-  //  hedepcal->Write();
+  hedepcal->Write();
 
   ehnecalcon->Write();
   phnecalcon->Write();
