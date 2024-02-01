@@ -33,12 +33,12 @@
 
 
 <!-- constants for dual readout sampling hcal calorimeter -->
-    <constant name="DRSampAthick" value="20.*mm"/>  <!-- should be 20 -->
+    <constant name="DRSampAthick" value="5.*mm"/>  <!-- should be 20 -->
     <constant name="DRSampSthick" value="5.*mm"/>  <!-- should be 5 -->
     <constant name="DRSampQthick" value="5.*mm"/>   <!-- should be 5 -->
     <constant name="DRSampxy" value="20.*mm"/> <!-- should be 20 -->
-    <constant name="DRSampNsize" value="20"/>        <!-- should be 5 -->
-    <constant name="DRSampNlayer" value="40"/>  <!-- should be 40 -->
+    <constant name="DRSampNsize" value="25"/>        <!-- should be 5 -->
+    <constant name="DRSampNlayer" value="500"/>  <!-- should be 40 -->
 
 <!-- detector numbering scheme -->
     

@@ -143,12 +143,12 @@ mapsampcalslice["PD4"]=7;
   TH1F *ehcEcalE = new TH1F("ehcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
   TH1F *phcEcalE = new TH1F("phcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
 
-  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",100,0.,0.08);
-  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",100,0.,0.08);
-  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.08);
-  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",100,0.,0.08);
-  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.08);
-  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",100,0.,0.08);
+  TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
@@ -190,8 +190,8 @@ mapsampcalslice["PD4"]=7;
   TH2F *phcHcalMarco = new TH2F("phcHcalMarco","hcal c v c/s",500,0.,1.5,500,0.,1.5);
 
 
-  TH2F *ehcHcalf1f2 = new TH2F("ehcHcalf1f2","hcal f1e versus f2e",500,0.,2,500,0.,2);
-  TH2F *phcHcalf1f2 = new TH2F("phcHcalf1f2","hcal f1e versus f2e",500,0.,2,500,0.,2);
+  TH2F *ehcHcalf1f2 = new TH2F("ehcHcalf1f2","hcal f1e versus f2e",500,0.,2.5,500,0.,2.5);
+  TH2F *phcHcalf1f2 = new TH2F("phcHcalf1f2","hcal f1e versus f2e",500,0.,2.5,500,0.,2.5);
 
 
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
@@ -892,7 +892,7 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, b
   if(logy) canv->SetLogy();
 
   h1->SetLineColor(kGreen);
-  h1->SetLineWidth(kGreen);
+  h1->SetLineWidth(1);
   h1->SetStats(111111);  
   h1->Draw("HIST");
 
@@ -1538,8 +1538,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 
-	if( islice==(*ii6).second ) eesumfiber1+=ah;
-	if( islice==(*ii3).second ) eesumfiber2+=ah;
+	if( islice==(*ii3).second ) eesumfiber1+=ah; // scint
+	if( islice==(*ii6).second ) eesumfiber2+=ah;  //cer
 	if(islice==(*ii1).second) eesumabs+=ah;
 	if(  (islice==(*ii2).second) || (islice==(*ii4).second) ||  (islice==(*ii5).second) || (islice==(*ii7).second)) eesumPDh+=ah;
 
@@ -1713,14 +1713,10 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
       else {  // sampling
 
 	int idet = (ihitchan) & 0x07;
-	int ix = (ihitchan >>3) & 0x7F;   // is this right?
-	if(ix>63) {ix=ix-128;} 
-	int iy =(ihitchan >>10) & 0x7F;   // is this right?
-	if(iy>63) {iy=iy-128;};
-	int islice  =(ihitchan >>17) & 0x3F;
-	int ilayer=(ihitchan >>23) & 0x3FF;
-
-
+	int iy = (ihitchan >>3) & 0xFFF;  
+	int ix = (ihitchan >>15) & 0xFFF;  
+	int ilayer = (ihitchan >>27) & 0xFFF;  
+	int islice = (ihitchan >>39) & 0xF;  
 
 
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
