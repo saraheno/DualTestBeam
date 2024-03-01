@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.01*mm" z1="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap"
+<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.01*mm" z1="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z2="shave"
 />
 
 
@@ -48,8 +48,8 @@ the assembled tower is a Stave
       <kill3  name="kill3"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
       <ceren   name="ceren" material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
       <kill4   name="kill4" material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
-      <unitbox  name="unitbox"  material = "unitbox" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
-      <tower  name="tower"  material = "tower"  sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughers"/>
+      <unitbox  name="unitbox"  material = "Air" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
+      <tower  name="tower"  material = "Air"  sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughers"/>
 </structure>
 
 

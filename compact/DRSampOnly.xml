@@ -738,6 +738,8 @@
     </opticalsurface>
     <opticalsurface name="/world/DRFtubeFiber#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
     </opticalsurface>
+    <opticalsurface name="/world/DRSamp#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
+    </opticalsurface>
   </surfaces>
 
 

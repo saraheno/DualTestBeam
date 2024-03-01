@@ -1,3 +1,4 @@
+//
 //==========================================================================
 //  AIDA Detector description implementation 
 //--------------------------------------------------------------------------
@@ -48,7 +49,7 @@ using namespace dd4hep;
 using namespace dd4hep::detail;
 
 static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens)  {
-
+  std::cout<<"create sampling calorimeter "<<std::endl;
   //
   constexpr double tol = 0.0;
   xml_det_t     x_det = e;
@@ -57,6 +58,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   int           det_id    = x_det.id();
   string        det_name  = x_det.nameStr();
   Material      air       = description.air();
+
+  DetElement    sdet      (det_name, det_id);
+  std::cout<<"detector name is "<<det_name<<std::endl;
 
   // pointer to finding dimensins text in xml file
   // look in DDCore/include/Parsers/detail/Dimension.h for arguments
@@ -67,6 +71,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   int Nlayers = x_dim.dim_z();
   double zoffset = x_dim.z1();
   double agap = x_dim.gap();
+  double shave=x_dim.z2();
 
   std::cout<<"half width tower is "<<hwidth<<std::endl;
   std::cout<<" array size is "<<Ncount<<std::endl;
@@ -88,10 +93,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   std::cout<<" got fXs "<<std::endl;
 
+  std::cout<<"making optical surface"<<std::endl;
+  OpticalSurfaceManager surfMgr = description.surfaceManager();
+  OpticalSurface cryS  = surfMgr.opticalSurface("/world/DRSamp#mirrorSurface");
 
-
-  //  OpticalSurfaceManager surfMgr = description.surfaceManager();
-  //OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+  std::cout<<" surface made"<<std::endl;
 
   Material mat;
   Transform3D trafo;
@@ -101,7 +107,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   sens.setType("calorimeter");
 
   // absorber
-  std::cout<<" absorber nade of "<<fX_absorb.materialStr()<<std::endl;
+  std::cout<<" absorber made of "<<fX_absorb.materialStr()<<std::endl;
   sol = Box(hwidth,hwidth,fX_absorb.thickness()/2.);
   mat = description.material(fX_absorb.materialStr());
   Volume absorb_vol(fX_absorb.nameStr(), sol, mat);
@@ -132,13 +138,16 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   // scintillator
-  sol = Box(hwidth,hwidth,fX_scint.thickness()/2.);
+  sol = Box(hwidth,hwidth,fX_scint.thickness()/2.-shave/2.);
   mat = description.material(fX_scint.materialStr());
   Volume scint_vol(fX_scint.nameStr(), sol, mat);
   scint_vol.setAttributes(description,fX_scint.regionStr(),fX_scint.limitsStr(),fX_scint.visStr());
   if ( fX_scint.isSensitive() ) {
     scint_vol.setSensitiveDetector(sens);
   }
+  // this does work, but need to think where to put the kill media before I implement
+  //SkinSurface mirror = SkinSurface(description,sdet,"HallCrys", cryS,scint_vol);
+  //mirror.isValid();
   cout << setw(28) << left << scint_vol.name()
        << " mat: "   << setw(15) << left << mat.name()
        << " vis: "   << setw(15) << left<< fX_scint.visStr()
@@ -177,7 +186,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   // cerenkov
-  sol = Box(hwidth,hwidth,fX_ceren.thickness()/2.);
+  sol = Box(hwidth,hwidth,fX_ceren.thickness()/2.-shave/2.);
   mat = description.material(fX_ceren.materialStr());
   Volume ceren_vol(fX_ceren.nameStr(), sol, mat);
   ceren_vol.setAttributes(description,fX_ceren.regionStr(),fX_ceren.limitsStr(),fX_ceren.visStr());
@@ -209,57 +218,90 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   //*********************************************************************************
   // unit cell volume
 
-  mat = air;
+
   float cellthick=fX_absorb.thickness()+fX_kill1.thickness()+fX_scint.thickness()+fX_kill2.thickness()+fX_kill3.thickness()+fX_ceren.thickness()+fX_kill4.thickness()+agap;
   float towerthick=Nlayers*cellthick;
-  sol = Box(hwidth+tol,hwidth+tol,cellthick/2.);
+  sol = Box(hwidth+tol,hwidth+tol,cellthick/2.+tol);
   std::cout<<"cell thick tower thick are "<<cellthick<<" "<<towerthick<<std::endl;
-
-  Volume unit_box_vol( "unit_box", sol, mat);
+  mat = description.material(fX_unitbox.materialStr());
+  Volume unit_box_vol( "unit_box", sol,mat);
+  unit_box_vol.setSensitiveDetector(sens);
   unit_box_vol.setAttributes(description, fX_unitbox.regionStr(), fX_unitbox.limitsStr(), fX_unitbox.visStr());
-  float ahere = -cellthick/2.+agap/2.+fX_absorb.thickness()/2.;
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv    = unit_box_vol.placeVolume(absorb_vol, trafo);
-  pv.addPhysVolID("type",1); 
-  ahere+=fX_absorb.thickness()/2.+fX_kill1.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(kill1_vol, trafo);
-  pv.addPhysVolID("type",2);
-  ahere+=fX_kill1.thickness()/2.+fX_scint.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(scint_vol, trafo);
-  pv.addPhysVolID("type",3);
-  ahere+=fX_scint.thickness()/2.+fX_kill2.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(kill2_vol, trafo);
-  pv.addPhysVolID("type",4);
-  ahere+=fX_kill2.thickness()/2.+fX_kill3.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(kill3_vol, trafo);
-  pv.addPhysVolID("type",5);
-  ahere+=fX_kill3.thickness()/2.+fX_ceren.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(ceren_vol, trafo);
-  pv.addPhysVolID("type",6);
-  ahere+=fX_ceren.thickness()/2.+fX_kill4.thickness()/2.;
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
-  pv = unit_box_vol.placeVolume(kill4_vol, trafo);
-  pv.addPhysVolID("type",7);
-
   if ( fX_unitbox.isSensitive() ) {
     unit_box_vol.setSensitiveDetector(sens);
   }
 
 
+  sol = Box(hwidth+2*tol,hwidth+2*tol,cellthick/2+2.*tol);
+  mat = description.material(fX_unitbox.materialStr());
+  Volume unit_box_vol2( "unit_box2", sol,mat);
+  unit_box_vol2.setSensitiveDetector(sens);
+  unit_box_vol2.setAttributes(description, fX_unitbox.regionStr(), fX_unitbox.limitsStr(), fX_unitbox.visStr());
+  if ( fX_unitbox.isSensitive() ) {
+    unit_box_vol2.setSensitiveDetector(sens);
+  }
+
+
+  //absorber
+  float ahere = -cellthick/2.+agap/2.+fX_absorb.thickness()/2.;
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv    = unit_box_vol.placeVolume(absorb_vol, trafo);
+  pv.addPhysVolID("type",1); 
+  //kill1
+  ahere+=fX_absorb.thickness()/2.+fX_kill1.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(kill1_vol, trafo);
+  pv.addPhysVolID("type",2);
+  //scintillator
+  ahere+=fX_kill1.thickness()/2.+fX_scint.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  PlacedVolume pv_scint = unit_box_vol.placeVolume(scint_vol, trafo);
+  pv_scint.addPhysVolID("type",3);
+
+
+  //kill3
+  ahere+=fX_scint.thickness()/2.+fX_kill2.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(kill2_vol, trafo);
+  pv.addPhysVolID("type",4);
+  //kill 3
+  ahere+=fX_kill2.thickness()/2.+fX_kill3.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(kill3_vol, trafo);
+  //quartz
+  pv.addPhysVolID("type",5);
+  ahere+=fX_kill3.thickness()/2.+fX_ceren.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(ceren_vol, trafo);
+  pv.addPhysVolID("type",6);
+  //kill4
+  ahere+=fX_ceren.thickness()/2.+fX_kill4.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(kill4_vol, trafo);
+  pv.addPhysVolID("type",7);
+
+
+  //kluge to use border surface
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  pv = unit_box_vol2.placeVolume(unit_box_vol, trafo);
+  pv.addPhysVolID("box2",1);
+  // this also works but need to think where to put photodetector
+  //BorderSurface mirror = BorderSurface(description,sdet,"HallCrys", cryS,pv_scint,pv);
+  //mirror.isValid();
+
+
+
+
   // tower
-  Box    tower_box(hwidth+agap/2., hwidth+agap/2., towerthick/2+tol);
-  Volume tower_vol("tower", tower_box, air);
+  Box    tower_box(hwidth+3.*tol+agap/2., hwidth+3.*tol+agap/2., towerthick/2+3.*tol);
+  mat = description.material(fX_unitbox.materialStr());
+  Volume tower_vol("tower", tower_box, mat);
   tower_vol.setVisAttributes(description, fX_tower.visStr());
   tower_vol.setSensitiveDetector(sens);
   for (int i=0;i<Nlayers;i++) {
     double zppp=-towerthick/2.+cellthick/2.+i*cellthick;
     std::cout<<" placing cell in tower at z of "<<zppp<<std::endl;
-    pv=tower_vol.placeVolume(unit_box_vol,Position(0.,0.,zppp));
+    pv=tower_vol.placeVolume(unit_box_vol2,Position(0.,0.,zppp));
     pv.addPhysVolID("layer",i+1);
   }
 
@@ -294,7 +336,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   dx = 2*(Ncount + Ncount+1)/2e0 * (hwidth+agap/2.) + tol;
   dy = 2*(Ncount + Ncount+1)/2e0 * (hwidth+agap/2.) + tol;
 
-  DetElement    sdet      (det_name, det_id);
+
+
   Box           env_box   (dx+tol, dy+tol, dz+tol);
   Volume        envelopeVol  (det_name, env_box, air);
   envelopeVol.setAttributes(description, x_det.regionStr(), x_det.limitsStr(), x_det.visStr());

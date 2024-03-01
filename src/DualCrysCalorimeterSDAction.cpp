@@ -28,8 +28,8 @@
 // so randomly delete photons after creation according to this fraction
 double dialCher= 0.00001;
 double dialScint=0.00001;
-//double dialCher= 0.001;
-//double dialScint=0.001;
+//double dialCher= 1.;
+//double dialScint=1.;
 float betarel=1/1.544;
 //float betarel=0.;
 //float betarel=0.95;
