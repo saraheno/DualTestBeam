@@ -116,7 +116,7 @@ while (i<nenergy):
 
 
 # create the submitter file
-f = open("massjobs.sh",'w')
+f = open("massjobs2.sh",'w')
 f.write('chmod 777 '+hostarea+'*'+'\n')
 i=0
 while (i<nenergy):
