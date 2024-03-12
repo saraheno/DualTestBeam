@@ -34,7 +34,7 @@ float betarel=1/1.544;
 //float betarel=0.;
 //float betarel=0.95;
 int printlimitSCE=10;
-int MAXEVENT=200;
+int MAXEVENT=10;
 
 // this doesn't work.  it is in mks
 //double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
@@ -115,7 +115,8 @@ namespace dd4hep {
       //      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
 
 
-      if(SCECOUNT==1) {
+      if(eventNumber==1) {
+	std::cout<<"event number is "<<eventNumber<<std::endl;
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
 	std::cout<<"dialCher is "<<dialCher<<std::endl;
 	std::cout<<"dialScint is "<<dialScint<<std::endl;
@@ -191,8 +192,8 @@ namespace dd4hep {
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
 	if(SCECOUNT2<printlimitSCE) {
-	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<std::endl;
-	  SCECOUNT2+=1;
+	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<std::endl;
+	  if(SCECOUNT2<printlimitSCE+1) SCECOUNT2+=1;
 	}
 
         if ( 0 == hit->cellID )  { // for debugging only!
@@ -224,7 +225,7 @@ namespace dd4hep {
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
 	if(SCEPRINT) std::cout<<"     in volume ID "<<cell<<std::endl;
 
-	SCECOUNT+=1;
+	if(SCECOUNT<printlimitSCE+1) SCECOUNT+=1;
 	//	if(SCEPRINT) std::cout<<"optical photon"<<std::endl;
 
 	bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")||(track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
@@ -349,7 +350,7 @@ namespace dd4hep {
 
 	if(SCEPRINT) {
 	  std::cout<<"     SCECOUNT="<<SCECOUNT<<std::endl;
-	
+	  std::cout<<"     event number is "<<eventNumber<<std::endl;
 	  std::cout<<"     will robinson have photon "<<track->GetCreatorProcess()->G4VProcess::GetProcessName() <<std::endl;
 	  std::cout<<"     photon mother is "<<track->GetParentID()<<std::endl;
 	  std::cout<<"     photon material is "<<(track->GetMaterial())->GetName()<<std::endl;
