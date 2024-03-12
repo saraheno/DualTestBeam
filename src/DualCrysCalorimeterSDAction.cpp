@@ -115,7 +115,7 @@ namespace dd4hep {
       //      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
 
 
-      if(eventNumber==1) {
+      if((eventNumber==1)&&(SCECOUNT==1)) {
 	std::cout<<"event number is "<<eventNumber<<std::endl;
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
 	std::cout<<"dialCher is "<<dialCher<<std::endl;
