@@ -22,7 +22,7 @@ SIM.outputFile = "dummyOutput.slcio"
 SIM.physicsList = None
 ## Verbosity use integers from 1(most) to 7(least) verbose
 ## or strings: VERBOSE, DEBUG, INFO, WARNING, ERROR, FATAL, ALWAYS
-SIM.printLevel = 3
+SIM.printLevel = 7
 ## The type of action to do in this invocation
 ## batch: just simulate some events, needs numberOfEvents, and input file or gun
 ## vis: enable visualisation, run the macroFile if it is set
@@ -304,19 +304,21 @@ SIM.meta.runNumberOffset = 0
 
 ################################################################################
 ## Configuration for the output levels of DDG4 components 
+##  
+## OUTPUT_CHOICES = (1, 2, 3, 4, 5, 6, 7, 'VERBOSE', 'DEBUG','INFO', 'WARNING', 'ERROR', 'FATAL', 'ALWAYS')
 ################################################################################
 
 ## Output level for input sources
-SIM.output.inputStage = 3
+SIM.output.inputStage = 7
 
 ## Output level for Geant4 kernel
-SIM.output.kernel = 3
+SIM.output.kernel = 7
 
 ## Output level for ParticleHandler
-SIM.output.part = 3
+SIM.output.part = 7
 
 ## Output level for Random Number Generator setup
-SIM.output.random = 3
+SIM.output.random = 7
 
 
 ################################################################################
