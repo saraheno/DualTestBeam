@@ -84,9 +84,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   xml_comp_t fX_kill1( fX_struct.child( _Unicode(kill1) ) );
   xml_comp_t fX_scint( fX_struct.child( _Unicode(scint) ) );
   xml_comp_t fX_kill2( fX_struct.child( _Unicode(kill2) ) );
+  xml_comp_t fX_separate1( fX_struct.child( _Unicode(separate1) ) );
   xml_comp_t fX_kill3( fX_struct.child( _Unicode(kill3) ) );
   xml_comp_t fX_ceren( fX_struct.child( _Unicode(ceren) ) );
   xml_comp_t fX_kill4( fX_struct.child( _Unicode(kill4) ) );
+  xml_comp_t fX_separate2( fX_struct.child( _Unicode(separate2) ) );
   xml_comp_t fX_unitbox( fX_struct.child( _Unicode(unitbox) ) );
   xml_comp_t fX_tower( fX_struct.child( _Unicode(tower) ) );
 
@@ -170,6 +172,21 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " sensitive: " << yes_no(fX_kill2.isSensitive()) << endl;
 
 
+  //  separate
+  sol = Box(hwidth,hwidth,fX_separate1.thickness()/2.);
+  mat = description.material(fX_separate1.materialStr());
+  Volume separate1_vol(fX_separate1.nameStr(), sol, mat);
+  separate1_vol.setAttributes(description,fX_separate1.regionStr(),fX_separate1.limitsStr(),fX_separate1.visStr());
+  if ( fX_separate1.isSensitive() ) {
+    separate1_vol.setSensitiveDetector(sens);
+  }
+  cout << setw(28) << left << separate1_vol.name()
+       << " mat: "   << setw(15) << left << mat.name()
+       << " vis: "   << setw(15) << left<< fX_separate1.visStr()
+       << " solid: " << setw(20) << left << sol.type()
+       << " sensitive: " << yes_no(fX_separate1.isSensitive()) << endl;
+
+
   // kill3
   sol = Box(hwidth,hwidth,fX_kill3.thickness()/2.);
   mat = description.material(fX_kill3.materialStr());
@@ -214,12 +231,26 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_kill4.isSensitive()) << endl;
 
+  //  separate
+  sol = Box(hwidth,hwidth,fX_separate2.thickness()/2.);
+  mat = description.material(fX_separate2.materialStr());
+  Volume separate2_vol(fX_separate2.nameStr(), sol, mat);
+  separate2_vol.setAttributes(description,fX_separate2.regionStr(),fX_separate2.limitsStr(),fX_separate2.visStr());
+  if ( fX_separate2.isSensitive() ) {
+    separate2_vol.setSensitiveDetector(sens);
+  }
+  cout << setw(28) << left << separate2_vol.name()
+       << " mat: "   << setw(15) << left << mat.name()
+       << " vis: "   << setw(15) << left<< fX_separate2.visStr()
+       << " solid: " << setw(20) << left << sol.type()
+       << " sensitive: " << yes_no(fX_separate2.isSensitive()) << endl;
+
 
   //*********************************************************************************
   // unit cell volume
 
 
-  float cellthick=fX_absorb.thickness()+fX_kill1.thickness()+fX_scint.thickness()+fX_kill2.thickness()+fX_kill3.thickness()+fX_ceren.thickness()+fX_kill4.thickness()+agap;
+  float cellthick=fX_absorb.thickness()+fX_kill1.thickness()+fX_scint.thickness()+fX_kill2.thickness()+fX_separate1.thickness()+fX_kill3.thickness()+fX_ceren.thickness()+fX_kill4.thickness()+fX_separate2.thickness()+agap;
   float towerthick=Nlayers*cellthick;
   sol = Box(hwidth+tol,hwidth+tol,cellthick/2.+tol);
   std::cout<<"cell thick tower thick are "<<cellthick<<" "<<towerthick<<std::endl;
@@ -259,13 +290,21 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   pv_scint.addPhysVolID("type",3);
 
 
-  //kill3
+  //kill2
   ahere+=fX_scint.thickness()/2.+fX_kill2.thickness()/2.;
   trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
   pv = unit_box_vol.placeVolume(kill2_vol, trafo);
   pv.addPhysVolID("type",4);
+
+  //separate
+  ahere+=fX_kill2.thickness()/2.+fX_separate1.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(separate1_vol, trafo);
+  pv.addPhysVolID("type",8);
+
+
   //kill 3
-  ahere+=fX_kill2.thickness()/2.+fX_kill3.thickness()/2.;
+  ahere+=fX_separate1.thickness()/2.+fX_kill3.thickness()/2.;
   trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
   pv = unit_box_vol.placeVolume(kill3_vol, trafo);
   //quartz
@@ -279,6 +318,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
   pv = unit_box_vol.placeVolume(kill4_vol, trafo);
   pv.addPhysVolID("type",7);
+
+
+  //separate2
+  ahere+=fX_kill4.thickness()/2.+fX_separate2.thickness()/2.;
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,ahere));
+  pv = unit_box_vol.placeVolume(separate2_vol, trafo);
+  pv.addPhysVolID("type",9);
 
 
   //kluge to use border surface

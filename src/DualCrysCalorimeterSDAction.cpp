@@ -26,8 +26,10 @@
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-double dialCher= 0.00001;
-double dialScint=0.00001;
+//double dialCher= 0.00001;
+//double dialScint=0.00001;
+double dialCher= 0.0000;
+double dialScint=0.0000;
 //double dialCher= 1.;
 //double dialScint=1.;
 float betarel=1/1.544;
