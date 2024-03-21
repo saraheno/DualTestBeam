@@ -72,6 +72,24 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 );
 
 
+map<string, int> mapecalslice; 
+map<string,int>::iterator eii0;
+map<string,int>::iterator eii1;
+map<string,int>::iterator eii2;
+map<string,int>::iterator eii3;
+
+map<string, int> mapsampcalslice; 
+map<string,int>::iterator sii1;
+map<string,int>::iterator sii2;
+map<string,int>::iterator sii3;
+map<string,int>::iterator sii4;
+map<string,int>::iterator sii5;
+map<string,int>::iterator sii6;
+map<string,int>::iterator sii7;
+map<string,int>::iterator sii8;
+map<string,int>::iterator sii9;
+
+
 // hcal type 0=fiber, 1 = sampling
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet
 // ECALleaf is 
@@ -79,22 +97,22 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 // "./output/out_FSCEPonly_30GeV_pi-_100.root","./output/out_FSCEPonly_30GeV_pi-_100.root",
 // 20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment")
 
-
-
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
 		const char* hcalonlyefilename,
  const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
 
-
-map<string, int> mapecalslice; 
 mapecalslice["air"]=0;
 mapecalslice["PD1"]=1;
 mapecalslice["crystal"]=2;
 mapecalslice["PD2"]=3;
 
+eii0 = mapecalslice.find("air");
+eii1 = mapecalslice.find("crystal");
+eii2 = mapecalslice.find("PD1");
+eii3 = mapecalslice.find("PD2");
 
 
-map<string, int> mapsampcalslice; 
+
 mapsampcalslice["air"]=0;
 mapsampcalslice["Iron"]=1;
 mapsampcalslice["PD1"]=2;
@@ -103,7 +121,18 @@ mapsampcalslice["PD2"]=4;
 mapsampcalslice["PD3"]=5;
 mapsampcalslice["Quartz"]=6;
 mapsampcalslice["PD4"]=7;
+mapsampcalslice["Sep1"]=8;
+mapsampcalslice["Sep2"]=9;
 
+sii1 = mapsampcalslice.find("Iron");
+sii2 = mapsampcalslice.find("PD1");
+sii3 = mapsampcalslice.find("PS");
+sii4 = mapsampcalslice.find("PD2");
+sii5 = mapsampcalslice.find("PD3");
+sii6 = mapsampcalslice.find("Quartz");
+sii7 = mapsampcalslice.find("PD4");
+sii8 = mapsampcalslice.find("Sep1");
+sii9 = mapsampcalslice.find("Sep2");
 
 
 
@@ -1105,20 +1134,17 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       int  islice = (ihitchan >>17) & 0x07;
       int  ilayer = (ihitchan>> 20) & 0x07;
       
-      map<string,int>::iterator ii1 = mapecalslice.find("crystal");
-      map<string,int>::iterator ii2 = mapecalslice.find("PD1");
-      map<string,int>::iterator ii3 = mapecalslice.find("PD2");
 
       Contributions zxzz=aecalhit->truth;
 
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*ii1).second) {  // crystal
+	if(islice==(*eii1).second) {  // crystal
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*ii2).second)||(islice==(*ii3).second) ) { // either photo detector
+	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) { // either photo detector
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
@@ -1142,6 +1168,8 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
     //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
+    if(ievt<SCECOUNT) std::cout<<"    ihitchan idet iy ix ilayer islice  "<<std::endl;
+
     ehcaltimecut=0.;
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
@@ -1213,42 +1241,39 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	int iy = (ihitchan >>3) & 0xFFF;  
 	int ix = (ihitchan >>15) & 0xFFF;  
 	int ilayer = (ihitchan >>27) & 0xFFF;  
-	int islice = (ihitchan >>39) & 0xF;  
+	int ibox2 = (ihitchan >> 39) & 0x03;
+	int islice = (ihitchan >>41) & 0xF;  
  
-	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
-	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
-	map<string,int>::iterator ii3 = mapsampcalslice.find("PS");
-	map<string,int>::iterator ii4 = mapsampcalslice.find("PD2");
-	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
-	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
-	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
+	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*ii3).second) {
+	  if(islice==(*sii3).second) {
 	    meanscinHcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*ii6).second) {  // cherenkov
+	  if(islice==(*sii6).second) {  // cherenkov
 	    meancerHcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
+	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
 	    meanscinHcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
 	    meancerHcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if( islice==(*ii3).second) { // PS
+	  if( islice==(*sii3).second) { // PS
 	    meanscinHcal+=ahcalhit->energyDeposit;
+	    if(ievt<SCECOUNT) std::cout<<" meanscinHcal "<<meanscinHcal<<std::endl;
 	  }
-	  if( islice==(*ii6).second ) {  // quartz
+	  if( islice==(*sii6).second ) {  // quartz
 	    if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
+	    if(ievt<SCECOUNT) std::cout<<" meancerHcal "<<meancerHcal<<std::endl;
 	  }
 	  for(size_t j=0;j<zxzz.size(); j++) {
 	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
@@ -1307,10 +1332,6 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       int  ilayer = (ihitchan>> 20) & 0x07;
 
 
-      map<string,int>::iterator ii0 = mapecalslice.find("air");
-      map<string,int>::iterator ii1 = mapecalslice.find("crystal");
-      map<string,int>::iterator ii2 = mapecalslice.find("PD1");
-      map<string,int>::iterator ii3 = mapecalslice.find("PD2");
 
       	
       if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
@@ -1342,20 +1363,20 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       eesum+=ae;
-      if(islice==(*ii0).second)eesumair+=ae;
-      if(islice==(*ii2).second)eesumPDe+=ae;
-      if(islice==(*ii1).second)eesumcrystal+=ae;
-      if(islice==(*ii3).second)eesumPDe+=ae;
+      if(islice==(*eii0).second)eesumair+=ae;
+      if(islice==(*eii2).second)eesumPDe+=ae;
+      if(islice==(*eii1).second)eesumcrystal+=ae;
+      if(islice==(*eii3).second)eesumPDe+=ae;
 
 
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*ii1).second) {  // crystal
+	if(islice==(*eii1).second) {  // crystal
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*ii2).second)||(islice==(*ii3).second) ) { // either photo detector
+	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) { // either photo detector
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
@@ -1479,53 +1500,51 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       }
       else {  // sampling
 
+
 	int idet = (ihitchan) & 0x07;
 	int iy = (ihitchan >>3) & 0xFFF;  
 	int ix = (ihitchan >>15) & 0xFFF;  
 	int ilayer = (ihitchan >>27) & 0xFFF;  
-	int islice = (ihitchan >>39) & 0xF;  
+	int ibox2 = (ihitchan >> 39) & 0x03;
+	int islice = (ihitchan >>41) & 0xF;  
+
+
 
 	//	std::cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 
 
-	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
-	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
-	map<string,int>::iterator ii3 = mapsampcalslice.find("PS");
-	map<string,int>::iterator ii4 = mapsampcalslice.find("PD2");
-	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
-	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
-	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
+
 
 	//std::cout<<" ps ii is "<<(*ii3).second<<std::endl;
 	//std::cout<<" quartz ii is "<<(*ii6).second<<std::endl;
 
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*ii3).second) {
+	  if(islice==(*sii3).second) {
 	    nescinttothcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*ii6).second) {  // chereknov
+	  if(islice==(*sii6).second) {  // chereknov
 	    necertothcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
+	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  //std::cout<<" here "<<std::endl;
 	  if(idet==6) {
-	  if( islice==(*ii3).second) { //  ps
+	  if( islice==(*sii3).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	    //	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
-	  if( islice==(*ii6).second ) {  // quartz
+	  if( islice==(*sii6).second ) {  // quartz
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
@@ -1538,10 +1557,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 
-	if( islice==(*ii3).second ) eesumfiber1+=ah; // scint
-	if( islice==(*ii6).second ) eesumfiber2+=ah;  //cer
-	if(islice==(*ii1).second) eesumabs+=ah;
-	if(  (islice==(*ii2).second) || (islice==(*ii4).second) ||  (islice==(*ii5).second) || (islice==(*ii7).second)) eesumPDh+=ah;
+	if( islice==(*sii3).second ) eesumfiber1+=ah; // scint
+	if( islice==(*sii6).second ) eesumfiber2+=ah;  //cer
+	if(islice==(*sii1).second) eesumabs+=ah;
+	if(  (islice==(*sii2).second) || (islice==(*sii4).second) ||  (islice==(*sii5).second) || (islice==(*sii7).second)) eesumPDh+=ah;
 
 
       }
@@ -1609,18 +1628,16 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
       //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
 
 
-      map<string,int>::iterator ii1 = mapecalslice.find("crystal");
-      map<string,int>::iterator ii2 = mapecalslice.find("PD1");
-      map<string,int>::iterator ii3 = mapecalslice.find("PD2");
+
       
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*ii1).second) {
+	if(islice==(*eii1).second) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*ii2).second)||(islice==(*ii3).second) ) {
+	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
@@ -1719,41 +1736,37 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	int islice = (ihitchan >>39) & 0xF;  
 
 
+
+
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
  
-	map<string,int>::iterator ii1 = mapsampcalslice.find("Iron");
-	map<string,int>::iterator ii2 = mapsampcalslice.find("PD1");
-	map<string,int>::iterator ii3 = mapsampcalslice.find("PS");
-	map<string,int>::iterator ii4 = mapsampcalslice.find("PD2");
-	map<string,int>::iterator ii5 = mapsampcalslice.find("PD3");
-	map<string,int>::iterator ii6 = mapsampcalslice.find("Quartz");
-	map<string,int>::iterator ii7 = mapsampcalslice.find("PD4");
+
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*ii3).second) {
+	  if(islice==(*sii3).second) {
 	    nescinttothcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*ii6).second) {  // cherenkov
+	  if(islice==(*sii6).second) {  // cherenkov
 	    necertothcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*ii2).second)||(islice==(*ii4).second) ) { // either photo detector
+	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*ii5).second)||(islice==(*ii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if( islice==(*ii3).second ) { // ps
+	  if( islice==(*sii3).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
-	  if( islice==(*ii6).second ) {  // quartz
+	  if( islice==(*sii6).second ) {  // quartz
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
