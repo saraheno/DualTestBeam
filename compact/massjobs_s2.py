@@ -22,11 +22,11 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 
 
-nenergy=1
-energies=[10]
+nenergy=10
+energies=[10,15,20,25,30,35,40,45,50,100]
 name="s2-condor-executable-"+args.geometry1+"_"+args.geometry2+"-"
 
-# create the .sh files for electrons
+# create the .sh files 
 i=0
 while (i<nenergy):
     print(i)
@@ -41,7 +41,7 @@ while (i<nenergy):
     shfile.write('echo "ran setup"'+'\n')
     shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
-    shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",10,0,1,1,1,3,"hists_'+args.geometry1+"_"+str(energies[i])+'GeV_3.root","DRCNoSegment","DRFNoSegment")\' >& 10GeV.log' );
+    shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+',0,1,1,1,3,"hists_'+args.geometry1+"_"+str(energies[i])+'GeV_3.root","DRSNoSegment","DRSNoSegment")\' >& '+str(energies[i])+'GeV.log \n' );
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -54,7 +54,7 @@ while (i<nenergy):
 
 
 
-# create the .jdl files for electrons
+# create the .jdl files 
 i=0
 while (i<nenergy):
     print(i)
