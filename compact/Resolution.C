@@ -1559,7 +1559,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 	if( islice==(*sii3).second ) eesumfiber1+=ah; // scint
 	if( islice==(*sii6).second ) eesumfiber2+=ah;  //cer
-	if(islice==(*sii1).second) eesumabs+=ah;
+	if( (islice==(*sii1).second)||(islice==(*sii8).second)||(islice==(*sii8).second) ) eesumabs+=ah;
 	if(  (islice==(*sii2).second) || (islice==(*sii4).second) ||  (islice==(*sii5).second) || (islice==(*sii7).second)) eesumPDh+=ah;
 
 
