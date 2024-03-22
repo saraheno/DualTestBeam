@@ -1733,9 +1733,8 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	int iy = (ihitchan >>3) & 0xFFF;  
 	int ix = (ihitchan >>15) & 0xFFF;  
 	int ilayer = (ihitchan >>27) & 0xFFF;  
-	int islice = (ihitchan >>39) & 0xF;  
-
-
+	int ibox2 = (ihitchan >> 39) & 0x03;
+	int islice = (ihitchan >>41) & 0xF;  
 
 
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<std::hex<<ihitchan<<std::dec<<" " <<idet<<" "<<ix<<" "<<iy<<" "<<islice<<" "<<ilayer<<" "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;

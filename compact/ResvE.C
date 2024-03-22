@@ -140,6 +140,8 @@ void res() {
 
 
 
+
+
   // cerenkov
   double arrres[npoints];
   for (int k=0;k<npoints;k++) {
@@ -184,9 +186,10 @@ void res() {
   lgd->SetBorderSize(0); lgd->SetTextSize(0.03); lgd->SetTextFont(62); lgd->SetFillColor(0);
 
 
+
   TH1 *frame = new TH1F("frame","",1000,0,70);
   frame->SetMinimum(0.);
-  frame->SetMaximum(0.30);
+  frame->SetMaximum(1.0);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
@@ -198,7 +201,8 @@ void res() {
   //calice->Draw("same");
   //lgd->AddEntry(calice, "calice detector resolution", "l");
 
-  
+
+  /*  
   mC->SetLineColor(kBlue);
   mC->SetLineStyle(2);
   mC->Draw("same");
@@ -211,7 +215,46 @@ void res() {
   mD->SetLineStyle(2);
   mD->Draw("same");
   lgd->AddEntry(mD, "Marco's dual resolution", "l");
-  
+  */
+
+  // digitization of Chekanov's 40L-PRQ
+  const int npts =4;
+  double C40LPFQ_s_y[npts]={0.32,0.23,0.195,0.17};;
+  double C40LPFQ_s_x[npts]={5.,10.,20.,40.};
+  auto C40LPFQ_s_g = new TGraph(npts,C40LPFQ_s_x,C40LPFQ_s_y);
+  f2->SetParameter(0,0.5);
+  f2->SetParameter(1,0.5);
+  f2->SetParameter(2,0.5);
+  C40LPFQ_s_g->Fit("f2");
+  f2 = C40LPFQ_s_g->GetFunction("f2");
+  f2->SetLineColor(kBlue);
+  f2->SetLineWidth(2);
+  f2->SetLineStyle(2);
+  C40LPFQ_s_g->SetLineColor(kBlue);
+  C40LPFQ_s_g->SetLineStyle(2);
+  C40LPFQ_s_g->SetMarkerSize(1.0);
+  C40LPFQ_s_g->SetMarkerStyle(4.0);
+  C40LPFQ_s_g->SetMarkerColor(kBlue);
+  C40LPFQ_s_g->Draw("P");
+  lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
+  double C40LPFQ_c_y[npts]={0.44,0.29,0.275,0.26};;
+  double C40LPFQ_c_x[npts]={5.,10.,20.,40.};
+  auto C40LPFQ_c_g = new TGraph(npts,C40LPFQ_c_x,C40LPFQ_c_y);
+  f2->SetParameter(0,0.2);
+  C40LPFQ_c_g->Fit("f2");
+  f2 = C40LPFQ_c_g->GetFunction("f2");
+  f2->SetLineColor(kGreen);
+  f2->SetLineWidth(2);
+  f2->SetLineStyle(2);
+  C40LPFQ_c_g->SetLineColor(kGreen);
+  C40LPFQ_c_g->SetLineStyle(2);
+  C40LPFQ_c_g->SetMarkerSize(1.0);
+  C40LPFQ_c_g->SetMarkerStyle(4.0);
+  C40LPFQ_c_g->SetMarkerColor(kGreen);
+  C40LPFQ_c_g->Draw("P");
+  lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
+
+
 
   f2 = g1->GetFunction("f2");
   f2->SetLineColor(kBlue);
@@ -255,6 +298,7 @@ void res() {
   lgd->AddEntry(g4, "escaping", "P");
 
   
+  /*
   f2 = g5->GetFunction("f2");
   f2->SetLineColor(kYellow);
   f2->SetLineWidth(1);
@@ -264,7 +308,7 @@ void res() {
   g5->SetMarkerSize(1.0);
   g5->Draw("P");
   lgd->AddEntry(g5, "all deposit truth", "P");
-    
+  */
 
   lgd->Draw();
   Canvas->Print("resolution.png",".png");
