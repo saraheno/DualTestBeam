@@ -27,7 +27,8 @@
 const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
 int SCECOUNT=1;
-bool dodualcorr=0;
+bool dodualcorr=1;
+bool doplots=1;
   float timecut=1000;
 
 // this is now hardwared in DualCrysCalorimeterHit.h
@@ -733,7 +734,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
   
   //***********************************************************************************************************************
-  /*
+  if(doplots) {
 
   TCanvas* c1;
   SCEDraw2(c1,"c1",ehetrue,phetrue,"junk1.png",0);
@@ -814,7 +815,7 @@ sii9 = mapsampcalslice.find("Sep2");
   //TCanvas* c7;
   //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
 
-  */
+  }
 
   //***********************************************************************************************************
 
