@@ -1327,11 +1327,12 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
   int nbyteecal, nbytehcal, nbyteedge;
 
+  /*
   std::cout<<"entering getStuff"<<std::endl;
       std::cout<<"eesum now "<<eesum<<std::endl;
       std::cout<<"ehcaltimecut is "<<ehcaltimecut<<std::endl;
       std::cout<<eesumfiber1<<" "<<eesumfiber2<<" "<<eesumabs<<std::endl;
-
+  */
 
   if(doecal) {
     nbyteecal = b_ecal->GetEntry(ievt);
@@ -1452,9 +1453,11 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       eesum+=ah;
+      /*
       std::cout<<"eesum now "<<eesum<<std::endl;
       std::cout<<"ehcaltimecut is "<<ehcaltimecut<<std::endl;
       std::cout<<eesumfiber1<<" "<<eesumfiber2<<" "<<eesumabs<<std::endl;
+      */
 
       long long int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
@@ -1615,7 +1618,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
     }  // end loop over escaping hits
   }
 
-  std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
+  //std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
 
 }
