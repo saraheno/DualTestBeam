@@ -247,7 +247,7 @@ void res() {
   C40LPFQ_s_g->Draw("P");
   lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
   auto C40LPFQ_c_g = new TGraph(npts,C40LPFQ_c_x,C40LPFQ_c_y);
-  f2->SetParameter(0,0.2);
+  f2->SetParameter(0,0.5);
   C40LPFQ_c_g->Fit("f2");
   f2 = C40LPFQ_c_g->GetFunction("f2");
   f2->SetLineColor(kBlue);
