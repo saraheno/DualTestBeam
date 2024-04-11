@@ -69,7 +69,7 @@ while (i<nenergy):
     shfile.write('echo "ran setup"'+'\n')
     shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
-    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DR'+args.geometry+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 10 >& '+outputarea+'sce_pi_'+args.geometry+'_'+str(energies[i])+'.log'+'\n')
+    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DR'+args.geometry+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 500 >& '+outputarea+'sce_pi_'+args.geometry+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
