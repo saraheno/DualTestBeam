@@ -217,12 +217,18 @@ void res() {
   lgd->AddEntry(mD, "Marco's dual resolution", "l");
   */
 
-  // digitization of Chekanov's 40L-PRQ
+  // digitization of Chekanov's 40L-PFQ
   const int npts =4;
   double C40LPFQ_s_y[npts]={0.32,0.23,0.195,0.17};;
   double C40LPFQ_s_x[npts]={5.,10.,20.,40.};
   double C40LPFQ_c_y[npts]={0.44,0.29,0.275,0.26};;
   double C40LPFQ_c_x[npts]={5.,10.,20.,40.};
+
+  // convert sigma90 to sigma
+  for(int jjj=0;jjj<npts;jjj++) {
+    C40LPFQ_s_y[jjj]=C40LPFQ_s_y[jjj]*1.25;
+    C40LPFQ_c_y[jjj]=C40LPFQ_c_y[jjj]*1.25;
+  }
 
   auto C40LPFQ_s_g = new TGraph(npts,C40LPFQ_s_x,C40LPFQ_s_y);
   f2->SetParameter(0,0.5);
