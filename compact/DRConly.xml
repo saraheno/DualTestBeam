@@ -903,7 +903,7 @@
 
   
   <define>
-    <include ref="SCEPCALConstants_hugeECAL.xml"/>
+    <include ref="SCEPCALConstants.xml"/>
   </define>
 
 <limits>

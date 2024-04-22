@@ -146,13 +146,16 @@ void res() {
   double arrres[npoints];
   for (int k=0;k<npoints;k++) {
     arrres[k]=rrres[k][0];
-    std::cout<<" cerenkov point "<<k<<" = "<<arrres[k]<<std::endl;
+    std::cout<<" cerenkov point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
   }
   auto g1 = new TGraph(npoints,aatruemean,arrres);
   g1->Fit("f2");
 
   // scintillator
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][1];}
+  for (int k=0;k<npoints;k++) {
+    arrres[k]=rrres[k][1];
+    std::cout<<" scint point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+  }
   auto g2 = new TGraph(npoints,aatruemean,arrres);
   g2->Fit("f2");
 
@@ -224,10 +227,14 @@ void res() {
   double C40LPFQ_c_y[npts]={0.44,0.29,0.275,0.26};;
   double C40LPFQ_c_x[npts]={5.,10.,20.,40.};
 
+  std::cout<<"Chekanov numbers "<<std::endl;
+  std::cout<<"    energy  raw scint corr scint raw chek corrected chek "<<std::endl;
   // convert sigma90 to sigma
   for(int jjj=0;jjj<npts;jjj++) {
+    std::cout<<"    "<<C40LPFQ_s_x[jjj]<<" "<<C40LPFQ_s_y[jjj]<<" "<<1.25*C40LPFQ_s_y[jjj]<<" "<<C40LPFQ_c_y[jjj]<<" "<<1.25*C40LPFQ_c_y[jjj]<<std::endl;
     C40LPFQ_s_y[jjj]=C40LPFQ_s_y[jjj]*1.25;
     C40LPFQ_c_y[jjj]=C40LPFQ_c_y[jjj]*1.25;
+
   }
 
   auto C40LPFQ_s_g = new TGraph(npts,C40LPFQ_s_x,C40LPFQ_s_y);
