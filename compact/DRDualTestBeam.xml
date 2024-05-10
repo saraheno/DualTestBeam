@@ -35,6 +35,9 @@
       4 eV is 309 nm
       5 eV is 238 nm
 -->
+ 
+  <properties>
+
    <matrix name="RINDEX__quartz" coldim="2" values="
   4.126*eV 1.3841208059058
   3.986*eV  1.3895553417944
@@ -79,8 +82,8 @@
  1.033*eV  1.4500069615101
     "/>
 
- 
-  <properties>
+
+
     <matrix name="RINDEX__Air" coldim="2" values="  
      1.1*eV 1.
      1.500*eV 1.
