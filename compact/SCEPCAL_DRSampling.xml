@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.01*mm" z1="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z2="shave"
+<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.0*mm" z1="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z2="0."
 />
 
 
@@ -46,9 +46,9 @@ the assembled tower is a Stave
       <scint  name="scint"  material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
       <kill2  name="kill2"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
   <separate1  name="separate1" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
-      <kill3  name="kill3"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <kill3  name="kill3"  material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
       <ceren   name="ceren" material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
-      <kill4   name="kill4" material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <kill4   name="kill4" material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
   <separate2  name="separate2" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
 
       <unitbox  name="unitbox"  material = "Air" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
