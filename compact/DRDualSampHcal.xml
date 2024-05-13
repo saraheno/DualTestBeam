@@ -828,7 +828,7 @@
       <fraction n="0.754" ref="N"/>
       <fraction n="0.234" ref="O"/>
       <fraction n="0.012" ref="Ar"/>
-      <property name="RINDEX"        ref="RI_PI"/>
+      <property name="RINDEX"        ref="RI_PS"/>
     </material>
 
 
