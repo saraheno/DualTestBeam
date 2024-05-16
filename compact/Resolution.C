@@ -28,7 +28,7 @@ const int nsliceecal = 4;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
 int SCECOUNT=1;
 bool dodualcorr=1;
-bool doplots=1;
+bool doplots=0;
   float timecut=1000;
 
 // this is now hardwared in DualCrysCalorimeterHit.h
@@ -1541,23 +1541,23 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 
-	//	std::cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
+	std::cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
+
+	std::cout<<"energy nscint ncer is "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
 
 
-
-
-	//std::cout<<" ps ii is "<<(*ii3).second<<std::endl;
-	//std::cout<<" quartz ii is "<<(*ii6).second<<std::endl;
+	std::cout<<" ps ii is "<<(*sii3).second<<std::endl;
+	std::cout<<" quartz ii is "<<(*sii6).second<<std::endl;
 
 
 	if(gendet==1) {  // take light as generated in media
 	  if(islice==(*sii3).second) {
 	    nescinttothcal+=ahcalhit->nscintillator;
-	    //	    std::cout<<"add scint"<<std::endl;
+	    std::cout<<"add scint"<<std::endl;
 	  }
 	  if(islice==(*sii6).second) {  // chereknov
 	    necertothcal+=ahcalhit->ncerenkov;
-	    //	    std::cout<<"add ceren"<<std::endl;
+	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
