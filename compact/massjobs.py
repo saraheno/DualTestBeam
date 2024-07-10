@@ -21,8 +21,8 @@ source_dir = os.getcwd()+'/../../..'
 print(source_dir)
 os.mkdir('output_1')
 os.mkdir('jobs_1')
-outputarea = os.getcwd() + '/output_1/'
-hostarea = os.getcwd() + '/jobs_1/'
+outputarea = os.getcwd() + '/output/'
+hostarea = os.getcwd() + '/jobs/'
 
 nenergy=3
 energies=[10,15,20,25,30,35,40,45,50,100]
@@ -43,8 +43,6 @@ shfile.write('source ' + parent_dir + '\n')
 shfile.write('echo "ran thisdd4hep"'+'\n')
 
 for i in energies[:3]:
-  print(i)
-  #print() 
   shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+args.particle+'.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 50 >& '+outputarea+'sce_e_'+args.geometry+'-dial_'+str(i)+'.log'+'\n')
 shfile.write('exitcode=$?'+'\n')
 shfile.write('echo ""'+'\n')
@@ -56,16 +54,15 @@ print("file closed")
 
 
 # create the .jdl files for electrons
-i=0
 jdlfile = open(hostarea+name+args.particle+'.jdl',"w")
 jdlfile.write("universe = vanilla"+'\n')
 jdlfile.write("Executable ="+hostarea+name+args.particle+".sh"+'\n')
 jdlfile.write("should_transfer_files = NO"+'\n')
 jdlfile.write("Requirements = TARGET.FileSystemDomain == \"privnet\""+'\n')
-jdlfile.write("Output = "+hostarea+name+"-e_sce_$(cluster)_$(process).stdout"+'\n')
-jdlfile.write("Error = "+hostarea+name+"-e_sce_$(cluster)_$(process).stderr"+'\n')
-jdlfile.write("Log = "+hostarea+name+"-e_sce_$(cluster)_$(process).condor"+'\n')
-jdlfile.write("Arguments = SCE"+'\n')
+jdlfile.write("Output = "+hostarea+name+args.particle+"_sce_$(cluster)_$(process).stdout"+'\n')
+jdlfile.write("Error = "+hostarea+name+args.particle+"_sce_$(cluster)_$(process).stderr"+'\n')
+jdlfile.write("Log = "+hostarea+name+args.particle+"_sce_$(cluster)_$(process).condor"+'\n')
+jdlfile.write("Arguments = $(process)"+'\n')
 jdlfile.write('Queue '+str(nenergy) + '\n')
 #for i in energies[:3]: jdlfile.write(str(i)+ ' ')
 #print("file closed")
@@ -75,11 +72,6 @@ jdlfile.close()
 # create the submitter file
 f = open("massjobs.sh",'w')
 f.write('chmod +x '+hostarea+'*'+'\n')
-'''i=0
-while (i<nenergy):
-    f.write("condor_submit "+hostarea+name+str(energies[i])+'-e.jdl'+'\n')
-    f.write("condor_submit "+hostarea+name+str(energies[i])+'-pi.jdl'+'\n')
-    i=i+1'''
 f.write("condor_submit "+hostarea+name+args.particle+'.jdl'+'\n')
 f.write("condor_q")
 f.close()
