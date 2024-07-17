@@ -16,41 +16,41 @@ print("args.name=%s" % args.geometry2)
 
 
 
-outputarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/"
-hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/"
+parent_dir = os.getcwd()
+source_dir = os.getcwd()+'/../../..'
+print(source_dir)
+outputarea = parent_dir + '/output/'
+hostarea   = parent_dir + '/jobs/'
 
-
-
-
-nenergy=10
+nenergy=3
 energies=[10,15,20,25,30,35,40,45,50,100]
-name="s2-condor-executable-"+args.geometry1+"_"+args.geometry2+"-"
+name="condor-executable-"+args.geometry1+"_"+args.geometry2+"-"
 
 # create the .sh files 
-i=0
-while (i<nenergy):
-    print(i)
-    shfile = open(hostarea+name+str(energies[i])+'_GeV.sh',"w")
+shfile = open(hostarea+name+str(energies[i])+'_GeV.sh',"w")
 
-    shfile.write('#!/bin/bash'+'\n')
-    shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
-    shfile.write('START_TIME=`/bin/date`'+'\n')
-    shfile.write('echo "started at $START_TIME"'+'\n')
-    shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
-    shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos7-gcc11-opt/setup.sh'+'\n')
-    shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/bin/thisdd4hep.sh'+'\n')
-    shfile.write('echo "ran thisdd4hep"'+'\n')
-    shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+',0,1,1,1,3,"./output/hists_'+args.geometry1+"_"+str(energies[i])+'GeV_3.root","DRSNoSegment","DRSNoSegment")\' >& ./output/s2_'+str(energies[i])+'GeV.log \n' );
-    shfile.write('exitcode=$?'+'\n')
-    shfile.write('echo ""'+'\n')
-    shfile.write('END_TIME=`/bin/date`'+'\n')
-    shfile.write('echo "finished at $END_TIME"'+'\n')
-    shfile.write('exit $exitcode'+'\n')
+shfile.write('#!/bin/bash'+'\n')
+shfile.write('cd '+parent_dir+'\n')
+shfile.write('START_TIME=`/bin/date`'+'\n')
+shfile.write('echo "started at $START_TIME"'+'\n')
+shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
+shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos7-gcc11-opt/setup.sh'+'\n')
+shfile.write('echo "ran setup"'+'\n')
+shfile.write('source  '+source_dir+'/bin/thisdd4hep.sh'+'\n')
+shfile.write('echo "ran thisdd4hep"'+'\n')
 
-    shfile.close()
-    i=i+1
-    print("file closed")
+
+shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"-dial_"+str(energies[i])+'GeV_'+args.particle+'.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+',0,1,1,1,3,"./output/hists_'+args.geometry1+"_"+str(energies[i])+'GeV_3.root","DRSNoSegment","DRSNoSegment")\' >& ./output/s2_'+str(energies[i])+'GeV.log \n' );
+
+
+shfile.write('exitcode=$?'+'\n')
+shfile.write('echo ""'+'\n')
+shfile.write('END_TIME=`/bin/date`'+'\n')
+shfile.write('echo "finished at $END_TIME"'+'\n')
+shfile.write('exit $exitcode'+'\n')
+
+shfile.close()
+print("file closed")
 
 
 
