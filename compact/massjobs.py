@@ -18,10 +18,13 @@ print("args.name=%s" % args.geometry)
 
 parent_dir = os.getcwd()
 source_dir = os.getcwd()+'/../../..'
-
 if not os.path.exists('output'):
-    os.makedirs('output/' + args.geometry)
-    os.makedirs('jobs/' + args.geometry)
+   os.makedirs('output/' + args.geometry)
+   os.makedirs('jobs/' + args.geometry)
+if not os.path.exists('output/' + args.geometry):
+   os.makedirs('output/' + args.geometry)
+   os.makedirs('jobs/' + args.geometry)
+
 outputarea = os.getcwd() + '/output/' + args.geometry + '/'
 hostarea = os.getcwd() + '/jobs/' + args.geometry + '/'
 
@@ -50,8 +53,6 @@ shfile.write('echo "finished at $END_TIME"'+'\n')
 shfile.write('exit $exitcode'+'\n')
 shfile.close()
 print("sh file closed")
-
-print(hostarea+name+args.particle)
 
 # create the .jdl files
 jdlfile = open(hostarea+name+args.particle+'.jdl',"w")

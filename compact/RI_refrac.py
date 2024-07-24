@@ -6,13 +6,15 @@ import numpy as np
 # This file is checking if last RefractiveIndecis from SingleCrystal_cosmic_ray 
 # are different from DualTestBeam xml files
 # to run: 
-#     python RI_refrac.py -f1 DRJunk.xml -f2 DRDualTestBeam.xml
+#     python RI_refrac.py -f1 DRSingleCrystalCosmicRay.xml -f2 DRDualTestBeam.xml
 
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-f1", "--xml_filename1", help="SingleCrystal_cosmic_ray file")
 argParser.add_argument("-f2", "--xml_filename2", help="Dualtestbeam file")
 args = argParser.parse_args()
+
+print(args.xml_filename1, args.xml_filename2)
 
 names = []
 values = {}
@@ -32,9 +34,8 @@ def diff_RIfiles(xml_file):
         values[name] = np.array(v)
   return names, values
 
-SCCR_dir = '/home/snabili/data/CalVision/dd4hep_base/DD4hep/examples/SingleCrystal_cosmic_ray/compact/'
-
-name_file1, values_file1 = diff_RIfiles(SCCR_dir + args.xml_filename1)
+print(os.getcwd() + '/' + args.xml_filename2)
+name_file1, values_file1 = diff_RIfiles(os.getcwd() + '/' + args.xml_filename1)
 name_file2, values_file2 = diff_RIfiles(os.getcwd() + '/' + args.xml_filename2)
 
 for name in name_file1:
