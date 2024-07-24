@@ -5,6 +5,7 @@ To setup your environment use instruction on `https://foswiki.web.cern.ch/Calvis
 To run ddsim with condor:
 
 `python massjobs.py -g <geometry> -p <particle>`
+
 `bash massjobs.sh`
 
 select geometry from: DRConly.xml (crystal ecal), DRFSCEPonly.xml (fiber hcal), DRDualTestBeam.xml (crystal ecal + fiber hcal)
