@@ -1,23 +1,22 @@
-DualRead out calorimeter
+DualReadOut Calorimeter using crystal ECAL and fiber HCAL
 
-Setup the code using instruction in: `https://foswiki.web.cern.ch/Calvision/DualCrystalDD4hep#Setup_the_working_area`
+To setup your environment use instruction on `https://foswiki.web.cern.ch/Calvision/DualCrystalDD4hep#Simulation_with_dual_readout_calorimetry`
 
-To compare rifractive index values with the latest values in DRDualTestBeam.xml file (from Mekhala Single Crystal Cosmic Ray analysis):
+To run ddsim with condor:
 
-`python RI_refrac.py -f1 DRSingleCrystalCosmicRay.xml -f2 DRDualTestBeam.xml`
+`python massjobs.py -g <geometry> -p <particle>`
+`bash massjobs.sh`
 
-To run condor jobs:
+select geometry from: DRConly.xml (crystal ecal), DRFSCEPonly.xml (fiber hcal), DRDualTestBeam.xml (crystal ecal + fiber hcal)
+run the above code for electron (`e-`) and pion (pi-) gun
 
-`python massjobs.py -g FSCEPonly -p e-`
-
-change particle type to by replacing `-e` with `pi-`.
-
-To run Resolution do interactively:
+Run Resolution.C code using:
 
 `root -l -b -q 'Resolution.C(nevt,"electron_rootfile.root", "pion_rootfile.root","hcalonly_rootfile.root",energy,doecal,dohcal,doedge,gendet,hcaltype,"output.root","ECALleaf","HCALleaf")'`
 
-the parameters to run Resolution.C file are described on top of Resolution.C file.
+Options described on the top of Resolution.C code
 
-Take the output file from last step and run ResvE.C file:
+To run ResvE.C:
 
-`root -l -b -q 'ResvE.C()’>resve.txt`
+`root -l -b -q 'ResvE.C()'`
+
