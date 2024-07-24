@@ -2,6 +2,10 @@ DualReadOut Calorimeter using crystal ECAL and fiber HCAL
 
 To setup your environment use instruction on `https://foswiki.web.cern.ch/Calvision/DualCrystalDD4hep#Simulation_with_dual_readout_calorimetry`
 
+To check the rifractive indices in the xml file (e.g. DRDualTestBeam.xml) with the latest file: DRSingleCrystalCosmicRay.xml (from Mekhala):
+
+`python RI_refrac.py -f1 DRSingleCrystalCosmicRay.xml -f2 DRDualTestBeam.xml`
+
 To run ddsim with condor:
 
 `python massjobs.py -g <geometry> -p <particle>`
