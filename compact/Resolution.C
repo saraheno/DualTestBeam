@@ -33,7 +33,7 @@ using namespace std;
 //     gendet                       photon in:
 //                                  active media (e.g. ecal crystal) = 1;
 //                                  photodetector                    = 2;
-//                                  energy deposit (?)               = 3;
+//                                  energy deposit                   = 3;
 //                                  debug                            = 4; 
 //     hcaltype                     fiber=0, sampling=1
 //     output.root                  output root file with all histograms --> to be used in ResvE.C
