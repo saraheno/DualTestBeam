@@ -28,7 +28,7 @@
 
 
 
-<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.0*mm" z1="2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgap+EcalHcalgap" z2="0."
+<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.0*mm" z1="2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgapl+EcalHcalgap" z2="0."
 />
 
 

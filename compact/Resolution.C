@@ -24,8 +24,8 @@
 
 // IGNORE THIS!!!!!!!!!!!!!!
 // LOOK AT THE DECLARATION JUST AT THE crystalana def!!!!!!!!!!!!!!!!!!!!
-const int nsliceecal = 6;
-std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap","crystal2","PD2"};
+const int nsliceecal = 8;
+std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlemat","gap2","crystal2","PD2"};
 int SCECOUNT=1;
 bool dodualcorr=1;
 bool doplots=1;
@@ -54,7 +54,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype,  bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-	      float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float  &eesum,float &eesumair, float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime,
 	      int &nin
@@ -81,6 +81,8 @@ map<string,int>::iterator eii2;
 map<string,int>::iterator eii3;
 map<string,int>::iterator eii4;
 map<string,int>::iterator eii5;
+map<string,int>::iterator eii6;
+map<string,int>::iterator eii7;
 
 map<string, int> mapsampcalslice; 
 map<string,int>::iterator sii1;
@@ -112,16 +114,20 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 mapecalslice["air"]=0;
 mapecalslice["PD1"]=1;
 mapecalslice["crystal1"]=2;
-mapecalslice["gap"]=3;
-mapecalslice["crystal2"]=4;
-mapecalslice["PD2"]=5;
+mapecalslice["gap1"]=3;
+mapecalslice["middlemat"]=4;
+mapecalslice["gap2"]=5;
+mapecalslice["crystal2"]=6;
+mapecalslice["PD2"]=7;
 
 eii0 = mapecalslice.find("air");
 eii1 = mapecalslice.find("PD1");
 eii2 = mapecalslice.find("crystal1");
-eii3 = mapecalslice.find("gap");
-eii4 = mapecalslice.find("crystal2");
-eii5 = mapecalslice.find("PD2");
+eii3 = mapecalslice.find("gap1");
+eii4 = mapecalslice.find("middlemat");
+eii5 = mapecalslice.find("gap2");
+eii6 = mapecalslice.find("crystal2");
+eii7 = mapecalslice.find("PD2");
 
 
 
@@ -336,6 +342,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
       float eesum=0.;
       float eesumair=0;
+      float eesumdead=0;
       float eesumcrystal=0;
       float eesumPDe=0;
       float eesumfiber1=0;
@@ -352,7 +359,7 @@ sii9 = mapsampcalslice.find("Sep2");
       
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
 
     
 
@@ -386,10 +393,10 @@ sii9 = mapsampcalslice.find("Sep2");
       ehcHcalMarco->Fill(tty2/tty,tty2);
 
 
-      float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge;
+      float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
       ehetrue->Fill(eachecks/beamE);
 
-      float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
+      float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
       hedepcal->Fill(eedepcal/beamE);
 
       enscvni->Fill(eedepcal/beamE,nin);
@@ -398,6 +405,7 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
       std::cout<<"       in air "<<eesumair/1000.<<std::endl;
+      std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
       std::cout<<"       in crystal "<<eesumcrystal/1000.<<std::endl;
       std::cout<<"       in fiber1 "<<eesumfiber1/1000.<<std::endl;
@@ -530,6 +538,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
       float pesum=0.;
       float pesumair=0;
+      float pesumdead=0;
       float pesumcrystal=0;
       float pesumPDe=0;
       float pesumfiber1=0;
@@ -545,7 +554,7 @@ sii9 = mapsampcalslice.find("Sep2");
       float ehcaltimecut=0.;
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
       std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
     
@@ -582,9 +591,9 @@ sii9 = mapsampcalslice.find("Sep2");
 
 
 
-      float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge;
+      float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
 
-      float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh;
+      float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
       hpdepcal->Fill(pedepcal/beamE);
 
       phetrue->Fill(pachecks/beamE);
@@ -596,6 +605,7 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
       std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
       std::cout<<"       in air "<<pesumair/1000.<<std::endl;
+      std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
       std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
       std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
@@ -1171,25 +1181,27 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       Contributions zxzz=aecalhit->truth;
 
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii4).second) ) {  // crystal
+	if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) { // either photo detector
+	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	meanscinEcal+=aecalhit->energyDeposit;
-	if(gendet==3) meancerEcal+=aecalhit->edeprelativistic;
-	if(gendet==4) meancerEcal+=aecalhit->energyDeposit;
-	for(size_t j=0;j<zxzz.size(); j++) {
-	  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
-	}
+	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	    meanscinEcal+=aecalhit->energyDeposit;
+	    if(gendet==3) meancerEcal+=aecalhit->edeprelativistic;
+	    if(gendet==4) meancerEcal+=aecalhit->energyDeposit;
+	    for(size_t j=0;j<zxzz.size(); j++) {
+	      if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	    }
+	  }
 	}
       }
     }
@@ -1330,7 +1342,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 
 void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-	      float  &eesum,float &eesumair,float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float  &eesum,float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, int &nin){
 
@@ -1403,31 +1415,38 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       eesum+=ae;
       if(islice==(*eii0).second)eesumair+=ae;
       if(islice==(*eii1).second)eesumPDe+=ae;
-      if(islice==(*eii5).second)eesumPDe+=ae;
       if(islice==(*eii2).second)eesumcrystal+=ae;
-      if(islice==(*eii4).second)eesumcrystal+=ae;
+      if(islice==(*eii3).second)eesumair+=ae;
+      if(islice==(*eii4).second)eesumdead+=ae;
+      if(islice==(*eii5).second)eesumair+=ae;
+      if(islice==(*eii6).second)eesumcrystal+=ae;
+      if(islice==(*eii7).second)eesumPDe+=ae;
+
+
 
 
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii4).second)) {  // crystal
+	if((islice==(*eii2).second)||(islice==(*eii6).second)) {  // crystal
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) { // either photo detector
+	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	nescinttotecal+=aecalhit->energyDeposit;
-	if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
-	if(gendet==4) necertotecal+=aecalhit->energyDeposit;
+	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	    nescinttotecal+=aecalhit->energyDeposit;
+	    if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
+	    if(gendet==4) necertotecal+=aecalhit->energyDeposit;
 	//for(size_t j=0;j<zxzz.size(); j++) {
 	//  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
 	//}
+	  }
 	}
       }
 
@@ -1674,26 +1693,28 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 
       
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii4).second)) {
+	if((islice==(*eii2).second)||(islice==(*eii6).second)) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) {
+	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	nescinttotecal+=aecalhit->energyDeposit;
-	if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
-	if(gendet==4) necertotecal+=aecalhit->energyDeposit;
+	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	    nescinttotecal+=aecalhit->energyDeposit;
+	    if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
+	    if(gendet==4) necertotecal+=aecalhit->energyDeposit;
 
-	for(size_t j=0;j<zxzz.size(); j++) {
-	  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
-	}
+	    for(size_t j=0;j<zxzz.size(); j++) {
+	      if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	    }
+	  }
 	}
       }
       
