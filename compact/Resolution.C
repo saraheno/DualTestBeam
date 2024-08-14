@@ -24,11 +24,11 @@
 
 // IGNORE THIS!!!!!!!!!!!!!!
 // LOOK AT THE DECLARATION JUST AT THE crystalana def!!!!!!!!!!!!!!!!!!!!
-const int nsliceecal = 4;
-std::string nameecalslice[nsliceecal] = {"air","PD1","crystal","PD2"};
+const int nsliceecal = 6;
+std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap","crystal2","PD2"};
 int SCECOUNT=1;
 bool dodualcorr=1;
-bool doplots=0;
+bool doplots=1;
   float timecut=1000;
 
 // this is now hardwared in DualCrysCalorimeterHit.h
@@ -79,6 +79,8 @@ map<string,int>::iterator eii0;
 map<string,int>::iterator eii1;
 map<string,int>::iterator eii2;
 map<string,int>::iterator eii3;
+map<string,int>::iterator eii4;
+map<string,int>::iterator eii5;
 
 map<string, int> mapsampcalslice; 
 map<string,int>::iterator sii1;
@@ -103,15 +105,24 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		const char* hcalonlyefilename,
  const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf) {
 
+
+  // these must correspond to the "slice" physvolid used in DRCrys_geo
+  // these correspond to slices in scepcal_drcrystal.xml
+  // surely there is a better way to do this
 mapecalslice["air"]=0;
 mapecalslice["PD1"]=1;
-mapecalslice["crystal"]=2;
-mapecalslice["PD2"]=3;
+mapecalslice["crystal1"]=2;
+mapecalslice["gap"]=3;
+mapecalslice["crystal2"]=4;
+mapecalslice["PD2"]=5;
 
 eii0 = mapecalslice.find("air");
-eii1 = mapecalslice.find("crystal");
-eii2 = mapecalslice.find("PD1");
-eii3 = mapecalslice.find("PD2");
+eii1 = mapecalslice.find("PD1");
+eii2 = mapecalslice.find("crystal1");
+eii3 = mapecalslice.find("gap");
+eii4 = mapecalslice.find("crystal2");
+eii5 = mapecalslice.find("PD2");
+
 
 
 
@@ -1160,13 +1171,13 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       Contributions zxzz=aecalhit->truth;
 
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*eii1).second) {  // crystal
+	if((islice==(*eii2).second)||(islice==(*eii4).second) ) {  // crystal
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) { // either photo detector
+	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) { // either photo detector
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
@@ -1391,19 +1402,20 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
       eesum+=ae;
       if(islice==(*eii0).second)eesumair+=ae;
-      if(islice==(*eii2).second)eesumPDe+=ae;
-      if(islice==(*eii1).second)eesumcrystal+=ae;
-      if(islice==(*eii3).second)eesumPDe+=ae;
+      if(islice==(*eii1).second)eesumPDe+=ae;
+      if(islice==(*eii5).second)eesumPDe+=ae;
+      if(islice==(*eii2).second)eesumcrystal+=ae;
+      if(islice==(*eii4).second)eesumcrystal+=ae;
 
 
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*eii1).second) {  // crystal
+	if((islice==(*eii2).second)||(islice==(*eii4).second)) {  // crystal
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) { // either photo detector
+	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) { // either photo detector
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
@@ -1662,13 +1674,13 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 
       
       if(gendet==1) {   // use photons as generated in otical material
-	if(islice==(*eii1).second) {
+	if((islice==(*eii2).second)||(islice==(*eii4).second)) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii2).second)||(islice==(*eii3).second) ) {
+	if( (islice==(*eii1).second)||(islice==(*eii5).second) ) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}

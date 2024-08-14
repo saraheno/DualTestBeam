@@ -867,7 +867,7 @@
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PbWO4"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PbWO4"/>
-      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>
+      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>  <!-- should be 0.45 -->
       <constant name="SCINTILLATIONTIMECONSTANT1" value="5.*ns"/>
       <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
       <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
