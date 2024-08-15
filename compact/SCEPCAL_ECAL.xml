@@ -28,6 +28,7 @@
     <vis name="CrystalEcalTowerVis"        alpha="0.1" r="0.0"  g="0.0"  b="1.0"   showDaughters="true" visible="true"/>
     <vis name="CrystalEcalLayerVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"  showDaughters="true" visible="true"/>
     <vis name="CrystalEcalSensitiveVis"    alpha="0.1" r="1.0"  g="0.0"  b="0.0"  showDaughters="true" visible="true"/>
+    <vis name="CrystalEcalHoneyVis"    alpha="0.1" r="1.0"  g="0.0"  b="1.0"  showDaughters="true" visible="true"/>
     <vis name="Invisible" showDaughers="true" visible="false"/> 
   </display>
 

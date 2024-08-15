@@ -47,6 +47,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // look in DDCore/include/Parsers/detail/Dimension.h for arguments
   xml_comp_t    x_towers  = x_det.staves();
   xml_comp_t    x_dim     = x_det.dimensions();
+  xml_comp_t fX_struct( x_det.child( _Unicode(structure) ) );
+  xml_comp_t fX_honey(  fX_struct.child( _Unicode(honey) ) );
 
 
 
@@ -70,6 +72,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   OpticalSurfaceManager surfMgr = description.surfaceManager();
   OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
 
+
+  // honeycomb thickness
+  double hthick = fX_honey.thickness();
+  std::cout<<"honeycomb thickness is "<<hthick<<std::endl;
 
 
   
@@ -102,7 +108,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
     // tower envelope
-  dd4hep::Box towertrap(hwidth+tol,hwidth+tol,hzmax+tol);
+  dd4hep::Box towertrap(hwidth+agap,hwidth+agap,hzmax+tol);
   dd4hep::Volume towerVol( "tower", towertrap, air);
   std::cout<<"   tower visstr is "<<x_towers.visStr()<<std::endl;
   towerVol.setVisAttributes(description, x_towers.visStr());
@@ -118,6 +124,26 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   //  SkinSurface haha = SkinSurface(description,sdet, "HallCrys", cryS, towerVol);
   //  haha.isValid();
+
+
+  // place the honeycomb into the tower
+
+  Position b_pos(0.,0.,0.);
+
+  // an air box
+  dd4hep::Box abox1   (hwidth+0.5*(agap-hthick)+hthick,hwidth+0.5*(agap-hthick)+hthick,hzmax);
+  dd4hep::Box abox2   (hwidth+0.5*(agap-hthick),hwidth+0.5*(agap-hthick),hzmax);
+  dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
+  Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
+  honeycomb.setVisAttributes(description,fX_honey.visStr());
+  DetElement shell(tower_det, "honeycomb", det_id);
+  PlacedVolume honeycomb_phv = towerVol.placeVolume(honeycomb,b_pos);
+  honeycomb_phv.addPhysVolID("layer", 0);
+  shell.setPlacement(honeycomb_phv);
+
+
+
+
 
 
 

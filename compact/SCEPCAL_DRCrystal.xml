@@ -41,6 +41,12 @@ within a layer is a slice os the Pb and scint are slices
 the assembled tower is a Stave 
 -->
 
+      <structure>
+        <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/>
+      </structure>
+
+
+
  <staves vis="Invisible"/>
 <layer repeat="1" vis="Invisible">
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
@@ -53,9 +59,9 @@ the assembled tower is a Stave
 
       <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/> 
-
-
 </layer>
+
+
     </detector>
   </detectors>
 
