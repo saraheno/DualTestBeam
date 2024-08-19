@@ -64,6 +64,7 @@ jdlfile.write("Output = "+hostarea+args.particle+"$(cluster)_$(process).stdout"+
 jdlfile.write("Error = "+hostarea+args.particle+"$(cluster)_$(process).stderr"+'\n')
 jdlfile.write("Log = "+hostarea+name+args.particle+"$(cluster)_$(process).condor"+'\n')
 jdlfile.write("Arguments = $(process)"+'\n')
+jdlfile.write("request_memory = 4GB"+'\n')
 jdlfile.write('Queue '+str(len(energies[:3])) + '\n')
 print("jdl file closed")
 jdlfile.close()
