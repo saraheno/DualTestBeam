@@ -17,10 +17,6 @@ using std::vector;
 TTree          *fChain;   //!pointer to the analyzed TTree or TChain               
 Int_t           fCurrent; //!current Tree number in a TChain                       
 
-
-
-
-
 void resolution(const char* inputfilename,const char* histname,double* aamean,double* aarms) {
 
   std::string name1(histname);
@@ -36,7 +32,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   gStyle->SetOptFit();
 
 
-  std::cout<<"file name is "<<inputfilename<<std::endl;
+  std::cout<<"file name is "<<inputfilename<<" histname = "<<histname<<std::endl;
   TFile *f = new TFile(inputfilename);
   TH1F* nhist = static_cast<TH1F*>(f->Get(histname)->Clone());
   Int_t imax = nhist->GetMaximumBin();
@@ -45,7 +41,8 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   Double_t arms = nhist->GetRMS();
   Double_t amean = nhist->GetMean();
   std::cout<<"hist mean rms is "<<amean<<" "<<arms<<std::endl;
-  TF1 *f1 = new TF1("f1","gaus",amean-1.5*arms,amean+1.5*arms);
+  //TF1 *f1 = new TF1("f1","gaus",amean-5.*arms,amean+5.*arms);
+  TF1 *f1 = new TF1("f1","gaus",0,amean+1.5*arms);
   nhist->Fit("f1","R");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
@@ -58,39 +55,35 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   nhist->Draw("");
   canv->Print(name.c_str(),".png");
   canv->Update();
-
-
 }
-
-
 
 void res() {
 
-  const int npoints=10;
+  const int npoints=5;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
-  filenames[0]="./output/hists_SampOnly_10GeV_3.root"; 
-  filenames[1]="./output/hists_SampOnly_15GeV_3.root"; 
-  filenames[2]="./output/hists_SampOnly_20GeV_3.root"; 
-  filenames[3]="./output/hists_SampOnly_25GeV_3.root"; 
-  filenames[4]="./output/hists_SampOnly_30GeV_3.root"; 
-  filenames[5]="./output/hists_SampOnly_35GeV_3.root"; 
+  filenames[0]="RES_hcal_10GeV.root"; 
+  filenames[1]="RES_hcal_15GeV.root "; 
+  filenames[2]="RES_hcal_20GeV.root"; 
+  filenames[3]="RES_hcal_25GeV.root"; 
+  filenames[4]="RES_hcal_30GeV.root"; 
+  /*filenames[5]="./output/hists_SampOnly_35GeV_3.root"; 
   filenames[6]="./output/hists_SampOnly_40GeV_3.root"; 
   filenames[7]="./output/hists_SampOnly_45GeV_3.root"; 
   filenames[8]="./output/hists_SampOnly_50GeV_3.root"; 
-  filenames[9]="./output/hists_SampOnly_100GeV_3.root"; 
+  filenames[9]="./output/hists_SampOnly_100GeV_3.root"; */
 
   aatruemean[0]=10;
   aatruemean[1]=15;
   aatruemean[2]=20;
   aatruemean[3]=25;
   aatruemean[4]=30;
-  aatruemean[5]=35;
+  /*aatruemean[5]=35;
   aatruemean[6]=40;
   aatruemean[7]=45;
   aatruemean[8]=50;
-  aatruemean[9]=100;
+  aatruemean[9]=100;*/
 
 
 
@@ -101,11 +94,17 @@ void res() {
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
  
   vector<string> hnam(nhst);
-  hnam[0]="phcHcalncer";
-  hnam[1]="phcHcalnscint";
+  hnam[0]="piph_1";
+  hnam[1]="piph_3";
   hnam[2]="phcHcalcorr";
   hnam[3]="phcEdgeR";
   hnam[4]="hpdepcal";
+
+  /*hnam[0]="eph_0";
+  hnam[1]="eph_2";
+  hnam[2]="phcEcalcorr";
+  hnam[3]="ehcEdgeR";
+  hnam[4]="hedepcal";*/
 
 
 
@@ -160,17 +159,26 @@ void res() {
   g2->Fit("f2");
 
   // dual
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][2];}
+  for (int k=0;k<npoints;k++) {
+	  arrres[k]=rrres[k][2];
+	  std::cout<<" dual point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+  }
   auto g3 = new TGraph(npoints,aatruemean,arrres);
   g3->Fit("f2");
 
   // only escaping
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][3];}
+  for (int k=0;k<npoints;k++) {
+	  arrres[k]=rrres[k][3];
+	  std::cout<<" escaping point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+  }
   auto g4 = new TGraph(npoints,aatruemean,arrres);
   g4->Fit("f2");
 
   // all deposited energies
-  for (int k=0;k<npoints;k++) {arrres[k]=rrres[k][4];}
+  for (int k=0;k<npoints;k++) {
+	  arrres[k]=rrres[k][4];
+	  std::cout<<" all deposited point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+  }
   auto g5 = new TGraph(npoints,aatruemean,arrres);
   g5->Fit("f2");
 
@@ -190,8 +198,9 @@ void res() {
 
 
 
+
   TH1 *frame = new TH1F("frame","",1000,0,70);
-  frame->SetMinimum(0.);
+  frame->SetMinimum(0.0);
   frame->SetMaximum(1.0);
   frame->SetStats(0);
   frame->GetXaxis()->SetTitle("true energy (GeV)");
@@ -251,8 +260,8 @@ void res() {
   C40LPFQ_s_g->SetMarkerSize(1.0);
   C40LPFQ_s_g->SetMarkerStyle(4.0);
   C40LPFQ_s_g->SetMarkerColor(kGreen);
-  C40LPFQ_s_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
+  //C40LPFQ_s_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
   auto C40LPFQ_c_g = new TGraph(npts,C40LPFQ_c_x,C40LPFQ_c_y);
   f2->SetParameter(0,0.5);
   C40LPFQ_c_g->Fit("f2");
@@ -265,8 +274,8 @@ void res() {
   C40LPFQ_c_g->SetMarkerSize(1.0);
   C40LPFQ_c_g->SetMarkerStyle(4.0);
   C40LPFQ_c_g->SetMarkerColor(kBlue);
-  C40LPFQ_c_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
+  //C40LPFQ_c_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
 
 
 
@@ -312,7 +321,7 @@ void res() {
   lgd->AddEntry(g4, "escaping", "P");
 
   
-  /*
+  
   f2 = g5->GetFunction("f2");
   f2->SetLineColor(kYellow);
   f2->SetLineWidth(1);
@@ -322,11 +331,11 @@ void res() {
   g5->SetMarkerSize(1.0);
   g5->Draw("P");
   lgd->AddEntry(g5, "all deposit truth", "P");
-  */
+  
 
   lgd->Draw();
   Canvas->Print("resolution.png",".png");
-
+  
 
   return;
 

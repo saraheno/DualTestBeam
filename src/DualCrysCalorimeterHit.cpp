@@ -20,7 +20,3 @@ using namespace CalVision;
 
 
 /// Assignment operator
-
-
-
-

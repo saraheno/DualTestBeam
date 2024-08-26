@@ -17,35 +17,24 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
+<detectors>
+	<detector id="Hcal_ID" name="DRFtubeFiber" type="DRFtubeFiber" readout="DRFNoSegment" vis="towerVis">
+		<comment>Hadronic Calorimeter</comment>
 
+		<!-- here z_length is the absorber length, thickness is length of an end side
+		z1 is the photodetector length gap is the distance between modules, and dz is how far the fiber sticks out of the absorber.  
+		Nsize is the number of cells to make zmin is where the dtector goes-->
 
-  <detectors>
-    <detector id="Hcal_ID" name="DRFtubeFiber" type="DRFtubeFiber" readout="DRFNoSegment" vis="towerVis">
+		<dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgap+EcalHcalgap" z1="killthick"/>
 
-
- <comment>Hadronic Calorimeter</comment>
-
-
-
-<!-- here z_length is the absorber length, thickness is length of an end side
-z1 is the photodetector length gap is the distance between modules, and dz is how far the fiber sticks out of the absorber.  Nsize is the number of cells to make
-zmin is where the dtector goes
- -->
-
-<dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z1="killthick"/>
-<!-- <dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="0.1*mm" dz="0.0*mm" zmin="0." z1="5*mm"/> -->
-
-
-<!-- not in core and hole rmind is not used -->
-      <structure>
-        <core1 name="core1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> 
-        <core2 name="core2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="DR_Quartz" vis="CerenVis" sensitive="yes"/> 
-        <hole name="hole" rmax="(DRFiberFibwidthSCE+holeoverSCE)" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
-        <absorb material="Brass" vis="AbsVis" sensitive="yes"/>
-        <phdet1 name="phdet1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia2" vis="phdetVis" sensitive="yes"/> 
-        <phdet2 name="phdet2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia3" vis="phdetVis" sensitive="yes"/> 
-      </structure>
-    </detector>
-  </detectors>
-
-
+		<!-- not in core and hole rmind is not used -->
+		<structure>
+			<core1 name="core1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="DR_Polystyrene" vis="ScintVis" sensitive="yes"/> <!-- scintillation fiber -->
+			<core2 name="core2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="DR_Quartz" vis="CerenVis" sensitive="yes"/>      <!-- quartz fiber-->
+			<hole name="hole" rmax="(DRFiberFibwidthSCE+holeoverSCE)" rmin="0.0" material="Air" vis="holeVis" sensitive="yes"/> 
+			<absorb material="Brass" vis="AbsVis" sensitive="yes"/>
+			<phdet1 name="phdet1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia2" vis="phdetVis" sensitive="yes"/> 
+			<phdet2 name="phdet2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia3" vis="phdetVis" sensitive="yes"/>
+		</structure>
+	</detector>
+</detectors>

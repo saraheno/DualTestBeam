@@ -30,6 +30,6 @@
 		<vis name="Invisible" showDaughers="true" visible="false"/> 
 	</display>
         <!--  Includes for sensitives and support; it includes DRCrystal for two-segmentation -->
-	<include ref="SCEPCAL_DRCrystal.xml"/>
+	<include ref="SCEPCAL_DRCrystal-twoseg.xml"/>
 
 </lccdd>
