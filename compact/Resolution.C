@@ -76,12 +76,13 @@ typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
 typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
 
 
-void SCEDraw1(   TCanvas* canv, const char* name, TH1F* h1,			const char* outfile,	bool logy);
-void SCEDraw1tp( TCanvas* canv, const char* name, TProfile* h1,			const char* outfile);
+void SCEDraw1   (TCanvas* canv,const char* name,TH1F* h1, const char* outfile, bool logy);
+void SCEDraw1tp (TCanvas* canv, const char* name, TProfile* h1,			const char* outfile);
 void SCEDraw1_2D(TCanvas* canv, const char* name, TH2F* h1,			const char* outfile,	float eohS,float eohC);
-void SCEDraw2(   TCanvas* canv, const char* name, TH1F* h1,TH1F* h2,		const char* outfile,	bool logy);
-void SCEDraw3(   TCanvas* canv, const char* name, TH1F* h1,TH1F* h2,TH1F* h3,	const char* outfile,	bool logy);
-void setCanvas(  TCanvas* canv, const char* name, TH1F* h1);
+void SCEDraw2   (TCanvas* canv, const char* name, TH1F* h1,TH1F* h2,		const char* outfile,	bool logy);
+void SCEDraw3   (TCanvas* canv, const char* name, TH1F* h1,TH1F* h2,TH1F* h3,	const char* outfile,	bool logy);
+//void setCanvas  (TCanvas* canv, const char* name, TH1F* h1);
+void setCanvas  (TCanvas* canv,const char* name, bool hist, bool tprofile, TH1F* h1, TProfile* t1);
 
 
 void getStuff(map<string,int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, 
@@ -201,6 +202,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 50,-1.,5.);  
 	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 50,-25.,25.);
 	
+	TH1F *ehcEdgeE 		= new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
+	TH1F *phcEdgeE 		= new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
 	TH1F *ehcEdgeR		= new TH1F("ehcEdgeR","e-  (beamE-sumEdge)/beamE",100,0.,1.5);
 	TH1F *phcEdgeR		= new TH1F("phcEdgeR","pi- (beamE-sumEdge)/beamE",100,-0.5,1.5);
 	
@@ -462,6 +465,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				m1Ecal=gEcalp->GetParameter(0);
 				b1Ecal=1-m1Ecal;
 				cout<<"ECAL b="<<b1Ecal<<", m="<<m1Ecal;
+				//TCanvas* ceeee;
+				//SCEDraw1(ceeee,"name",1,0,phcEdgeR,phcEcalNsNc_pfx,"outfile",0);
 			}
 			double kappaEcal = 1+(b1Ecal/m1Ecal);
 			cout<<", k=1+b/m="<<kappaEcal<<endl;
@@ -498,6 +503,50 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	pif->Close();
 	cout<<"END PION ************************"<<endl;
 
+	cout<<"********* Start plotting some plots ***********"<<endl;
+	if(doplots) {
+		int ncanv = 7;
+		vector<TCanvas*> canv;
+		for (int i = 0; i < ncanv; ++i) {canv.push_back(new TCanvas(Form("canvas%d", i), Form("Canvas %d", i), 800, 600));}
+		SCEDraw2(canv[0],"allDepE: pi- vs e-",ehetrue,phetrue,"pivse_allE.png",0);		
+		SCEDraw2(canv[1],"EdgeE: pi- vs e-",ehcEdgeE,phcEdgeE,"pivse_edgeE.png",0);
+		SCEDraw2(canv[2],"BeamE-EdgeE: pi- vs e-",ehcEdgeR,phcEdgeR,"pivse_allcaloE.png",0);
+		SCEDraw1(canv[3],"e-: allDepE-EdgeE",hedepcal,"e_allcaloE.png",0);
+		SCEDraw1(canv[4],"pi-: allDepE-EdgeE",hpdepcal,"pi_allcaloE.png",0);
+		SCEDraw1_2D(canv[5],"e-: allDepE-EdgeE vs num_inelastic",enscvni,"e_allcaloE-vs-inel.png",0.,0.);
+                SCEDraw1_2D(canv[6],"pi-: allDepE-EdgeE vs num_inelastic",pinscvni,"pi_allcaloE-vs-inel.png",0.,0.);
+		if(doecal) {
+			int necanv = 8;
+			vector<TCanvas*> ecanv;
+			for (int i = 0; i < necanv; ++i) {ecanv.push_back(new TCanvas(Form("ecanvas%d", i), Form("eCanvas %d", i), 800, 600));}
+			SCEDraw2(ecanv[0],"pi- vs e-: Crystal Energy",eenergy[0],pienergy[0],"pivse_crysE.png",0);
+			SCEDraw2(ecanv[1],"ECAL e-: num_scint vs num_cer",ephoton[0],ephoton[2],"eecal_scintvscer.png",0);
+			SCEDraw3(ecanv[2],"ECAL pi-: num_cer, num_scint, dualcorr",piphoton[0],piphoton[2],phcEcalcorr,"piecal_ncerscintcorr.png",0);
+			SCEDraw1_2D(ecanv[3],"ECAL e-: num_scint vs num_cer (TH2F)",ehcEcalNsNc,"eecal_cervsscint.png",0.,0.);
+			SCEDraw1_2D(ecanv[4],"ECAL e- (Marco): num_scint vs num_cer",ehcEcalMarco,"eecal_scintvscerMarcoFit.png",0.,0.);
+			SCEDraw1_2D(ecanv[5],"ECAL pi-: num_scint vs num_cer",phcEcalNsNc,"piecal_scintvscerFit.png",0.,0.);
+			SCEDraw1_2D(ecanv[6],"ECAL pi- (Marco): num_scint vs num_cer",phcEcalMarco,"piecal_scintvscerMarcoFit.png",0.,0.);
+			SCEDraw2(ecanv[7],"ECAL Time: pi- vs e-",eecaltime,piecaltime,"pivse_ecaltime.png",1);
+		}
+		if(dohcal) {
+			int nhcanv = 12;
+			vector<TCanvas*> hcanv;
+			for (int i = 0; i < nhcanv; ++i) {hcanv.push_back(new TCanvas(Form("hcanvas%d", i), Form("hCanvas %d", i), 800, 600));}
+			SCEDraw2(hcanv[0],"pi- vs e-: quatz+scint fiberE",eenergy[3],pienergy[3],"pivse_allfiber.png",0);
+			SCEDraw2(hcanv[1],"pi- vs e-: scint fiberE",ephoton[1],piphoton[1],"pivse_scintfiber.png",0);
+			SCEDraw2(hcanv[2],"pi- vs e-: quatz fiberE",eenergy[2],pienergy[2],"pivse_quartzfiber.png",0);
+			SCEDraw2(hcanv[3],"HCAL e-: cer_num vs scint_num",ephoton[1],ephoton[3],"ehcal_cervsscint.png",0);
+			SCEDraw3(hcanv[4],"HCAL pi-: num_cer, num_scint, dualcorr",piphoton[1],piphoton[3],phcHcalcorr,"pihcal_ncerscintcorr.png",0);
+			SCEDraw1_2D(hcanv[5],"HCAL e-: scint_num vs cer_num",ehcHcalNsNc,"ehcal_scintvscerFit.png",0.,0.);
+			SCEDraw1_2D(hcanv[6],"HCAL e- (Marco): num_scint vs num_cer",ehcHcalMarco,"ehcal_scintvscerMarcoFit.png",0.,0.);
+			SCEDraw1_2D(hcanv[7],"HCAL pi-: num_scint vs num_cer",phcHcalNsNc,"pihcal_scintvscerFit.png",-b1Hcal/m1Hcal,0.);
+			SCEDraw1_2D(hcanv[8],"HCAL pi-(Marco): num_scint vs num_cer",phcHcalMarco,"pihcal_scintvscerMarcoFit.png",-b1Hcal/m1Hcal,0.);
+			SCEDraw1_2D(hcanv[9],"HCAL e-: scint vs quartz fiberE",ehcHcalf1f2,"ehcal_scintvsquartz.png",0.,0.);
+			SCEDraw1_2D(hcanv[10],"HCAL pi-: scint vs quartz fiberE",phcHcalf1f2,"pihcal_scintvsquartz.png",0.,0.);
+			SCEDraw2(hcanv[11],"HCAL Time: pi- vs e-",ehcaltime,pihcaltime,"pivse_hcaltime.png",1);
+		}
+	}
+
 	//***********************************************************************************************************
 	TFile * out = new TFile(outputfilename,"RECREATE");
 	for (auto ee : eenergy)     {ee->Write();}
@@ -505,9 +554,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	for (auto enph : ephoton)   {enph->Write();}
 	for (auto pinph : piphoton) {pinph->Write();}
 	phcEcalcorr->Write();
+	ehcEdgeE->Write();
+	phcEdgeE->Write();
 	ehcEdgeR->Write();
 	phcEdgeR->Write();
-	//ehcHcalcorr->Write();
 	phcHcalcorr->Write();
 	ehaphcal->Write();
 	phaphcal->Write();
@@ -517,8 +567,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	phetrue->Write();
 	hedepcal->Write();
 	hpdepcal->Write();
-	//ehchan->Write();
-	//phchan->Write();
 	ehcEcalNsNc->Write();
 	phcEcalNsNc->Write();
 	ehcHcalNsNc->Write();
@@ -538,9 +586,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	out->Close();
 } // end of Resolution
 
-
-
-void setCanvas(TCanvas* canv,const char* name, bool hist, bool tprofile, TH1F* h1, TProfile* t1) {
+void setCanvas(TCanvas* canv,const char* name) {
 	canv= new TCanvas(name,name,200,10,700,500);
 	canv->SetFillColor(0);
 	canv->SetBorderMode(0);
@@ -548,89 +594,107 @@ void setCanvas(TCanvas* canv,const char* name, bool hist, bool tprofile, TH1F* h
 	canv->SetFrameBorderMode(0);
 	canv->SetTickx(0);
 	canv->SetTicky(0);
-	if(hist){
-		h1->SetLineColor(kGreen);
-		h1->SetLineWidth(3);
-		h1->SetStats(111111);
-		h1->Draw("HIST");
-	}
-	if(tprofile){
-		t1->SetMarkerSize(20);
-		t1->SetMarkerStyle(4);
-		t1->SetMarkerColor(3);
-		t1->SetLineColor(kGreen);
-		t1->SetLineWidth(3);
-		t1->SetStats(111111);
-		t1->Draw("HIST");
-	}
+	return;
 }
 
-void SCEDraw1(TCanvas* canv,const char* name,bool hist, bool tprofile, TH1F* h1, TProfile* t1, const char* outfile, bool logy){
-	setCanvas(canv, name, 1, 0, h1, t1);
+void SCEDraw1(TCanvas* canv,const char* name,TH1F* h1, const char* outfile, bool logy){
+	setCanvas(canv, name);
+	canv->cd();
+	h1->SetLineColor(kGreen);
+	h1->SetLineWidth(3);
+	h1->SetStats(111111);
+	h1->Draw("HIST");
 	if(logy) canv->SetLogy();
+	canv->Print(outfile);
+	canv->Update();
+	return;
+}
+
+void SCEDraw1tp(TCanvas* canv,const char* name,TProfile* t1, const char* outfile) {
+	setCanvas(canv, name);
+	canv->cd();
+	t1->SetMarkerSize(20);
+	t1->SetMarkerStyle(4);
+	t1->SetMarkerColor(3);
+	t1->SetLineColor(kGreen);
+	t1->SetLineWidth(3);
+	t1->SetStats(111111);
+	t1->Draw("HIST");
 	canv->Print(outfile,".png");
 	canv->Update();
 	return;
 }
 
-void SCEDraw1tp (TCanvas* canv,  const char* name,bool hist, bool tprofile, TH1F* h1, TProfile* t1, const char* outfile) {
-	setCanvas(canv, name, 0, 1, h1, t1);
-	canv->Print(outfile,".png");
-	canv->Update();
-	return;
-}
-
-void SCEDrawp (TCanvas* canv,  const char* name,bool hist, bool tprofile, TH1F* h1, TProfile* t1, const char* outfile) {
-	setCanvas(canv, name, 0, 1, h1, t1);
+void SCEDrawp (TCanvas* canv,const char* name,TProfile* t1,const char* outfile) {
+	setCanvas(canv, name);
+	canv->cd();
 	gStyle->SetOptFit();
-	h1->Draw("*");
+	t1->SetLineColor(kGreen);
+	t1->SetLineWidth(kGreen);
+	t1->SetStats(111111);
+	t1->SetMarkerSize(20);
+	t1->SetMarkerStyle(4);
+	t1->SetMarkerColor(3);
+	gStyle->SetOptFit();
+	t1->Draw("*");
 	canv->Print(outfile,".png");
 	canv->Update();
 	return;
 }
 
-/*void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile, float eohS, float eohC) {
-  setCanvas(canv, name, h1);
-  TLine line = TLine(eohS,eohC,1.,1.);
-  line.SetLineColor(kYellow);
-  line.SetLineWidth(2);
-  line.Draw("same");
-  canv->Print(outfile,".png");
-  canv->Update();
-  return;
-  }
+void SCEDraw1_2D(TCanvas* canv,const char* name,TH2F* h1,const char* outfile,float eohS,float eohC) {
+	setCanvas(canv, name);
+	canv->cd();
+	h1->SetLineColor(kGreen);
+	h1->SetLineWidth(kGreen);
+	h1->SetStats(111111);
+	h1->Draw("");
+	TLine line = TLine(eohS,eohC,1.,1.);
+	line.SetLineColor(kYellow);
+	line.SetLineWidth(2);
+	line.Draw("same");
+	canv->Print(outfile,".png");
+	canv->Update();
+	return;
+}
 
-  void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char* outfile, bool logy) {
-  setCanvas(canv, name, h1);
-  if(logy) canv->SetLogy();
-  float max = std::max(h1->GetMaximum(),h2->GetMaximum());
-  h1->SetMaximum(max*1.3);
-  h2->SetLineColor(kRed);
-  h2->SetLineWidth(3);
-  h2->SetStats(111111);
-  h2->Draw("HIST same");
-  canv->Print(outfile,".png");
-  canv->Update();
-  return;
-  }
+void SCEDraw2 (TCanvas* canv,const char* name,TH1F* h1,TH1F* h2,const char* outfile, bool logy) {
+	setCanvas(canv, name);
+	canv->cd();
+	if(logy) canv->SetLogy();
+	float max = std::max(h1->GetMaximum(),h2->GetMaximum());
+	h1->SetMaximum(max*1.3);
+	h1->SetLineColor(kGreen);
+	h1->SetLineWidth(3);
+	h1->SetStats(111111);
+	h1->Draw("HIST");	
+	h2->SetLineColor(kRed);
+	h2->SetLineWidth(3);
+	h2->SetStats(111111);
+	h2->Draw("HIST same");
+	canv->Print(outfile,".png");
+	canv->Update();
+	return;
+}
 
-  void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile,bool logy) {
-  setCanvas(canv, name, h1);
-  if(logy) canv->SetLogy();
-  float max = std::max(h1->GetMaximum(),h2->GetMaximum());
-  h1->SetMaximum(max*1.3);
-  h2->SetLineColor(kRed);
-  h2->SetLineWidth(3);
-  h2->SetStats(111111);  
-  h2->Draw("HIST same");
-  h3->SetLineColor(kBlue);
-  h3->SetLineWidth(3);
-  h3->SetStats(111111);  
-  h3->Draw("HIST same");
-  canv->Print(outfile,".png");
-  canv->Update();
-  return;
-  }*/
+void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile,bool logy) {
+	  setCanvas(canv, name);
+	  canv->cd();
+	  if(logy) canv->SetLogy();
+	  float max = std::max(h1->GetMaximum(),h2->GetMaximum());
+	  h1->SetMaximum(max*1.3);
+	  h2->SetLineColor(kRed);
+	  h2->SetLineWidth(3);
+	  h2->SetStats(111111);  
+	  h2->Draw("HIST same");
+	  h3->SetLineColor(kBlue);
+	  h3->SetLineWidth(3);
+	  h3->SetStats(111111);  
+	  h3->Draw("HIST same");
+	  canv->Print(outfile,".png");
+	  canv->Update();
+	  return;
+  }
 
 void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, //input
 		int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, //input
