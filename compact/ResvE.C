@@ -57,17 +57,17 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   canv->Update();
 }
 
-void res() {
+void ResvE() {
 
-  const int npoints=5;
+  const int npoints=3;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
   filenames[0]="RES_hcal_10GeV.root"; 
-  filenames[1]="RES_hcal_15GeV.root "; 
-  filenames[2]="RES_hcal_20GeV.root"; 
-  filenames[3]="RES_hcal_25GeV.root"; 
-  filenames[4]="RES_hcal_30GeV.root"; 
+  filenames[1]="RES_hcal_20GeV.root "; 
+  filenames[2]="RES_HCAL_30GeV.root"; 
+  //filenames[3]="RES_hcal_40GeV.root"; 
+  //filenames[4]="RES_hcal_30GeV.root"; 
   /*filenames[5]="./output/hists_SampOnly_35GeV_3.root"; 
   filenames[6]="./output/hists_SampOnly_40GeV_3.root"; 
   filenames[7]="./output/hists_SampOnly_45GeV_3.root"; 
@@ -75,10 +75,10 @@ void res() {
   filenames[9]="./output/hists_SampOnly_100GeV_3.root"; */
 
   aatruemean[0]=10;
-  aatruemean[1]=15;
-  aatruemean[2]=20;
-  aatruemean[3]=25;
-  aatruemean[4]=30;
+  aatruemean[1]=20;
+  aatruemean[2]=30;
+  //aatruemean[3]=40;
+  //aatruemean[4]=30;
   /*aatruemean[5]=35;
   aatruemean[6]=40;
   aatruemean[7]=45;

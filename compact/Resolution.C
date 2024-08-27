@@ -194,12 +194,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	  eenergy.push_back(new TH1F(Form("electron_%zu", i), energy_title[i].c_str(), 100, 0.0, 1.5));
 	  pienergy.push_back(new TH1F(Form("pion_%zu", i), energy_title[i].c_str(), 100, 0.0, 1.5));
 	  if (i>3) { continue;}
-	  ephoton.push_back(new TH1F(Form("eph_%zu",i), nphoton_title[i].c_str(),   100, 0.0, 1.5));
-	  piphoton.push_back(new TH1F(Form("piph_%zu",i), nphoton_title[i].c_str(), 100, 0.0, 1.5));
+	  ephoton.push_back(new TH1F(Form("eph_%zu",i), nphoton_title[i].c_str(),   50, 0.0, 1.5));
+	  piphoton.push_back(new TH1F(Form("piph_%zu",i), nphoton_title[i].c_str(), 50, 0.0, 1.5));
 	}
 	
-	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 100,-1.,5.);  
-	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 100,-10.,10.);
+	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 50,-1.,5.);  
+	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 50,-25.,25.);
 	
 	TH1F *ehcEdgeR		= new TH1F("ehcEdgeR","e-  (beamE-sumEdge)/beamE",100,0.,1.5);
 	TH1F *phcEdgeR		= new TH1F("phcEdgeR","pi- (beamE-sumEdge)/beamE",100,-0.5,1.5);
@@ -344,7 +344,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		num_evt_mc = b_mc->GetEntries();
 		num_evt    = std::min(num_evt,num_evtsmax);
 		cout<<"num_evt_ele hcalcalib file="<<num_evt<<endl;
-		//float meanscinEcala(0),meanfscinHcala(0),meancerEcala(0),meancerHcala(0), meaneecaltimecut(0),meanehcaltimecut(0);
 		float meanscinEcal(0),meancerEcal(0),meanscinHcal(0),meancerHcal(0),meaneecaltimecut(0),meanehcaltimecut(0);
 		if(num_evt>0) { 
 		      	CalHits* ecalhitsa = new CalHits();
@@ -478,6 +477,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				cout<<"HCAL b="<<b1Hcal<<", m="<<m1Hcal<<", k=1+b/m="<<endl;
 			}
 			double kappaHcal = 1+(b1Hcal/m1Hcal);
+			cout<<kappaHcal<<endl;
 			double hoverehcalscint=piphoton[3]->GetMean();
 			double hoverehcalcer=piphoton[1]->GetMean();
 			kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
@@ -487,8 +487,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) cout<<"num_evt_pi="<<ievt<<endl;
 				float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0); 
 				getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,
-						ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,timecut, eecaltimecutcor, 
-						ehcaltimecutcor);
+						ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,
+						timecut, eecaltimecutcor, ehcaltimecutcor);
 				phcEcalcorr->Fill(EcorEcal);
 				phcHcalcorr->Fill(EcorHcal);
 			}  //end loop over events
@@ -746,7 +746,6 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 				int ilayer = (ihitchan >>27) & 0xFFF;  
 				int ibox2 = (ihitchan >> 39) & 0x03;
 				int islice = (ihitchan >>41) & 0xF;  
-				//if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 				if(gendet==1) {  // take light as generated in media
 					if(islice==(*sii3).second) {
 						meanscinHcal+=ahcalhit->nscintillator;
@@ -765,7 +764,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 				}
 				else if(gendet==3||gendet==4) {
 					if(idet==6) {
-						if( islice==(*sii3).second) { // PS
+						if( islice==(*sii3).second) { // PS (Polystyrene)
 							meanscinHcal+=ahcalhit->energyDeposit;
 							if(ievt<SCECOUNT) std::cout<<" meanscinHcal "<<meanscinHcal<<std::endl;
 						}
@@ -882,6 +881,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			}
 			eesum+=ah;
 			long long int ihitchan=ahcalhit->cellID;
+			cout<<"HCAL INFO: cellID=="<<ihitchan;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
 				int ilayer = (ihitchan >>8) & 0xFFF;  
@@ -900,6 +900,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 				if(itube==0) ihole=1;
 				ix=itube;
 				iy=ilayer;
+				cout<<", idet=="<<idet<<", gendet=="<<gendet<<", ilayer=="<<ilayer<<", itube=="<<itube<<endl;
 				if(gendet==1) {  // take light as generated in fiber
 					if(ifiber==1) {  // scintillating fibers
 						nescinttothcal+=ahcalhit->nscintillator;
@@ -1130,7 +1131,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
                 cout<<"ECAL:"<<endl;
 		cout<<"		necertot="<<necertotecal   <<", meancer="  <<meancerEcal <<", necertot/meancer="   <<anecertotecal<<endl;
                 cout<<"         nescintot="<<nescinttotecal<<", meanscint="<<meanscinEcal<<", nescintot/meanscint="<<anescinttotecal<<endl;
-                cout<<"         kappahcal="<<kappaEcal     <<", EEcal="    <<EEcal<<endl;
+                cout<<"         kappaEcal="<<kappaEcal     <<", EEcal="    <<EEcal<<endl;
         }
 	if(dohcal){
 		float anecertothcal=necertothcal/meancerHcal;
@@ -1139,7 +1140,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 		cout<<"HCAL: "<<endl;
 		cout<<"		necertot="<<necertothcal   <<", meancer="  <<meancerHcal <<", necertot/meancer="   <<anecertothcal<<endl;
 		cout<<"		nescintot="<<nescinttothcal<<", meanscint="<<meanscinHcal<<", nescintot/meanscint="<<anescinttothcal<<endl;
-		cout<<"		kappahcal="<<kappaHcal     <<", EHcal="    <<EHcal<<endl;
+		cout<<"		kappaHcal="<<kappaHcal     <<", EHcal="    <<EHcal<<endl;
 	}
 
 } // end of getStuffDualCorr
