@@ -22,7 +22,7 @@
 #include "DD4hep/InstanceCount.h"
 #include "DDG4/Geant4Random.h"
 #include <G4Event.hh>
-
+using namespace std;
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
@@ -30,9 +30,8 @@ double dialCher= 100./8000.;
 double dialScint=100./200000.;
 //double dialCher= 1.;
 //double dialScint=1.;
-float betarel=1/1.544;
+float betarel=1/1.544; //depends on the media refractive index
 //float betarel=0.;
-//float betarel=0.95;
 int printlimitSCE=10;
 int MAXEVENT=10;
 
@@ -48,14 +47,11 @@ namespace CalVision {
     // there is some bug somewhere.  shouldn't need this facto
     //return  conversioneVnm/ energy*1000.;
     return 1239.84187 / energy*1000.;
-
   }
-
 
   int SCECOUNT=0;
   int SCECOUNT2=0;
   int OLDEVENTNUMBER=-1;
-
 
   class DualCrysCalorimeterSD {
   public:
@@ -70,9 +66,7 @@ namespace CalVision {
 namespace dd4hep {
   /// Namespace for the Geant4 based simulation part of the AIDA detector description toolkit
   namespace sim   {
-
     using namespace CalVision;
-    
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //               Geant4SensitiveAction<MyTrackerSD>
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -88,19 +82,10 @@ namespace dd4hep {
     template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::defineCollections()    {
       m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrysCalorimeterSD::Hit>();
     }
-
     /// Method for generating hit(s) using the information of G4Step object.
     template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
-
-
-
       Geant4Event&  evt = context()->event();
-
-
-
       int eventNumber = static_cast<G4Event const&>(context()->event()).GetEventID();
-
-
       if(eventNumber != OLDEVENTNUMBER) {
 	if(eventNumber<MAXEVENT) {
         std::cout<<" SDAction event number is "<<eventNumber<<std::endl;
@@ -110,25 +95,15 @@ namespace dd4hep {
 	}
       }
 
-
-
-      //      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
-
-
       if((eventNumber==1)&&(SCECOUNT==1)) {
-	std::cout<<"event number is "<<eventNumber<<std::endl;
-	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
-	std::cout<<"dialCher is "<<dialCher<<std::endl;
-	std::cout<<"dialScint is "<<dialScint<<std::endl;
-	std::cout<<" you need to use this to interpret your results"<<std::endl;
-	std::cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
+	cout<<"event number is "<<eventNumber<<endl;
+	cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<endl;
+	cout<<"dialCher is "<<dialCher<<endl;
+	cout<<"dialScint is "<<dialScint<<endl;
+	cout<<" you need to use this to interpret your results"<<endl;
+	cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
       }
-
       bool SCEPRINT=(SCECOUNT<printlimitSCE);
-      //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
-
-
-
       G4StepPoint *thePrePoint = step->GetPreStepPoint();
       G4StepPoint *thePostPoint = step->GetPostStepPoint();
       //      const G4ThreeVector &thePrePosition = thePrePoint->GetPosition();
@@ -143,16 +118,6 @@ namespace dd4hep {
       G4String thePostPVName = "";
       if (thePostPV)
 	thePostPVName = thePostPV->GetName();
-      //G4Track *theTrack = step->GetTrack();
-      //G4int TrPDGid = theTrack->GetDefinition()->GetPDGEncoding();
-
-      //      if(thePrePVName.contains("slice")==0) {
-      //std::cout<<"entering DualCrysAction"<<std::endl;
-      //  std::cout<<" prevolume is "<<thePrePVName<<std::endl;
-      //  std::cout<<" postvolume is "<<thePostPVName<<std::endl;
-      //  std::cout<<" pid is "<<TrPDGid<<std::endl;
-	  //}
-
 
       Geant4StepHandler h(step);
       HitContribution contrib = DualCrysCalorimeterHit::extractContribution(step);
@@ -163,19 +128,19 @@ namespace dd4hep {
       try {
         cell = cellID(step);
       } catch(std::runtime_error &e) {
-	std::stringstream out;
-        out << std::setprecision(20) << std::scientific;
-        out << "ERROR: " << e.what()  << std::endl;
+	stringstream out;
+        out << setprecision(20) << scientific;
+        out << "ERROR: " << e.what()  << endl;
         out << "Position: "
-            << "Pre (" << std::setw(24) << step->GetPreStepPoint()->GetPosition() << ") "
-            << "Post (" << std::setw(24) << step->GetPostStepPoint()->GetPosition() << ") "
+            << "Pre (" <<  setw(24) << step->GetPreStepPoint()->GetPosition() << ") "
+            << "Post (" << setw(24) << step->GetPostStepPoint()->GetPosition() << ") "
             << std::endl;
         out << "Momentum: "
-            << " Pre (" <<std::setw(24) << step->GetPreStepPoint() ->GetMomentum()  << ") "
-            << " Post (" <<std::setw(24) << step->GetPostStepPoint()->GetMomentum() << ") "
+            << " Pre (" <<setw(24) << step->GetPreStepPoint() ->GetMomentum()  << ") "
+            << " Post (" <<setw(24) << step->GetPostStepPoint()->GetMomentum() << ") "
             << std::endl;
 
-	std::cout << out.str();
+	cout << out.str();
 
         return true;
       }
@@ -192,7 +157,7 @@ namespace dd4hep {
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
 	if(SCECOUNT2<printlimitSCE) {
-	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<std::endl;
+	  cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<endl;
 	  if(SCECOUNT2<printlimitSCE+1) SCECOUNT2+=1;
 	}
 
@@ -204,18 +169,14 @@ namespace dd4hep {
 	//	std::cout<<"updating old hit"<<std::endl;
       }
 
-
-
       G4Track * track =  step->GetTrack();
-      std::string amedia = ((track->GetMaterial())->GetName());
+      string amedia = ((track->GetMaterial())->GetName());
       //      if(SCEPRINT) std::cout<<"track name is "<< (track->GetDefinition())->GetParticleName()<<std::endl;
-
       float avearrival=(pretime+posttime)/2.;
       int jbin=-1;
       float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
       jbin = (avearrival-hit->timemin)/tbinsize;
       jbin = std::min(jbin,(hit->nfinebin)-1);
-
 
       if(thePostPoint->GetProcessDefinedStep()->GetProcessName().contains("Inelast")){
 	hit->n_inelastic+=1;
@@ -223,8 +184,7 @@ namespace dd4hep {
 
       //photons
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
-	if(SCEPRINT) std::cout<<"     in volume ID "<<cell<<std::endl;
-
+	if(SCEPRINT) cout<<"     in volume ID "<<cell<<endl;
 	if(SCECOUNT<printlimitSCE+1) SCECOUNT+=1;
 	//	if(SCEPRINT) std::cout<<"optical photon"<<std::endl;
 
@@ -233,64 +193,51 @@ namespace dd4hep {
 	//if(track->GetParentID()!=1) SCEPRINT=1;
 	if( (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "CerenkovPhys")&&(track->GetCreatorProcess()->G4VProcess::GetProcessName() != "ScintillationPhys")  ) SCEPRINT=1;  // print if less than scecount (set earlier) or if photon has weird source
 
-
         float wavelength=fromEvToNm(track->GetTotalEnergy()/eV);
         int ibin=-1;
         float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nfinebin;
         ibin = (wavelength-hit->wavelenmin)/binsize;
 	ibin = std::min(ibin,(hit->nfinebin)-1);
 
-
-
-
         int xbin=-1;
         float xbinsize=(hit->xmax-hit->xmin)/hit->ncoarsebin;
         xbin = (thePrePoint->GetPosition().x()-hit->xmin)/xbinsize;
-
 
         int ybin=-1;
         float ybinsize=(hit->ymax-hit->ymin)/hit->ncoarsebin;
         ybin = (thePrePoint->GetPosition().y()-hit->ymin)/ybinsize;
 
-
 	int phstep = track->GetCurrentStepNumber();
-	
-	
+		
 	if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
-	  if(SCEPRINT) std::cout<<" found Cerenkov photon"<<std::endl;
+	  if(SCEPRINT) cout<<" found Cerenkov photon"<<endl;
 
-	  if(amedia.find("kill")!=std::string::npos) 
+	  if(amedia.find("kill")!=string::npos) 
 	    { 
-	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
-	      //std::cout<<"killing photon"<<std::endl;
-	      //	      SCEPRINT=1;
+	      if(SCEPRINT) cout<<"killing photon"<<endl;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
                 if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
-                if(SCEPRINT) std::cout<<" cer photon kill pre time "<<pretime<<std::endl;
-                if(SCEPRINT) std::cout<<" cer photon kill post time "<<posttime<<std::endl;
+                if(SCEPRINT) cout<<" cer photon kill pre time "<<pretime<<endl;
+                if(SCEPRINT) cout<<" cer photon kill post time "<<posttime<<endl;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	    }
-	  else if(amedia.find("BlackHole")!=std::string::npos) {
+	  else if(amedia.find("BlackHole")!=string::npos) {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
 	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
 	  }
 	  else {
-	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
 	    if( (phstep==1)  ) {
 	      hit->ncerenkov+=1;
 	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
-
 	      //Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
@@ -301,7 +248,6 @@ namespace dd4hep {
           if(SCEPRINT) std::cout<<"     scintillation photon"<<std::endl;
 	  std::string amedia = ((track->GetMaterial())->GetName());
 	  if(amedia.find("kill")!=std::string::npos) 
-	    //          if(((track->GetMaterial())->GetName())=="killMedia") 
 	    {
 	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
 	      //std::cout<<"killing photon"<<std::endl;

@@ -443,7 +443,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
                                cout<<" hits Edeposit="<<pesum/1000.<<", beamE="<<beamE/1000.<<endl;
                         cout<<" EDeposit: air="<<pesumair/1000.<<", ecalPD="<<pesumPDe/1000.<<", crys="<<pesumcrystal/1000.<<endl;
                         cout<<"           scintfiber="<<pesumfiber1/1000.<<"cerfiber="<<pesumfiber2/1000.<<", hcalPD="<<pesumPDh/1000.<<endl;
-                        cout<<"           absorber="<<pesumabs/1000.<<" edgeE"<<pesumedge/1000.<<endl;
+                        cout<<"           absorber="<<pesumabs/1000.<<", edgeE="<<pesumedge/1000.<<endl;
                         cout<<" sum EDeposit="<<pachecks/1000.<<", sum EDeposit/beamE="<<pachecks/beamE<<endl;
                                cout<<"ecal, totnum_cer="<<npcertotecal<<", totnum_scint="<<npscinttotecal<<endl;
                         cout<<"hcal, totnum_cer="<<npcertothcal<<", totnum_scint="<<npscinttothcal<<endl;
@@ -945,7 +945,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			}
 			eesum+=ah;
 			long long int ihitchan=ahcalhit->cellID;
-			cout<<"HCAL INFO: cellID=="<<ihitchan;
+			if(ievt<SCECOUNT) cout<<"HCAL INFO: cellID=="<<ihitchan;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
 				int ilayer = (ihitchan >>8) & 0xFFF;  

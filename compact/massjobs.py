@@ -44,7 +44,7 @@ shfile.write('echo "machine is centos${VERSION_ID%.*}"' + '\n')
 shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos${VERSION_ID%.*}-gcc11-opt/setup.sh' + '\n')
 shfile.write('source '+source_dir+'/install/bin/thisdd4hep.sh'+'\n')
 shfile.write('echo "ran setup"'+'\n')
-for i in energies[3:]:
+for i in energies:
   shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+args.particle+str(i)+'_.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 100 >& '+outputarea+'Log_'+args.geometry+'-dial_'+str(i)+'_'+args.particle+'.log'+'\n')
 shfile.write('exitcode=$?'+'\n')
 shfile.write('echo ""'+'\n')
@@ -66,7 +66,7 @@ jdlfile.write("Error = "+hostarea+args.particle+"$(cluster)_$(process).stderr"+'
 jdlfile.write("Log = "+hostarea+name+args.particle+"$(cluster)_$(process).condor"+'\n')
 jdlfile.write("Arguments = $(process)"+'\n')
 jdlfile.write("request_memory = 4GB"+'\n')
-jdlfile.write('Queue '+str(len(energies[3:])) + '\n')
+jdlfile.write('Queue '+str(len(energies)) + '\n')
 print("jdl file closed")
 jdlfile.close()
 
