@@ -81,8 +81,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   sens.setType("calorimeter");
 
-
-
   // photodetector 1
   sol = Tube(0.,fX_phdet1.rmax(), hzph);
   mat = description.material(fX_phdet1.materialStr());

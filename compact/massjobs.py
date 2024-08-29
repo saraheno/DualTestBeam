@@ -18,6 +18,7 @@ print("args.name=%s" % args.geometry)
 
 parent_dir = os.getcwd()
 source_dir = os.getcwd()+'/../../..'
+
 if not os.path.exists('output'):
    os.makedirs('output/' + args.geometry)
    os.makedirs('jobs/' + args.geometry)

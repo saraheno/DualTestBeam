@@ -17,6 +17,10 @@ using std::vector;
 TTree          *fChain;   //!pointer to the analyzed TTree or TChain               
 Int_t           fCurrent; //!current Tree number in a TChain                       
 
+
+
+
+
 void resolution(const char* inputfilename,const char* histname,double* aamean,double* aarms) {
 
   std::string name1(histname);
@@ -29,10 +33,10 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   canv->SetFrameBorderMode(0);
   canv->SetTickx(0);
   canv->SetTicky(0);
-  gStyle->SetOptFit();
+  gStyle->SetOptFit(000000);
 
 
-  std::cout<<"file name is "<<inputfilename<<" histname = "<<histname<<std::endl;
+  std::cout<<"file name is "<<inputfilename<<std::endl;
   TFile *f = new TFile(inputfilename);
   TH1F* nhist = static_cast<TH1F*>(f->Get(histname)->Clone());
   Int_t imax = nhist->GetMaximumBin();
@@ -41,8 +45,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   Double_t arms = nhist->GetRMS();
   Double_t amean = nhist->GetMean();
   std::cout<<"hist mean rms is "<<amean<<" "<<arms<<std::endl;
-  //TF1 *f1 = new TF1("f1","gaus",amean-5.*arms,amean+5.*arms);
-  TF1 *f1 = new TF1("f1","gaus",0,amean+1.5*arms);
+  TF1 *f1 = new TF1("f1","gaus",amean-1.5*arms,amean+1.5*arms);
   nhist->Fit("f1","R");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
@@ -55,40 +58,31 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   nhist->Draw("");
   canv->Print(name.c_str(),".png");
   canv->Update();
+
+
 }
 
-void ResvE() {
 
-  const int npoints=3;
+
+void res() {
+
+  const int npoints=6;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
-  filenames[0]="RES_hcal_10GeV.root"; 
-  filenames[1]="RES_hcal_20GeV.root "; 
-  filenames[2]="RES_HCAL_30GeV.root"; 
-  //filenames[3]="RES_hcal_40GeV.root"; 
-  //filenames[4]="RES_hcal_30GeV.root"; 
-  /*filenames[5]="./output/hists_SampOnly_35GeV_3.root"; 
-  filenames[6]="./output/hists_SampOnly_40GeV_3.root"; 
-  filenames[7]="./output/hists_SampOnly_45GeV_3.root"; 
-  filenames[8]="./output/hists_SampOnly_50GeV_3.root"; 
-  filenames[9]="./output/hists_SampOnly_100GeV_3.root"; */
+  filenames[0]="./output/FSCEPonly/res/res_fsceponly_30gev.root"; 
+  filenames[1]="./output/FSCEPonly/res/res_fsceponly_35gev.root"; 
+  filenames[2]="./output/FSCEPonly/res/res_fsceponly_40gev.root"; 
+  filenames[3]="./output/FSCEPonly/res/res_fsceponly_45gev.root"; 
+  filenames[4]="./output/FSCEPonly/res/res_fsceponly_50gev.root"; 
+  filenames[5]="./output/FSCEPonly/res/res_fsceponly_100gev.root"; 
 
-  aatruemean[0]=10;
-  aatruemean[1]=20;
-  aatruemean[2]=30;
-  //aatruemean[3]=40;
-  //aatruemean[4]=30;
-  /*aatruemean[5]=35;
-  aatruemean[6]=40;
-  aatruemean[7]=45;
-  aatruemean[8]=50;
-  aatruemean[9]=100;*/
-
-
-
-
-
+  aatruemean[0]=30;
+  aatruemean[1]=35;
+  aatruemean[2]=40;
+  aatruemean[3]=45;
+  aatruemean[4]=50;
+  aatruemean[5]=100;
 
   const int nhst=5;
   double aaamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
@@ -99,13 +93,6 @@ void ResvE() {
   hnam[2]="phcHcalcorr";
   hnam[3]="phcEdgeR";
   hnam[4]="hpdepcal";
-
-  /*hnam[0]="eph_0";
-  hnam[1]="eph_2";
-  hnam[2]="phcEcalcorr";
-  hnam[3]="ehcEdgeR";
-  hnam[4]="hedepcal";*/
-
 
 
 
@@ -160,8 +147,8 @@ void ResvE() {
 
   // dual
   for (int k=0;k<npoints;k++) {
-	  arrres[k]=rrres[k][2];
-	  std::cout<<" dual point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+    arrres[k]=rrres[k][2];
+    std::cout<<" dual point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
   }
   auto g3 = new TGraph(npoints,aatruemean,arrres);
   g3->Fit("f2");
@@ -177,33 +164,33 @@ void ResvE() {
   // all deposited energies
   for (int k=0;k<npoints;k++) {
 	  arrres[k]=rrres[k][4];
-	  std::cout<<" all deposited point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
+	  std::cout<<" alldepE point "<<k<<" energy "<<aatruemean[k]<<" = "<<arrres[k]<<std::endl;
   }
   auto g5 = new TGraph(npoints,aatruemean,arrres);
   g5->Fit("f2");
 
 
   auto Canvas= new TCanvas("Canvas","Canvas",200,10,700,500);
-  //  gStyle->SetOptStat(111111);
+  gStyle->SetOptStat(000000);
   //gStyle->SetOptFit();
 
-  float x1_l = 1.0;
+  float x1_l = 0.8;
   float y1_l = 0.80;
   float dx_l = 0.40;
-  float dy_l = 0.1;
+  float dy_l = 0.22;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
   TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
-  lgd->SetBorderSize(0); lgd->SetTextSize(0.03); lgd->SetTextFont(62); lgd->SetFillColor(0);
+  lgd->SetBorderSize(0); lgd->SetTextSize(0.04); lgd->SetTextFont(62); lgd->SetFillColor(0);
 
 
 
-
-  TH1 *frame = new TH1F("frame","",1000,0,70);
-  frame->SetMinimum(0.0);
+  TH1 *frame = new TH1F("frame","",1000,25,110);
+  frame->SetMinimum(0.);
   frame->SetMaximum(1.0);
   frame->SetStats(0);
-  frame->GetXaxis()->SetTitle("true energy (GeV)");
+  frame->SetTitle("FSCEP pi- Resolution vs Energy");
+  frame->GetXaxis()->SetTitle("Beam Energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
   frame->GetXaxis()->SetLabelSize(0.03);
   frame->GetYaxis()->SetTitle("percent resolution");
@@ -321,7 +308,7 @@ void ResvE() {
   lgd->AddEntry(g4, "escaping", "P");
 
   
-  
+ 
   f2 = g5->GetFunction("f2");
   f2->SetLineColor(kYellow);
   f2->SetLineWidth(1);
@@ -330,12 +317,12 @@ void ResvE() {
   g5->SetMarkerStyle(23);
   g5->SetMarkerSize(1.0);
   g5->Draw("P");
-  lgd->AddEntry(g5, "all deposit truth", "P");
+  lgd->AddEntry(g5, "alldepE-EdgeE ", "P");
   
 
   lgd->Draw();
   Canvas->Print("resolution.png",".png");
-  
+
 
   return;
 

@@ -32,7 +32,7 @@ using namespace std;
 //
 //     electron_rootfile.root		ddsim input with electron gun, e.g. out_DualTestBeam-dial_e-10_.root;
 //     pion_rootfile.root		ddsim input with electron gun, e.g. out_DualTestBeam-dial_e-10_.root;
-//     hcalonly_rootfile.root		for calibration hcal if both ecal + hcal, e.g. " ";
+//     hcalonly_rootfile.root		e- filename for hcal calibration if both ecal + hcal, e.g. " ";
 //
 //     energy				particle gun energy, e.g. 20;
 //
@@ -337,7 +337,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	ef->Close();
 	cout<<"done with getstuff electrons"<<endl;
 	//****************************************************************************************************************************
-	if(doecal&&dohcal ) {
+	if(doecal&&dohcal ) {//start calibration
 		TFile* efa = TFile::Open(hcalonlyefilename);
 		TTree* eta = (TTree*)efa->Get("EVENT;1");
 		b_mc= eta->GetBranch("MCParticles");
@@ -345,14 +345,14 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		cout<<"Calibration **********************"<<endl;
 		cout<<"mc branch="<<b_mc<<", hcal branch="<<b_hcal<<endl;
 		num_evt_mc = b_mc->GetEntries();
-		num_evt    = std::min(num_evt,num_evtsmax);
+		num_evt    = min(num_evt,num_evtsmax);
 		cout<<"num_evt_ele hcalcalib file="<<num_evt<<endl;
 		float meanscinEcal(0),meancerEcal(0),meanscinHcal(0),meancerHcal(0),meaneecaltimecut(0),meanehcaltimecut(0);
 		if(num_evt>0) { 
 		      	CalHits* ecalhitsa = new CalHits();
 		      	CalHits* hcalhitsa = new CalHits();
 			b_hcal->SetAddress(&hcalhitsa);
-			std::cout<<" branches set"<<std::endl;
+			cout<<" branches set"<<endl;
 			// first pass through file
 			for(int ievt=0;ievt<num_evt; ++ievt) {
 				getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, 
@@ -361,7 +361,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			meanscinHcal=meanscinHcal/num_evt;
 			meancerHcal=meancerHcal/num_evt;
 			cout<<"HCAL meanscint="<<meanscinHcal<<endl;
-			cout<<"ECAL meancer="<<meancerHcal<<endl;
+			cout<<"HCAL meancer="  <<meancerHcal<<endl;
 		} 
 		efa->Close();
 		cout<<"END calibration **********************"<<endl;

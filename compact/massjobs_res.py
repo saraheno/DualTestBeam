@@ -1,0 +1,93 @@
+import os
+from array import *
+import argparse
+
+'''
+ wraper code to run Resolution.C in condor; code set to use hcal fiber type
+ to run the code with DualTestBeam, ecal+hcal:
+#   python massjobs_s2.py -g DualTestBeam -ho=1 -h=1 -e=1 -ed=1 gd=3
+'''
+
+argParser = argparse.ArgumentParser()
+argParser.add_argument("-g",  "--geometry", help="main geo")
+argParser.add_argument("-ho", "--hcalonly", help="e-file hcal-cal", type=int, default=0)
+argParser.add_argument("-hc",  "--hcal",     help="hcal-leaf",       type=int, default=0)
+argParser.add_argument("-ec",  "--ecal",     help="ecal-leaf",       type=int, default=0)
+argParser.add_argument("-ed", "--edge",     help="edge detector",   type=int,  default=1)
+argParser.add_argument("-gd", "--gendet",   help="gen type",        type=int,  default=3)
+
+args = argParser.parse_args()
+print("args=%s" % args)
+print("args.name=%s" % args.geometry)
+
+parent_dir = os.getcwd()
+source_dir = os.getcwd()+'/../../..'
+if not os.path.exists('jobs/' + args.geometry+'/res'):
+   os.makedirs('output/' + args.geometry + '/res')
+   os.makedirs('jobs/' + args.geometry + '/res')
+
+inputfilearea = os.getcwd() + '/output/' + args.geometry
+outputarea    = os.getcwd() + '/output/' + args.geometry + '/res/'
+hostarea      = os.getcwd() + '/jobs/' + args.geometry + '/res/'
+
+energies=[10,15,20,25,30,35,40,45,50,100]
+nenergy=len(energies)
+
+einputfile = inputfilearea + '/out_' + args.geometry + '-dial_e-'
+pinputfile = inputfilearea + '/out_' + args.geometry + '-dial_pi-'
+
+hinputfile = ""
+
+outfile = outputarea+'res_'+args.geometry+'_'
+outlogfile = outputarea+'log_'+args.geometry+'_'
+if args.ecal: ecaleaf = "DRCNoSegment"
+else: ecaleaf = ""
+if args.hcal: hcaleaf = "DRFNoSegment"
+else: hcaleaf = ""
+
+name="condor-executable-"+args.geometry+"_"
+
+# create the .sh files 
+shfile = open(hostarea+name+'GeV.sh',"w")
+shfile.write('#!/bin/bash'+'\n')
+shfile.write('cd '+parent_dir+'\n')
+shfile.write('START_TIME=`/bin/date`'+'\n')
+shfile.write('echo "started at $START_TIME"'+'\n')
+shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
+# getting centos version
+shfile.write('. /etc/os-release' + '\n')
+shfile.write('echo "machine is centos${VERSION_ID%.*}"' + '\n')
+shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos${VERSION_ID%.*}-gcc11-opt/setup.sh' + '\n')
+shfile.write('source '+source_dir+'/install/bin/thisdd4hep.sh'+'\n')
+shfile.write('echo "ran setup"'+'\n')
+for i in energies:
+    if args.hcalonly==1: hinputfile = outputarea+'out_FSCEPonly-dial_e-'+str(i)
+    shfile.write('root -b -l -q \'Resolution.C(100,"'+einputfile+str(i)+'_.root","'+pinputfile+str(i)+'_.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
+
+shfile.write('exitcode=$?'+'\n')
+shfile.write('echo ""'+'\n')
+shfile.write('END_TIME=`/bin/date`'+'\n')
+shfile.write('echo "finished at $END_TIME"'+'\n')
+shfile.write('exit $exitcode'+'\n')
+shfile.close()
+
+# create the .jdl files 
+jdlfile = open(hostarea+name+'GeV.jdl',"w")
+jdlfile.write("universe = vanilla"+'\n')
+jdlfile.write("Executable ="+hostarea+name+"GeV.sh"+'\n')
+jdlfile.write("should_transfer_files = NO"+'\n')
+jdlfile.write("Requirements = (machine == \"r720-0-1.privnet\") || (machine == \"hepcms-namenode.privnet\")"+'\n') #alternative req. for hepcms cluster
+jdlfile.write("Output = "+hostarea+name+"$(cluster)_$(process).stdout"+'\n')
+jdlfile.write("Error = "+hostarea+name+"$(cluster)_$(process).stderr"+'\n')
+jdlfile.write("Log = "+hostarea+name+"$(cluster)_$(process).condor"+'\n')
+jdlfile.write("Arguments = $(process)"+'\n')
+jdlfile.write("Queue "+str(nenergy)+'\n')
+jdlfile.close()
+
+
+# create the submitter file
+f = open("massjobs_res.sh",'w')
+f.write('chmod 777 '+hostarea+'*'+'\n')
+f.write("condor_submit "+hostarea+name+'GeV.jdl'+'\n')
+f.write("condor_q")
+f.close()
