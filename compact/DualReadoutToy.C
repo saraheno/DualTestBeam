@@ -76,12 +76,13 @@ void DualReadoutToy() {
 	TH2F *covcheck		= new TH2F("covcheck",	  "cov: comp vs formula;cov(formula);cov(fit)",  100, 0.,  0.002,	100,  0.,  0.002);
 	TH2F *covcheckf1	= new TH2F("covcheckf1",  "#sigma_{D} - #sigma_{formula} vs fres",100, 1.6, 0.22,	100, -0.01,0.0);
 	TH2F *scintdual		= new TH2F("scintdual",	  "#sigma_{D} vs #sigma_{S}",	   100, 0.,  0.1,	100,  0.,  0.1);
+	TH2F *scintvscer	= new TH2F("scintvscer",  "#sigma_{S} vs #sigma_{C};#sigma_{C};#sigma_{S}", 100, 0, 0.1, 100, 0, 0.1);
 
 	TH1F *cerRes		= new TH1F("cerRes",	  "#sigma_{C}",		100, 0,	0.1);
 	TH1F *scintRes          = new TH1F("scintRes",    "#sigma_{S}",		100, 0, 0.1);
-	TH1F *dualRes           = new TH1F("dualRes",     "#sigma_{D}",		100, 0, 0.1);
-	TH1F *dualFormula	= new TH1F("dualFormula", "#sigma_{formula}",	100, 0, 0.1);
-	TH1F *dualTrue		= new TH1F("dualTrue",    "#sigma_{true}",	100, 0, 0.1);
+	TH1F *dualRes           = new TH1F("dualRes",     "#sigma_{D}",		100, 0, 0.02);
+	TH1F *dualFormula	= new TH1F("dualFormula", "#sigma_{formula}",	100, 0, 0.02);
+	TH1F *dualTrue		= new TH1F("dualTrue",    "#sigma_{true}",	100, 0, 0.02);
 
 	TH1F *dualcheck		= new TH1F("dualcheck",	  "#sigma_{D}-dualtrue",	100,-0.02,-0.01);
 	TH1F *dualcheckf	= new TH1F("dualcheckf",  "#sigma_{D}-dualformula",	100,-0.02, 0.0);
@@ -132,6 +133,7 @@ void DualReadoutToy() {
 		dualcheckf->Fill(sigmaD-dualpredb);
 		dualcheckab->Fill(dualpreda-dualpredb);
 		scintdual->Fill(sigmaS,sigmaD);
+		scintvscer->Fill(sigmaC,sigmaS);
 		covcheckf1->Fill(frestry,sigmaD-dualpredb);
 	}
 
@@ -195,6 +197,7 @@ void DualReadoutToy() {
 	scintdual3->Write();
 	dualFormula->Write();
 	dualTrue->Write();
+	scintvscer->Write();
 	out->Close();
 }
 
@@ -204,7 +207,7 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	TH1F *ccc  = new TH1F("ccc",	"shower cherenkov",	300,	0.,2.0);
 	TH1F *ddd  = new TH1F("ddd",	"dual readout",		900,	0.,2.0);
 	TH1F *cov  = new TH1F("cov",	"covariance",		3000,  -2.,2.0);
-	TH2F *sscc = new TH2F("sscc",   "cheren versus scint",  1000,   0.,2.0,1000,0.,2.0);
+	TH2F *sscc = new TH2F("sscc",   "Cerenkov versus scint",  1000,   0.,2.0,1000,0.,2.0);
 
 	fff->Reset();
 	sss->Reset();
