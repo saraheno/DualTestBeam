@@ -14,7 +14,10 @@
     <constant name="DRcrystalgapt" value="0.001*cm"/>
     <constant name="DRcrystalhont" value="0.999*DRcrystalgapt"/>
 
+    <constant name="DRcrystallength" value="20.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
+
+    
     <constant name="DRcrystalNsize" value="45"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->

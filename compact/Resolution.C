@@ -1246,6 +1246,10 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 
 
 	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>8)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>20)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>32)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>35)<<std::endl;
 
 
 
@@ -1572,13 +1576,13 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 
-	std::cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
+	//std::cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 
-	std::cout<<"energy nscint ncer is "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
+	//std::cout<<"energy nscint ncer is "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
 
 
-	std::cout<<" ps ii is "<<(*sii3).second<<std::endl;
-	std::cout<<" quartz ii is "<<(*sii6).second<<std::endl;
+	//std::cout<<" ps ii is "<<(*sii3).second<<std::endl;
+	//std::cout<<" quartz ii is "<<(*sii6).second<<std::endl;
 
 
 	if(gendet==1) {  // take light as generated in media
