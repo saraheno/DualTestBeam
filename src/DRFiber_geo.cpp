@@ -95,7 +95,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_phdet1.isSensitive()) << endl;
 
-
   // photodetector 2
   sol = Tube(0.,fX_phdet2.rmax(), hzph);
   mat = description.material(fX_phdet2.materialStr());
@@ -109,8 +108,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " vis: "   << setw(15) << left<< fX_phdet2.visStr()
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_phdet2.isSensitive()) << endl;
-
-
 
   // scint fiber
   sol = Tube(0.,fX_core1.rmax(), hzlength-2*hzph);

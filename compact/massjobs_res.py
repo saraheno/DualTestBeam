@@ -5,16 +5,16 @@ import argparse
 '''
  wraper code to run Resolution.C in condor; code set to use hcal fiber type
  to run the code with DualTestBeam, ecal+hcal:
-#   python massjobs_s2.py -g DualTestBeam -ho=1 -h=1 -e=1 -ed=1 gd=3
+#   python massjobs_s2.py -g DualTestBeam -ho=1 -hc=1 -ec=1 -ed=1 -gd=3
 '''
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g",  "--geometry", help="main geo")
 argParser.add_argument("-ho", "--hcalonly", help="e-file hcal-cal", type=int, default=0)
-argParser.add_argument("-hc",  "--hcal",     help="hcal-leaf",       type=int, default=0)
-argParser.add_argument("-ec",  "--ecal",     help="ecal-leaf",       type=int, default=0)
-argParser.add_argument("-ed", "--edge",     help="edge detector",   type=int,  default=1)
-argParser.add_argument("-gd", "--gendet",   help="gen type",        type=int,  default=3)
+argParser.add_argument("-hc",  "--hcal",    help="hcal-leaf",       type=int, default=0)
+argParser.add_argument("-ec",  "--ecal",    help="ecal-leaf",       type=int, default=0)
+argParser.add_argument("-ed", "--edge",     help="edge detector",   type=int, default=1)
+argParser.add_argument("-gd", "--gendet",   help="gen type",        type=int, default=3)
 
 args = argParser.parse_args()
 print("args=%s" % args)
@@ -26,15 +26,17 @@ if not os.path.exists('jobs/' + args.geometry+'/res'):
    os.makedirs('output/' + args.geometry + '/res')
    os.makedirs('jobs/' + args.geometry + '/res')
 
-inputfilearea = os.getcwd() + '/output/' + args.geometry
-outputarea    = os.getcwd() + '/output/' + args.geometry + '/res/'
-hostarea      = os.getcwd() + '/jobs/' + args.geometry + '/res/'
+inputfilearea = os.getcwd() + '/output/' + args.geometry + '/hadd'
+outputarea    = os.getcwd() + '/output/' + args.geometry + '/res_yusuf/'
+hostarea      = os.getcwd() + '/jobs/' + args.geometry + '/res_yusuf/'
 
 energies=[10,15,20,25,30,35,40,45,50,100]
 nenergy=len(energies)
 
-einputfile = inputfilearea + '/out_' + args.geometry + '-dial_e-'
-pinputfile = inputfilearea + '/out_' + args.geometry + '-dial_pi-'
+einputfile = inputfilearea + '/out_' + args.geometry + '_e-'
+pinputfile = inputfilearea + '/out_' + args.geometry + '_pi-'
+#einputfile = 'baylor_rootfiles/FSCEPonlyOutput/outFSCPonly-dial'
+#pinputfile = 'baylor_rootfiles/FSCEPonlyOutput/'
 
 hinputfile = ""
 
@@ -45,14 +47,13 @@ else: ecaleaf = ""
 if args.hcal: hcaleaf = "DRFNoSegment"
 else: hcaleaf = ""
 
-name="condor-executable-"+args.geometry+"_"
+name=args.geometry+"_"
 
 # create the .sh files 
 shfile = open(hostarea+name+'GeV.sh',"w")
 shfile.write('#!/bin/bash'+'\n')
 shfile.write('cd '+parent_dir+'\n')
 shfile.write('START_TIME=`/bin/date`'+'\n')
-shfile.write('echo "started at $START_TIME"'+'\n')
 shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
 # getting centos version
 shfile.write('. /etc/os-release' + '\n')
@@ -61,8 +62,9 @@ shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos${VERSIO
 shfile.write('source '+source_dir+'/install/bin/thisdd4hep.sh'+'\n')
 shfile.write('echo "ran setup"'+'\n')
 for i in energies:
-    if args.hcalonly==1: hinputfile = outputarea+'out_FSCEPonly-dial_e-'+str(i)
-    shfile.write('root -b -l -q \'Resolution.C(100,"'+einputfile+str(i)+'_.root","'+pinputfile+str(i)+'_.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
+    if args.hcalonly==1: hinputfile = outputarea+'out_FSCEPonly_'+str(i)+'gev.root'
+    shfile.write('echo root -b -l -q \'Resolution_SaraVer.C(120,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
+    shfile.write('root -b -l -q \'Resolution_SaraVer.C(120,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
 
 shfile.write('exitcode=$?'+'\n')
 shfile.write('echo ""'+'\n')

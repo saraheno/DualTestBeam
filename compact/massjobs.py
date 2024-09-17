@@ -30,7 +30,7 @@ outputarea = os.getcwd() + '/output/' + args.geometry + '/'
 hostarea = os.getcwd() + '/jobs/' + args.geometry + '/'
 
 energies=[10,15,20,25,30,35,40,45,50,100]
-name="condor-executable-"+args.geometry+"-dial-"
+name="condor-executable-"+args.geometry+'_'
 
 # create the .sh files
 shfile = open(hostarea+name+args.particle+'.sh',"w")
@@ -45,8 +45,11 @@ shfile.write('echo "machine is centos${VERSION_ID%.*}"' + '\n')
 shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos${VERSION_ID%.*}-gcc11-opt/setup.sh' + '\n')
 shfile.write('source '+source_dir+'/install/bin/thisdd4hep.sh'+'\n')
 shfile.write('echo "ran setup"'+'\n')
+shfile.write('process_id=$1'+'\n')
+shfile.write('echo "process $process_id"'+'\n')
 for i in energies:
-  shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+args.particle+str(i)+'_.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 100 >& '+outputarea+'Log_'+args.geometry+'-dial_'+str(i)+'_'+args.particle+'.log'+'\n')
+  shfile.write('echo ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 50 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log'+'\n')
+  shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 50 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log'+'\n')
 shfile.write('exitcode=$?'+'\n')
 shfile.write('echo ""'+'\n')
 shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -64,10 +67,10 @@ jdlfile.write("should_transfer_files = NO"+'\n')
 jdlfile.write("Requirements = (machine == \"r720-0-1.privnet\") || (machine == \"hepcms-namenode.privnet\")"+'\n') #alternative req. for hepcms cluster
 jdlfile.write("Output = "+hostarea+args.particle+"$(cluster)_$(process).stdout"+'\n')
 jdlfile.write("Error = "+hostarea+args.particle+"$(cluster)_$(process).stderr"+'\n')
-jdlfile.write("Log = "+hostarea+name+args.particle+"$(cluster)_$(process).condor"+'\n')
+jdlfile.write("Log = "+hostarea+args.particle+"$(cluster)_$(process).condor"+'\n')
 jdlfile.write("Arguments = $(process)"+'\n')
 jdlfile.write("request_memory = 4GB"+'\n')
-jdlfile.write('Queue '+str(len(energies)) + '\n')
+jdlfile.write('Queue 12' + '\n') # run jobs in parallel
 print("jdl file closed")
 jdlfile.close()
 

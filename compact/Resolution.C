@@ -124,7 +124,7 @@ map<string,int>::iterator sii7;
 map<string,int>::iterator sii8;
 map<string,int>::iterator sii9;
 
-void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
+void Resolution_SaraVer(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
                 const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,
                 const char* ECALleaf, const char* HCALleaf){
 	mapecalslice["air"]=0;
@@ -189,24 +189,21 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	vector<TH1F*> pienergy;
 	vector<TH1F*> ephoton;
 	vector<TH1F*> piphoton;
-	vector<string> energy_title = {"sum(crysE)/beamE","sum(fiberE)/beamE","sum(scintfiberE)/beamE","sum(cerfiberE)/beamE","sum(edgeE)/beamE","sum(beamE-edgeE)/beamE"};
-	vector<string> nphoton_title = {"ecal: ntotcer/meancer", "hcal: ntotcer/meancer", "ecal: ntotscint/meanscint", "hcal: ntotscint/meanscint"};
+	//vector<const char*> energy_lowbin = {}
+	vector<double> energy_hbin = {0.5,0.5,0.5,0.5,1.5,1.5};
+	vector<const char*> energy_title = {"sum(crysE)/beamE","sum(fiberE)/beamE","sum(scintfiberE)/beamE","sum(cerfiberE)/beamE","sum(edgeE)/beamE","sum(beamE-edgeE)/beamE"};
+	vector<const char*> nphoton_title = {"ecal: ntotcer/emeancer", "hcal: ntotcer/emeancer", "ecal: ntotscint/emeanscint", "hcal: ntotscint/emeanscint"};
 	for (size_t i = 0; i < num_histograms; ++i) {
-	  eenergy.push_back(new TH1F(Form("electron_%zu", i), energy_title[i].c_str(), 100, 0.0, 1.5));
-	  pienergy.push_back(new TH1F(Form("pion_%zu", i), energy_title[i].c_str(), 100, 0.0, 1.5));
+	  eenergy.push_back( new TH1F(Form("elenergy_%zu", i), Form("e-: %s", energy_title[i]), 100, 0.0, energy_hbin[i]));
+	  pienergy.push_back(new TH1F(Form("pienergy_%zu", i), Form("pi-: %s",energy_title[i]), 100, 0.0, energy_hbin[i]));
 	  if (i>3) { continue;}
-	  ephoton.push_back(new TH1F(Form("eph_%zu",i), nphoton_title[i].c_str(),   50, 0.0, 1.5));
-	  piphoton.push_back(new TH1F(Form("piph_%zu",i), nphoton_title[i].c_str(), 50, 0.0, 1.5));
+	  ephoton.push_back(new  TH1F(Form("elnphoton_%zu",i), Form("e-: %s", nphoton_title[i]), 50, 0.0, 1.5));
+	  piphoton.push_back(new TH1F(Form("pinphoton_%zu",i), Form("pi-: %s",nphoton_title[i]), 50, 0.0, 1.5));
 	}
 	
 	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 50,-1.,5.);  
-	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 50,-25.,25.);
-	
-	TH1F *ehcEdgeE 		= new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
-	TH1F *phcEdgeE 		= new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
-	TH1F *ehcEdgeR		= new TH1F("ehcEdgeR","e-  (beamE-sumEdge)/beamE",100,0.,1.5);
-	TH1F *phcEdgeR		= new TH1F("phcEdgeR","pi- (beamE-sumEdge)/beamE",100,-0.5,1.5);
-	
+	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 50,-1.,5.);
+		
 	TH2F *ehcEcalNsNc	= new TH2F("ehcEcalNsNc","e-  ecal ncer vs nscint",100,0.,1.5,100,0.,1.5);
 	TH2F *phcEcalNsNc	= new TH2F("phcEcalNsNc","pi- ecal ncer vs nscint",100,0.,1.5,100,0.,1.5);
 	TH2F *ehcHcalNsNc	= new TH2F("ehcHcalNsNc","e-  hcal ncer vs nscint",100,0.,1.5,100,0.,1.5);
@@ -288,7 +285,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 					eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, 
 					ehcaltimecut,eecaltime,ehcaltime,nin);
 
-			vector<float> eesums   = {eesumcrystal, eesumfiber1, eesumfiber2, eesumfiber1 + eesumfiber2, eesumedge};
+			vector<float> eesums   = {eesumcrystal, eesumfiber1 + eesumfiber2, eesumfiber1, eesumfiber2, eesumedge, beamE - eesumedge};
 			vector<float> nphotons = {necertotecal/meancerEcal, necertothcal/meancerHcal, nescinttotecal/meanscinEcal, nescinttothcal/meanscinHcal};
 			
 			auto eit = eesums.begin();
@@ -301,7 +298,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				hist->Fill(*nit);
 				++nit;
 			}
-			ehcEdgeR->Fill((beamE-eesumedge)/beamE);
 			
 			ehcHcalf1f2->Fill(eesumfiber1/1000.,eesumfiber2/1000.);
 			if((eesumfiber1+eesumfiber2)>0) ehaphcal->Fill((eesumfiber1+eesumfiber2)/(eesumabs+eesumfiber1+eesumfiber2));
@@ -403,7 +399,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 					ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead, pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,
 					npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
 
-			vector<float> piesums   = {pesumcrystal, pesumfiber1, pesumfiber2, pesumfiber1 + pesumfiber2, pesumedge};
+			vector<float> piesums   = {pesumcrystal, pesumfiber1 + pesumfiber2, pesumfiber1, pesumfiber2, pesumedge, beamE-pesumedge};
 			vector<float> npiphotons = {npcertotecal/meancerEcal, npcertothcal/meancerHcal, npscinttotecal/meanscinEcal, npscinttothcal/meanscinHcal};
 			
 			auto pit = piesums.begin();
@@ -416,7 +412,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				hist->Fill(*nit);
 				++nit;
 			}
-			phcEdgeR->Fill((beamE-pesumedge)/beamE);
 			
 			phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
 			if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
@@ -442,7 +437,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			cout<<"GETSTUFF pions"<<endl;
                                cout<<" hits Edeposit="<<pesum/1000.<<", beamE="<<beamE/1000.<<endl;
                         cout<<" EDeposit: air="<<pesumair/1000.<<", ecalPD="<<pesumPDe/1000.<<", crys="<<pesumcrystal/1000.<<endl;
-                        cout<<"           scintfiber="<<pesumfiber1/1000.<<"cerfiber="<<pesumfiber2/1000.<<", hcalPD="<<pesumPDh/1000.<<endl;
+                        cout<<"           scintfiber="<<pesumfiber1/1000.<<", cerfiber="<<pesumfiber2/1000.<<", hcalPD="<<pesumPDh/1000.<<endl;
                         cout<<"           absorber="<<pesumabs/1000.<<", edgeE="<<pesumedge/1000.<<endl;
                         cout<<" sum EDeposit="<<pachecks/1000.<<", sum EDeposit/beamE="<<pachecks/beamE<<endl;
                                cout<<"ecal, totnum_cer="<<npcertotecal<<", totnum_scint="<<npscinttotecal<<endl;
@@ -509,8 +504,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		vector<TCanvas*> canv;
 		for (int i = 0; i < ncanv; ++i) {canv.push_back(new TCanvas(Form("canvas%d", i), Form("Canvas %d", i), 800, 600));}
 		SCEDraw2(canv[0],"allDepE: pi- vs e-",ehetrue,phetrue,"pivse_allE.png",0);		
-		SCEDraw2(canv[1],"EdgeE: pi- vs e-",ehcEdgeE,phcEdgeE,"pivse_edgeE.png",0);
-		SCEDraw2(canv[2],"BeamE-EdgeE: pi- vs e-",ehcEdgeR,phcEdgeR,"pivse_allcaloE.png",0);
+		SCEDraw2(canv[1],"EdgeE(escaping): pi- vs e-",eenergy[4],pienergy[4],"pivse_edgeE.png",0);
+		SCEDraw2(canv[2],"BeamE-EdgeE: pi- vs e-",eenergy[5],pienergy[5],"pivse_allcaloE.png",0);
 		SCEDraw1(canv[3],"e-: allDepE-EdgeE",hedepcal,"e_allcaloE.png",0);
 		SCEDraw1(canv[4],"pi-: allDepE-EdgeE",hpdepcal,"pi_allcaloE.png",0);
 		SCEDraw1_2D(canv[5],"e-: allDepE-EdgeE vs num_inelastic",enscvni,"e_allcaloE-vs-inel.png",0.,0.);
@@ -554,10 +549,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	for (auto enph : ephoton)   {enph->Write();}
 	for (auto pinph : piphoton) {pinph->Write();}
 	phcEcalcorr->Write();
-	ehcEdgeE->Write();
-	phcEdgeE->Write();
-	ehcEdgeR->Write();
-	phcEdgeR->Write();
 	phcHcalcorr->Write();
 	ehaphcal->Write();
 	phaphcal->Write();
@@ -681,8 +672,10 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 	  setCanvas(canv, name);
 	  canv->cd();
 	  if(logy) canv->SetLogy();
-	  float max = std::max(h1->GetMaximum(),h2->GetMaximum());
-	  h1->SetMaximum(max*1.3);
+	  float mx = max(h1->GetMaximum(),h3->GetMaximum());
+	  float mn = min(h1->GetMinimum(),h3->GetMinimum());
+	  h1->SetMaximum(mx*1.3);
+	  h1->SetMinimum(mn*1.3);
 	  h2->SetLineColor(kRed);
 	  h2->SetLineWidth(3);
 	  h2->SetStats(111111);  
@@ -945,12 +938,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			}
 			eesum+=ah;
 			long long int ihitchan=ahcalhit->cellID;
-			if(ievt<SCECOUNT) cout<<"HCAL INFO: cellID=="<<ihitchan;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
 				int ilayer = (ihitchan >>8) & 0xFFF;  
 				int itube = (ihitchan >>20) & 0xFFF;  
-				//int iair=0; int itype=0;
 				int iair = (ihitchan >>32) & 0x3;  
 				int itype = (ihitchan >>35) & 0x3; 
 				int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
@@ -964,7 +955,6 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 				if(itube==0) ihole=1;
 				ix=itube;
 				iy=ilayer;
-				cout<<", idet=="<<idet<<", gendet=="<<gendet<<", ilayer=="<<ilayer<<", itube=="<<itube<<endl;
 				if(gendet==1) {  // take light as generated in fiber
 					if(ifiber==1) {  // scintillating fibers
 						nescinttothcal+=ahcalhit->nscintillator;
@@ -983,10 +973,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 				}
 				else if(gendet==3||gendet==4) {
 					if(idet==6) {
-						if(ifiber==1) {
+						if(ifiber==1) {//scint fiber
 							nescinttothcal+=ahcalhit->energyDeposit;
 						}
-						if(ifiber==2) {
+						if(ifiber==2) {//quartz (cer) fiber
 							if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 							if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 						}
