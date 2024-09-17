@@ -61,7 +61,7 @@ for i in angles:
     shfile.write('process_id=$1'+'\n')
     shfile.write('echo "process $process_id"'+'\n')
     shfile.write('echo "ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+str(gdir)+' 1." --gun.energy "50*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log"'+'\n')
-    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+ str(gdir) + '1." --gun.energy "50GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log'+'\n')
+    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+ str(gdir) + ' 1." --gun.energy "50GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
