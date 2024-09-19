@@ -28,7 +28,7 @@ if not os.path.exists('output'):
 if not os.path.exists('output/' + args.geometry):
    os.makedirs('output/' + args.geometry)
    os.makedirs('jobs/' + args.geometry)
-if not os.path.exists('jobs/' + args.geometry+'/exefiles/'):
+if not os.path.exists('jobs/' + args.geometry+'/stdfiles/') or not os.path.exists('jobs/' + args.geometry+'/exefiles/'):
    os.makedirs('jobs/' + args.geometry+'/exefiles/')
    os.makedirs('jobs/' + args.geometry+'/stdfiles/')
 
@@ -61,7 +61,7 @@ for i in angles:
     shfile.write('process_id=$1'+'\n')
     shfile.write('echo "process $process_id"'+'\n')
     shfile.write('echo "ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+str(gdir)+' 1." --gun.energy "50*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log"'+'\n')
-    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+ str(gdir) + ' 1." --gun.energy "50GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log'+'\n')
+    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 '+ str(gdir) + ' 1." --gun.energy "50*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'degrees_$process_id.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -74,7 +74,7 @@ print("sh file closed")
 for i in angles:
     jdlfile = open(exearea+name+args.particle+str(i)+'degrees.jdl',"w")
     jdlfile.write("universe = vanilla"+'\n')
-    jdlfile.write("Executable ="+exearea+name+args.particle+str(i)+"gev.sh"+'\n')
+    jdlfile.write("Executable ="+exearea+name+args.particle+str(i)+"degrees.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
     #jdlfile.write("Requirements = TARGET.FileSystemDomain == \"privnet\""+'\n')
     jdlfile.write("Requirements = (machine == \"r720-0-1.privnet\") || (machine == \"hepcms-namenode.privnet\")"+'\n') #alternative req. for hepcms cluster
@@ -88,7 +88,7 @@ for i in angles:
 print("jdl file closed")
 
 # create the submitter file
-f = open("massjobs_ddsim_angles.sh",'w')
+f = open("massjobs_ddsim_angle.sh",'w')
 f.write('chmod +x '+exearea+'*'+'\n')
 for i in angles:
     f.write("condor_submit "+exearea+name+args.particle+str(i)+'degrees.jdl'+'\n')

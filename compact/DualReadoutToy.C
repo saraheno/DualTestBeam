@@ -16,24 +16,23 @@
 using namespace std;
 
 /*
-	this code is generating random number 
-	it is using the initial values from the DualResolutionPaper
+	this code is using MC with initial values from the DualResolutionPaper
 	to run the code do: root -l -b -q 'DualReadoutToy.C'
 
 */
-void SCEDraw1		(TCanvas* canv, const char* name, TH1F* h1, const char* outfile, bool logy);
+void SCEDraw1		(TCanvas* canv, const char* name, TH1F* h1, const char* outfile, bool logy, Color_t color);
 void SCEDraw1_2D	(TCanvas* canv, const char* name, TH2F* h1, const char* outfile);
 void SCEDraw1_2D_2 	(TCanvas* canv, const char* name, TH2F* h1, const char* outfile);
 void setCanvas  	(TCanvas* canv,const char* name, bool hist, bool tprofile, TH1F* h1, TProfile* t1);
 
 void dotoy(bool doplot,double h_s,double h_c,double nscint,double ncer,double fmean,double frms, double &meanS,double &meanC,double &sigmaS, double &sigmaC, double &sigmaD, double &acov);
+
 TRandom rrr;
-
 int nshowers = 100000;
-bool doplots = 0;
-bool verbose = 1;
+bool doplots = 1;
+bool verbose = 0;
 
-TFile * out = new TFile("dualtoy.root","RECREATE");
+//TFile * out = new TFile("dualtoy.root","RECREATE");
 
 void DualReadoutToy() {
 	// values from the paper
@@ -42,10 +41,9 @@ void DualReadoutToy() {
 	double nscint	=  10000.0;
 	double ncer	=  10000.0;
 	double fmean	=  0.6;
-	double frms	=  0.2;
+	double frms	=  0.15;
 
 	double meanS, meanC, sigmaS, sigmaC, sigmaD, acov;
-
 	dotoy(1, h_s, h_c, nscint, ncer, fmean, frms, meanS, meanC, sigmaS, sigmaC, sigmaD, acov);
 
 	double precov = (1 - h_s) * (1 - h_c) * pow(frms,2); // eq. 8 of DualResolutionPaper
@@ -57,16 +55,16 @@ void DualReadoutToy() {
 	cout<<"sigmaC     = "	<< sigmaC << endl;
 	cout<<"sigmaD     = "   << sigmaD << endl;
 
-	//computing the 3 terms of the resolution formula eq 9
+	//computing the 3 terms of the resolution formula eq 9;
+	//3rd terms using eq. 7 (true) and eq. 8 (formula)
 	double term1	= pow((1 - h_c) * sigmaS, 2); // scint term
 	double term2	= pow((1 - h_s) * sigmaC, 2); // ceren term
 	double sum12    = term1 + term2;
+	double term3_true	= 2 * (1 - h_s) * (1 - h_c) * acov;   // from cov computed using eq. 7
+	double term3_formula	= 2 * (1 - h_s) * (1 - h_c) * precov; // from cov computed using eq. 8 --> estimated with fres = 0.2
 
-	double term3_true	= 2 * (1 - h_s) * (1 - h_c) * acov;   // from dotoy 
-	double term3_formula	= 2 * (1 - h_s) * (1 - h_c) * precov; // from frms=0.2
-
-	double dualpred		= (1 / (h_s - h_c)) * sqrt(sum12 - term3_true);    // resolution with fres = 0.2
-	double dualpred2	= (1 / (h_s - h_c)) * sqrt(sum12 - term3_formula); // resolution with fit cov
+	double dualpred		= (1 / (h_s - h_c)) * sqrt(sum12 - term3_true);    // resolution with cov computed using eq. 7
+	double dualpred2	= (1 / (h_s - h_c)) * sqrt(sum12 - term3_formula); // resolution with cov computed using eq. 8 --> estimated with fres = 0.2
 
 	cout<<"DualToy = " << dualpred << ", DualFormula = " << dualpred2 << ", SigmaD= " << sigmaD << endl;
 
@@ -74,7 +72,7 @@ void DualReadoutToy() {
 	gStyle->SetOptStat(0);
 
 	TH2F *covcheck		= new TH2F("covcheck",	  "cov: comp vs formula;cov(formula);cov(fit)",  100, 0.,  0.002,	100,  0.,  0.002);
-	TH2F *covcheckf1	= new TH2F("covcheckf1",  "#sigma_{D} - #sigma_{formula} vs fres",100, 1.6, 0.22,	100, -0.01,0.0);
+	TH2F *covcheckf1	= new TH2F("covcheckf1",  "#sigma_{D} - #sigma_{formula} vs f_{res};f_{res};#sigma_{D} - #sigma_{formula}",100,1.6,0.22,100,-0.01,0.0);
 	TH2F *scintdual		= new TH2F("scintdual",	  "#sigma_{D} vs #sigma_{S}",	   100, 0.,  0.1,	100,  0.,  0.1);
 	TH2F *scintvscer	= new TH2F("scintvscer",  "#sigma_{S} vs #sigma_{C};#sigma_{C};#sigma_{S}", 100, 0, 0.1, 100, 0, 0.1);
 
@@ -92,13 +90,17 @@ void DualReadoutToy() {
 	int npts = 200;
 	double range = min(fmean ,1 - fmean) / 2.;
 
-	if (verbose) cout << "sigmaS,         sigmaC,        sigmaD,         term1,        term2,         term1+term2,   term3_true,  term3_formula" << endl;
+	if (verbose) {
+		cout << "sigmaS         sigmaC        sigmaD         term1        term2         term1+term2   term3_true  term3_formula" << endl;
+		cout << "--------------------------------------------------------------------------------------------------------------" << endl;
+	}
+
 
 	for(int j=1; j < npts; j++) { // computing dualres with 200 variations of fres
 		double frestry = j * (range / npts);
 		dotoy(0, h_s, h_c, nscint, ncer, fmean, frestry, meanS, meanC, sigmaS, sigmaC, sigmaD, acov);
 		
-		precov = (1 - h_s) * (1 - h_c) * pow(frestry,2); // eq. 8 of the paper
+		precov = (1 - h_s) * (1 - h_c) * pow(frestry,2); // covariance from eq. 8 of the paper --> computed
 		covcheck->Fill(acov, precov);
 		
 		term1		= pow((1 - h_c) * sigmaS, 2);
@@ -106,11 +108,11 @@ void DualReadoutToy() {
 		term3_true	= 2 * (1 - h_s) * (1 - h_c) * acov;
 		term3_formula	= 2 * (1 - h_s) * (1 - h_c) * precov;
 		
+		//debugging
 		if(term3_formula>term1+term2) {
 			cout << "invalid prediction frestry = " << frestry << endl;
 			jmax=j-1;
 		}
-
 		if(jmax!=0) term3_formula = 2 * pow((1 - h_s) * (1 - h_c) * jmax * (1./40.), 2); // factor (1./40.) to catch odd values; jmax should not be == 0
 
 		if (verbose){
@@ -145,9 +147,9 @@ void DualReadoutToy() {
 		SCEDraw1_2D	(canv[0],	"c7", 	covcheck,	"covcheck.png");
 		SCEDraw1_2D	(canv[1],	"c7a",	covcheckf1,	"covcheckf1.png");
 		SCEDraw1_2D_2	(canv[2],	"c10",	scintdual,	"scintdual.png");
-		SCEDraw1	(canv[3],	"c8", 	dualcheck,	"dualcheck.png",  0);
-		SCEDraw1	(canv[4],	"c9", 	dualcheckf,	"dualcheckf.png", 0);
-		SCEDraw1	(canv[5],	"c91",	dualcheckab,	"dualcheckab.png",0);
+		SCEDraw1	(canv[3],	"c8", 	dualcheck,	"dualcheck.png",  0, 4);
+		SCEDraw1	(canv[4],	"c9", 	dualcheckf,	"dualcheckf.png", 0, 3);
+		SCEDraw1	(canv[5],	"c91",	dualcheckab,	"dualcheckab.png",0, 2);
 	}
 
 	TH2F *scintdual2	= new TH2F("scintdual2", "toys #sigma_{D} vs #sigma_{S}",	100,0.,0.1,100,0.,0.1);
@@ -168,8 +170,6 @@ void DualReadoutToy() {
 		double dualpredb = (1/(h_s-h_c)) * sqrt(term1 + term2 - term3_formula);
 		dualcheckha->Fill(dualpreda,dualpredb);
 	}
-	cout<<"last dualres is "<<sigmaD<<endl;
-
 	if (doplots){
 		SCEDraw1_2D_2(canv[6],	"toys: scint vs dual res",	scintdual2,	"scintdual2.png");
 		SCEDraw1_2D_2(canv[7],	"toys: dual true vs formula",	dualcheckha,	"dualcheckha.png");
@@ -183,6 +183,7 @@ void DualReadoutToy() {
 		scintdual3->Fill(meanC, sigmaD);
 	}
 	if (doplots) SCEDraw1_2D(canv[8],"c12",scintdual3,"cer_vs_sigmaD.png");
+	TFile * out = new TFile("dualtoy.root","RECREATE");
 	covcheck->Write();
         covcheckf1->Write();
         scintdual->Write();
@@ -201,13 +202,14 @@ void DualReadoutToy() {
 	out->Close();
 }
 
-void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double fmean,double frms, double &meanS, double& meanC, double &sigmaS, double &sigmaC, double &sigmaD, double &acov) {
+void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double fmean,double frms, double &meanS, double& meanC, double &sigmaS, double &sigmaC, double &sigmaD, double &acov) {// this function computes true covariance with equation 7 for covariance term of resolution formula
+	gStyle->SetOptStat(0);
 	TH1F *fff  = new TH1F("fff",	"shower em fraction",	300,	0.,2.0);
 	TH1F *sss  = new TH1F("sss",	"shower scintillation",	300,	0.,2.0);
 	TH1F *ccc  = new TH1F("ccc",	"shower cherenkov",	300,	0.,2.0);
 	TH1F *ddd  = new TH1F("ddd",	"dual readout",		900,	0.,2.0);
 	TH1F *cov  = new TH1F("cov",	"covariance",		3000,  -2.,2.0);
-	TH2F *sscc = new TH2F("sscc",   "Cerenkov versus scint",  1000,   0.,2.0,1000,0.,2.0);
+	TH2F *sscc = new TH2F("sscc",   "Cerenkov versus Scintillation Resolution;#sigma_{scint};#sigma_{cer}",100,0.8,1.1,100,0.5,1.1);
 
 	fff->Reset();
 	sss->Reset();
@@ -215,7 +217,6 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	sscc->Reset();
 	ddd->Reset();
 	cov->Reset();
-
 	acov=0.;
 
 	// two last terms to compute the cov(S,C) in formula 7 of DualResolutionPaper
@@ -225,15 +226,16 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	for (int i=0; i < nshowers; i++) {
 		double FFF = -1.; // pick a value for fraction EM in the shower
 		while((FFF<0)||(FFF>1) ) {
-			FFF = rrr.Gaus(fmean,frms); // generate single random number following the Gaus distr with mean=fmean and rms=frms
+			FFF = rrr.Gaus(fmean,frms); // generate single random number of Gaus distr with mean=fmean and rms=frms
 		}
 		fff->Fill(FFF);
 
 		double SSS = FFF + h_s * (1-FFF);
 		double CCC = FFF + h_c * (1-FFF);
 
-		SSS = SSS * (1 + rrr.Gaus(0.,1/sqrt(nscint)));
-		CCC = CCC * (1 + rrr.Gaus(0.,1/sqrt(ncer)));
+		//computing g2, g3 terms of equation 7 of the paper
+		SSS = SSS * (1 + rrr.Gaus(0.,1 / sqrt(nscint))); // smearing gaussian flactuating with a mean==0 and rms=n1=1/sqrt(nscint)==1%
+		CCC = CCC * (1 + rrr.Gaus(0.,1 / sqrt(ncer)));   // smearing gaussian flactuating with a mean==0 and rms=n2=1/sqrt(ncer)==1%
 
 		double DDD = ((1 - h_c) * SSS - (1 - h_s) * CCC)/(h_s - h_c); // energy estimate eq. 3 of the paper
 
@@ -242,8 +244,8 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 		ddd->Fill(DDD);
 		sscc->Fill(SSS,CCC);
 
-		cov->Fill((SSS - pmeans) * (CCC - (fmean - pmeanc)));
-		acov+= (SSS - pmeans) * (CCC - pmeanc);
+		cov->Fill((SSS - pmeans) * (CCC - (fmean - pmeanc))); //not sure what it is
+		acov+= (SSS - pmeans) * (CCC - pmeanc); // covariance definition: cov = <SC> - <S><C>
 	}
 
 	acov	=	acov / (nshowers-1);
@@ -253,20 +255,22 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	meanS	=	sss->GetMean();
 	meanC	=	ccc->GetMean();
 
-	
-	if(doplot) {
-		TCanvas* c1;
-		SCEDraw1(c1,"EM Shower",fff,"emshower.png",0);
-		TCanvas* c2;
-		SCEDraw1(c2,"Scint Shower",sss,"scintshower.png",0);
-		TCanvas* c3;
-		SCEDraw1(c3,"Cer Shower",ccc,"cershower.png",0);
-		TCanvas* c4;
-		SCEDraw1_2D(c4,"Scint vs Cer",sscc,"scint_vs_cer.png");
-		TCanvas* c5;
-		SCEDraw1(c5,"Dual Readout",ddd,"dualreadout.png",0);
-		TCanvas* c6;
-		SCEDraw1(c6,"Covariance",cov,"cov.png",0);
+	if(doplot){
+		int ncv = 6;
+		vector<TCanvas*> cv;
+		for (int i = 0; i < ncv; ++i) {cv.push_back(new TCanvas(Form("canva%d", i), Form("Canva %d", i), 800, 600));}
+		SCEDraw1(cv[0],    "EM Shower",   fff, "emshower.png",0, 2);
+		SCEDraw1(cv[1],    "Scint Shower",sss, "scintshower.png",0, 3);
+		SCEDraw1(cv[2],    "Cer Shower",  ccc, "cershower.png",0,4);
+		SCEDraw1(cv[3],    "Dual Readout",ddd, "dualreadout.png",0,6);
+                SCEDraw1(cv[4],    "Covariance",  cov, "cov.png",0, 7);
+		SCEDraw1_2D(cv[5], "Scint vs Cer",sscc,"scint_vs_cer.png");
+		TFile *outsscc = new TFile("dualtoy_sscc.root","RECREATE");
+		sss->Write();
+		ccc->Write();
+		ddd->Write();
+		sscc->Write();
+		outsscc->Close();
 	}
 	delete fff;
 	delete sss;
@@ -288,10 +292,10 @@ void setCanvas(TCanvas* canv,const char* name) {
         return;
 }
 
-void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, bool logy) {
+void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, bool logy, Color_t color) {
 	setCanvas(canv, name);
 	if(logy) canv->SetLogy();
-	h1->SetLineColor(kGreen);
+	h1->SetLineColor(color);
 	h1->SetLineWidth(1);
 	h1->SetStats(111111);
 	h1->Draw("HIST");	
