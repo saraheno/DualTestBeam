@@ -66,21 +66,34 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  const int npoints=10;
-  const char* filenames[npoints];
+  //const int npoints=10;
+  const int npoints=2;
+  std::string filenames[npoints];
   double aatruemean[npoints];
+  std::string aatype = "FSCEPonly";
 
-  filenames[0]="./output/hists_SampOnly_10GeV_3.root"; 
-  filenames[1]="./output/hists_SampOnly_15GeV_3.root"; 
-  filenames[2]="./output/hists_SampOnly_20GeV_3.root"; 
-  filenames[3]="./output/hists_SampOnly_25GeV_3.root"; 
-  filenames[4]="./output/hists_SampOnly_30GeV_3.root"; 
-  filenames[5]="./output/hists_SampOnly_35GeV_3.root"; 
-  filenames[6]="./output/hists_SampOnly_40GeV_3.root"; 
-  filenames[7]="./output/hists_SampOnly_45GeV_3.root"; 
-  filenames[8]="./output/hists_SampOnly_50GeV_3.root"; 
-  filenames[9]="./output/hists_SampOnly_100GeV_3.root"; 
+  std::string yuck;
+  /*
+  filenames[0]="./output/hists_"+aatype+"_10GeV.root";
+  filenames[1]="./output/hists_"+aatype+"_15GeV.root";
+  filenames[2]="./output/hists_"+aatype+"_20GeV.root";
+  filenames[3]="./output/hists_"+aatype+"_25GeV.root";
+  filenames[4]="./output/hists_"+aatype+"_30GeV.root";
+  filenames[5]="./output/hists_"+aatype+"_35GeV.root";
+  filenames[6]="./output/hists_"+aatype+"_40GeV.root";
+  filenames[7]="./output/hists_"+aatype+"_45GeV.root";
+  filenames[8]="./output/hists_"+aatype+"_50GeV.root";
+  filenames[9]="./output/hists_"+aatype+"_100GeV.root";
+  */
 
+
+  filenames[0]="./output/hists_"+aatype+"_20GeV.root";
+  filenames[1]="./output/hists_"+aatype+"_50GeV.root";
+
+
+  
+  
+  /*
   aatruemean[0]=10;
   aatruemean[1]=15;
   aatruemean[2]=20;
@@ -91,7 +104,12 @@ void res() {
   aatruemean[7]=45;
   aatruemean[8]=50;
   aatruemean[9]=100;
+  */
 
+  
+  aatruemean[0]=20;
+  aatruemean[1]=50;
+  
 
 
 
@@ -114,7 +132,7 @@ void res() {
   for(int k=0;k<nhst;k++) {
     for(int j=0;j<npoints;j++){
       std::cout<<"k j are "<<k<<" "<<j<<" fitting "<<hnam[k]<<" at energy "<<aatruemean[j]<<std::endl;
-      resolution(filenames[j],hnam[k].c_str(),&abc,&dej);
+      resolution(filenames[j].c_str(),hnam[k].c_str(),&abc,&dej);
       aaamean[j][k]=abc;
       aarms[j][k]=dej;
       rrres[j][k]=0;

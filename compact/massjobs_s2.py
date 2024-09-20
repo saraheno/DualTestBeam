@@ -2,7 +2,7 @@ from array import *
 import argparse
 
 
-# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 0 -dohcal 1 -hcaltype 0 -doedge 1 -gendet 3
+# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendet 3
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g1", "--geometry1", help="main geometry ")
