@@ -25,7 +25,9 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
   std::string name1(histname);
   std::string name2(inputfilename);
-  std::string name=name1+name2;
+  name2.erase(name2.size()-5,name2.size());
+  name2.erase(0,9);
+  std::string name=name1+"-"+name2+".png";
   TCanvas* canv= new TCanvas(name.c_str(),name.c_str(),200,10,700,500);
   canv->SetFillColor(0);
   canv->SetBorderMode(0);
@@ -56,7 +58,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   *aarms=p2;
 
   nhist->Draw("");
-  canv->Print(name.c_str(),".png");
+  canv->Print(name.c_str());
   canv->Update();
 
 
@@ -70,7 +72,7 @@ void res() {
   const int npoints=2;
   std::string filenames[npoints];
   double aatruemean[npoints];
-  std::string aatype = "FSCEPonly";
+  std::string aatype = "DualTestBeam";
 
   std::string yuck;
   /*
@@ -269,8 +271,8 @@ void res() {
   C40LPFQ_s_g->SetMarkerSize(1.0);
   C40LPFQ_s_g->SetMarkerStyle(4.0);
   C40LPFQ_s_g->SetMarkerColor(kGreen);
-  C40LPFQ_s_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
+  //  C40LPFQ_s_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
   auto C40LPFQ_c_g = new TGraph(npts,C40LPFQ_c_x,C40LPFQ_c_y);
   f2->SetParameter(0,0.5);
   C40LPFQ_c_g->Fit("f2");
@@ -283,8 +285,8 @@ void res() {
   C40LPFQ_c_g->SetMarkerSize(1.0);
   C40LPFQ_c_g->SetMarkerStyle(4.0);
   C40LPFQ_c_g->SetMarkerColor(kBlue);
-  C40LPFQ_c_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
+  //C40LPFQ_c_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
 
 
 
@@ -343,7 +345,7 @@ void res() {
   */
 
   lgd->Draw();
-  Canvas->Print("resolution.png",".png");
+  Canvas->Print("resolution.png");
 
 
   return;

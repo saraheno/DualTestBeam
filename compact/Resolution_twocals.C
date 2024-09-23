@@ -28,7 +28,11 @@ const int nsliceecal = 8;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlemat","gap2","crystal2","PD2"};
 int SCECOUNT=1;
 bool dodualcorr=1;
-  float timecut=1000;
+float timecut=1000;
+double hoverehcalscint(1.),hoverehcalcer(1.);
+double hovereecalscint(1.),hovereecalcer(1.);
+double kappaHcal;
+double kappaEcal;
 
 // this is now hardwared in DualCrysCalorimeterHit.h
 // need to figure out how to charge this
@@ -98,12 +102,12 @@ map<string,int>::iterator sii9;
 // hcal type 0=fiber, 1 = sampling
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet
 // ECALleaf is 
-// crystalana(100,"./output/out_FSCEPonly_30GeV_e-_100.root",
-// "./output/out_FSCEPonly_30GeV_pi-_100.root","./output/out_FSCEPonly_30GeV_pi-_100.root",
-// 20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment",1)
+// Resolution(20,"./output/out_DualTestBeam_50GeV_e-.root","./output/out_DualTestBeam_50GeV_pi-.root",
+// "./output/out_FSCEPonly_50GeV_e-.root","./output/out_FSCEPonly_50GeV_pi-.root",
+// 50,1,1,0,1,3,"hists_50GeV.root","DRCNoSegment","DRFNoSegment",1)
 
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
-		const char* hcalonlyefilename,
+		const char* hcalonlyefilename, const char* hcalonlypifilename,
 		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots) {
 
 
@@ -191,11 +195,17 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *phcEcalE = new TH1F("phcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
 
   TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalEHO = new TH1F("ehcHcalEHO","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalEHO = new TH1F("phcHcalEHO","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalE1HO = new TH1F("ehcHcalE1HO","fiber 1 hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalE1HO = new TH1F("phcHcalE1HO","fiber 1 hcal energy / beam E",200,0.,0.5);
   TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalE2HO = new TH1F("ehcHcalE2HO","fiber 2 hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
+  TH1F *phcHcalE2HO = new TH1F("phcHcalE2HO","fiber 2 hcal energy / beam E",200,0.,0.5);
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum escaping / beam E",100,0.,1.5);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum escaping / beam E",100,0.,1.5);
@@ -210,6 +220,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
   TH1F *ehcHcalncer = new TH1F("ehcHcalncer","total number of hcal cerenkov",   500,0.,1.5);
   TH1F *phcHcalncer = new TH1F("phcHcalncer","total number of hcal cerenkov",  500,0.,1.5);
+  TH1F *fullEcalCalncer = new TH1F("fullEcalCalncer","total number of cerenkov Ecal cal",  500,0.,1.5);
 
 
   TH1F *ehcEcalnscint = new TH1F("ehcEcalnscint","total number of ecal scintillation", 500,0.,1.5);
@@ -217,6 +228,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
   TH1F *ehcHcalnscint = new TH1F("ehcHcalnscint","total number of hcal scintillation", 500,0.,1.5);
   TH1F *phcHcalnscint = new TH1F("phcHcalnscint","total number of hcal scitillation", 500,0.,1.5);
+  TH1F *fullEcalCalnscint = new TH1F("fullEcalCalnscint","total number of scitillation Ecal cal", 500,0.,1.5);
 
   TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalcorr = new TH1F("phcEcalcorr","total number of ecal scitillation", 500,0.,1.5);
@@ -278,32 +290,29 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *pinscvni = new TH2F("pinscvni","pion scint E versus number inelastic",100,0.,1.2,100,0.,1000);
 
 
+
+
+  //calibration constants
+  float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
+  float meaneecaltimecut(0),meanehcaltimecut(0);
+
+
+  
   //****************************************************************************************************************************
-  // process electrons
+  // process electrons in full calorimeter first pass to get calibration of single detector or ECAL of combined detector
 
   TFile* ef = TFile::Open(einputfilename);
   TTree* et = (TTree*)ef->Get("EVENT;1");
-
   b_mc= et->GetBranch("MCParticles");
-  //  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
-  //  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
   if(doecal) b_ecal = et->GetBranch(ECALleaf);
   if(dohcal) b_hcal = et->GetBranch(HCALleaf);
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
-
-
-
-
-
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
-  std::cout<<std::endl<<std::endl<<"num_evt for electron file is  "<<num_evt<<std::endl;
+  std::cout<<std::endl<<std::endl<<"num_evt for electron file full calorimeter is  "<<num_evt<<std::endl<<std::endl;
   
   // loop over events 
 
-  float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
-
-  float meaneecaltimecut(0),meanehcaltimecut(0);
 
   
   if(num_evt>0) {  
@@ -315,29 +324,96 @@ sii9 = mapsampcalslice.find("Sep2");
     CalHits* edgehits = new CalHits();
     if(doedge) b_edge->SetAddress(&edgehits);
 
-    // first pass through file
-
+    float ajunk1,ajunk2;
     for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, meaneecaltimecut, meanehcaltimecut);
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass electron file full detector is "<<ievt<<std::endl;
+      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, ajunk1, meancerEcal, ajunk2,timecut, meaneecaltimecut, meanehcaltimecut);
     }
 
-    std::cout<<"done with getMeanPhot"<<std::endl;
+    std::cout<<"done with getMeanPhot full detector"<<std::endl;
     meanscinEcal=meanscinEcal/num_evt;
-    meanscinHcal=meanscinHcal/num_evt;
     meancerEcal=meancerEcal/num_evt;
-    meancerHcal=meancerHcal/num_evt;
-    std::cout<<"mean scint ecal is "<<meanscinEcal<<std::endl;
-    std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
-    std::cout<<"mean cer ecal is "<<meancerEcal<<std::endl;
-    std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+     std::cout<<"mean scint ecal is "<<meanscinEcal<<std::endl;
+     std::cout<<"mean cer ecal is "<<meancerEcal<<std::endl;
+     std::cout<<"done with electron calibration of ECAL"<<std::endl<<std::endl;
+  }
+  ef->Close();
+
+  //****************************************************************************************************************************
+  // for calibration of hcal,  if have both an ecal and hcal
+
+
+  if(doecal&&dohcal ) {
+    TFile* efa = TFile::Open(hcalonlyefilename);
+    TTree* eta = (TTree*)efa->Get("EVENT;1");
+    b_mc= eta->GetBranch("MCParticles");
+    b_hcal = eta->GetBranch(HCALleaf);
+    //std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
+    ihaha = b_mc->GetEntries();
+    num_evt= std::min(ihaha,num_evtsmax);
+    std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+
+    float meanscinEcala(0),meanscinHcalla(0),meancerEcala(0),meancerHcalla(0), meaneecaltimecutla(0),meanehcaltimecutla(0);
+
+  
+    if(num_evt>0) {  
+
+      CalHits* ecalhitsa = new CalHits();
+      CalHits* hcalhitsa = new CalHits();
+      b_hcal->SetAddress(&hcalhitsa);
+
+      std::cout<<" branches set"<<std::endl;
+
+    // first pass through file
+      float ajunk1,ajunk2;
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
+	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, ajunk1, meanscinHcalla, ajunk2, meancerHcalla,timecut,meaneecaltimecutla,meanehcaltimecutla);
+      }
+
+      std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
+      meanscinHcal=meanscinHcalla/num_evt;
+      meancerHcal=meancerHcalla/num_evt;
+      std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
+      std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+
+    }
+
+    efa->Close();
+    std::cout<<"done with with electron calibration of hcal"<<std::endl<<std::endl;
+
+  }
 
 
 
-    // second pass through file
+  //process electrons with calibration in full detector
+ 
+  ef = TFile::Open(einputfilename);
+  et = (TTree*)ef->Get("EVENT;1");
+
+  b_mc= et->GetBranch("MCParticles");
+  if(doecal) b_ecal = et->GetBranch(ECALleaf);
+  if(dohcal) b_hcal = et->GetBranch(HCALleaf);
+  if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
+
+  ihaha = b_mc->GetEntries();
+  num_evt= std::min(ihaha,num_evtsmax);
+  std::cout<<std::endl<<std::endl<<"num_evt for electron file full detector is  "<<num_evt<<std::endl;
+
+  CalHits* ecalhits = new CalHits();
+  if(doecal) b_ecal->SetAddress(&ecalhits);
+  CalHits* hcalhits = new CalHits();
+  if(dohcal) b_hcal->SetAddress(&hcalhits);
+  CalHits* edgehits = new CalHits();
+  if(doedge) b_edge->SetAddress(&edgehits);
+
+   
+  if(num_evt>0) {  
+
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number second is "<<ievt<<std::endl;
-
 
       float eesum=0.;
       float eesumair=0;
@@ -355,14 +431,11 @@ sii9 = mapsampcalslice.find("Sep2");
       float nescinttothcal=0;
       float eecaltimecut=0.;
       float ehcaltimecut=0.;
-      
       int nin=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
 
     
-
-
       ehcEcalE->Fill(eesumcrystal/beamE);
       ehcHcalE->Fill((eesumfiber1+eesumfiber2)/beamE);
       ehcHcalE1->Fill(eesumfiber1/beamE);
@@ -400,7 +473,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
       enscvni->Fill(eedepcal/beamE,nin);
 
-      std::cout<<"GETSTUFF electrons"<<std::endl;
+      std::cout<<"GETSTUFF electrons full detector"<<std::endl;
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
       std::cout<<"       in air "<<eesumair/1000.<<std::endl;
@@ -420,15 +493,8 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
       std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
       std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
-      std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl<<std::endl;
-      std::cout<<"number inelastic is "<<nin<<std::endl;
-
-
-
-
-
-
-
+      std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl;
+      std::cout<<"number inelastic is "<<nin<<std::endl<<std::endl;
 
 
     }  //end loop over events
@@ -437,320 +503,363 @@ sii9 = mapsampcalslice.find("Sep2");
   //  float amean = hceest->GetMean();
 
   ef->Close();
-  std::cout<<"done with getstuff electrons"<<std::endl;
+  std::cout<<"done with getstuff electrons full detector"<<std::endl<<std::endl;
 
-
-
-  //****************************************************************************************************************************
-  // for calibration of hcal,  if have both an ecal and hcal
-
+  //process electrons with calibration in HCAL only
 
   if(doecal&&dohcal ) {
     TFile* efa = TFile::Open(hcalonlyefilename);
     TTree* eta = (TTree*)efa->Get("EVENT;1");
 
     b_mc= eta->GetBranch("MCParticles");
-    b_hcal = eta->GetBranch(HCALleaf);
-    std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
+    if(dohcal) b_hcal = eta->GetBranch(HCALleaf);
+    if(doedge) b_edge = eta->GetBranch("EdgeDetNoSegment");
 
-
+    
     ihaha = b_mc->GetEntries();
     num_evt= std::min(ihaha,num_evtsmax);
-    std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
-  
-  // loop over events 
-
-    float meanscinEcala(0),meanfscinHcala(0),meancerEcala(0),meancerHcala(0), meaneecaltimecut(0),meanehcaltimecut(0);
-
-  
-    if(num_evt>0) {  
-
-      CalHits* ecalhitsa = new CalHits();
-      CalHits* hcalhitsa = new CalHits();
-      b_hcal->SetAddress(&hcalhitsa);
-
-      std::cout<<" branches set"<<std::endl;
-
-    // first pass through file
-
-      for(int ievt=0;ievt<num_evt; ++ievt) {
-	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut);
-      }
-
-      std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
-      meanscinHcal=meanscinHcal/num_evt;
-      meancerHcal=meancerHcal/num_evt;
-      std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
-      std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
-
-    }
-
-    efa->Close();
-    std::cout<<"done with with electron calibration of hcal"<<std::endl;
-
-  }
-
-  //****************************************************************************************************************************
-  // process pions
-
-  TFile* pif = TFile::Open(piinputfilename);
-  TTree* pit = (TTree*)pif->Get("EVENT;1");
+    std::cout<<std::endl<<std::endl<<"num_evt for hcal only electron file is  "<<num_evt<<std::endl;
 
 
-  if(pif==0) std::cout<<" no file "<<std::endl;
-  if(pit==0) std::cout<<" no event "<<std::endl;
-  std::cout<<"pion file open"<<std::endl;
-
-  b_mc= pit->GetBranch("MCParticles");
-  if(doecal) b_ecal = pit->GetBranch(ECALleaf);
-  if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
-  if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
-
-  std::cout<<"pion branches found"<<std::endl;
-
-  float b1Ecal=0.;float m1Ecal=1.;
-  float b1Hcal=0.;float m1Hcal=1.;
-
-
-  ihaha = b_mc->GetEntries();
-  num_evt= std::min(ihaha,num_evtsmax);
-  std::cout<<"num_evt for pion file is  "<<num_evt<<std::endl;
-  
-  // loop over events 
-  
-  if(num_evt>0) {  
-
-
-    CalHits* ecalhits = new CalHits();
-    if(doecal) b_ecal->SetAddress(&ecalhits);
     CalHits* hcalhits = new CalHits();
     if(dohcal) b_hcal->SetAddress(&hcalhits);
     CalHits* edgehits = new CalHits();
     if(doedge) b_edge->SetAddress(&edgehits);
 
+    if(num_evt>0) {  
+
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number second is "<<ievt<<std::endl;
+	float eesum=0.;
+	float eesumair=0;
+	float eesumdead=0;
+	float eesumcrystal=0;
+	float eesumPDe=0;
+	float eesumfiber1=0;
+	float eesumfiber2=0.;
+	float eesumabs=0;
+	float eesumPDh=0;
+	float eesumedge=0;
+	float necertotecal=0;
+	float nescinttotecal=0;
+	float necertothcal=0;
+	float nescinttothcal=0;
+	float eecaltimecut=0.;
+	float ehcaltimecut=0.;
+	
+	int nin=0;
+
+	getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, 0, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
 
 
-    for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
+	ehcHcalEHO->Fill((eesumfiber1+eesumfiber2)/beamE);
+	ehcHcalE1HO->Fill(eesumfiber1/beamE);
+	ehcHcalE2HO->Fill(eesumfiber2/beamE);
 
-
-      float pesum=0.;
-      float pesumair=0;
-      float pesumdead=0;
-      float pesumcrystal=0;
-      float pesumPDe=0;
-      float pesumfiber1=0;
-      float pesumfiber2=0;
-      float pesumabs=0;
-      float pesumPDh=0;
-      float pesumedge=0;
-      float npcertotecal=0;
-      float npscinttotecal=0;
-      float npcertothcal=0;
-      float npscinttothcal=0;
-      float eecaltimecut=0.;
-      float ehcaltimecut=0.;
-      int nin=0;
-
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
-      std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
-
-    
-
-
-
-      phcEcalE->Fill(pesumcrystal/beamE);
-      phcHcalE->Fill((pesumfiber1+pesumfiber2)/beamE);
-      phcHcalE1->Fill(pesumfiber1/beamE);
-      phcHcalE2->Fill(pesumfiber2/beamE);
-      phcEdgeE->Fill(pesumedge/beamE);
-      phcEdgeR->Fill((beamE-pesumedge)/beamE);
-      phcEcalncer->Fill(npcertotecal/meancerEcal);
-      phcHcalncer->Fill(npcertothcal/meancerHcal);
-      phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
-      phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
-
-      phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
-
-      if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
-      pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
-
-      float rrr=npscinttotecal/meanscinEcal;
-      float rrr2=npcertotecal/meancerEcal;
-      float rrx=npscinttothcal/meanscinHcal;
-      float rrx2=npcertothcal/meancerHcal;
-      if( (rrr>0.1)&&(rrr2>0.2) )
-      phcEcalNsNc->Fill(rrr,rrr2);  
-      if( (rrx>0.1)&&(rrx2>0.2) )
-      phcHcalNsNc->Fill(rrx,rrx2);  
-
-      phcEcalMarco->Fill(rrr2/rrr,rrr2);
-      phcHcalMarco->Fill(rrx2/rrx,rrx2);
+	float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
+	float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
 
 
 
-      float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
+	std::cout<<"GETSTUFF hcal only electrons"<<std::endl;
+	std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+	std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
+	std::cout<<"       in air "<<eesumair/1000.<<std::endl;
+	std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
+	std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
+	std::cout<<"       in crystal "<<eesumcrystal/1000.<<std::endl;
+	std::cout<<"       in fiber1 "<<eesumfiber1/1000.<<std::endl;
+	std::cout<<"       in fiber2 "<<eesumfiber2/1000.<<std::endl;
+	std::cout<<"       in absorber "<<eesumabs/1000.<<std::endl;
+	std::cout<<"       in photodetect hcal "<<eesumPDh/1000.<<std::endl;
+	std::cout<<"       escaping detector "<<eesumedge/1000.<<std::endl;
+	
+	std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
+	std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
 
-      float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
-      hpdepcal->Fill(pedepcal/beamE);
+	std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
+	std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
+	std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
+	std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl;
+	std::cout<<"number inelastic is "<<nin<<std::endl<<std::endl;
 
-      phetrue->Fill(pachecks/beamE);
-      pinscvni->Fill(pedepcal/beamE,nin);
-
-
-      std::cout<<std::endl<<std::endl;
-      std::cout<<"GETSTUFF pions"<<std::endl;
-      std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
-      std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
-      std::cout<<"       in air "<<pesumair/1000.<<std::endl;
-      std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
-      std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
-      std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
-      std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
-      std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
-      std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
-      std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
-      std::cout<<"       escaping detector "<<pesumedge/1000.<<std::endl;
-
-      std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
-      std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
-      std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
-
-      std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
-      std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
-      std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
-      std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl<<std::endl;
-      std::cout<<" number of inelastic is "<<nin<<std::endl;
+      }  //end loop over events
+    }  // end if no events
+    efa->Close();
+  } // end both ecal and hcal
 
 
 
+  std::cout<<"done with getstuff electrons hcal only"<<std::endl<<std::endl;
+
+  
+  //****************************************************************************************************************************
+  // process pions for hcalonly to get fiber e/h
+
+  if(doecal&&dohcal) {
+    TFile* pifa = TFile::Open(hcalonlypifilename);
+    TTree* pita = (TTree*)pifa->Get("EVENT;1");
+    if(pifa==0) std::cout<<" no file "<<std::endl;
+    if(pita==0) std::cout<<" no event "<<std::endl;
+    std::cout<<"pion file hcal only open"<<std::endl;
+
+    b_mc= pita->GetBranch("MCParticles");
+    if(doecal) b_ecal = pita->GetBranch(ECALleaf);
+    if(dohcal) b_hcal = pita->GetBranch(HCALleaf);
+    if(doedge) b_edge = pita->GetBranch("EdgeDetNoSegment");
+    std::cout<<"pion branches found"<<std::endl;
+
+    ihaha = b_mc->GetEntries();
+    num_evt= std::min(ihaha,num_evtsmax);
+    std::cout<<"num_evt for pion file is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+  
+    if(num_evt>0) {  
+
+      CalHits* hcalhits = new CalHits();
+      if(dohcal) b_hcal->SetAddress(&hcalhits);
+      CalHits* edgehits = new CalHits();
+      if(doedge) b_edge->SetAddress(&edgehits);
+
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion full detector "<<ievt<<std::endl;
+
+	float pesum(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
+	int nin=0;
+
+	getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, 0, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
+	std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
+
+	phcEcalE->Fill(pesumcrystal/beamE);
+	phcHcalE->Fill((pesumfiber1+pesumfiber2)/beamE);
+	phcHcalE1->Fill(pesumfiber1/beamE);
+	phcHcalE2->Fill(pesumfiber2/beamE);
+	phcEdgeE->Fill(pesumedge/beamE);
+	phcEdgeR->Fill((beamE-pesumedge)/beamE);
+	phcEcalncer->Fill(npcertotecal/meancerEcal);
+	phcHcalncer->Fill(npcertothcal/meancerHcal);
+	phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
+	phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
+	phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
+	if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
+	pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
+
+	float rrr=npscinttotecal/meanscinEcal;
+	float rrr2=npcertotecal/meancerEcal;
+	float rrx=npscinttothcal/meanscinHcal;
+	float rrx2=npcertothcal/meancerHcal;
+	if( (rrr>0.1)&&(rrr2>0.2) )
+	  phcEcalNsNc->Fill(rrr,rrr2);  
+	if( (rrx>0.1)&&(rrx2>0.2) )
+	  phcHcalNsNc->Fill(rrx,rrx2);  
+
+	phcEcalMarco->Fill(rrr2/rrr,rrr2);
+	phcHcalMarco->Fill(rrx2/rrx,rrx2);
+
+	float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
+	float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
+	hpdepcal->Fill(pedepcal/beamE);
+	phetrue->Fill(pachecks/beamE);
+	pinscvni->Fill(pedepcal/beamE,nin);
+
+	std::cout<<std::endl<<std::endl;
+	std::cout<<"GETSTUFF pions HCALONLY detector"<<std::endl;
+	std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+	std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
+	std::cout<<"       in air "<<pesumair/1000.<<std::endl;
+	std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
+	std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
+	std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
+	std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
+	std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
+	std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
+	std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
+	std::cout<<"       escaping detector "<<pesumedge/1000.<<std::endl;
+
+	std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
+	std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
+
+	std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
+	std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
+	std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
+	std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl;
+	std::cout<<" number of inelastic is "<<nin<<std::endl<<std::endl;
 
 
-
-
-
-
-    }  //end loop over events
-    //}  // end if no events
-
-  //  float amean = hceest->GetMean();
-
-
-    if(dodualcorr) {
-  std::cout<<" starting fits"<<std::endl;
-
-  //** fits
-  /*
-  TF1 *gEcale = new TF1("gEcale","p1",0.,1.);
-  TF1 *gHcale = new TF1("gHcale","p1",0.,1.);
-  TF1 *gEcalp = new TF1("gEcalp","p1",0.,1.);
-  TF1 *gHcalp = new TF1("gHcalp","p1",0.,1.);
-  */ 
-
-
-  TF1 *gEcale = new TF1("gEcale","[0]*(x-1.)+1",0.,1.);
-  TF1 *gHcale = new TF1("gHcale","[0]*(x-1.)+1",0.,1.);
-  TF1 *gEcalp = new TF1("gEcalp","[0]*(x-1.)+1",0.,1.);
-  TF1 *gHcalp = new TF1("gHcalp","[0]*(x-1.)+1",0.,1.);
-
-
-
-      // fit to get e/h
-  if(doecal) {
-    TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
-    ehcEcalNsNc_pfx->Fit("gEcale","W");
-  }
-  if(dohcal) {
-    TProfile* ehcHcalNsNc_pfx = ehcHcalNsNc->ProfileX();
-    ehcHcalNsNc_pfx->Fit("gHcale","W");
-  }
-
-
-
-  if(doecal) {
-    TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
-    phcEcalNsNc_pfx->Fit("gEcalp","W");
-    //b1Ecal=gEcalp->GetParameter(0);
-    //m1Ecal=gEcalp->GetParameter(1);
-    m1Ecal=gEcalp->GetParameter(0);
-    b1Ecal=1-m1Ecal;
-    std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-  }
-    double kappaEcal = 1+(b1Ecal/m1Ecal);
-
-
-    double hovereecalscint=phcEcalnscint->GetMean();;
-    double hovereecalcer=phcEcalncer->GetMean();
-    kappaEcal= (1-hovereecalscint)/(1.-hovereecalcer);
-
-
-    std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
-
-
-  if(dohcal) {
-    TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
-    phcHcalNsNc_pfx->Fit("gHcalp","W");
-    //    b1Hcal=gHcalp->GetParameter(0);
-    //    m1Hcal=gHcalp->GetParameter(1);
-    m1Hcal=gHcalp->GetParameter(0);
-    b1Hcal=1-m1Hcal;
-
-    std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
-    TCanvas* cyuck;
-    SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
-  }
-    double kappaHcal = 1+(b1Hcal/m1Hcal);
-
-
-    double hoverehcalscint=phcHcalnscint->GetMean();;
-    double hoverehcalcer=phcHcalncer->GetMean();
+      }  //end loop over events
+    }  // end if no events
+    pifa->Close();
+    hoverehcalscint=phcHcalnscint->GetMean();
+    hoverehcalcer=phcHcalncer->GetMean();
     kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
+    std::cout<<" hoverehcalscint hoverehcalcer kappa hcal are "<<hoverehcalscint<<" "<<hoverehcalcer<<" "<<kappaHcal<<std::endl<<std::endl;
 
-
-
-
-    std::cout<<" hoverehcalscint hoverehcalcer kappa hcal are "<<hoverehcalscint<<" "<<hoverehcalcer<<" "<<kappaHcal<<std::endl;
-
+  
+  }
+  
       
-  // no calculate with dual readout correction  
+
+
+  
+  //****************************************************************************************************************************
+  // process pions for full detector and try to get e/h for ecal
+
+  if(doecal&&dohcal) {
+    TFile* pif = TFile::Open(piinputfilename);
+    TTree* pit = (TTree*)pif->Get("EVENT;1");
+    if(pif==0) std::cout<<" no file "<<std::endl;
+    if(pit==0) std::cout<<" no event "<<std::endl;
+    std::cout<<"pion file full detector open"<<std::endl;
+
+    b_mc= pit->GetBranch("MCParticles");
+    if(doecal) b_ecal = pit->GetBranch(ECALleaf);
+    if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
+    if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
+    std::cout<<"pion branches found"<<std::endl;
+
+    ihaha = b_mc->GetEntries();
+    num_evt= std::min(ihaha,num_evtsmax);
+    std::cout<<"num_evt for pion file full is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+  
+    if(num_evt>0) {  
+
+      CalHits* ecalhits = new CalHits();
+      if(doecal) b_ecal->SetAddress(&ecalhits);
+      CalHits* hcalhits = new CalHits();
+      if(dohcal) b_hcal->SetAddress(&hcalhits);
+      CalHits* edgehits = new CalHits();
+      if(doedge) b_edge->SetAddress(&edgehits);
+
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion full detector "<<ievt<<std::endl;
+
+	float pesum(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
+	int nin=0;
+
+	getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
+	std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
+
+
+	fullEcalCalnscint->Fill((npscinttotecal/meanscinEcal)/(1.-npscinttothcal/meanscinHcal));
+	fullEcalCalncer->Fill((npcertotecal/meancerEcal)/(1.-npcertothcal/meancerHcal));
+	std::cout<<(npscinttotecal/meanscinEcal)<<" "<<(1.-npscinttothcal/meanscinHcal)<<std::endl;
+	std::cout<<(npcertotecal/meancerEcal)<<" "<<(1.-npcertothcal/meancerHcal)<<std::endl;
+
+	
+	float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
+	float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
+	std::cout<<std::endl<<std::endl;
+	std::cout<<"GETSTUFF pion full detector"<<std::endl;
+	std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+	std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
+	std::cout<<"       in air "<<pesumair/1000.<<std::endl;
+	std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
+	std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
+	std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
+	std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
+	std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
+	std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
+	std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
+	std::cout<<"       escaping detector "<<pesumedge/1000.<<std::endl;
+
+	std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
+	std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
+
+	std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
+	std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
+	std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
+	std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl;
+	std::cout<<" number of inelastic is "<<nin<<std::endl<<std::endl;
+
+
+      }  //end loop over events
+    }  // end if no events
+
+    hovereecalscint=fullEcalCalnscint->GetMean();
+    hovereecalcer=fullEcalCalncer->GetMean();
+    kappaEcal= (1-hovereecalscint)/(1.-hovereecalcer);
+    std::cout<<" hoverehcalscint hoverehcalcer kappa ecal are "<<hovereecalscint<<" "<<hovereecalcer<<" "<<kappaEcal<<std::endl<<std::endl;
+
+      pif->Close();
+
+  
+  }
+  
+      
 
 
 
 
-  //if(num_evt>0) {  
-    //CalHits* ecalhits = new CalHits();
-    //if(doecal) b_ecal->SetAddress(&ecalhits);
-    //CalHits* hcalhits = new CalHits();
-    //if(dohcal) b_hcal->SetAddress(&hcalhits);
-    //CalHits* edgehits = new CalHits();
-    //if(doedge) b_edge->SetAddress(&edgehits);
+
+  
+  // do dual corr  full detector
+
+  if(dodualcorr) {
+
+    TFile* pif = TFile::Open(piinputfilename);
+     TTree* pit = (TTree*)pif->Get("EVENT;1");
 
 
-    for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
+     if(pif==0) std::cout<<" no file "<<std::endl;
+     if(pit==0) std::cout<<" no event "<<std::endl;
+     std::cout<<"pion file open"<<std::endl;
 
-      float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
+     b_mc= pit->GetBranch("MCParticles");
+     if(doecal) b_ecal = pit->GetBranch(ECALleaf);
+     if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
+     if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
 
-
-      getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,timecut, eecaltimecutcor, ehcaltimecutcor);
-
-      phcEcalcorr->Fill(EcorEcal);
-      phcHcalcorr->Fill(EcorHcal);
-
-
-
-    }  //end loop over events
+     std::cout<<"pion branches found"<<std::endl;
 
 
-    }
 
-  }  // end if no events
+     ihaha = b_mc->GetEntries();
+     num_evt= std::min(ihaha,num_evtsmax);
+     std::cout<<"num_evt for pion file is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+  
+     if(num_evt>0) {  
 
+
+       CalHits* ecalhits = new CalHits();
+       if(doecal) b_ecal->SetAddress(&ecalhits);
+       CalHits* hcalhits = new CalHits();
+       if(dohcal) b_hcal->SetAddress(&hcalhits);
+       CalHits* edgehits = new CalHits();
+       if(doedge) b_edge->SetAddress(&edgehits);
+
+       
+       for(int ievt=0;ievt<num_evt; ++ievt) {
+	 if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
+
+	 float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
+
+
+	 getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,timecut, eecaltimecutcor, ehcaltimecutcor);
+
+	 phcEcalcorr->Fill(EcorEcal);
+	 phcHcalcorr->Fill(EcorHcal);
+
+
+
+       }   //end loop over events
 
 
   // close pion file
-  pif->Close();
+	 pif->Close();
+    
+
+     }  // end if no events
+
+  }
+
 
   
   //***********************************************************************************************************************
@@ -802,6 +911,16 @@ sii9 = mapsampcalslice.find("Sep2");
     SCEDraw2(ch2a,"ch2a",ehcHcalE1,phcHcalE1,"junkh2a.png",0);
     TCanvas* ch2b;
     SCEDraw2(ch2b,"ch2b",ehcHcalE2,phcHcalE2,"junkh2b.png",0);
+    TCanvas* ch2HO;
+    SCEDraw2(ch2HO,"ch2HO",ehcHcalEHO,phcHcalEHO,"junkh2HO.png",0);
+    TCanvas* ch2aHO;
+    SCEDraw2(ch2aHO,"ch2aHO",ehcHcalE1HO,phcHcalE1HO,"junkh2aHO.png",0);
+    TCanvas* ch2bHO;
+    SCEDraw2(ch2bHO,"ch2bHO",ehcHcalE2HO,phcHcalE2HO,"junkh2bHO.png",0);
+    TCanvas* ch4a;
+    SCEDraw2(ch4a,"ch4a",fullEcalCalncer,fullEcalCalnscint,"junkh4a.png",0);
+
+    
     TCanvas* ch3;
     SCEDraw2(ch3,"ch3",ehcHcalncer,ehcHcalnscint,"junkh3.png",0);
     TCanvas* ch4;
@@ -810,10 +929,6 @@ sii9 = mapsampcalslice.find("Sep2");
     SCEDraw1_2D(ch5,"ch5",ehcHcalNsNc,"junkh5.png",0.,0.);
     TCanvas* ch5b;
     SCEDraw1_2D(ch5b,"ch5b",ehcHcalMarco,"junkhb.png",0.,0.);
-    TCanvas* ch6;
-    SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
-     TCanvas* ch6b;
-    SCEDraw1_2D(ch6b,"ch6b",phcHcalMarco,"junkh6b.png",-b1Hcal/m1Hcal,0.);
     TCanvas* ch7;
     SCEDraw1_2D(ch7,"ch7",ehcHcalf1f2,"junkh7.png",0.,0.);
     TCanvas* ch7b;
@@ -848,13 +963,19 @@ sii9 = mapsampcalslice.find("Sep2");
 
   ehcHcalE->Write();
   phcHcalE->Write();
+  ehcHcalEHO->Write();
+  phcHcalEHO->Write();
 
   ehcHcalE1->Write();
   phcHcalE1->Write();
+  ehcHcalE1HO->Write();
+  phcHcalE1HO->Write();
 
 
   ehcHcalE2->Write();
   phcHcalE2->Write();
+  ehcHcalE2HO->Write();
+  phcHcalE2HO->Write();
 
 
   ehcEdgeE->Write();
@@ -872,6 +993,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
    ehcHcalncer->Write();
    phcHcalncer->Write();
+   fullEcalCalncer->Write();
 
    ehcEcalcorr->Write();
    phcEcalcorr->Write();
@@ -890,7 +1012,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
    ehcHcalnscint->Write();
    phcHcalnscint->Write();
-
+   fullEcalCalnscint->Write();
 
   ehhcal2d->Write();
   phhcal2d->Write();
@@ -1212,7 +1334,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
     //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
-    if(ievt<SCECOUNT) std::cout<<"    ihitchan idet iy ix ilayer islice  "<<std::endl;
+    //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet iy ix ilayer islice  "<<std::endl;
 
     ehcaltimecut=0.;
     for(size_t i=0;i<hcalhits->size(); ++i) {
