@@ -625,7 +625,7 @@ sii9 = mapsampcalslice.find("Sep2");
       if(doedge) b_edge->SetAddress(&edgehits);
 
       for(int ievt=0;ievt<num_evt; ++ievt) {
-	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion full detector "<<ievt<<std::endl;
+	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion hcanonly detector "<<ievt<<std::endl;
 
 	float pesum(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
 	int nin=0;
