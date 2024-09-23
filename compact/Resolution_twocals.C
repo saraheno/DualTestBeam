@@ -235,6 +235,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
   TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","e hcal dual", 500,0.,1.5);
   TH1F *phcHcalcorr = new TH1F("phcHcalcorr","pi hcal dual", 500,0.,1.5);
+  TH1F *phcFulldetcorr = new TH1F("phcFulldetcorr","pi full detector dual", 500,0.,1.5);
 
  
   TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
@@ -846,6 +847,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
 	 phcEcalcorr->Fill(EcorEcal);
 	 phcHcalcorr->Fill(EcorHcal);
+	 phcFulldetcorr->Fill(EcorEcal+EcorHcal);
 
 
 
@@ -924,7 +926,7 @@ sii9 = mapsampcalslice.find("Sep2");
     TCanvas* ch3;
     SCEDraw2(ch3,"ch3",ehcHcalncer,ehcHcalnscint,"junkh3.png",0);
     TCanvas* ch4;
-    SCEDraw3(ch4,"ch4",phcHcalncer,phcHcalnscint,phcHcalcorr,"junkh4.png",0);
+    SCEDraw3(ch4,"ch4",phcHcalncer,phcHcalnscint,phcFulldetcorr,"junkh4.png",0);
     TCanvas* ch5;
     SCEDraw1_2D(ch5,"ch5",ehcHcalNsNc,"junkh5.png",0.,0.);
     TCanvas* ch5b;
@@ -1000,6 +1002,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
    ehcHcalcorr->Write();
    phcHcalcorr->Write();
+   phcFulldetcorr->Write();
 
 
   ehecal2d->Write();
