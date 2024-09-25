@@ -124,7 +124,7 @@ map<string,int>::iterator sii7;
 map<string,int>::iterator sii8;
 map<string,int>::iterator sii9;
 
-void Resolution_SaraVer(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
+void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
                 const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,
                 const char* ECALleaf, const char* HCALleaf){
 	mapecalslice["air"]=0;
@@ -327,7 +327,7 @@ void Resolution_SaraVer(int num_evtsmax, const char* einputfilename, const char*
 			cout<<" sum EDeposit="<<eachecks/1000.<<", sum EDeposit/beamE="<<eachecks/beamE<<endl;
 			cout<<"ecal, totncer="<<necertotecal<<", totnscint="<<nescinttotecal<<endl;
 			cout<<"hcal, totncer="<<necertothcal<<", totnscint="<<nescinttothcal<<endl;
-			cout<<"ehcaltimecut= "<<ehcaltimecut/1000.<<", num_inelastic"<<nin<<endl;
+			cout<<"ehcaltimecut= "<<ehcaltimecut/1000.<<", num_inelastic="<<nin<<endl;
 		}  //end loop 2nd pass through events
 	}  // end process electron if no events
 	ef->Close();

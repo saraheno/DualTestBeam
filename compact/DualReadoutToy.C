@@ -152,7 +152,7 @@ void DualReadoutToy() {
 		SCEDraw1	(canv[5],	"c91",	dualcheckab,	"dualcheckab.png",0, 2);
 	}
 
-	TH2F *scintdual2	= new TH2F("scintdual2", "toys #sigma_{D} vs #sigma_{S}",	100,0.,0.1,100,0.,0.1);
+	TH2F *scintdual2	= new TH2F("scintdual2", "Energy Resolution: Dual vs Scintillation;#sigma_{S};#sigma_{D}",100,0.,0.1,100,0.,0.1);
 	TH2F *dualcheckha	= new TH2F("dualcheckha", "toys dual: true vs formula",	100,0.,0.1,100,0.,0.1);
 
 	for(int j=1; j < 500; j++) { // compute resolution by varying nscint=ncer ranged from 100 to 50000 (= 100 * 500)
@@ -218,7 +218,7 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	ddd->Reset();
 	cov->Reset();
 	acov=0.;
-
+	gStyle->SetOptStat(0);
 	// two last terms to compute the cov(S,C) in formula 7 of DualResolutionPaper
 	double pmeans = fmean + h_s * (1 - fmean); // == <S>
 	double pmeanc = fmean + h_c * (1 - fmean); // == <C>
@@ -226,16 +226,16 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 	for (int i=0; i < nshowers; i++) {
 		double FFF = -1.; // pick a value for fraction EM in the shower
 		while((FFF<0)||(FFF>1) ) {
-			FFF = rrr.Gaus(fmean,frms); // generate single random number of Gaus distr with mean=fmean and rms=frms
+			FFF = rrr.Gaus(fmean,frms); // generate single random number of Gaus distr with mean=fmean and rms=frms --> g1 in eq. 7
 		}
 		fff->Fill(FFF);
 
-		double SSS = FFF + h_s * (1-FFF);
-		double CCC = FFF + h_c * (1-FFF);
+		double SSS = FFF + h_s * (1-FFF); // from eq. 1 for scintillation
+		double CCC = FFF + h_c * (1-FFF); // from eq. 2 for cerenkov
 
 		//computing g2, g3 terms of equation 7 of the paper
-		SSS = SSS * (1 + rrr.Gaus(0.,1 / sqrt(nscint))); // smearing gaussian flactuating with a mean==0 and rms=n1=1/sqrt(nscint)==1%
-		CCC = CCC * (1 + rrr.Gaus(0.,1 / sqrt(ncer)));   // smearing gaussian flactuating with a mean==0 and rms=n2=1/sqrt(ncer)==1%
+		SSS = SSS * (1 + rrr.Gaus(0.,1 / sqrt(nscint))); // smearing gaussian flactuating with: mean==0 and rms=n1=1/sqrt(nscint)==1%
+		CCC = CCC * (1 + rrr.Gaus(0.,1 / sqrt(ncer)));   // smearing gaussian flactuating with: mean==0 and rms=n2=1/sqrt(ncer)==1%
 
 		double DDD = ((1 - h_c) * SSS - (1 - h_s) * CCC)/(h_s - h_c); // energy estimate eq. 3 of the paper
 
@@ -244,7 +244,7 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
 		ddd->Fill(DDD);
 		sscc->Fill(SSS,CCC);
 
-		cov->Fill((SSS - pmeans) * (CCC - (fmean - pmeanc))); //not sure what it is
+		cov->Fill((SSS - pmeans) * (CCC - (fmean - pmeanc))); //not sure what it is ??
 		acov+= (SSS - pmeans) * (CCC - pmeanc); // covariance definition: cov = <SC> - <S><C>
 	}
 
@@ -266,6 +266,7 @@ void dotoy(bool doplot, double h_s,double h_c,double nscint,double ncer,double f
                 SCEDraw1(cv[4],    "Covariance",  cov, "cov.png",0, 7);
 		SCEDraw1_2D(cv[5], "Scint vs Cer",sscc,"scint_vs_cer.png");
 		TFile *outsscc = new TFile("dualtoy_sscc.root","RECREATE");
+		gStyle->SetOptStat(0);
 		sss->Write();
 		ccc->Write();
 		ddd->Write();

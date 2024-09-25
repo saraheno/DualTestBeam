@@ -34,7 +34,7 @@ exearea = os.getcwd() + '/jobs/' + args.geometry + '/exefiles/'
 stdarea = os.getcwd() + '/jobs/' + args.geometry + '/stdfiles/'
 
 #energies=[10,15,20,25,30,35,40,45,50,100]
-energies=[15,20,25,30,35,40,45,100]
+energies=[15,20,25,30,35,40,45,50,100]
 name="condor-executable-"+args.geometry+'_'
 
 # create the .sh files

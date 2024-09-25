@@ -41,7 +41,7 @@ exearea = os.getcwd() + '/jobs/' + args.geometry + '/exefiles/'
 stdarea = os.getcwd() + '/jobs/' + args.geometry + '/stdfiles/'
 
 name="condor-executable-"+args.geometry+'_'
-angles = [10,15,20,25,30,35,40,45,50]
+angles = [5,7,9,12]
 # create the .sh files
 for i in angles:
     gdir = np.tan(np.radians(i))
