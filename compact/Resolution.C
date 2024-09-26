@@ -53,7 +53,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype,  bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-	      float  &eesum,float &eesumair, float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float  &eesum,float &eesumcal, float &eesumem, float &eesumair, float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime,
 	      int &nin
@@ -278,6 +278,14 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *pinscvni = new TH2F("pinscvni","pion scint E versus number inelastic",100,0.,1.2,100,0.,1000);
 
 
+  TH1F *heesumcal = new TH1F("heesumcal","electron energy in calorimeter",400,0.,1.5);
+  TH1F *heesumemcal = new TH1F("heesumemcal","electron relativistic energy in calorimeter",400,0.,1.5);
+  TH1F *hefff = new TH1F("hefff","electron relativistic fraction in calorimeter",400,0.,1.5);
+  TH1F *hpesumcal = new TH1F("hpesumcal","pion energy in calorimeter",400,0.,1.5);
+  TH1F *hpesumemcal = new TH1F("hpesumemcal","pion relativistic energy in calorimeter",400,0.,1.5);
+  TH1F *hpfff = new TH1F("hpfff","pion relativistic fraction in calorimeter",400,0.,1.5);
+  
+
   //****************************************************************************************************************************
   // process electrons
 
@@ -339,29 +347,20 @@ sii9 = mapsampcalslice.find("Sep2");
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number second is "<<ievt<<std::endl;
 
 
-      float eesum=0.;
-      float eesumair=0;
-      float eesumdead=0;
-      float eesumcrystal=0;
-      float eesumPDe=0;
-      float eesumfiber1=0;
-      float eesumfiber2=0.;
-      float eesumabs=0;
-      float eesumPDh=0;
-      float eesumedge=0;
-      float necertotecal=0;
-      float nescinttotecal=0;
-      float necertothcal=0;
-      float nescinttothcal=0;
-      float eecaltimecut=0.;
-      float ehcaltimecut=0.;
+      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
       
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin);
 
     
-
+      heesumcal->Fill(eesumcal/beamE);
+      heesumemcal->Fill(eesumem/beamE);
+      if(eesumem>0) {
+	hefff->Fill(eesumem/eesumcal);
+      } else {
+	std::cout<<"esumemcal is zero "<<std::endl;
+      }
 
       ehcEcalE->Fill(eesumcrystal/beamE);
       ehcHcalE->Fill((eesumfiber1+eesumfiber2)/beamE);
@@ -403,6 +402,8 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<"GETSTUFF electrons"<<std::endl;
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
       std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
+      std::cout<<"       cal total energy deposit "<<eesumcal/1000.<<std::endl;
+      std::cout<<"       cal EM total energy deposit "<<eesumem/1000.<<std::endl;
       std::cout<<"       in air "<<eesumair/1000.<<std::endl;
       std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
@@ -535,29 +536,21 @@ sii9 = mapsampcalslice.find("Sep2");
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
 
 
-      float pesum=0.;
-      float pesumair=0;
-      float pesumdead=0;
-      float pesumcrystal=0;
-      float pesumPDe=0;
-      float pesumfiber1=0;
-      float pesumfiber2=0;
-      float pesumabs=0;
-      float pesumPDh=0;
-      float pesumedge=0;
-      float npcertotecal=0;
-      float npscinttotecal=0;
-      float npcertothcal=0;
-      float npscinttothcal=0;
-      float eecaltimecut=0.;
-      float ehcaltimecut=0.;
+      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin);
       std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
     
 
+      hpesumcal->Fill(pesumcal/beamE);
+      hpesumemcal->Fill(pesumem/beamE);
+      if(pesumem>0) {
+	hpfff->Fill(pesumem/pesumcal);
+      } else {
+	std::cout<<"psumemcal is zero "<<std::endl;
+      }
 
 
       phcEcalE->Fill(pesumcrystal/beamE);
@@ -603,6 +596,8 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<"GETSTUFF pions"<<std::endl;
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
       std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
+      std::cout<<"       cal total energy deposit "<<pesumcal/1000.<<std::endl;
+      std::cout<<"       cal EM total energy deposit "<<pesumem/1000.<<std::endl;
       std::cout<<"       in air "<<pesumair/1000.<<std::endl;
       std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
       std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
@@ -698,7 +693,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
     std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
     TCanvas* cyuck;
-    SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
+    if(doplots) SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
   }
     double kappaHcal = 1+(b1Hcal/m1Hcal);
 
@@ -822,6 +817,7 @@ sii9 = mapsampcalslice.find("Sep2");
     TCanvas* ch8;
     SCEDraw2(ch8,"ch8",ehcaltime,pihcaltime,"junkh8.png",1);
 
+
   }
 
 
@@ -831,17 +827,28 @@ sii9 = mapsampcalslice.find("Sep2");
     SCEDraw1_2D(ch9b,"ch9b",pinscvni,"junkh9by.png",0.,0.);
 
 
-
+  
   //TCanvas* c7;
   //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
 
   }
 
+
+
+    TCanvas* cc1;
+    SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
+
+  
   //***********************************************************************************************************
 
   TFile * out = new TFile(outputfilename,"RECREATE");
 
-
+  heesumcal->Write();
+  heesumemcal->Write();
+  hefff->Write();
+  hpesumcal->Write();
+  hpesumemcal->Write();
+  hpfff->Write();
 
   ehcEcalE->Write();
   phcEcalE->Write();
@@ -1345,7 +1352,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 
 void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
-	      float  &eesum,float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, int &nin){
 
@@ -1416,14 +1423,14 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       eesum+=ae;
-      if(islice==(*eii0).second)eesumair+=ae;
-      if(islice==(*eii1).second)eesumPDe+=ae;
-      if(islice==(*eii2).second)eesumcrystal+=ae;
-      if(islice==(*eii3).second)eesumair+=ae;
-      if(islice==(*eii4).second)eesumdead+=ae;
-      if(islice==(*eii5).second)eesumair+=ae;
-      if(islice==(*eii6).second)eesumcrystal+=ae;
-      if(islice==(*eii7).second)eesumPDe+=ae;
+      if(islice==(*eii0).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii1).second) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii2).second) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii3).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii4).second) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii5).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii6).second) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
+      if(islice==(*eii7).second) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;};
 
 
 
@@ -1488,6 +1495,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       eesum+=ah;
+      eesumcal+=ahcalhit->energyDeposit;eesumem+=ahcalhit->edeprelativistic;
       /*
       std::cout<<"eesum now "<<eesum<<std::endl;
       std::cout<<"ehcaltimecut is "<<ehcaltimecut<<std::endl;
