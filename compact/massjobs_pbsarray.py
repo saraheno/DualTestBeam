@@ -19,6 +19,12 @@ compactdir=basedir+"/examples/DualTestBeam/compact/"
 outputarea=basedir+"/examples/DualTestBeam/compact/output/"
 hostarea=basedir+"/examples/DualTestBeam/compact/jobs/"
 
+# Directions & position
+#direction="0 0.176 1."
+#position="0.,0*mm,-1*cm"
+direction="0 0.05 0.99875"
+position="0.,-7*mm,-1*cm"
+
 # LCG setup script
 LCGsetup="/cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos8-gcc11-opt/setup.sh"
 
@@ -45,7 +51,7 @@ while (i<nenergy):
 # another good direction is  "0 0.05 0.99875"  and position 0.,-7*mm,-1*cm use this for pure fiber
 # DO IT BOTH PLACES!!!
 #    shfile.write('ddsim --compactFile=/cms/data/truitta/dd4hep/DD4hep/examples/DualTestBeam/compact/DR'+args.geometry+'.xml --runType=batch -G --steeringFile /cms/data/truitta/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_e-.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.0 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N 500 >& '+outputarea+'sce_e_'+args.geometry+'-dial_'+str(energies[i])+'.log'+'\n')
-    shfile.write('ddsim --compactFile='+compactdir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+compactdir+'/SCEPCALsteering.py --outputFile='+outputarea+'/out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_e-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N 5 >& '+outputarea+'sce_e_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')
+    shfile.write('ddsim --compactFile='+compactdir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+compactdir+'/SCEPCALsteering.py --outputFile='+outputarea+'/out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_e-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="'+position+'" --gun.direction "'+direction+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N 50 >& '+outputarea+'sce_e_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -72,7 +78,7 @@ while (i<nenergy):
     shfile.write('source  '+basedir+'/install/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
     #shfile.write('ddsim --compactFile=/cms/data/hatake/ana/CalVision/DD4hep_102b/DD4hep/examples/DualTestBeam/compact/DR'+args.geometry+'.xml --runType=batch -G --steeringFile /cms/data/hatake/ana/CalVision/DD4hep_102b/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_pi-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 50 >& '+outputarea+'sce_pi_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')
-    shfile.write('ddsim --compactFile='+compactdir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+compactdir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_pi-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 5 >& '+outputarea+'sce_pi_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')
+    shfile.write('ddsim --compactFile='+compactdir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+compactdir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_pi-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="'+position+'" --gun.direction "'+direction+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 50 >& '+outputarea+'sce_pi_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
