@@ -831,12 +831,14 @@ sii9 = mapsampcalslice.find("Sep2");
   //TCanvas* c7;
   //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
 
-  }
-
-
 
     TCanvas* cc1;
     SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
+
+
+  }
+
+
 
   
   //***********************************************************************************************************
