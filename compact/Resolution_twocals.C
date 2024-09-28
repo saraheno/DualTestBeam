@@ -1351,8 +1351,8 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	int idet = (ihitchan) & 0xFF;
 	int ilayer = (ihitchan >>8) & 0xFFF;  
 	int itube = (ihitchan >>20) & 0xFFF;  
-	int iair = (ihitchan >>32) & 0x3;  
-	int itype = (ihitchan >>35) & 0x3;  
+	int iair = (ihitchan >>32) & 0x7;  
+	int itype = (ihitchan >>35) & 0x7;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 	int ix=0; int iy=0;
 
@@ -1626,8 +1626,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	int ilayer = (ihitchan >>8) & 0xFFF;  
 	int itube = (ihitchan >>20) & 0xFFF;  
 	//int iair=0; int itype=0;
-	int iair = (ihitchan >>32) & 0x3;  
-	int itype = (ihitchan >>35) & 0x3;  
+	int iair = (ihitchan >>32) & 0x7;  
+	int itype = (ihitchan >>35) & 0x7;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 	int ix=0; int iy=0;
 	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
@@ -1867,8 +1867,8 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 	int ilayer = (ihitchan >>8) & 0xFFF;  
 	int itube = (ihitchan >>20) & 0xFFF; 
 	//int iair=0; int itype=0; 
-	int iair = (ihitchan >>32) & 0x3;  
-	int itype = (ihitchan >>35) & 0x3;  
+	int iair = (ihitchan >>32) & 0x7;  
+	int itype = (ihitchan >>35) & 0x7;  
 	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 	int ix=0; int iy=0;
 	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;

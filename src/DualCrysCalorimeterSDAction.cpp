@@ -30,8 +30,10 @@
 //double dialScint=0.00001;
 //double dialCher= 0.0000;
 //double dialScint=0.0000;
-double dialCher= 100./8000.;
-double dialScint=10./200000.;
+double dialCherC= 100./8000.;
+double dialScintC=10./200000.;
+double dialCherO= 1000./8000.;
+double dialScintO=100./200000.;
 //double dialScint=100./200000.;
 //double dialCher= 1.;
 //double dialScint=1.;
@@ -123,8 +125,10 @@ namespace dd4hep {
       if((eventNumber==1)&&(SCECOUNT==1)) {
 	std::cout<<"event number is "<<eventNumber<<std::endl;
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
-	std::cout<<"dialCher is "<<dialCher<<std::endl;
-	std::cout<<"dialScint is "<<dialScint<<std::endl;
+	std::cout<<"dialCher for PbWO4 and BGO is "<<dialCherC<<std::endl;
+	std::cout<<"dialScint for PbWO4 and BGO is "<<dialScintC<<std::endl;
+	std::cout<<"dialCher for others is "<<dialCherO<<std::endl;
+	std::cout<<"dialScint for others is "<<dialScintO<<std::endl;
 	std::cout<<" you need to use this to interpret your results"<<std::endl;
 	std::cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
       }
@@ -298,7 +302,11 @@ namespace dd4hep {
 
 	      //Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
-	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
+	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
+		if(rnd.rndm()>dialCherC) track->SetTrackStatus(fStopAndKill);
+	      } else{
+		if(rnd.rndm()>dialCherO) track->SetTrackStatus(fStopAndKill);
+	      }
 	    }
 	  }
 	}
@@ -341,7 +349,11 @@ namespace dd4hep {
 
 		//Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
-	      if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
+	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
+		if(rnd.rndm()>dialScintC) track->SetTrackStatus(fStopAndKill);
+	      } else {
+		if(rnd.rndm()>dialScintO) track->SetTrackStatus(fStopAndKill);
+	      }
 	    }
 	  }
 

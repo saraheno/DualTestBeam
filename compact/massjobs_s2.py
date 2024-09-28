@@ -48,7 +48,7 @@ while (i<nenergy):
     shfile.write('echo "ran setup"'+'\n')
     shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
-    shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+','+args.gendet+',"./output/hists_'+args.geometry1+"_"+str(energies[i])+'GeV.root","DRCNoSegment","DRFNoSegment")\' >& ./output/s2_'+str(energies[i])+'GeV.log \n' );
+    shfile.write('root -b -l -q \'Resolution.C(500,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+','+args.gendet+',"./output/hists_'+args.geometry1+"_"+str(energies[i])+'GeV.root","DRCNoSegment","DRFNoSegment,0")\' >& ./output/s2_'+str(energies[i])+'GeV.log \n' );
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
