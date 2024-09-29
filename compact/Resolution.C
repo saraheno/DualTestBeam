@@ -1610,16 +1610,16 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 	if(iphdet==1) {  // pd on scintillating fibers
-	  std::cout<<"iphdet 1 scint fiber nscint "<<ahcalhit->nscintillator<<" ncer "<<ahcalhit->ncerenkov<<std::endl;
-	  std::cout<<"idet ilayer itube iair itype "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<std::endl;
+	  //std::cout<<"iphdet 1 scint fiber nscint "<<ahcalhit->nscintillator<<" ncer "<<ahcalhit->ncerenkov<<std::endl;
+	  //std::cout<<"idet ilayer itube iair itype "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<std::endl;
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd1cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
 	  }
 	}
 	if(iphdet==2) {  // pd on cherenkov fibers
-	  std::cout<<"iphdet 2 quartz fiber nscint "<<ahcalhit->nscintillator<<" ncer "<<ahcalhit->ncerenkov<<std::endl;
-	  std::cout<<"idet ilayer itube iair itype "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<std::endl;
+	  //std::cout<<"iphdet 2 quartz fiber nscint "<<ahcalhit->nscintillator<<" ncer "<<ahcalhit->ncerenkov<<std::endl;
+	  //std::cout<<"idet ilayer itube iair itype "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<std::endl;
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd2cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
