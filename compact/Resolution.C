@@ -301,25 +301,25 @@ sii9 = mapsampcalslice.find("Sep2");
   // if you change these, you MUST remake the samples
   
   std::cout<<"warning warning if you change the timing histograms, please read the comment in the code"<<std::endl;
-  TH1F *eecalpd1scint = new TH1F("eecalpd1scint","electron scint photon arrival time ECAL PD1",finenbin,timemin,timemax);
-  TH1F *eecalpd1cer = new TH1F("eecalpd1cer","electron cerenov photon arrival time ECAL PD1",finenbin,timemin,timemax);
-  TH1F *pecalpd1scint = new TH1F("pecalpd1scint","pion scint photon arrival time ECAL PD1",finenbin,timemin,timemax);
-  TH1F *pecalpd1cer = new TH1F("pecalpd1cer","pion cerenov photon arrival time ECAL PD1",finenbin,timemin,timemax);
+  TH1F *eecalpd1scint = new TH1F("eecalpd1scint","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+  TH1F *eecalpd1cer = new TH1F("eecalpd1cer","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+  TH1F *pecalpd1scint = new TH1F("pecalpd1scint","pion scint photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+  TH1F *pecalpd1cer = new TH1F("pecalpd1cer","pion cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
 
-  TH1F *eecalpd2scint = new TH1F("eecalpd2scint","electron scint photon arrival time ECAL PD2",finenbin,timemin,timemax);
-  TH1F *eecalpd2cer = new TH1F("eecalpd2cer","electron cerenov photon arrival time ECAL PD2",finenbin,timemin,timemax);
-  TH1F *pecalpd2scint = new TH1F("pecalpd2scint","pion scint photon arrival time ECAL PD2",finenbin,timemin,timemax);
-  TH1F *pecalpd2cer = new TH1F("pecalpd2cer","pion cerenov photon arrival time ECAL PD2",finenbin,timemin,timemax);
+  TH1F *eecalpd2scint = new TH1F("eecalpd2scint","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
+  TH1F *eecalpd2cer = new TH1F("eecalpd2cer","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
+  TH1F *pecalpd2scint = new TH1F("pecalpd2scint","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
+  TH1F *pecalpd2cer = new TH1F("pecalpd2cer","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
 
-  TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","electron scint photon arrival time HCAL PD1",finenbin,timemin,timemax);
-  TH1F *ehcalpd1cer = new TH1F("ehcalpd1cer","electron cerenov photon arrival time HCAL PD1",finenbin,timemin,timemax);
-  TH1F *phcalpd1scint = new TH1F("phcalpd1scint","pion scint photon arrival time HCAL PD1",finenbin,timemin,timemax);
-  TH1F *phcalpd1cer = new TH1F("phcalpd1cer","pion cerenov photon arrival time HCAL PD1",finenbin,timemin,timemax);
+  TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","electron scint photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
+  TH1F *ehcalpd1cer = new TH1F("ehcalpd1cer","electron cerenov photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
+  TH1F *phcalpd1scint = new TH1F("phcalpd1scint","pion scint photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
+  TH1F *phcalpd1cer = new TH1F("phcalpd1cer","pion cerenov photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
 
-  TH1F *ehcalpd2scint = new TH1F("ehcalpd2scint","electron scint photon arrival time HCAL PD2",finenbin,timemin,timemax);
-  TH1F *ehcalpd2cer = new TH1F("ehcalpd2cer","electron cerenov photon arrival time HCAL PD2",finenbin,timemin,timemax);
-  TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time HCAL PD2",finenbin,timemin,timemax);
-  TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time HCAL PD2",finenbin,timemin,timemax);
+  TH1F *ehcalpd2scint = new TH1F("ehcalpd2scint","electron scint photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
+  TH1F *ehcalpd2cer = new TH1F("ehcalpd2cer","electron cerenov photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
+  TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
+  TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
 
   
   //****************************************************************************************************************************
