@@ -26,13 +26,6 @@
 // LOOK AT THE DECLARATION JUST AT THE crystalana def!!!!!!!!!!!!!!!!!!!!
 const int nsliceecal = 8;
 std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlemat","gap2","crystal2","PD2"};
-int SCECOUNT=1;
-bool dodualcorr=1;
-float timecut=1000;
-const int finenbin=40;
-const float timemin=0.;
-const float timemax=300.;
-const float timebinsize=(timemax-timemin)/float(finenbin);
 
 
 
@@ -40,8 +33,18 @@ const float timebinsize=(timemax-timemin)/float(finenbin);
 // need to figure out how to charge this
 //const int HARDWIREDmax=1000;
 
-// DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!!!!!!!
-//  this must be changed whenever you change the hcalgeometry
+int SCECOUNT=1;
+bool dodualcorr=1;
+float timecut=1000;
+const int finenbin=40;
+const float timemin=0.;
+const float timemax=10000.;
+const float timebinsize=(timemax-timemin)/float(finenbin);
+
+
+
+
+
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
