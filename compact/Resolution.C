@@ -38,7 +38,7 @@ bool dodualcorr=1;
 float timecut=1000;
 const int finenbin=40;
 const float timemin=0.;
-const float timemax=10000.;
+const float timemax=4000.;
 const float timebinsize=(timemax-timemin)/float(finenbin);
 
 
