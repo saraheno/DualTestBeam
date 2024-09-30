@@ -77,7 +77,7 @@ for i in energies:
     jdlfile.write("Log = "+stdarea+args.particle+"$(cluster)_$(process).condor"+'\n')
     jdlfile.write("Arguments = $(process)"+'\n')
     jdlfile.write("request_memory = 4GB"+'\n')
-    jdlfile.write('Queue 12' + '\n') # run jobs in parallel
+    jdlfile.write('Queue 38' + '\n') # run jobs in parallel
     jdlfile.close()
 print("jdl file closed")
 
