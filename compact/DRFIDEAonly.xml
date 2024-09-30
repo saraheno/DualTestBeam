@@ -882,8 +882,8 @@
       <property name="RINDEX" ref="RI_PS"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PS"/>
-<!-- set low because impossibly long at correct yield -->
-      <constant name="SCINTILLATIONYIELD" value="8/MeV"/>
+<!-- correct yield 10000 -->
+      <constant name="SCINTILLATIONYIELD" value="10000/MeV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>

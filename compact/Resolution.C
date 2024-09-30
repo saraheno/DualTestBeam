@@ -38,7 +38,7 @@ bool dodualcorr=1;
 float timecut=1000;
 const int finenbin=40;
 const float timemin=0.;
-const float timemax=4000.;
+const float timemax=2000.;
 const float timebinsize=(timemax-timemin)/float(finenbin);
 
 
@@ -311,15 +311,15 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *pecalpd2scint = new TH1F("pecalpd2scint","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *pecalpd2cer = new TH1F("pecalpd2cer","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
 
-  TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","electron scint photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
-  TH1F *ehcalpd1cer = new TH1F("ehcalpd1cer","electron cerenov photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
-  TH1F *phcalpd1scint = new TH1F("phcalpd1scint","pion scint photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
-  TH1F *phcalpd1cer = new TH1F("phcalpd1cer","pion cerenov photon arrival time ns HCAL PD1",finenbin,timemin,timemax);
+  TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","elec scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
+  TH1F *ehcalpd1cer = new TH1F("ehcalpd1cer","elec cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
+  TH1F *phcalpd1scint = new TH1F("phcalpd1scint","pion scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
+  TH1F *phcalpd1cer = new TH1F("phcalpd1cer","pion cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
 
-  TH1F *ehcalpd2scint = new TH1F("ehcalpd2scint","electron scint photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
-  TH1F *ehcalpd2cer = new TH1F("ehcalpd2cer","electron cerenov photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
-  TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
-  TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns HCAL PD2",finenbin,timemin,timemax);
+  TH1F *ehcalpd2scint = new TH1F("ehcalpd2scint","elec scint photon arrival time ns HCAL quartz fiber",finenbin,timemin,timemax);
+  TH1F *ehcalpd2cer = new TH1F("ehcalpd2cer","elec cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
+  TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemax);
+  TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
 
   
   //****************************************************************************************************************************

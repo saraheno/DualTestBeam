@@ -30,10 +30,10 @@
 //double dialScint=0.00001;
 //double dialCher= 0.0000;
 //double dialScint=0.0000;
-double dialCherC= 100./8000.;
-double dialScintC=10./200000.;
-double dialCherO= 1000./8000.;
-double dialScintO=100./200000.;
+double dialCherC= 10./8000.;
+double dialScintC=100./200000.;
+double dialCherO= 100./8000.;
+double dialScintO=1./200000.;
 //double dialScint=100./200000.;
 //double dialCher= 1.;
 //double dialScint=1.;

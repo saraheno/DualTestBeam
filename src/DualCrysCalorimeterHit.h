@@ -63,7 +63,7 @@ namespace CalVision {
 
     int nfinebin=finenbin;
     float timemin=0;
-    float timemax=4000;
+    float timemax=2000;
     std::array<int,finenbin>  ncerwave;
     std::array<int,finenbin> nscintwave;
     std::array<int,finenbin>  ncertime;
