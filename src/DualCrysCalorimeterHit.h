@@ -63,11 +63,14 @@ namespace CalVision {
 
     int nfinebin=finenbin;
     float timemin=0;
-    float timemax=2000;
-    std::array<int,finenbin>  ncerwave;
-    std::array<int,finenbin> nscintwave;
+    float timemax=400;
+    float timemaxz=40;
+    //    std::array<int,finenbin>  ncerwave;
+    // std::array<int,finenbin> nscintwave;
     std::array<int,finenbin>  ncertime;
     std::array<int,finenbin> nscinttime;
+    std::array<int,finenbin>  ncertimez;
+    std::array<int,finenbin> nscinttimez;
     std::array<float,finenbin> edeptime;
     std::array<float,finenbin> ereldeptime;
     float xmax=10;
@@ -96,10 +99,12 @@ namespace CalVision {
 
 
       for( int i=0;i<finenbin;i++){
-        ncerwave[i]=0;
-        nscintwave[i]=0;
+        //ncerwave[i]=0;
+        //nscintwave[i]=0;
         ncertime[i]=0;
         nscinttime[i]=0;
+        ncertimez[i]=0;
+        nscinttimez[i]=0;
 	edeptime[i]=0.;
 	ereldeptime[i]=0.;
       }

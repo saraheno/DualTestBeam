@@ -1,5 +1,6 @@
-//
-// force update
+// 30 cm/ns
+// 210 cm = 7 ns
+
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -38,8 +39,10 @@ bool dodualcorr=1;
 float timecut=1000;
 const int finenbin=40;
 const float timemin=0.;
-const float timemax=2000.;
+const float timemax=400.;
+const float timemaxz=40.;
 const float timebinsize=(timemax-timemin)/float(finenbin);
+const float timebinsizez=(timemaxz-timemin)/float(finenbin);
 
 
 
@@ -66,7 +69,8 @@ void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, i
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime,
 	      int &nin,
-	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer
+	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
+	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
 );
 
 
@@ -108,7 +112,7 @@ map<string,int>::iterator sii9;
 // hcal type 0=fiber, 1 = sampling
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet
 // ECALleaf is 
-// crystalana(100,"./output/out_FSCEPonly_30GeV_e-_100.root",
+// Resolution(100,"./output/out_FSCEPonly_30GeV_e-_100.root",
 // "./output/out_FSCEPonly_30GeV_pi-_100.root","./output/out_FSCEPonly_30GeV_pi-_100.root",
 // 20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment",1)
 
@@ -305,21 +309,35 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *eecalpd1cer = new TH1F("eecalpd1cer","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
   TH1F *pecalpd1scint = new TH1F("pecalpd1scint","pion scint photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
   TH1F *pecalpd1cer = new TH1F("pecalpd1cer","pion cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
-
   TH1F *eecalpd2scint = new TH1F("eecalpd2scint","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *eecalpd2cer = new TH1F("eecalpd2cer","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *pecalpd2scint = new TH1F("pecalpd2scint","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *pecalpd2cer = new TH1F("pecalpd2cer","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
-
   TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","elec scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
   TH1F *ehcalpd1cer = new TH1F("ehcalpd1cer","elec cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
   TH1F *phcalpd1scint = new TH1F("phcalpd1scint","pion scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
   TH1F *phcalpd1cer = new TH1F("phcalpd1cer","pion cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
-
   TH1F *ehcalpd2scint = new TH1F("ehcalpd2scint","elec scint photon arrival time ns HCAL quartz fiber",finenbin,timemin,timemax);
   TH1F *ehcalpd2cer = new TH1F("ehcalpd2cer","elec cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
   TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemax);
   TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
+
+  TH1F *eecalpd1scintz = new TH1F("eecalpd1scintz","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
+  TH1F *eecalpd1cerz = new TH1F("eecalpd1cerz","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
+  TH1F *pecalpd1scintz = new TH1F("pecalpd1scintz","pion scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
+  TH1F *pecalpd1cerz = new TH1F("pecalpd1cerz","pion cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
+  TH1F *eecalpd2scintz = new TH1F("eecalpd2scintz","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
+  TH1F *eecalpd2cerz = new TH1F("eecalpd2cerz","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
+  TH1F *pecalpd2scintz = new TH1F("pecalpd2scintz","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
+  TH1F *pecalpd2cerz = new TH1F("pecalpd2cerz","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
+  TH1F *ehcalpd1scintz = new TH1F("ehcalpd1scintz","elec scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
+  TH1F *ehcalpd1cerz = new TH1F("ehcalpd1cerz","elec cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
+  TH1F *phcalpd1scintz = new TH1F("phcalpd1scintz","pion scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
+  TH1F *phcalpd1cerz = new TH1F("phcalpd1cerz","pion cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
+  TH1F *ehcalpd2scintz = new TH1F("ehcalpd2scintz","elec scint photon arrival time ns HCAL quartz fiber",finenbin,timemin,timemaxz);
+  TH1F *ehcalpd2cerz = new TH1F("ehcalpd2cerz","elec cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
+  TH1F *phcalpd2scintz = new TH1F("phcalpd2scintz","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
+  TH1F *phcalpd2cerz = new TH1F("phcalpd2cerz","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
 
   
   //****************************************************************************************************************************
@@ -388,7 +406,9 @@ sii9 = mapsampcalslice.find("Sep2");
       int nin=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin,
-	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
+	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,
+	       eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz
+	       );
 
     
       heesumcal->Fill(eesumcal/beamE);
@@ -577,7 +597,9 @@ sii9 = mapsampcalslice.find("Sep2");
       int nin=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin,
-	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer);
+	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
+	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
+	       );
       std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
     
@@ -894,6 +916,26 @@ sii9 = mapsampcalslice.find("Sep2");
     TCanvas* cc9;
     SCEDraw2(cc9,"cc9",phcalpd2scint,phcalpd2cer,"junkcc9.png",1);
 
+    TCanvas* cc2z;
+    SCEDraw2(cc2z,"cc2z",eecalpd1scintz,eecalpd1cerz,"junkcc2z.png",1);
+    TCanvas* cc3z;
+    SCEDraw2(cc3z,"cc3z",eecalpd2scintz,eecalpd2cerz,"junkcc3z.png",1);
+    TCanvas* cc4z;
+    SCEDraw2(cc4z,"cc4z",ehcalpd1scintz,ehcalpd1cerz,"junkcc4z.png",1);
+    TCanvas* cc5z;
+    SCEDraw2(cc5z,"cc5z",ehcalpd2scintz,ehcalpd2cerz,"junkcc5z.png",1);
+
+    
+    TCanvas* cc6z;
+    SCEDraw2(cc6z,"cc6z",pecalpd1scintz,pecalpd1cerz,"junkcc6z.png",1);
+    TCanvas* cc7z;
+    SCEDraw2(cc7z,"cc7z",pecalpd2scintz,pecalpd2cerz,"junkcc7z.png",1);
+    TCanvas* cc8z;
+    SCEDraw2(cc8z,"cc8z",phcalpd1scintz,phcalpd1cerz,"junkcc8z.png",1);
+    TCanvas* cc9z;
+    SCEDraw2(cc9z,"cc9z",phcalpd2scintz,phcalpd2cerz,"junkcc9z.png",1);
+
+
 
 
   
@@ -917,6 +959,23 @@ sii9 = mapsampcalslice.find("Sep2");
   ehcalpd2cer->Write();
   phcalpd2scint->Write();
   phcalpd2cer->Write();
+
+  eecalpd1scintz->Write();
+  eecalpd1cerz->Write();
+  pecalpd1scintz->Write();
+  pecalpd1cerz->Write();
+  eecalpd2scintz->Write();
+  eecalpd2cerz->Write();
+  pecalpd2scintz->Write();
+  pecalpd2cerz->Write();
+  ehcalpd1scintz->Write();
+  ehcalpd1cerz->Write();
+  phcalpd1scintz->Write();
+  phcalpd1cerz->Write();
+  ehcalpd2scintz->Write();
+  ehcalpd2cerz->Write();
+  phcalpd2scintz->Write();
+  phcalpd2cerz->Write();
   
   heesumcal->Write();
   heesumemcal->Write();
@@ -1429,7 +1488,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut, TH1F* eecaltime, TH1F* ehcaltime, int &nin,
-	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer
+	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
+	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
 	      ){
 
 
@@ -1503,12 +1563,17 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  ecalpd1scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
 	  ecalpd1cer->Fill((ijk+0.5)*timebinsize,aecalhit->ncertime[ijk]);
+	  std::cout<<"yuck "<<(ijk+0.5)*timebinsizez<<std::endl;
+	  ecalpd1scintz->Fill((ijk+0.5)*timebinsizez,aecalhit->nscinttimez[ijk]);
+	  ecalpd1cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
       }
       if(islice==(*eii7).second) {  // pd on exist of ecal
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  ecalpd2scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
 	  ecalpd2cer->Fill((ijk+0.5)*timebinsize,aecalhit->ncertime[ijk]);
+	  ecalpd2scintz->Fill((ijk+0.5)*timebinsizez,aecalhit->nscinttimez[ijk]);
+	  ecalpd2cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
       }
 
@@ -1618,6 +1683,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd1cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
+	    hcalpd1scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
+	    hcalpd1cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
 	}
 	if(iphdet==2) {  // pd on cherenkov fibers
@@ -1626,6 +1693,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd2cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
+	    hcalpd2scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
+	    hcalpd2cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
 	}
 
@@ -1696,12 +1765,16 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd1cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
+	    hcalpd1scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
+	    hcalpd1cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
 	}
 	if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // pd on quartz?
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd2cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
+	    hcalpd2scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
+	    hcalpd2cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
 	}
 

@@ -68,14 +68,14 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 
 void res() {
 
-  //const int npoints=10;
-  const int npoints=2;
+  const int npoints=8;
+  //const int npoints=2;
   std::string filenames[npoints];
   double aatruemean[npoints];
-  std::string aatype = "DualTestBeam";
+  std::string aatype = "FSCEPonly";
 
   std::string yuck;
-  /*
+
   filenames[0]="./output/hists_"+aatype+"_10GeV.root";
   filenames[1]="./output/hists_"+aatype+"_15GeV.root";
   filenames[2]="./output/hists_"+aatype+"_20GeV.root";
@@ -84,18 +84,18 @@ void res() {
   filenames[5]="./output/hists_"+aatype+"_35GeV.root";
   filenames[6]="./output/hists_"+aatype+"_40GeV.root";
   filenames[7]="./output/hists_"+aatype+"_45GeV.root";
-  filenames[8]="./output/hists_"+aatype+"_50GeV.root";
-  filenames[9]="./output/hists_"+aatype+"_100GeV.root";
-  */
+  //filenames[8]="./output/hists_"+aatype+"_50GeV.root";
+  //filenames[9]="./output/hists_"+aatype+"_100GeV.root";
 
 
-  filenames[0]="./output/hists_"+aatype+"_20GeV.root";
-  filenames[1]="./output/hists_"+aatype+"_50GeV.root";
+
+  //filenames[0]="./output/hists_"+aatype+"_20GeV.root";
+  //filenames[1]="./output/hists_"+aatype+"_50GeV.root";
 
 
   
   
-  /*
+  
   aatruemean[0]=10;
   aatruemean[1]=15;
   aatruemean[2]=20;
@@ -104,13 +104,13 @@ void res() {
   aatruemean[5]=35;
   aatruemean[6]=40;
   aatruemean[7]=45;
-  aatruemean[8]=50;
-  aatruemean[9]=100;
-  */
+  //aatruemean[8]=50;
+  //aatruemean[9]=100;
+  
 
   
-  aatruemean[0]=20;
-  aatruemean[1]=50;
+  //aatruemean[0]=20;
+  //aatruemean[1]=50;
   
 
 

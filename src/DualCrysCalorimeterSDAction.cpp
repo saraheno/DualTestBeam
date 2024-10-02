@@ -224,6 +224,10 @@ namespace dd4hep {
       float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
       jbin = (avearrival-hit->timemin)/tbinsize;
       jbin = std::min(jbin,(hit->nfinebin)-1);
+      int jbinz=-1;
+      float tbinsizez=(hit->timemaxz-hit->timemin)/hit->nfinebin;
+      jbinz = (avearrival-hit->timemin)/tbinsizez;
+      jbinz = std::min(jbinz,(hit->nfinebin)-1);
 
 
       if(thePostPoint->GetProcessDefinedStep()->GetProcessName().contains("Inelast")){
@@ -275,8 +279,9 @@ namespace dd4hep {
 	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
-                if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+                //if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
                 if(SCEPRINT) std::cout<<" cer photon kill pre time "<<pretime<<std::endl;
                 if(SCEPRINT) std::cout<<" cer photon kill post time "<<posttime<<std::endl;
@@ -286,8 +291,9 @@ namespace dd4hep {
 	  else if(amedia.find("BlackHole")!=std::string::npos) {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
-	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+		//if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+	      if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
@@ -296,8 +302,9 @@ namespace dd4hep {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1)  ) hit->ncerenkov+=1;
 	    if( (phstep==1)  ) {
 	      hit->ncerenkov+=1;
-	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+	      //if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
               if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+	      if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 
 	      //Geant4Event&  evt = context()->event();
@@ -320,8 +327,9 @@ namespace dd4hep {
 	      //std::cout<<"killing photon"<<std::endl;
 	      if(phstep>1) {
 		hit->nscintillator+=1;
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+		//if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
                 if(SCEPRINT) std::cout<<" scint photon kill pre time "<<pretime<<std::endl;
@@ -331,8 +339,9 @@ namespace dd4hep {
 	  else if(amedia.find("BlackHole")!=std::string::npos) {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->nscintillator+=1;
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+		//if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 	      }
@@ -342,8 +351,9 @@ namespace dd4hep {
 	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
 	    if( (phstep==1) ) {
 	      hit->nscintillator+=1; 
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+	      //if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 
