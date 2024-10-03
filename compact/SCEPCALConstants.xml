@@ -27,14 +27,14 @@
     <constant name="DRFiberNsizeIDEA" value="199"/>        <!-- should be 150 -->
 
 <!-- constants for dual readout sampling hcal calorimeter -->
-    <constant name="DRSampAthick" value="18.*mm"/>  <!-- should be 20 -->
-    <constant name="DRSampSthick" value="5.*mm"/>  <!-- should be 5 -->
-    <constant name="DRSampQthick" value="5.*mm"/>   <!-- should be 5 -->
-    <constant name="DRSeparate" value="1.*mm"/>   <!-- should be 5 -->
-    <constant name="DRSampxy" value="20.*cm"/> <!-- should be 20 -->
-    <constant name="DRSampNsize" value="0"/>        <!-- should be 25 -->
-    <constant name="DRSampNlayer" value="40"/>  <!-- should be 40 -->
-    <constant name="shave" value="0.1*mm"/>  <!-- should be small -->
+    <constant name="DRSampAthick" 	value="18.*mm"/>  	<!-- should be 20 -->
+    <constant name="DRSampSthick" 	value="5.*mm"/>  	<!-- should be 5 -->
+    <constant name="DRSampQthick" 	value="5.*mm"/>   	<!-- should be 5 -->
+    <constant name="DRSeparate"		value="1.*mm"/>   	<!-- should be 5 -->
+    <constant name="DRSampxy" 		value="20.*cm"/> 	<!-- should be 20 -->
+    <constant name="DRSampNsize" 	value="0"/>        	<!-- should be 25 -->
+    <constant name="DRSampNlayer" 	value="40"/>  		<!-- should be 40 -->
+    <constant name="shave" 		value="0.1*mm"/>  	<!-- should be small -->
 
 <!-- detector numbering scheme -->
     <constant name="Ecal_ID" value="5"/>

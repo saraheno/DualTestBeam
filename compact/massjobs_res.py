@@ -17,6 +17,7 @@ argParser.add_argument("-ed", "--edge",     help="edge detector",   type=int, de
 argParser.add_argument("-gd", "--gendet",   help="gen type",        type=int, default=3)
 argParser.add_argument("-a", "--angle",     help="run angles",      type=int, default=0)
 argParser.add_argument("-e", "--energy",    help="run energies",    type=int, default=0)
+argParser.add_argument("-ht", "--hcaltype", help="hcal-type",       type=int, default=0) # fiber: hc=0, sampl: hc=1
 
 args = argParser.parse_args()
 print("args=%s" % args)
@@ -47,7 +48,7 @@ outfile = outputarea+'res_'+args.geometry+'_'
 outlogfile = outputarea+'log_'+args.geometry+'_'
 if args.ecal: ecaleaf = "DRCNoSegment"
 else: ecaleaf = ""
-if args.hcal: hcaleaf = "DRFNoSegment"
+if args.hcal: hcaleaf = "DRSNoSegment"
 else: hcaleaf = ""
 
 name=args.geometry+"_"
@@ -67,12 +68,12 @@ shfile.write('source '+source_dir+'/install/bin/thisdd4hep.sh'+'\n')
 shfile.write('echo "ran setup"'+'\n')
 if args.energy==1:
     for i in energies:
-        if args.hcalonly==1: hinputfile = outputarea+'out_FSCEPonly_'+str(i)+'gev.root'
-        shfile.write('echo root -b -l -q \'Resolution.C(120,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
-        shfile.write('root -b -l -q \'Resolution.C(120,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
+        if args.hcalonly==1: hinputfile = outputarea+'out_'+args.geometry+'_'+str(i)+'gev.root'
+        shfile.write('echo root -b -l -q \'Resolution.C(500,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcaltype)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
+        shfile.write('root -b -l -q \'Resolution.C(500,"'+einputfile+str(i)+'gev.root","'+pinputfile+str(i)+'gev.root","'+hinputfile+'",'+str(i)+','+str(args.ecal)+","+str(args.hcal)+","+str(args.hcaltype)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(i)+'GeV.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(i)+"GeV.log"+'\n')
 if args.angle==1:
     for a in angles:
-        shfile.write('root -b -l -q \'Resolution.C(120,"'+einputfile+str(a)+'degrees.root","'+pinputfile+str(a)+'degrees.root","'+hinputfile+'",50,'+str(args.ecal)+","+str(args.hcal)+","+str(args.hcalonly)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(a)+'degrees.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(a)+"degrees.log"+'\n')
+        shfile.write('root -b -l -q \'Resolution.C(120,"'+einputfile+str(a)+'degrees.root","'+pinputfile+str(a)+'degrees.root","'+hinputfile+'",50,'+str(args.ecal)+","+str(args.hcal)+","+str(args.hcaltype)+","+str(args.edge)+","+str(args.gendet)+',"'+outfile+str(a)+'degrees.root","'+ecaleaf+'","'+hcaleaf+'")\' >&'+ outlogfile+str(a)+"degrees.log"+'\n')
 
 shfile.write('exitcode=$?'+'\n')
 shfile.write('echo ""'+'\n')

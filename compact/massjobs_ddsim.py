@@ -33,8 +33,8 @@ outputarea = os.getcwd() + '/output/' + args.geometry + '/'
 exearea = os.getcwd() + '/jobs/' + args.geometry + '/exefiles/'
 stdarea = os.getcwd() + '/jobs/' + args.geometry + '/stdfiles/'
 
-#energies=[10,15,20,25,30,35,40,45,50,100]
-energies=[15,20,25,30,35,40,45,50,100]
+energies=[10,15,20,25,30,35,40,45,50,100]
+#energies=[15,20,25,30,35,40,45,50,100]
 name="condor-executable-"+args.geometry+'_'
 
 # create the .sh files
@@ -55,7 +55,8 @@ for i in energies:
     shfile.write('process_id=$1'+'\n')
     shfile.write('echo "process $process_id"'+'\n')
     shfile.write('echo "ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log"'+'\n')
-    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log'+'\n')
+    #shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0.176 1." --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log'+'\n')
+    shfile.write('ddsim --compactFile='+parent_dir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+parent_dir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.root --part.userParticleHandler='' -G --gun.position="0.,0*mm,-1*cm" --gun.direction "0 0. 5.67" --gun.energy "'+str(i)+'*GeV" --gun.particle="'+args.particle+'" -N 10 >& '+outputarea+'Log_'+args.geometry+'_'+args.particle+str(i)+'gev_$process_id.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -77,7 +78,7 @@ for i in energies:
     jdlfile.write("Log = "+stdarea+args.particle+"$(cluster)_$(process).condor"+'\n')
     jdlfile.write("Arguments = $(process)"+'\n')
     jdlfile.write("request_memory = 4GB"+'\n')
-    jdlfile.write('Queue 38' + '\n') # run jobs in parallel
+    jdlfile.write('Queue 50' + '\n') # run jobs in parallel
     jdlfile.close()
 print("jdl file closed")
 

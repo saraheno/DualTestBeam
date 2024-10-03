@@ -26,7 +26,6 @@
 		Nsize is the number of cells to make zmin is where the dtector goes-->
 
 		<dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgap+EcalHcalgap" z1="killthick"/>
-		<!dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z1="killthick"/>
 
 		<!-- not in core and hole rmind is not used -->
 		<structure>

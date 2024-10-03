@@ -41,14 +41,15 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   std::cout<<"file name is "<<inputfilename<<std::endl;
   TFile *f = new TFile(inputfilename);
   TH1F* nhist = static_cast<TH1F*>(f->Get(histname)->Clone());
+  nhist->GetXaxis()->SetLimits(0,1.5);
   Int_t imax = nhist->GetMaximumBin();
   Double_t amax = nhist->GetBinCenter(imax);
   std::cout<<"hist max at "<<amax<<std::endl;
   Double_t arms = nhist->GetRMS();
   Double_t amean = nhist->GetMean();
   std::cout<<"hist mean rms is "<<amean<<" "<<arms<<std::endl;
-  TF1 *f1 = new TF1("f1","gaus",amean-5.*arms,amean+5.*arms);
-  nhist->Fit("f1","R");
+  TF1 *f1 = new TF1("f1","gaus",amean-1.5*arms,amean+1.5*arms);
+  nhist->Fit("f1");
   TF1 *fit=nhist->GetFunction("f1");
   Double_t p0= f1->GetParameter(0);
   Double_t p1= f1->GetParameter(1);
@@ -141,9 +142,9 @@ void ResvE() {
   //double Marco_x[7]={5.206,10.528,15.944,31.143,61.259,121.14,288.60};
   //auto marco_g = new TGraph(7,Marco_x,Marco_y);
   //marco_g->Fit("f2");
-  TF1 *mC = new TF1("MC","sqrt(0.7*0.7/x+0.11*0.11)",0,110);
-  TF1 *mS = new TF1("MS","sqrt(0.32*0.32/x+0.08*0.08)",0,110);
-  TF1 *mD = new TF1("MD","sqrt(0.25*0.25/x+0.01*0.01)",0,110);
+  TF1 *mC = new TF1("MC","sqrt(0.7*0.7/x+0.11*0.11)",6,110);
+  TF1 *mS = new TF1("MS","sqrt(0.32*0.32/x+0.08*0.08)",6,110);
+  TF1 *mD = new TF1("MD","sqrt(0.25*0.25/x+0.01*0.01)",6,110);
 
 
 
@@ -202,9 +203,9 @@ void ResvE() {
   //gStyle->SetOptFit();
 
   float x1_l = 0.85;
-  float y1_l = 0.90;
+  float y1_l = 0.80;
   float dx_l = 0.35;
-  float dy_l = 0.28;
+  float dy_l = 0.25;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
   TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
@@ -214,9 +215,10 @@ void ResvE() {
 
   TH1 *frame = new TH1F("frame","",1000,0,110);
   frame->SetMinimum(0.01);
-  frame->SetMaximum(0.3);
+  frame->SetMaximum(0.5);
   frame->SetStats(0);
-  frame->SetTitle("FSCEP pi- Resolution vs Energy");
+  //frame->SetTitle("Sampling HCAL pi- Resolution vs Energy");
+  frame->SetTitle("FSCEP HCAL pi- Resolution vs Energy");
   frame->GetXaxis()->SetTitle("Beam Energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
   frame->GetXaxis()->SetLabelSize(0.03);
@@ -231,16 +233,16 @@ void ResvE() {
    
   mC->SetLineColor(kBlue);
   mC->SetLineStyle(2);
-  mC->Draw("same");
-  lgd->AddEntry(mC, "Marco's C resolution", "l");
+  //mC->Draw("same");
+  //lgd->AddEntry(mC, "Marco's C resolution", "l");
   mS->SetLineColor(kGreen);
   mS->SetLineStyle(2);
-  mS->Draw("same");
-  lgd->AddEntry(mS, "Marco's S resolution", "l");
+  //mS->Draw("same");
+  //lgd->AddEntry(mS, "Marco's S resolution", "l");
   mD->SetLineColor(kRed);
   mD->SetLineStyle(2);
-  mD->Draw("same");
-  lgd->AddEntry(mD, "Marco's dual resolution", "l");
+  //mD->Draw("same");
+  //lgd->AddEntry(mD, "Marco's dual resolution", "l");
   
 
   // digitization of Chekanov's 40L-PFQ

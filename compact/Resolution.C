@@ -125,7 +125,7 @@ map<string,int>::iterator sii7;
 map<string,int>::iterator sii8;
 map<string,int>::iterator sii9;
 
-void Resolution_sn(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
+void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
                 const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,
                 const char* ECALleaf, const char* HCALleaf){
 	mapecalslice["air"]=0;
@@ -144,16 +144,16 @@ void Resolution_sn(int num_evtsmax, const char* einputfilename, const char* piin
 	eii6 = mapecalslice.find("crystal2");
 	eii7 = mapecalslice.find("PD2");
 	
-	mapsampcalslice["air"]=0;
-	mapsampcalslice["Iron"]=1;
-	mapsampcalslice["PD1"]=2;
-	mapsampcalslice["PS"]=3;
-	mapsampcalslice["PD2"]=4;
-	mapsampcalslice["PD3"]=5;
-	mapsampcalslice["Quartz"]=6;
-	mapsampcalslice["PD4"]=7;
-	mapsampcalslice["Sep1"]=8;
-	mapsampcalslice["Sep2"]=9;
+	mapsampcalslice["air"]		=0;
+	mapsampcalslice["Iron"]		=1;
+	mapsampcalslice["PD1"]		=2;
+	mapsampcalslice["PS"]		=3;
+	mapsampcalslice["PD2"]		=4;
+	mapsampcalslice["PD3"]		=5;
+	mapsampcalslice["Quartz"]	=6;
+	mapsampcalslice["PD4"]		=7;
+	mapsampcalslice["Sep1"]		=8;
+	mapsampcalslice["Sep2"]		=9;
 	
 	sii1 = mapsampcalslice.find("Iron");
 	sii2 = mapsampcalslice.find("PD1");
@@ -198,25 +198,25 @@ void Resolution_sn(int num_evtsmax, const char* einputfilename, const char* piin
 	  eenergy.push_back( new TH1F(Form("elenergy_%zu", i), Form("e-: %s", energy_title[i]), 100, 0.0, energy_hbin[i]));
 	  pienergy.push_back(new TH1F(Form("pienergy_%zu", i), Form("pi-: %s",energy_title[i]), 100, 0.0, energy_hbin[i]));
 	  if (i>3) { continue;}
-	  ephoton.push_back(new  TH1F(Form("elnphoton_%zu",i), Form("e-: %s", nphoton_title[i]), 50, 0.0, 1.5));
-	  piphoton.push_back(new TH1F(Form("pinphoton_%zu",i), Form("pi-: %s",nphoton_title[i]), 50, 0.0, 1.5));
+	  ephoton.push_back(new  TH1F(Form("elnphoton_%zu",i), Form("e-: %s", nphoton_title[i]), 100, 0.0, 1.5));
+	  piphoton.push_back(new TH1F(Form("pinphoton_%zu",i), Form("pi-: %s",nphoton_title[i]), 100, 0.0, 1.5));
 	}
 	
-	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 50,-1.,5.);  
-	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 50,-1.,5.);
+	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 100,0.,1.5);  
+	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 100,0.,1.5);
 		
-	TH2F *ehcEcalNsNc	= new TH2F("ehcEcalNsNc","e-  ecal ncer vs nscint",100,0.,1.5,100,0.,1.5);
-	TH2F *phcEcalNsNc	= new TH2F("phcEcalNsNc","pi- ecal ncer vs nscint",100,0.,1.5,100,0.,1.5);
-	TH2F *ehcHcalNsNc	= new TH2F("ehcHcalNsNc","e-  hcal ncer vs nscint",100,0.,1.5,100,0.,1.5);
-	TH2F *phcHcalNsNc	= new TH2F("phcHcalNsNc","pi- hcal ncer vs nscint",100,0.,1.5,100,0.,1.5);
+	TH2F *ehcEcalNsNc	= new TH2F("ehcEcalNsNc","e-  ecal ncer vs nscint",500,0.,1.5,500,0.,1.5);
+	TH2F *phcEcalNsNc	= new TH2F("phcEcalNsNc","pi- ecal ncer vs nscint",500,0.,1.5,500,0.,1.5);
+	TH2F *ehcHcalNsNc	= new TH2F("ehcHcalNsNc","e-  hcal ncer vs nscint",500,0.,1.5,500,0.,1.5);
+	TH2F *phcHcalNsNc	= new TH2F("phcHcalNsNc","pi- hcal ncer vs nscint",500,0.,1.5,500,0.,1.5);
 	
-	TH2F *ehcEcalMarco	= new TH2F("ehcEcalMarco","e-  ecal c v c/s",100,0.,1.5,100,0.,1.5);
-	TH2F *phcEcalMarco	= new TH2F("phcEcalMarco","pi- ecal c v c/s",100,0.,1.5,100,0.,1.5);
-	TH2F *ehcHcalMarco	= new TH2F("ehcHcalMarco","e-  hcal c v c/s",100,0.,1.5,100,0.,1.5);
-	TH2F *phcHcalMarco	= new TH2F("phcHcalMarco","pi- hcal c v c/s",100,0.,1.5,100,0.,1.5);
+	TH2F *ehcEcalMarco	= new TH2F("ehcEcalMarco","e-  ecal c v c/s",500,0.,1.5,500,0.,1.5);
+	TH2F *phcEcalMarco	= new TH2F("phcEcalMarco","pi- ecal c v c/s",500,0.,1.5,500,0.,1.5);
+	TH2F *ehcHcalMarco	= new TH2F("ehcHcalMarco","e-  hcal c v c/s",500,0.,1.5,500,0.,1.5);
+	TH2F *phcHcalMarco	= new TH2F("phcHcalMarco","pi- hcal c v c/s",500,0.,1.5,500,0.,1.5);
 	
-	TH2F *ehcHcalf1f2	= new TH2F("ehcHcalf1f2","e-  hcal-fiber scint vs cer",100,0.,2.5,100,0.,2.5);
-	TH2F *phcHcalf1f2	= new TH2F("phcHcalf1f2","pi- hcal-fiber scint vs cer",100,0.,2.5,100,0.,2.5);
+	TH2F *ehcHcalf1f2	= new TH2F("ehcHcalf1f2","e-  hcal-fiber scint vs cer",500,0.,2.5,500,0.,2.5);
+	TH2F *phcHcalf1f2	= new TH2F("phcHcalf1f2","pi- hcal-fiber scint vs cer",500,0.,2.5,500,0.,2.5);
 	
 	TH1F *ehaphcal		= new TH1F("ehaphcal","e-  hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
 	TH1F *phaphcal		= new TH1F("phaphcal","pi- hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
@@ -235,8 +235,8 @@ void Resolution_sn(int num_evtsmax, const char* einputfilename, const char* piin
 	TH1F *piecaltime	= new TH1F("piecaltime","pi- ecal: time",100,0.,40.);
 	TH1F *pihcaltime	= new TH1F("pihcaltime","pi- hcal: time",100,0.,40.);
 	
-	TH2F *enscvni		= new TH2F("enscvni", "e-  (alldepositE-edgeE) vs num_inelastic",100,0.,1.2,100,0.,1000);
-	TH2F *pinscvni		= new TH2F("pinscvni","pi- (alldepositE-edgeE) vs num_inelastic",100,0.,1.2,100,0.,1000);
+	TH2F *enscvni		= new TH2F("enscvni", "e-  (alldepositE-edgeE) vs num_inelastic",500,0.,1.2,100,0.,500);
+	TH2F *pinscvni		= new TH2F("pinscvni","pi- (alldepositE-edgeE) vs num_inelastic",500,0.,1.2,100,0.,500);
 
 	TH1F *heesumcal 	= new TH1F("heesumcal",		"electron energy in calorimeter",		400,0.,1.5);
 	TH1F *heesumemcal 	= new TH1F("heesumemcal",	"electron relativistic energy in calorimeter",	400,0.,1.5);
@@ -1094,8 +1094,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 				}
 				if( islice==(*sii3).second ) eesumfiber1+=ah; // scint
 				if( islice==(*sii6).second ) eesumfiber2+=ah;  //cer
-				if( (islice==(*sii1).second)||(islice==(*sii8).second)||(islice==(*sii9).second) ) eesumabs+=ah;
-				if(  (islice==(*sii2).second) || (islice==(*sii4).second) ||  (islice==(*sii5).second) || (islice==(*sii7).second)) eesumPDh+=ah;
+				if( (islice==(*sii1).second) || (islice==(*sii8).second) || (islice==(*sii9).second) ) eesumabs+=ah;
+				if( (islice==(*sii2).second) || (islice==(*sii4).second) || (islice==(*sii5).second) || (islice==(*sii7).second)) eesumPDh+=ah;
 			} //end of hcal sampling
 		}  // end loop over hcal hits
 	}//end of if dohcal
