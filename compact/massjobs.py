@@ -108,7 +108,7 @@ while (i<nenergy):
     jdlfile.write("should_transfer_files = NO"+'\n')
 #    jdlfile.write("Requirements = machine == \"hepcms-rubin.privnet\""+'\n')
     jdlfile.write("request_memory = 15GB"+'\n')
-    jdlfile.write("RequestCpus = 4"+'\n')
+#    jdlfile.write("RequestCpus = 4"+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stdout"+'\n')
     jdlfile.write("Error = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stderr"+'\n')
     jdlfile.write("Log = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).condor"+'\n')
