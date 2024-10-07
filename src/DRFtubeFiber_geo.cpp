@@ -147,7 +147,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   sol = Tube(0.,fX_hole.rmax(),hzlength);
   Volume scint_hole_vol( fX_core1.nameStr()+"_hole", sol, mat);
   scint_hole_vol.setAttributes(description, fX_hole.regionStr(), fX_hole.limitsStr(), fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzph));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzph));
   pv    = scint_hole_vol.placeVolume(fiber_scint_vol, trafo);
   pv.addPhysVolID("type",1); // label fiber volume (in hole)
   cout << setw(28) << left << scint_hole_vol.name()
@@ -156,7 +156,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzlength-hzph));
   pv = scint_hole_vol.placeVolume(phdet1_vol, trafo);
   pv.addPhysVolID("type",3);
 
@@ -167,7 +167,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // absorberhole with a quartz inside
   Volume quartz_hole_vol( fX_core2.nameStr()+"_hole", sol, mat);
   quartz_hole_vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzph));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzph));
   pv = quartz_hole_vol.placeVolume(fiber_quartz_vol,trafo);
   pv.addPhysVolID("type",2);  // label quartz volume (in hole)
   cout << setw(28) << left << quartz_hole_vol.name()
@@ -176,7 +176,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzlength-hzph));
   pv = quartz_hole_vol.placeVolume(phdet2_vol, trafo);
   pv.addPhysVolID("type",4);
 
@@ -220,7 +220,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // setup the volumes with the shapes and properties in one horixontal layer
   double dx = 2*(Ncount + Ncount+1)/2e0 * (hthick+agap) + tol;
   double dy = hthick + tol;
-  double dz = hzlength+hzph + tol;
+  double dz = hzlength + tol;
   Box    tube_row_box(dx, dy, dz);
   Volume tube_row_vol("layer", tube_row_box, air);
   tube_row_vol.setVisAttributes(description, x_det.visStr());
