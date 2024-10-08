@@ -12,7 +12,6 @@
 //==========================================================================
 
 // Framework include files
-
 #include <algorithm>
 #include <CLHEP/Units/PhysicalConstants.h>
 #include "DualCrysCalorimeterHit.h"
@@ -25,447 +24,353 @@
 using namespace std;
 
 // way too slow if track all photons for now
-// so randomly delete photons after creation according to this fraction
+//   so randomly delete photons after creation according to this fraction
+//   dialScint=1.0, dialCer=1.0 to keep all photons 
 double dialCher= 100./8000.;
 double dialScint=10./200000.;
-//double dialCher= 1.;
-//double dialScint=1.;
-float betarel=1/1.544; //depends on the media refractive index
-//float betarel=0.;
+float betarel=1/1.544;	//depends on the media refractive index
 int printlimitSCE=10;
 int MAXEVENT=10;
 
-// this doesn't work.  it is in mks
-//double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
-
-
-
 namespace CalVision {
-
-  G4double fromEvToNm(G4double energy)
-  {
-    // there is some bug somewhere.  shouldn't need this facto
-    //return  conversioneVnm/ energy*1000.;
-    return 1239.84187 / energy*1000.;
-  }
-
-  int SCECOUNT=0;
-  int SCECOUNT2=0;
-  int OLDEVENTNUMBER=-1;
-
-  class DualCrysCalorimeterSD {
-  public:
-    typedef DualCrysCalorimeterHit Hit;
-    // If we need special data to personalize the action, be put it here
-    //int mumDeposits = 0;
-    //double integratedDeposit = 0;
-  };
+	G4double fromEvToNm(G4double energy){
+		// there is some bug somewhere.  shouldn't need this factor
+		//return  conversioneVnm/ energy*1000.;
+		return 1239.84187 / energy*1000.;
+	}	
+	int SCECOUNT=0;
+	int SCECOUNT2=0;
+	int OLDEVENTNUMBER=-1;
+	class DualCrysCalorimeterSD {
+		public:
+			typedef DualCrysCalorimeterHit Hit;
+			// If we need special data to personalize the action, put it here
+			//int mumDeposits = 0;
+			//double integratedDeposit = 0;
+			};
 }
 
-/// Namespace for the AIDA detector description toolkit
-namespace dd4hep {
-  /// Namespace for the Geant4 based simulation part of the AIDA detector description toolkit
-  namespace sim   {
-    using namespace CalVision;
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    //               Geant4SensitiveAction<MyTrackerSD>
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    /** \addtogroup Geant4SDActionPlugin
-     *
-     * @{
-     * \package DualCrysCalorimeterSDAction
-     *
-     * @}
-     */
-
-    /// Define collections created by this sensitivie action object
-    template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::defineCollections()    {
-      m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrysCalorimeterSD::Hit>();
-    }
-    /// Method for generating hit(s) using the information of G4Step object.
-    template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
-      Geant4Event&  evt = context()->event();
-      int eventNumber = static_cast<G4Event const&>(context()->event()).GetEventID();
-      if(eventNumber != OLDEVENTNUMBER) {
-	if(eventNumber<MAXEVENT) {
-        std::cout<<" SDAction event number is "<<eventNumber<<std::endl;
-        OLDEVENTNUMBER=eventNumber;
-        SCECOUNT=0;
-        SCECOUNT2=0;
-	}
-      }
-
-      if((eventNumber==1)&&(SCECOUNT==1)) {
-	cout<<"event number is "<<eventNumber<<endl;
-	cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<endl;
-	cout<<"dialCher is "<<dialCher<<endl;
-	cout<<"dialScint is "<<dialScint<<endl;
-	cout<<" you need to use this to interpret your results"<<endl;
-	cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
-      }
-      bool SCEPRINT=(SCECOUNT<printlimitSCE);
-      G4StepPoint *thePrePoint = step->GetPreStepPoint();
-      G4StepPoint *thePostPoint = step->GetPostStepPoint();
-      //      const G4ThreeVector &thePrePosition = thePrePoint->GetPosition();
-      //const G4ThreeVector &thePostPosition = thePostPoint->GetPosition();
-      G4VPhysicalVolume *thePrePV = thePrePoint->GetPhysicalVolume();
-      G4double pretime = thePrePoint->GetGlobalTime();
-      G4VPhysicalVolume *thePostPV = thePostPoint->GetPhysicalVolume();
-      G4double posttime = thePostPoint->GetGlobalTime();
-      G4String thePrePVName = "";
-      if (thePrePV)
-	thePrePVName = thePrePV->GetName();
-      G4String thePostPVName = "";
-      if (thePostPV)
-	thePostPVName = thePostPV->GetName();
-
-      Geant4StepHandler h(step);
-      HitContribution contrib = DualCrysCalorimeterHit::extractContribution(step);
-
-      Geant4HitCollection*  coll    = collection(m_collectionID);
-      VolumeID cell = 0;
-
-      try {
-        cell = cellID(step);
-      } catch(std::runtime_error &e) {
-	stringstream out;
-        out << setprecision(20) << scientific;
-        out << "ERROR: " << e.what()  << endl;
-        out << "Position: "
-            << "Pre (" <<  setw(24) << step->GetPreStepPoint()->GetPosition() << ") "
-            << "Post (" << setw(24) << step->GetPostStepPoint()->GetPosition() << ") "
-            << std::endl;
-        out << "Momentum: "
-            << " Pre (" <<setw(24) << step->GetPreStepPoint() ->GetMomentum()  << ") "
-            << " Post (" <<setw(24) << step->GetPostStepPoint()->GetMomentum() << ") "
-            << std::endl;
-
-	cout << out.str();
-
-        return true;
-      }
-
-
-      DualCrysCalorimeterHit* hit = coll->findByKey<DualCrysCalorimeterHit>(cell);
-      if ( !hit ) {
-        Geant4TouchableHandler handler(step);
-	DDSegmentation::Vector3D pos = m_segmentation.position(cell);
-        Position global = h.localToGlobal(pos);
-        hit = new DualCrysCalorimeterHit(global);
-        hit->cellID = cell;
-        coll->add(cell, hit);
-        printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
-                contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	if(SCECOUNT2<printlimitSCE) {
-	  cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<endl;
-	  if(SCECOUNT2<printlimitSCE+1) SCECOUNT2+=1;
-	}
-
-        if ( 0 == hit->cellID )  { // for debugging only!
-          hit->cellID = cellID(step);
-          except("+++ Invalid CELL ID for hit!");
-        }
-      } else {
-	//	std::cout<<"updating old hit"<<std::endl;
-      }
-
-      G4Track * track =  step->GetTrack();
-      string amedia = ((track->GetMaterial())->GetName());
-      //      if(SCEPRINT) std::cout<<"track name is "<< (track->GetDefinition())->GetParticleName()<<std::endl;
-      float avearrival=(pretime+posttime)/2.;
-      int jbin=-1;
-      float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
-      jbin = (avearrival-hit->timemin)/tbinsize;
-      jbin = std::min(jbin,(hit->nfinebin)-1);
-
-      if(thePostPoint->GetProcessDefinedStep()->GetProcessName().contains("Inelast")){
-	hit->n_inelastic+=1;
-      }
-
-      //photons
-      if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
-	if(SCEPRINT) cout<<"     in volume ID "<<cell<<endl;
-	if(SCECOUNT<printlimitSCE+1) SCECOUNT+=1;
-	//	if(SCEPRINT) std::cout<<"optical photon"<<std::endl;
-
-	bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")||(track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
-
-	//if(track->GetParentID()!=1) SCEPRINT=1;
-	if( (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "CerenkovPhys")&&(track->GetCreatorProcess()->G4VProcess::GetProcessName() != "ScintillationPhys")  ) SCEPRINT=1;  // print if less than scecount (set earlier) or if photon has weird source
-
-        float wavelength=fromEvToNm(track->GetTotalEnergy()/eV);
-        int ibin=-1;
-        float binsize=(hit->wavelenmax-hit->wavelenmin)/hit->nfinebin;
-        ibin = (wavelength-hit->wavelenmin)/binsize;
-	ibin = std::min(ibin,(hit->nfinebin)-1);
-
-        int xbin=-1;
-        float xbinsize=(hit->xmax-hit->xmin)/hit->ncoarsebin;
-        xbin = (thePrePoint->GetPosition().x()-hit->xmin)/xbinsize;
-
-        int ybin=-1;
-        float ybinsize=(hit->ymax-hit->ymin)/hit->ncoarsebin;
-        ybin = (thePrePoint->GetPosition().y()-hit->ymin)/ybinsize;
-
-	int phstep = track->GetCurrentStepNumber();
+// Namespace for the AIDA detector description toolkit
+namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AIDA detector description toolkit
+	namespace sim   {
+		using namespace CalVision;
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//               Geant4SensitiveAction<MyTrackerSD>
+		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		/** \addtogroup Geant4SDActionPlugin
+		 *
+		 * @{
+		 * \package DualCrysCalorimeterSDAction
+		 *
+		 * @}
+		 */		
+		/// Define collections created by this sensitivie action object
+		template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::defineCollections()    {
+			m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrysCalorimeterSD::Hit>();
+		}
 		
-	if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
-	  if(SCEPRINT) cout<<" found Cerenkov photon"<<endl;
+		// Method for generating hit(s) using the information of G4Step object.
+		template <> bool Geant4SensitiveAction<DualCrysCalorimeterSD>::process(const G4Step* step,G4TouchableHistory* /*hist*/ ) {
+			Geant4Event&  evt = context()->event();
+			int eventNumber = static_cast<G4Event const&>(context()->event()).GetEventID();
+			if(eventNumber != OLDEVENTNUMBER) {
+				if(eventNumber<MAXEVENT) {
+					cout<< " SDAction event number is " << eventNumber << endl;
+					OLDEVENTNUMBER=eventNumber;
+					SCECOUNT=0;
+					SCECOUNT2=0;
+				}
+			}	
+			if(( eventNumber == 1 ) && ( SCECOUNT == 1 ) ) {
+				cout << "Info to interpret results:"		 << endl;
+				cout << "	event number is " << eventNumber << endl;
+				cout << "	DANGER DANGER "   		 << endl;
+				cout << "	dialCher = "	  <<dialCher 	 << endl;
+				cout << "	dialScint = "     <<dialScint	 << endl;
+				cout << "	relativistic particles count with beta = " << betarel << " adjust with media RI" << endl;
+			}
+			
+			bool SCEPRINT = ( SCECOUNT < printlimitSCE);
+			G4StepPoint *thePrePoint  = step->GetPreStepPoint();
+			G4StepPoint *thePostPoint = step->GetPostStepPoint();
+			
+			G4VPhysicalVolume *thePrePV 	= thePrePoint->GetPhysicalVolume();
+			G4double pretime 		= thePrePoint->GetGlobalTime();
+			G4VPhysicalVolume *thePostPV 	= thePostPoint->GetPhysicalVolume();
+			G4double posttime 		= thePostPoint->GetGlobalTime();
+			
+			G4String thePrePVName  = "";
+			if (thePrePV)	thePrePVName = thePrePV->GetName();
+			G4String thePostPVName = "";
+			if (thePostPV)	thePostPVName = thePostPV->GetName();
+			Geant4StepHandler h(step);
+			HitContribution contrib = DualCrysCalorimeterHit::extractContribution(step);
+			Geant4HitCollection*  coll    = collection(m_collectionID);
+			VolumeID cell = 0;	
+			try {
+				cell = cellID(step);
+			} catch(std::runtime_error &e) {
+				stringstream out;
+				out << setprecision(20) << scientific;
+				out << "ERROR: " << e.what()  << endl;
+				out << "Position: "
+					<< "Pre (" <<  setw(24) << step->GetPreStepPoint()->GetPosition() << ") "
+					<< "Post (" << setw(24) << step->GetPostStepPoint()->GetPosition() << ") "
+					<< endl;
+				out << "Momentum: "
+					<< " Pre (" <<setw(24) << step->GetPreStepPoint() ->GetMomentum()  << ") "
+					<< " Post (" <<setw(24) << step->GetPostStepPoint()->GetMomentum() << ") "
+					<< endl;
+				cout << out.str();
+				return true;
+			}
+			
+			DualCrysCalorimeterHit* hit = coll->findByKey<DualCrysCalorimeterHit>(cell);
+			if ( !hit ) {
+				Geant4TouchableHandler handler(step);
+				DDSegmentation::Vector3D pos = m_segmentation.position(cell);
+				Position global = h.localToGlobal(pos);
+				hit = new DualCrysCalorimeterHit(global);
+				hit->cellID = cell;
+				coll->add(cell, hit);
+				printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
+				        contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
+				if(SCECOUNT2<printlimitSCE) {
+				  cout << "DRcalo deposit " << contrib.deposit << " position (" <<
+					  pos.X << "," << pos.Y << "," << pos.Z << ") string "  <<
+					  handler.path().c_str() << " volume id " << cell << " event " << eventNumber << endl;
+				  if(SCECOUNT2<printlimitSCE+1) SCECOUNT2+=1;
+				}
+				if ( 0 == hit->cellID )  { // for debugging only!
+					hit->cellID = cellID(step);
+					except("+++ Invalid CELL ID for hit!");
+				}
+			}
+			G4Track * track =  step->GetTrack();
+			string amedia = ((track->GetMaterial())->GetName());
+			float avearrival=(pretime+posttime)/2.;
+			int jbin=-1;
+			float tbinsize=(hit->timemax-hit->timemin)/hit->nfinebin;
+			jbin = (avearrival-hit->timemin)/tbinsize;
+			jbin = std::min(jbin,(hit->nfinebin)-1);
+			if(thePostPoint->GetProcessDefinedStep()->GetProcessName().contains("Inelast")) hit->n_inelastic+=1;
+			
+			//photons
+			if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
+				if(SCEPRINT)	cout << "     in volume ID " << cell << endl;
+				if(SCECOUNT<printlimitSCE+1)	SCECOUNT+=1;
+				
+				bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")
+					||  (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
+				// print if less than scecount (set earlier) or if photon has weird source
+				if( (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "CerenkovPhys")
+				&&  (track->GetCreatorProcess()->G4VProcess::GetProcessName() != "ScintillationPhys")  ) SCEPRINT=1;
 
-	  if(amedia.find("kill")!=string::npos) 
-	    { 
-	      if(SCEPRINT) cout<<"killing photon"<<endl;
-	      if(phstep>1) {  // don't count photons created in kill media
-		hit->ncerenkov+=1;
-                if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
-                if(SCEPRINT) cout<<" cer photon kill pre time "<<pretime<<endl;
-                if(SCEPRINT) cout<<" cer photon kill post time "<<posttime<<endl;
-	      }
-	      track->SetTrackStatus(fStopAndKill);
-	    }
-	  else if(amedia.find("BlackHole")!=string::npos) {
-	      if(phstep>1) {  // don't count photons created in kill media
-		hit->ncerenkov+=1;
-	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-              if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      }
-	      track->SetTrackStatus(fStopAndKill);
-	  }
-	  else {
-	    if( (phstep==1)  ) {
-	      hit->ncerenkov+=1;
-	      if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-              if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      //Geant4Event&  evt = context()->event();
-	      dd4hep::sim::Geant4Random& rnd = evt.random();
-	      if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
-	    }
-	  }
+				float wavelength = fromEvToNm(track->GetTotalEnergy()/eV);
+				int ibin=-1;
+				float binsize    = (hit->wavelenmax - hit->wavelenmin) / hit->nfinebin;
+				ibin = (wavelength - hit->wavelenmin) / binsize;
+				ibin = std::min(ibin, (hit->nfinebin) - 1);
+				
+				int xbin=-1;
+				float xbinsize   = (hit->xmax - hit->xmin) / hit->ncoarsebin;
+				xbin = (thePrePoint->GetPosition().x() - hit->xmin) / xbinsize;
+
+				int ybin=-1;
+				float ybinsize=(hit->ymax - hit->ymin) / hit->ncoarsebin;
+				ybin = (thePrePoint->GetPosition().y() - hit->ymin) / ybinsize;
+
+				int phstep = track->GetCurrentStepNumber();
+				if ( track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")  {
+					if(SCEPRINT) cout << " found Cerenkov photon" << endl;
+					if(amedia.find("kill")!=string::npos){
+						if(SCEPRINT) cout << "	killing photon" << endl;
+						if(phstep>1) {  // don't count photons created in kill media
+							hit->ncerenkov+=1;
+							if(ibin > -1 && ibin < hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+							if(jbin > -1 && jbin < hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+							if(SCEPRINT) cout<<" cer photon kill pre time "  << pretime  << endl;
+							if(SCEPRINT) cout<<" cer photon kill post time " << posttime << endl;
+						}
+						track->SetTrackStatus(fStopAndKill);
+					}
+					else if(amedia.find("BlackHole")!=string::npos) {
+						if(phstep>1) {  // don't count photons created in kill media
+							hit->ncerenkov += 1;
+							if(ibin > -1 && ibin < hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+							if(jbin > -1 && jbin < hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+						}
+						track->SetTrackStatus(fStopAndKill);
+					}
+					else {
+						if( (phstep==1)  ) {
+							hit->ncerenkov += 1;
+							if(ibin > -1 && ibin < hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
+							if(jbin > -1 && jbin < hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+							dd4hep::sim::Geant4Random& rnd = evt.random();
+							if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
+						}
+					}
+				}
+				else if (  track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys"  ) {
+					if(SCEPRINT) cout << "found Scintillation photon" << endl;
+					std::string amedia = ((track->GetMaterial())->GetName());
+					if(amedia.find("kill")!=std::string::npos) {
+						if(SCEPRINT) cout << "	killing photon " << endl;
+						if(phstep>1) {
+							hit->nscintillator += 1;
+							if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+							if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+							if(SCEPRINT) cout<<"		scint photon kill pre time "  << pretime  << endl;
+							if(SCEPRINT) cout<<"		scint photon kill post time " << posttime << endl;
+						}
+						track->SetTrackStatus(fStopAndKill);
+					}
+					else if(amedia.find("BlackHole")!=std::string::npos) {
+						if(phstep>1) {  // don't count photons created in kill media
+							hit->nscintillator += 1;
+							if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+							if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+						}
+						track->SetTrackStatus(fStopAndKill);
+					}
+					else {
+						if( (phstep==1) ) {
+							hit->nscintillator += 1; 
+							if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
+							if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+							//Geant4Event&  evt = context()->event();
+							dd4hep::sim::Geant4Random& rnd = evt.random();
+							if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
+						}
+					}
+				}
+				else {
+					if(SCEPRINT) cout << "other photon" << endl;
+					track->SetTrackStatus(fStopAndKill);
+				}
+				
+				if(SCEPRINT) {
+					cout<< " SCECOUNT="<<SCECOUNT<<std::endl;
+					cout<< " event number is " << eventNumber<<std::endl;
+					cout<< " Found photon:   " << track->GetCreatorProcess()->G4VProcess::GetProcessName() 		<< endl;
+					cout<< "   PreVolume name:  		" << thePrePVName					<< endl;
+                                        cout<< "   PostVolume name: 		" << thePostPVName					<< endl;
+					cout<< "   photon mother:   		" << track->GetParentID()				<< endl;
+					cout<< "   photon material: 		" << (track->GetMaterial())->GetName()			<< endl;
+					cout<< "   photon creator process: 	" << (track->GetCreatorProcess())->GetProcessName()	<< endl;
+					cout<< "   photon  process type: 	" << (track->GetCreatorProcess())->GetProcessType()	<< endl;
+					cout<< "   photon sub process: 		" << (track->GetCreatorProcess())->GetProcessSubType()	<< endl;
+					cout<< "   photon current step number: 	" << track->GetCurrentStepNumber()			<< endl;
+					cout<< "   photon energy: 		" << track->GetTotalEnergy() / eV			<< endl;
+					cout<< "   photon wavelength: 		" << fromEvToNm(track->GetTotalEnergy() / eV)		<< endl;
+					cout<< "   number of cherenkov:		" << hit->ncerenkov					<< endl;
+					cout<< "   number of scintillation: 	" << hit->nscintillator					<< endl;
+				}
+			}
+			else {   // particles other than optical photons
+				if(SCEPRINT) cout << " NOT optical photon" << endl;
+				if(amedia.find("BlackHole")!=std::string::npos) {  //edge detector, not the kill PD media
+					hit->energyDeposit += track->GetKineticEnergy();
+					track->SetTrackStatus(fStopAndKill);
+				} 
+				else { //add information about each contribution to the hit
+					hit->truth.emplace_back(contrib);
+					hit->energyDeposit += contrib.deposit;
+					
+					float aabeta=track->GetVelocity()/CLHEP::c_light;
+					hit->contribBeta.emplace_back(aabeta);
+					hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
+					if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
+					if(aabeta>betarel) {
+						hit->edeprelativistic+=contrib.deposit;	  
+						if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
+					}
+				}// comment for this routine says mark the track to be kept for MC truth propagation during hit processing
+			}
+			mark(h.track);
+			return true;
+		}
 	}
-	else if (  track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys"  ) {
-          if(SCEPRINT) std::cout<<"     scintillation photon"<<std::endl;
-	  std::string amedia = ((track->GetMaterial())->GetName());
-	  if(amedia.find("kill")!=std::string::npos) 
-	    {
-	      if(SCEPRINT) std::cout<<"killing photon"<<std::endl;
-	      //std::cout<<"killing photon"<<std::endl;
-	      if(phstep>1) {
-		hit->nscintillator+=1;
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
-
-                if(SCEPRINT) std::cout<<" scint photon kill pre time "<<pretime<<std::endl;
-                if(SCEPRINT) std::cout<<" scint photon kill post time "<<posttime<<std::endl;
-	      }
-	      track->SetTrackStatus(fStopAndKill);}
-	  else if(amedia.find("BlackHole")!=std::string::npos) {
-	      if(phstep>1) {  // don't count photons created in kill media
-		hit->nscintillator+=1;
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
-
-	      }
-	      track->SetTrackStatus(fStopAndKill);
-	  }
-	  else {
-	    //	    if( (track->GetParentID()==1)&&(track->GetCurrentStepNumber()==1) ) hit->nscintillator+=1; 
-	    if( (phstep==1) ) {
-	      hit->nscintillator+=1; 
-		if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
-
-
-		//Geant4Event&  evt = context()->event();
-	      dd4hep::sim::Geant4Random& rnd = evt.random();
-	      if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
-	    }
-	  }
-
-          //return false;
-        }
-	else {
-          if(SCEPRINT) std::cout<<"      other photon"<<std::endl;
-          track->SetTrackStatus(fStopAndKill);
-          //return false;
-	}
-
-	if(SCEPRINT) {
-	  std::cout<<"     SCECOUNT="<<SCECOUNT<<std::endl;
-	  std::cout<<"     event number is "<<eventNumber<<std::endl;
-	  std::cout<<"     will robinson have photon "<<track->GetCreatorProcess()->G4VProcess::GetProcessName() <<std::endl;
-	  std::cout<<"     photon mother is "<<track->GetParentID()<<std::endl;
-	  std::cout<<"     photon material is "<<(track->GetMaterial())->GetName()<<std::endl;
-	  std::cout<<"     photon creator process is "<<(track->GetCreatorProcess())->GetProcessName()<<std::endl;
-	  std::cout<<"     photon  process  type is "<<(track->GetCreatorProcess())->GetProcessType()<<std::endl;
-	  std::cout<<"     photon sub process is "<<(track->GetCreatorProcess())->GetProcessSubType()<<std::endl;
-	  std::cout<<"     photon current step number is "<<track->GetCurrentStepNumber()<<std::endl;
-	  std::cout<<"     the pre volume name is "<<thePrePVName<<std::endl;
-	  std::cout<<"     the post volume name is "<<thePostPVName<<std::endl;
-	//(track->GetCreatorProcess())->DumpInfo();
-	  std::cout<<"     photon energy is "<<track->GetTotalEnergy()/eV<<std::endl;
-	  std::cout<<"     photon wavelength is "<<fromEvToNm(track->GetTotalEnergy()/eV)<<std::endl;
-	  std::cout<<"     number of cherenkov is  is "<<hit->ncerenkov<<std::endl;
-	  std::cout<<"     number of scintillation is  is "<<hit->nscintillator<<std::endl;
-	}
-
-
-
-      }
-      else {   // particles other than optical photons
-	
-      //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
-
-	if(amedia.find("BlackHole")!=std::string::npos) {  //edge detector
-	  // note this is the edge detector, not the kill media of photodetector
-	  hit->energyDeposit += track->GetKineticEnergy();
-	  track->SetTrackStatus(fStopAndKill);
-	} else {
-      //add information about each contribution to the hit
-	  hit->truth.emplace_back(contrib);
-
-	  hit->energyDeposit += contrib.deposit;
-	  //	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light*10000.);
-	  float aabeta=track->GetVelocity()/CLHEP::c_light;
-	  hit->contribBeta.emplace_back(aabeta);
-	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
-	  if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
-	  if(aabeta>betarel) {
-	    hit->edeprelativistic+=contrib.deposit;	  
-	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
-	  }
-
-	  //int tsize = (hit->truth).size();
-	  //if((tsize<hit->ntruthbin)&&(tsize>0)) {
-	  //hit->contribBeta[tsize-1]=track->GetVelocity();
-	  //hit->contribCharge[tsize-1]=(track->GetParticleDefinition())->GetPDGCharge();
-	    //	    std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
-	  //} else {
-	    //std::cout<<"tsize is "<<tsize<<" ntruthbin is "<<hit->ntruthbin<<std::endl;
-
-	  //}
-
-	}
-
-
-	// comment for this routine says Mark the track to be kept for MC truth propagation during hit processing
-
-
-        //return true;
-      }
-
-      mark(h.track);
-	
-      return true;
-
-    }
-	
-  }
 } // end namespace calvision
 
-
-
-
-
-
-
-namespace dd4hep { namespace sim {
-
-    using namespace CalVision;
-
-    struct WavelengthMinimumCut : public dd4hep::sim::Geant4Filter  {
-  /// Energy cut value
-      double m_wavelengthCut;
-    public:
-  /// Constructor.
-      WavelengthMinimumCut(dd4hep::sim::Geant4Context* c, const std::string& n);
-  /// Standard destructor
-      virtual ~WavelengthMinimumCut();
-  /// Filter action. Return true if hits should be processed
-      virtual bool operator()(const G4Step* step) const  override  final  {
-	bool test=true;
-	G4Track *theTrack = step->GetTrack();
-	if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
-	  float energy=theTrack->GetTotalEnergy()/eV;
-	  float wave=fromEvToNm(energy);
-	  if(wave < m_wavelengthCut) {
-	    theTrack->SetTrackStatus(fStopAndKill);
-	    test=false;}
+namespace dd4hep { 
+	namespace sim {
+		using namespace CalVision;
+		struct WavelengthMinimumCut : public dd4hep::sim::Geant4Filter  {// Energy cut value
+			double m_wavelengthCut;
+			public: // Constructor.
+			WavelengthMinimumCut(dd4hep::sim::Geant4Context* c, const std::string& n);
+			virtual ~WavelengthMinimumCut(); // Standard destructor
+			
+			// Filter action. Return true if hits should be processed
+			virtual bool operator()(const G4Step* step) const  override  final  {
+				bool test=true;
+				G4Track *theTrack = step->GetTrack();
+				if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
+					float energy = theTrack->GetTotalEnergy()/eV;
+					float wave   = fromEvToNm(energy);
+					if(wave < m_wavelengthCut) {
+						theTrack->SetTrackStatus(fStopAndKill);
+						test=false;
+					}
+				}
+				return test;
+			}
+			virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
+				return true;
+			}
+		};
+		WavelengthMinimumCut::WavelengthMinimumCut(Geant4Context* c, const std::string& n) //Constructor
+			: Geant4Filter(c,n) {
+				InstanceCount::increment(this);
+				declareProperty("Cut",m_wavelengthCut=0.0);
+			}
+		WavelengthMinimumCut::~WavelengthMinimumCut() { // Standard destructor
+			InstanceCount::decrement(this);
+		}
+		
+		struct WavelengthnmwindCut : public dd4hep::sim::Geant4Filter  { // Energy cut value
+			double m_wavelengthstart;
+			public: // Constructor.
+			WavelengthnmwindCut(dd4hep::sim::Geant4Context* c, const std::string& n);
+			virtual ~WavelengthnmwindCut(); // Standard destructor
+			// Filter action. Return true if hits should be processed
+			virtual bool operator()(const G4Step* step) const  override  final  {
+				bool test=true;
+				G4Track *theTrack = step->GetTrack();
+				if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
+					float energy = theTrack->GetTotalEnergy()/eV;
+					float wave   = fromEvToNm(energy);
+					if((wave < m_wavelengthstart) || (wave > m_wavelengthstart+0.5) ) {
+						theTrack->SetTrackStatus(fStopAndKill);
+						test=false;
+					}
+				}
+				return test;
+			}
+			virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
+				return true;
+			}
+		};
+		WavelengthnmwindCut::WavelengthnmwindCut(Geant4Context* c, const std::string& n) // Constructor.
+			: Geant4Filter(c,n) {
+				InstanceCount::increment(this);
+				declareProperty("Cut",m_wavelengthstart=0.0);
+			}
+		WavelengthnmwindCut::~WavelengthnmwindCut() { // Standard destructor
+			InstanceCount::decrement(this);
+		}
 	}
-	return test;
-      }
-      virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
-	return true;
-      }
-    };
-
-  /// Constructor.
-    WavelengthMinimumCut::WavelengthMinimumCut(Geant4Context* c, const std::string& n)
-      : Geant4Filter(c,n) {
-      InstanceCount::increment(this);
-      declareProperty("Cut",m_wavelengthCut=0.0);
-    }
-
-  /// Standard destructor
-    WavelengthMinimumCut::~WavelengthMinimumCut() {
-      InstanceCount::decrement(this);
-    }
-
-
-
-    struct WavelengthnmwindCut : public dd4hep::sim::Geant4Filter  {
-  /// Energy cut value
-      double m_wavelengthstart;
-    public:
-  /// Constructor.
-      WavelengthnmwindCut(dd4hep::sim::Geant4Context* c, const std::string& n);
-  /// Standard destructor
-      virtual ~WavelengthnmwindCut();
-  /// Filter action. Return true if hits should be processed
-      virtual bool operator()(const G4Step* step) const  override  final  {
-	bool test=true;
-	G4Track *theTrack = step->GetTrack();
-	if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
-	  float energy=theTrack->GetTotalEnergy()/eV;
-	  float wave=fromEvToNm(energy);
-	  if((wave<m_wavelengthstart) || (wave > m_wavelengthstart+0.5) ) {
-	    theTrack->SetTrackStatus(fStopAndKill);
-	    test=false;}
-	}
-	return test;
-      }
-      virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
-	return true;
-      }
-    };
-
-  /// Constructor.
-    WavelengthnmwindCut::WavelengthnmwindCut(Geant4Context* c, const std::string& n)
-      : Geant4Filter(c,n) {
-      InstanceCount::increment(this);
-      declareProperty("Cut",m_wavelengthstart=0.0);
-    }
-
-  /// Standard destructor
-    WavelengthnmwindCut::~WavelengthnmwindCut() {
-      InstanceCount::decrement(this);
-    }
-
-
-  }}  // end using namespace
-
-
-
-
+}  // end using namespace
 
 //--- Factory declaration
-namespace dd4hep { namespace sim {
-    typedef Geant4SensitiveAction<DualCrysCalorimeterSD> DualCrysCalorimeterSDAction;
-  }}
+namespace dd4hep { 
+	namespace sim {
+		typedef Geant4SensitiveAction<DualCrysCalorimeterSD> DualCrysCalorimeterSDAction;
+	}
+}
+
 DECLARE_GEANT4SENSITIVE(DualCrysCalorimeterSDAction)
 DECLARE_GEANT4ACTION(WavelengthMinimumCut)
 DECLARE_GEANT4ACTION(WavelengthnmwindCut)

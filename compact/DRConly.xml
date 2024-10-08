@@ -18,15 +18,14 @@
 <!-- ====================================================================== -->
 
 <lccdd>
-
-  <info name="SCEPCAL with IDEA"
-        title="SCEPCAL with IDEA"
-        author="Sarah Eno"
-        url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
-        status="development"
-        version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
-    <comment>The compact format for the SCEPCAL IDEA</comment>        
-  </info>
+	<info name="SCEPCAL with IDEA"
+		title="SCEPCAL with IDEA"
+		author="Sarah Eno"
+		url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
+		status="development"
+		version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
+		<comment>The compact format for the SCEPCAL IDEA</comment>
+	</info>
 
 
 <!--  1 eV is 1240 nm
@@ -812,7 +811,13 @@
     </material>
 
 
-
+    <material name="E_Silicone">
+      <D type="density" unit="g/cm3" value="0.0012"/>
+      <fraction n="0.754" ref="N"/>
+      <fraction n="0.234" ref="O"/>
+      <fraction n="0.012" ref="Ar"/>
+      <property name="RINDEX"        ref="RINDEX__Silicone"/>
+    </material>
 
 
     <material name="killMedia1">
@@ -977,6 +982,7 @@
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id>
+      <!idslice:5,layer:3,system:3</id>  <! Mekhala>
 <!--      <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id> -->
  </readout>
 <readout name="DRFNoSegment">
@@ -989,5 +995,5 @@
 
   <comment>EM Calorimeters</comment>
   <include ref="SCEPCAL_ECAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
+  <!include ref="SCEPCAL_BOUND.xml"/>
 </lccdd>
