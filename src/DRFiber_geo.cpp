@@ -81,6 +81,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
   sens.setType("calorimeter");
 
+
+
   // photodetector 1
   sol = Tube(0.,fX_phdet1.rmax(), hzph);
   mat = description.material(fX_phdet1.materialStr());
@@ -94,6 +96,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " vis: "   << setw(15) << left<< fX_phdet1.visStr()
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_phdet1.isSensitive()) << endl;
+
 
   // photodetector 2
   sol = Tube(0.,fX_phdet2.rmax(), hzph);
@@ -109,8 +112,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_phdet2.isSensitive()) << endl;
 
+
+
   // scint fiber
-  sol = Tube(0.,fX_core1.rmax(), hzlength-2*hzph);
+  sol = Tube(0.,fX_core1.rmax(), hzlength-hzph);
   mat = description.material(fX_core1.materialStr());
   Volume fiber_scint_vol(fX_core1.nameStr(), sol, mat);
   fiber_scint_vol.setAttributes(description,fX_core1.regionStr(),fX_core1.limitsStr(),fX_core1.visStr());
@@ -124,7 +129,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " sensitive: " << yes_no(fX_core1.isSensitive()) << endl;
   
   // quartz fiber
-  sol = Tube(0.,fX_core2.rmax(), hzlength-2*hzph);
+  sol = Tube(0.,fX_core2.rmax(), hzlength-hzph);
   mat = description.material(fX_core2.materialStr());
   Volume  fiber_quartz_vol(fX_core2.nameStr(), sol, mat);
   fiber_quartz_vol.setAttributes(description,fX_core2.regionStr(),fX_core2.limitsStr(),fX_core2.visStr());
@@ -142,7 +147,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   sol = Tube(0.,fX_hole.rmax(),hzlength);
   Volume scint_hole_vol( fX_core1.nameStr()+"_hole", sol, mat);
   scint_hole_vol.setAttributes(description, fX_hole.regionStr(), fX_hole.limitsStr(), fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzph));
   pv    = scint_hole_vol.placeVolume(fiber_scint_vol, trafo);
   pv.addPhysVolID("type",1); // label fiber volume (in hole)
   cout << setw(28) << left << scint_hole_vol.name()
@@ -151,7 +156,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+0.5*hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzlength-hzph));
   pv = scint_hole_vol.placeVolume(phdet1_vol, trafo);
   pv.addPhysVolID("type",3);
 
@@ -162,7 +167,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // absorberhole with a quartz inside
   Volume quartz_hole_vol( fX_core2.nameStr()+"_hole", sol, mat);
   quartz_hole_vol.setAttributes(description,fX_hole.regionStr(),fX_hole.limitsStr(),fX_hole.visStr());
-  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,0.));
+  trafo = Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzph));
   pv = quartz_hole_vol.placeVolume(fiber_quartz_vol,trafo);
   pv.addPhysVolID("type",2);  // label quartz volume (in hole)
   cout << setw(28) << left << quartz_hole_vol.name()
@@ -171,7 +176,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
        << " solid: " << setw(20) << left << sol.type()
        << " sensitive: " << yes_no(fX_hole.isSensitive()) << endl;
 
-  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,-hzlength+0.5*hzph));
+  trafo =  Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,hzlength-hzph));
   pv = quartz_hole_vol.placeVolume(phdet2_vol, trafo);
   pv.addPhysVolID("type",4);
 
@@ -215,7 +220,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // setup the volumes with the shapes and properties in one horixontal layer
   double dx = 2*(Ncount + Ncount+1)/2e0 * (hthick+agap) + tol;
   double dy = hthick + tol;
-  double dz = hzlength+hzph + tol;
+  double dz = hzlength + tol;
   Box    tube_row_box(dx, dy, dz);
   Volume tube_row_vol("layer", tube_row_box, air);
   tube_row_vol.setVisAttributes(description, x_det.visStr());
