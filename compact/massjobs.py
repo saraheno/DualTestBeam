@@ -25,10 +25,10 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 
 
-nenergy=9
-energies=[10,15,20,25,30,35,40,45,50]
-#nenergy=2
-#energies=[20,50]
+#nenergy=9
+#energies=[10,15,20,25,30,35,40,45,50]
+nenergy=2
+energies=[20,50]
 name="condor-executable-"+args.geometry+"-"
 direct="0. 0.0 1."
 
@@ -128,7 +128,7 @@ while (i<nenergy):
     jdlfile.write("should_transfer_files = NO"+'\n')
 #    jdlfile.write("Requirements = machine == \"hepcms-rubin.privnet\""+'\n')
     jdlfile.write("request_memory = 15GB"+'\n')
-    jdlfile.write("RequestCpus = 4"+'\n')
+#    jdlfile.write("RequestCpus = 4"+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).stdout"+'\n')
     jdlfile.write("Error = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).stderr"+'\n')
     jdlfile.write("Log = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).condor"+'\n')
