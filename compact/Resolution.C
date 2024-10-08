@@ -894,10 +894,6 @@ sii9 = mapsampcalslice.find("Sep2");
     TCanvas* cc1;
     SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
 
-
-  }
-
-
     
     TCanvas* cc2;
     SCEDraw2(cc2,"cc2",eecalpd1scint,eecalpd1cer,"junkcc2.png",1);
@@ -936,6 +932,10 @@ sii9 = mapsampcalslice.find("Sep2");
     SCEDraw2(cc8z,"cc8z",phcalpd1scintz,phcalpd1cerz,"junkcc8z.png",1);
     TCanvas* cc9z;
     SCEDraw2(cc9z,"cc9z",phcalpd2scintz,phcalpd2cerz,"junkcc9z.png",1);
+
+
+  }
+
 
 
 
