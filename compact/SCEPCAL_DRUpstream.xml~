@@ -1,0 +1,48 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+
+<!-- please note these are half lengths and widths -->
+
+  <detectors>
+    <detector id="Upstream_ID" name="DRUpstream" type="DRUpS" readout="DRCNoSegment" vis="Invisible">
+ <comment>Upstream material </comment>
+<dimensions width="DRcrystalwidth" z_length="DRcrystallength1+DRcrystallength2+DRcrystalgapl+2*killthick" repeat="DRcrystalNsize" gap="DRcrystalgapt" z1="edgeoffset"
+/>
+<!--  a tower may have several different patterns that repeat.
+for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
+each of these repeating things is a "layer". (so in this example, two "layers") 
+within a layer is a slice os the Pb and scint are slices
+the assembled tower is a Stave 
+-->
+<structure>
+  <bbb name="bbb" thickness="Upbbbthick" material="NS_Polystyrene" vis="UpstreambbbVis" sensitive="yes"/>
+</structure>
+
+
+<staves vis="Invisible"/>
+<layer repeat="2" vis="Invisible">
+  <slice material = "NS_Polystyrene" thickness = "Upaaaathick" sensitive="yes" limits="cal_limits" vis="UpstreamaaaVis"/>
+</layer>
+
+
+    </detector>
+  </detectors>
+
+

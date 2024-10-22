@@ -32,10 +32,16 @@
 //double dialCherO= 1.2;
 //double dialScintO=1.2;
 
-double dialCherC= 10./8000.;
-double dialScintC=100./200000.;
-double dialCherO= 100./8000.;
-double dialScintO=1./200000.;
+//double dialCherC= 10./8000.;
+//double dialScintC=100./200000.;
+//double dialCherO= 100./8000.;
+//double dialScintO=1./200000.;
+
+
+double dialCherC= 10./800000.;
+double dialScintC=100./20000000.;
+double dialCherO= 100./800000.;
+double dialScintO=1./20000000.;
 
 float betarel=1/1.544;
 //float betarel=0.;
@@ -152,8 +158,8 @@ namespace dd4hep {
       G4String thePostPVName = "";
       if (thePostPV)
 	thePostPVName = thePostPV->GetName();
-      //G4Track *theTrack = step->GetTrack();
-      //G4int TrPDGid = theTrack->GetDefinition()->GetPDGEncoding();
+      G4Track *theTrack = step->GetTrack();
+      G4int TrPDGid = theTrack->GetDefinition()->GetPDGEncoding();
 
       //      if(thePrePVName.contains("slice")==0) {
       //std::cout<<"entering DualCrysAction"<<std::endl;
@@ -418,6 +424,9 @@ namespace dd4hep {
 	  if(aabeta>betarel) {
 	    hit->edeprelativistic+=contrib.deposit;	  
 	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
+	  }
+	  if((abs(TrPDGid)==11)||(abs(TrPDGid)==22)) {
+	    hit->edepepgam+=contrib.deposit;	  
 	  }
 
 	  //int tsize = (hit->truth).size();
