@@ -36,7 +36,7 @@ std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlema
 
 int SCECOUNT=1;
 bool dodualcorr=1;
-float timecut=1000;
+float timecut=100000000;
 const int finenbin=40;
 const float timemin=0.;
 const float timemax=400.;
@@ -288,7 +288,9 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *piecaltime = new TH1F("piecaltime","time of ecal const",100,0.,40.);
   TH1F *pihcaltime = new TH1F("pihcaltime","time of hcal const",100,0.,40.);
   TH2F *enscvni = new TH2F("enscvni","electron scint E versus number inelastic",100,0.,1.2,100,0.,1000);
-  TH2F *pinscvni = new TH2F("pinscvni","pion scint E versus number inelastic",100,0.,1.2,100,0.,1000);
+  TH2F *pinalvni = new TH2F("pinalvni","pion all E versus number inelastic",100,0.,1.2,100,0.,1000);
+  TH2F *pinscvni = new TH2F("pinscvni","pion scint  versus number inelastic",100,0.,1.2,100,0.,1000);
+  TH2F *pincevni = new TH2F("pincevni","pion cherenkov  versus number inelastic",100,0.,1.2,100,0.,1000);
 
 
   TH1F *heesumcal = new TH1F("heesumcal","electron energy in calorimeter",400,0.,1.5);
@@ -600,7 +602,7 @@ sii9 = mapsampcalslice.find("Sep2");
 	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
 	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
 	       );
-      std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
+      //      std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
     
 
@@ -629,10 +631,11 @@ sii9 = mapsampcalslice.find("Sep2");
       if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
       pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
 
-      float rrr=npscinttotecal/meanscinEcal;
-      float rrr2=npcertotecal/meancerEcal;
-      float rrx=npscinttothcal/meanscinHcal;
-      float rrx2=npcertothcal/meancerHcal;
+      float rrr=0.;float rrr2=0.;float rrx=0.;float rrx2=0.;
+      if(meanscinEcal>0) rrr=npscinttotecal/meanscinEcal;
+      if(meancerEcal>0) rrr2=npcertotecal/meancerEcal;
+      if(meanscinHcal>0) rrx=npscinttothcal/meanscinHcal;
+      if(meancerHcal>0) rrx2=npcertothcal/meancerHcal;
       if( (rrr>0.1)&&(rrr2>0.2) )
       phcEcalNsNc->Fill(rrr,rrr2);  
       if( (rrx>0.1)&&(rrx2>0.2) )
@@ -649,7 +652,10 @@ sii9 = mapsampcalslice.find("Sep2");
       hpdepcal->Fill(pedepcal/beamE);
 
       phetrue->Fill(pachecks/beamE);
-      pinscvni->Fill(pedepcal/beamE,nin);
+      pinalvni->Fill(pedepcal/beamE,nin);
+      std::cout<<" rrr rrx "<<rrr<<" "<<rrx<<std::endl;
+      pinscvni->Fill(rrr+rrx,nin);
+      pincevni->Fill(rrr2+rrx2,nin);
 
 
       std::cout<<std::endl<<std::endl;
@@ -883,8 +889,12 @@ sii9 = mapsampcalslice.find("Sep2");
 
     TCanvas* ch9a;
     SCEDraw1_2D(ch9a,"ch9a",enscvni,"junkh9a.png",0.,0.);
-    TCanvas* ch9b;
-    SCEDraw1_2D(ch9b,"ch9b",pinscvni,"junkh9by.png",0.,0.);
+    TCanvas* ch9ba;
+    SCEDraw1_2D(ch9ba,"ch9ba",pinalvni,"junkh9bya.png",0.,0.);
+    TCanvas* ch9bb;
+    SCEDraw1_2D(ch9bb,"ch9bb",pinscvni,"junkh9byb.png",0.,0.);
+    TCanvas* ch9bc;
+    SCEDraw1_2D(ch9bc,"ch9bc",pincevni,"junkh9byc.png",0.,0.);
 
 
   
@@ -937,6 +947,9 @@ sii9 = mapsampcalslice.find("Sep2");
   }
 
 
+
+  //TCanvas* ch6;
+  //SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
 
 
   
@@ -1084,7 +1097,9 @@ sii9 = mapsampcalslice.find("Sep2");
    pihcaltime->Write();
 
    enscvni->Write();
+   pinalvni->Write();
    pinscvni->Write();
+   pincevni->Write();
 
   out->Close();
 
@@ -1564,7 +1579,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  ecalpd1scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
 	  ecalpd1cer->Fill((ijk+0.5)*timebinsize,aecalhit->ncertime[ijk]);
-	  std::cout<<"yuck "<<(ijk+0.5)*timebinsizez<<std::endl;
+	  //	  std::cout<<"yuck "<<(ijk+0.5)*timebinsizez<<std::endl;
 	  ecalpd1scintz->Fill((ijk+0.5)*timebinsizez,aecalhit->nscinttimez[ijk]);
 	  ecalpd1cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
