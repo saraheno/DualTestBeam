@@ -36,7 +36,8 @@ std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlema
 
 int SCECOUNT=1;
 bool dodualcorr=1;
-float timecut=100000000;
+float timecut=400000;
+float betacut=1/1.5;
 const int finenbin=40;
 const float timemin=0.;
 const float timemax=400.;
@@ -47,7 +48,7 @@ const float timebinsizez=(timemaxz-timemin)/float(finenbin);
 
 
 
-
+float biggesttime=0.;
 
 
   typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
@@ -66,7 +67,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype,  bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 	      float  &eesum,float &eesumcal, float &eesumem, float &eesumair, float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
-	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
+	      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime,
 	      int &nin,
 	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
@@ -77,13 +78,13 @@ void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, i
 void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal, 
 		      CalHits* &ecalhits, CalHits* &hcalhits,
 		      float &EEcal, float &EHcal,
-	      float &timecut, float &eecaltimecut, float &ehcaltimecut
+		      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
 );
 
 void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
-	      float &timecut, float &eecaltimecut, float &ehcaltimecut
+		 float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
 );
 
 
@@ -244,6 +245,12 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
 
+  
+  TH2F *ehcEcalNsNctc = new TH2F("ehcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
+  TH2F *phcEcalNsNctc = new TH2F("phcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
+  TH2F *ehcHcalNsNctc = new TH2F("ehcHcalNsNctc","hcal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
+  TH2F *phcHcalNsNctc = new TH2F("phcHcalNsNctc","hcal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
+
 
   TH2F *ehcEcalMarco = new TH2F("ehcEcalMarco","ecal c v c/s",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalMarco = new TH2F("phcEcalMarco","ecal c v c/s",500,0.,1.5,500,0.,1.5);
@@ -367,7 +374,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
   float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
 
-  float meaneecaltimecut(0),meanehcaltimecut(0);
+  float meaneecaltimecut(0),meanehcaltimecut(0),meanerelecaltimecut(0),meanerelhcaltimecut(0);
 
   
   if(num_evt>0) {  
@@ -383,7 +390,8 @@ sii9 = mapsampcalslice.find("Sep2");
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, meaneecaltimecut, meanehcaltimecut);
+      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,
+		  meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
     }
 
     std::cout<<"done with getMeanPhot"<<std::endl;
@@ -391,10 +399,19 @@ sii9 = mapsampcalslice.find("Sep2");
     meanscinHcal=meanscinHcal/num_evt;
     meancerEcal=meancerEcal/num_evt;
     meancerHcal=meancerHcal/num_evt;
+    meaneecaltimecut=meaneecaltimecut/num_evt;
+    meanehcaltimecut=meanehcaltimecut/num_evt;
+    meanerelecaltimecut=meanerelecaltimecut/num_evt;
+    meanerelhcaltimecut=meanerelhcaltimecut/num_evt;
     std::cout<<"mean scint ecal is "<<meanscinEcal<<std::endl;
     std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
     std::cout<<"mean cer ecal is "<<meancerEcal<<std::endl;
     std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+    
+    std::cout<<"mean e ecal timecut is "<<meaneecaltimecut<<std::endl;
+    std::cout<<"mean e hcal timecut is "<<meanehcaltimecut<<std::endl;
+    std::cout<<"mean rel ecal timecut is "<<meanerelecaltimecut<<std::endl;
+    std::cout<<"mean rel hcal timecut is "<<meanerelhcaltimecut<<std::endl;
 
 
 
@@ -403,11 +420,14 @@ sii9 = mapsampcalslice.find("Sep2");
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number second is "<<ievt<<std::endl;
 
 
-      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
+      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.);
       
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,eecaltime,ehcaltime,nin,
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,
+erelecaltimecut,erelhcaltimecut,
+	       eecaltime,ehcaltime,
+	       nin,
 	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,
 	       eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz
 	       );
@@ -520,7 +540,7 @@ sii9 = mapsampcalslice.find("Sep2");
   
   // loop over events 
 
-    float meanscinEcala(0),meanfscinHcala(0),meancerEcala(0),meancerHcala(0), meaneecaltimecut(0),meanehcaltimecut(0);
+    float meanscinEcala(0),meanfscinHcala(0),meancerEcala(0),meancerHcala(0), meaneecaltimecut(0),meanehcaltimecut(0),meanerelecaltimecut(0),meanerelhcaltimecut(0);
 
   
     if(num_evt>0) {  
@@ -535,7 +555,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
       for(int ievt=0;ievt<num_evt; ++ievt) {
 	if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut);
+	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
       }
 
       std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
@@ -595,10 +615,13 @@ sii9 = mapsampcalslice.find("Sep2");
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
 
 
-      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.);
+      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.);
       int nin=0;
 
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nin,
+      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, pecaltimecut, phcaltimecut,
+prelecaltimecut,prelhcaltimecut,
+	       piecaltime,pihcaltime,
+	       nin,
 	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
 	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
 	       );
@@ -645,6 +668,20 @@ sii9 = mapsampcalslice.find("Sep2");
       phcHcalMarco->Fill(rrx2/rrx,rrx2);
 
 
+      float rrrtc=0.;float rrr2tc=0.;float rrxtc=0.;float rrx2tc=0.;
+      std::cout<<"lala "<<pecaltimecut<<" "<<prelecaltimecut<<" "<<meaneecaltimecut<<" "<<meanerelecaltimecut<<std::endl;
+      std::cout<<"lalah "<<phcaltimecut<<" "<<prelhcaltimecut<<" "<<meanehcaltimecut<<" "<<meanerelhcaltimecut<<std::endl;
+      if(meaneecaltimecut>0) rrrtc=pecaltimecut/meaneecaltimecut;
+      if(meanerelecaltimecut>0) rrr2tc=prelecaltimecut/meanerelecaltimecut;
+      if(meanehcaltimecut>0) rrxtc=phcaltimecut/meanehcaltimecut;
+      if(meanerelhcaltimecut>0) rrx2tc=prelhcaltimecut/meanerelhcaltimecut;
+      std::cout<<"lalar "<<rrrtc<<" "<<rrr2tc<<" "<<rrxtc<<" "<<rrx2tc<<std::endl;
+      if( (rrrtc>0.1)&&(rrr2tc>0.2) )
+      phcEcalNsNctc->Fill(rrrtc,rrr2tc);  
+      if( (rrxtc>0.1)&&(rrx2tc>0.2) )
+      phcHcalNsNctc->Fill(rrxtc,rrx2tc);  
+
+      
 
       float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
 
@@ -660,7 +697,8 @@ sii9 = mapsampcalslice.find("Sep2");
 
       std::cout<<std::endl<<std::endl;
       std::cout<<"GETSTUFF pions"<<std::endl;
-      std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+      std::cout<<" phcaltimecut is "<<phcaltimecut/1000.<<std::endl;
+      std::cout<<" prelhcaltimecut is "<<prelhcaltimecut/1000.<<std::endl;
       std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
       std::cout<<"       cal total energy deposit "<<pesumcal/1000.<<std::endl;
       std::cout<<"       cal EM total energy deposit "<<pesumem/1000.<<std::endl;
@@ -670,6 +708,7 @@ sii9 = mapsampcalslice.find("Sep2");
       std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
       std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
       std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
+      std::cout<<"       sum of fibers "<<(pesumfiber1+pesumfiber2)/1000.<<std::endl;
       std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
       std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
       std::cout<<"       escaping detector "<<pesumedge/1000.<<std::endl;
@@ -791,10 +830,10 @@ sii9 = mapsampcalslice.find("Sep2");
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number pion is "<<ievt<<std::endl;
 
-      float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
+      float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0);
 
 
-      getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,timecut, eecaltimecutcor, ehcaltimecutcor);
+      getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,  ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
 
       phcEcalcorr->Fill(EcorEcal);
       phcHcalcorr->Fill(EcorHcal);
@@ -869,11 +908,15 @@ sii9 = mapsampcalslice.find("Sep2");
     SCEDraw3(ch4,"ch4",phcHcalncer,phcHcalnscint,phcHcalcorr,"junkh4.png",0);
     TCanvas* ch5;
     SCEDraw1_2D(ch5,"ch5",ehcHcalNsNc,"junkh5.png",0.,0.);
+    TCanvas* ch5c;
+    SCEDraw1_2D(ch5c,"ch5c",ehcHcalNsNctc,"junkh5c.png",0.,0.);
     TCanvas* ch5b;
     SCEDraw1_2D(ch5b,"ch5b",ehcHcalMarco,"junkhb.png",0.,0.);
     TCanvas* ch6;
     SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
-     TCanvas* ch6b;
+    TCanvas* ch6c;
+    SCEDraw1_2D(ch6c,"ch6c",phcHcalNsNctc,"junkh6c.png",-b1Hcal/m1Hcal,0.);
+    TCanvas* ch6b;
     SCEDraw1_2D(ch6b,"ch6b",phcHcalMarco,"junkh6b.png",-b1Hcal/m1Hcal,0.);
     TCanvas* ch7;
     SCEDraw1_2D(ch7,"ch7",ehcHcalf1f2,"junkh7.png",0.,0.);
@@ -946,12 +989,14 @@ sii9 = mapsampcalslice.find("Sep2");
 
   }
 
+    TCanvas* ch6c;
+    SCEDraw1_2D(ch6c,"ch6c",phcHcalNsNctc,"junkh6c.png",-b1Hcal/m1Hcal,0.);
 
 
   //TCanvas* ch6;
   //SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
 
-
+    std::cout<<"biggest hit time was "<<biggesttime<<std::endl;
   
   //***********************************************************************************************************
 
@@ -1076,6 +1121,11 @@ sii9 = mapsampcalslice.find("Sep2");
    phcEcalNsNc->Write();
    ehcHcalNsNc->Write();
    phcHcalNsNc->Write();
+
+   ehcEcalNsNctc->Write();
+   phcEcalNsNctc->Write();
+   ehcHcalNsNctc->Write();
+   phcHcalNsNctc->Write();
 
 
    ehcEcalMarco->Write();
@@ -1306,13 +1356,10 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
-		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut
-
-){
+		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut){
   int nbyteecal, nbytehcal, nbyteedge;
 
 
-  
 
   if(doecal) {
     if(ievt<SCECOUNT) std::cout<<"getMean phot ievt is "<<ievt<<std::endl;
@@ -1321,7 +1368,6 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 
       // ecal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
-    eecaltimecut=0.;
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
       long long int ihitchan=aecalhit->cellID;
@@ -1354,8 +1400,13 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	    meanscinEcal+=aecalhit->energyDeposit;
 	    if(gendet==3) meancerEcal+=aecalhit->edeprelativistic;
 	    if(gendet==4) meancerEcal+=aecalhit->energyDeposit;
+
 	    for(size_t j=0;j<zxzz.size(); j++) {
-	      if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	      if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
+	      if((zxzz.at(j)).time<timecut) {
+		eecaltimecut+=(zxzz.at(j)).deposit;
+		if(((aecalhit->contribBeta)[j])>betacut) erelecaltimecut+=(zxzz.at(j)).deposit;
+	      }
 	    }
 	  }
 	}
@@ -1371,7 +1422,6 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
     //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
     if(ievt<SCECOUNT) std::cout<<"    ihitchan idet iy ix ilayer islice  "<<std::endl;
 
-    ehcaltimecut=0.;
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
 
@@ -1427,16 +1477,26 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if(ifiber==1) {
-	    meanscinHcal+=ahcalhit->energyDeposit;
-	  }
-	  if(ifiber==2) {
-	    if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
-	    if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
-	  }
-	  for(size_t j=0;j<zxzz.size(); j++) {
-	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
-	  }
+	    if(ifiber==1) {
+	      meanscinHcal+=ahcalhit->energyDeposit;
+	    }
+	    if(ifiber==2) {
+	      if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
+	      if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
+	    }
+	    if((ifiber==1)||(ifiber==2)) {
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
+		if((zxzz.at(j)).time<timecut) {
+		  if(ifiber==1) {
+		  ehcaltimecut+=(zxzz.at(j)).deposit;
+		  }
+		  if(ifiber==2) {
+		  if(((ahcalhit->contribBeta)[j])>betacut) erelhcaltimecut+=(zxzz.at(j)).deposit;
+		  }
+		}
+	      }
+	    }
 	  }
 	}
       }
@@ -1471,18 +1531,24 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if( islice==(*sii3).second) { // PS
-	    meanscinHcal+=ahcalhit->energyDeposit;
-	    if(ievt<SCECOUNT) std::cout<<" meanscinHcal "<<meanscinHcal<<std::endl;
-	  }
-	  if( islice==(*sii6).second ) {  // quartz
-	    if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
-	    if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
-	    if(ievt<SCECOUNT) std::cout<<" meancerHcal "<<meancerHcal<<std::endl;
-	  }
-	  for(size_t j=0;j<zxzz.size(); j++) {
-	    if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
-	  }
+	    if( islice==(*sii3).second) { // PS
+	      meanscinHcal+=ahcalhit->energyDeposit;
+	      if(ievt<SCECOUNT) std::cout<<" meanscinHcal "<<meanscinHcal<<std::endl;
+	    }
+	    if( islice==(*sii6).second ) {  // quartz
+	      if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
+	      if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
+	      if(ievt<SCECOUNT) std::cout<<" meancerHcal "<<meancerHcal<<std::endl;
+	    }
+	    if(( islice==(*sii3).second)||( islice==(*sii6).second)) {
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
+		if((zxzz.at(j)).time<timecut) {
+		  ehcaltimecut+=(zxzz.at(j)).deposit;
+		  if(((ahcalhit->contribBeta)[j])>betacut) erelhcaltimecut+=(zxzz.at(j)).deposit;
+		}
+	      }
+	    }
 	  }
 	}
 
@@ -1503,7 +1569,8 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
-	      float &timecut, float &eecaltimecut, float &ehcaltimecut, TH1F* eecaltime, TH1F* ehcaltime, int &nin,
+	      float &timecut, float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,
+	      TH1F* eecaltime, TH1F* ehcaltime, int &nin,
 	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
 	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
 	      ){
@@ -1526,6 +1593,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       // ecal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
     eecaltimecut=0.;
+    erelecaltimecut=0.;
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
 
@@ -1549,20 +1617,6 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       
       float ae=aecalhit->energyDeposit;
       nin+=aecalhit->n_inelastic;
-
-      // check contribs
-      Contributions zxzz=aecalhit->truth;
-      float hacheck=0.;
-      for(size_t j=0;j<zxzz.size(); j++) {
-	hacheck+=(zxzz.at(j)).deposit;
-	if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
-	eecaltime->Fill((zxzz.at(j)).time);
-      }
-      if(ae>0.001) {
-	if(hacheck/ae<0.99999) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
-      }
-
-
 
 
       eesum+=ae;
@@ -1613,9 +1667,19 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	    nescinttotecal+=aecalhit->energyDeposit;
 	    if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
 	    if(gendet==4) necertotecal+=aecalhit->energyDeposit;
-	//for(size_t j=0;j<zxzz.size(); j++) {
-	//  if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
-	//}
+	    Contributions zxzz=aecalhit->truth;
+	    float hacheck=0.;
+	    for(size_t j=0;j<zxzz.size(); j++) {
+	      hacheck+=(zxzz.at(j)).deposit;
+	      if((zxzz.at(j)).time<timecut) {
+		eecaltimecut+=(zxzz.at(j)).deposit;
+		if(((aecalhit->contribBeta)[j])>betacut) erelecaltimecut+=(zxzz.at(j)).deposit;
+	      }
+	      eecaltime->Fill((zxzz.at(j)).time);
+	    }
+	    if(ae>0.001) {
+	      if(hacheck/ae<0.99999) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
+	    }
 	  }
 	}
       }
@@ -1633,25 +1697,12 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
-    //float ehcaltimecut=0.;
+    ehcaltimecut=0.;
+    erelhcaltimecut=0.;
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
       nin+=ahcalhit->n_inelastic;
-
-      // check contribs
-      Contributions zxzz=ahcalhit->truth;
-      float hacheck=0.;
-      for(size_t j=0;j<zxzz.size(); j++) {
-	hacheck+=(zxzz.at(j)).deposit;
-	if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
-	ehcaltime->Fill((zxzz.at(j)).time);
-      }
-      if(ah>0.001) {
-	if(hacheck/ah<0.99999) std::cout<<"missing contribs: hcal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ah is "<<ah<<" ratio "<<hacheck/ah<<std::endl;
-      }
-
-
 
 
       eesum+=ah;
@@ -1734,16 +1785,33 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if(ifiber==1) {
-	    nescinttothcal+=ahcalhit->energyDeposit;
-	  }
-	  if(ifiber==2) {
-	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
-	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
-	  }
-	  //	  for(size_t j=0;j<zxzz.size(); j++) { 
-	  //  if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
-	  //}
+	    if(ifiber==1) {
+	      nescinttothcal+=ahcalhit->energyDeposit;
+	    }
+	    if(ifiber==2) {
+	      if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
+	      if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
+	    }
+	    if((ifiber==1)||(ifiber==2) ) {
+      // check contribs
+	      Contributions zxzz=ahcalhit->truth;
+	      float hacheck=0.;
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		hacheck+=(zxzz.at(j)).deposit;
+		if((zxzz.at(j)).time<timecut) {
+		  if(ifiber==1) {
+		  ehcaltimecut+=(zxzz.at(j)).deposit;
+		  }
+		  if(ifiber==2) {
+		  if(((ahcalhit->contribBeta)[j])>betacut) erelhcaltimecut+=(zxzz.at(j)).deposit;
+		  }
+		}
+		ehcaltime->Fill((zxzz.at(j)).time);
+	      }
+	      if(ah>0.001) {
+		if(hacheck/ah<0.99999) std::cout<<"missing contribs: hcal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ah is "<<ah<<" ratio "<<hacheck/ah<<std::endl;
+	      }
+	    }
 	  }
 	}
 
@@ -1825,6 +1893,26 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
+	  if((islice==(*sii3).second)||(islice==(*sii6).second) ){
+      // check contribs
+	      Contributions zxzz=ahcalhit->truth;
+	      float hacheck=0.;
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		hacheck+=(zxzz.at(j)).deposit;
+		if((zxzz.at(j)).time<timecut) {
+		  ehcaltimecut+=(zxzz.at(j)).deposit;
+		  if(((ahcalhit->contribBeta)[j])>betacut) erelhcaltimecut+=(zxzz.at(j)).deposit;
+		}
+		ehcaltime->Fill((zxzz.at(j)).time);
+	      }
+	      if(ah>0.001) {
+		if(hacheck/ah<0.99999) std::cout<<"missing contribs: hcal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ah is "<<ah<<" ratio "<<hacheck/ah<<std::endl;
+	      }
+
+	  }
+
+
+
 	  //	  for(size_t j=0;j<zxzz.size(); j++) {
 	  //  if((zxzz.at(j)).time<timecut) ehcaltimecut+=(zxzz.at(j)).deposit;
 	  //}
@@ -1872,7 +1960,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal, 
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
-		      float &EEcal, float &EHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut)
+		      float &EEcal, float &EHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
+		      float &erelecaltimecut, float &erelhcaltimecut)
 {
   float necertotecal(0),nescinttotecal(0),necertothcal(0),nescinttothcal(0);
   int nbyteecal, nbytehcal, nbyteedge;
