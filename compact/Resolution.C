@@ -119,7 +119,7 @@ map<string,int>::iterator sii9;
 
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
 		const char* hcalonlyefilename,
-		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots) {
+		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots) {
 
 
   // these must correspond to the "slice" physvolid used in DRCrys_geo
@@ -946,6 +946,10 @@ prelecaltimecut,prelhcaltimecut,
 
     TCanvas* cc1;
     SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
+  }
+
+  if(dotimingplots) {
+
 
     
     TCanvas* cc2;
@@ -987,9 +991,8 @@ prelecaltimecut,prelhcaltimecut,
     SCEDraw2(cc9z,"cc9z",phcalpd2scintz,phcalpd2cerz,"junkcc9z.png",1);
 
 
+
   }
-
-
 
 
 
