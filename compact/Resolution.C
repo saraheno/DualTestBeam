@@ -989,9 +989,9 @@ prelecaltimecut,prelhcaltimecut,
 
   }
 
-    TCanvas* ch6c;
-    SCEDraw1_2D(ch6c,"ch6c",phcHcalNsNctc,"junkh6c.png",-b1Hcal/m1Hcal,0.);
 
+
+y
 
   //TCanvas* ch6;
   //SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",-b1Hcal/m1Hcal,0.);
