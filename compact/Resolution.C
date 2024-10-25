@@ -88,6 +88,13 @@ void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 );
 
 
+void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+	      CalHits* &ecalhits, CalHits* &hcalhits, 
+	      float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
+		 TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
+);
+
+
 map<string, int> mapecalslice; 
 map<string,int>::iterator eii0;
 map<string,int>::iterator eii1;
@@ -233,8 +240,8 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *ehcHcalnscint = new TH1F("ehcHcalnscint","total number of hcal scintillation", 500,0.,1.5);
   TH1F *phcHcalnscint = new TH1F("phcHcalnscint","total number of hcal scitillation", 500,0.,1.5);
 
-  TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","total number of ecal scintillation", 500,0.,1.5);
-  TH1F *phcEcalcorr = new TH1F("phcEcalcorr","total number of ecal scitillation", 500,0.,1.5);
+  TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","ecal dual corr", 500,0.,1.5);
+  TH1F *phcEcalcorr = new TH1F("phcEcalcorr","ecal dual corr", 500,0.,1.5);
 
   TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","e hcal dual", 500,0.,1.5);
   TH1F *phcHcalcorr = new TH1F("phcHcalcorr","pi hcal dual", 500,0.,1.5);
@@ -306,6 +313,15 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *hpesumcal = new TH1F("hpesumcal","pion energy in calorimeter",400,0.,1.5);
   TH1F *hpesumemcal = new TH1F("hpesumemcal","pion relativistic energy in calorimeter",400,0.,1.5);
   TH1F *hpfff = new TH1F("hpfff","pion relativistic fraction in calorimeter",400,0.,1.5);
+
+
+  // for calibration refinement
+  TH1F *CalEcalncer = new TH1F("CalEcalncer","total number of ecal cerenkov",  500,0.,1.5);
+  TH1F *CalEcalnscint = new TH1F("CalEcalnscint","total number of ecal scint",  500,0.,1.5);
+  TH1F *CalHcalncer = new TH1F("CalHcalncer","total number of ecal cerenkov",  500,0.,1.5);
+  TH1F *CalHcalnscint = new TH1F("CalHcalnscint","total number of ecal scint",  500,0.,1.5);
+
+
   
 
   //********************************************************
@@ -370,7 +386,6 @@ sii9 = mapsampcalslice.find("Sep2");
   num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<std::endl<<std::endl<<"num_evt for electron file is  "<<num_evt<<std::endl;
   
-  // loop over events 
 
   float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
 
@@ -386,10 +401,10 @@ sii9 = mapsampcalslice.find("Sep2");
     CalHits* edgehits = new CalHits();
     if(doedge) b_edge->SetAddress(&edgehits);
 
-    // first pass through file
+    // first pass through file for rough calibration
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number rough calibration "<<ievt<<std::endl;
       getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,
 		  meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
     }
@@ -414,8 +429,83 @@ sii9 = mapsampcalslice.find("Sep2");
     std::cout<<"mean rel hcal timecut is "<<meanerelhcaltimecut<<std::endl;
 
 
+    // refine calibration
 
-    // second pass through file
+    for(int ievt=0;ievt<num_evt; ++ievt) {
+      if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
+      CalibRefine(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
+    }
+    float arms,amean;
+
+    if(doecal ) {
+    arms = CalEcalncer->GetRMS();
+    amean = CalEcalncer->GetMean();
+    CalEcalncer->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitEcalncer = (TF1*)CalEcalncer->GetListOfFunctions()->FindObject("gaus");
+    Double_t Ecalncer_p0= fitEcalncer->GetParameter(0);
+    Double_t Ecalncer_p1= fitEcalncer->GetParameter(1);
+    Double_t Ecalncer_p2= fitEcalncer->GetParameter(2);
+    std::cout<<std::endl;
+    std::cout<<"Ecal cer refine calib fit params "<<Ecalncer_p0<<" "<<Ecalncer_p1<<" "<<Ecalncer_p2<<std::endl;
+    std::cout<<std::endl;
+    meancerEcal=meancerEcal/Ecalncer_p1;
+    
+    arms = CalEcalnscint->GetRMS();
+    amean = CalEcalnscint->GetMean();
+    CalEcalnscint->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitEcalnscint = (TF1*)CalEcalnscint->GetListOfFunctions()->FindObject("gaus");
+    Double_t Ecalnscint_p0= fitEcalnscint->GetParameter(0);
+    Double_t Ecalnscint_p1= fitEcalnscint->GetParameter(1);
+    Double_t Ecalnscint_p2= fitEcalnscint->GetParameter(2);
+    meanscinEcal=meanscinEcal/Ecalnscint_p1;
+    std::cout<<std::endl;
+    std::cout<<"Ecal scint refine calib fit params "<<Ecalnscint_p0<<" "<<Ecalnscint_p1<<" "<<Ecalnscint_p2<<std::endl;
+    std::cout<<std::endl;
+
+    }
+
+    if(dohcal) {
+    arms = CalHcalncer->GetRMS();
+    amean = CalHcalncer->GetMean();
+    CalHcalncer->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitHcalncer = (TF1*)CalHcalncer->GetListOfFunctions()->FindObject("gaus");
+    Double_t Hcalncer_p0= fitHcalncer->GetParameter(0);
+    Double_t Hcalncer_p1= fitHcalncer->GetParameter(1);
+    Double_t Hcalncer_p2= fitHcalncer->GetParameter(2);
+    meancerHcal=meancerHcal/Hcalncer_p1;
+    std::cout<<std::endl;
+    std::cout<<"Hcal cer refine calib fit params "<<Hcalncer_p0<<" "<<Hcalncer_p1<<" "<<Hcalncer_p2<<std::endl;
+    std::cout<<std::endl;
+
+    arms = CalHcalnscint->GetRMS();
+    amean = CalHcalnscint->GetMean();
+    CalHcalnscint->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitHcalnscint = (TF1*)CalHcalnscint->GetListOfFunctions()->FindObject("gaus");
+    Double_t Hcalnscint_p0= fitHcalnscint->GetParameter(0);
+    Double_t Hcalnscint_p1= fitHcalnscint->GetParameter(1);
+    Double_t Hcalnscint_p2= fitHcalnscint->GetParameter(2);
+    meanscinHcal=meanscinHcal/Hcalnscint_p1;
+    std::cout<<std::endl;
+    std::cout<<"Hcal scint refine calib fit params "<<Hcalnscint_p0<<" "<<Hcalnscint_p1<<" "<<Hcalnscint_p2<<std::endl;
+        std::cout<<std::endl;
+	
+    }
+    
+    
+if(doplots) {
+  TCanvas* z1;
+  SCEDraw1(z1,"z1",CalEcalncer,"junkz1.png",0);
+  TCanvas* z2;
+  SCEDraw1(z2,"z2",CalEcalnscint,"junkz2.png",0);
+  TCanvas* z3;
+  SCEDraw1(z3,"z3",CalHcalncer,"junkz3.png",0);
+  TCanvas* z4;
+  SCEDraw1(z4,"z4",CalEcalnscint,"junkz4.png",0);
+
+  }
+
+
+    // now that have calibration, do the real work
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) std::cout<<"event number second is "<<ievt<<std::endl;
 
@@ -756,7 +846,7 @@ prelecaltimecut,prelhcaltimecut,
 
 
 
-      // fit to get e/h
+      // an attempt to do something that didn't work
   if(doecal) {
     TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
     ehcEcalNsNc_pfx->Fit("gEcale","W");
@@ -766,9 +856,10 @@ prelecaltimecut,prelhcaltimecut,
     ehcHcalNsNc_pfx->Fit("gHcale","W");
   }
 
-
+  float arms,amean,hovereecalcer(1.),hovereecalscint(1.),hoverehcalcer(1.),hoverehcalscint(1.), kappaEcal(1.),kappaHcal(1.);
 
   if(doecal) {
+// another attempt to do something that didn't work
     TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
     phcEcalNsNc_pfx->Fit("gEcalp","W");
     //b1Ecal=gEcalp->GetParameter(0);
@@ -776,41 +867,84 @@ prelecaltimecut,prelhcaltimecut,
     m1Ecal=gEcalp->GetParameter(0);
     b1Ecal=1-m1Ecal;
     std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-  }
-    double kappaEcal = 1+(b1Ecal/m1Ecal);
+    kappaEcal = 1+(b1Ecal/m1Ecal);
 
+// here is the real deal
+    //hovereecalscint=phcEcalnscint->GetMean();;
+    //hovereecalcer=phcEcalncer->GetMean();
 
-    double hovereecalscint=phcEcalnscint->GetMean();;
-    double hovereecalcer=phcEcalncer->GetMean();
+    arms = phcEcalnscint->GetRMS();
+    amean = phcEcalnscint->GetMean();
+    phcEcalnscint->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitphcEcalnscint = (TF1*)phcEcalnscint->GetListOfFunctions()->FindObject("gaus");
+    Double_t fitphcEcalnscint_p0= fitphcEcalnscint->GetParameter(0);
+    Double_t fitphcEcalnscint_p1= fitphcEcalnscint->GetParameter(1);
+    Double_t fitphcEcalnscint_p2= fitphcEcalnscint->GetParameter(2);
+    hovereecalscint=fitphcEcalnscint_p1;
+    
+    arms = phcEcalncer->GetRMS();
+    amean = phcEcalncer->GetMean();
+    phcEcalncer->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitphcEcalncer = (TF1*)phcEcalncer->GetListOfFunctions()->FindObject("gaus");
+    Double_t fitphcEcalncer_p0= fitphcEcalncer->GetParameter(0);
+    Double_t fitphcEcalncer_p1= fitphcEcalncer->GetParameter(1);
+    Double_t fitphcEcalncer_p2= fitphcEcalncer->GetParameter(2);
+    hovereecalcer=fitphcEcalncer_p1;
+    
     kappaEcal= (1-hovereecalscint)/(1.-hovereecalcer);
 
-
+    std::cout<<" hovereecalcer hovereecalscint "<<hovereecalcer<<" "<<hovereecalscint<<std::endl;
     std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
 
+    }
 
   if(dohcal) {
+    // crap
     TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
     phcHcalNsNc_pfx->Fit("gHcalp","W");
     //    b1Hcal=gHcalp->GetParameter(0);
     //    m1Hcal=gHcalp->GetParameter(1);
     m1Hcal=gHcalp->GetParameter(0);
     b1Hcal=1-m1Hcal;
-
     std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
     TCanvas* cyuck;
     if(doplots) SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
-  }
-    double kappaHcal = 1+(b1Hcal/m1Hcal);
+    kappaHcal = 1+(b1Hcal/m1Hcal);
+  
 
 
-    double hoverehcalscint=phcHcalnscint->GetMean();;
-    double hoverehcalcer=phcHcalncer->GetMean();
-    kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
-
-
+    //real deal
+    float hoverehcalscint,hoverehcalcer;
+    //hoverehcalscint=phcHcalnscint->GetMean();;
+    //hoverehcalcer=phcHcalncer->GetMean();
+    float arms,amean;
+    arms = phcHcalnscint->GetRMS();
+    amean = phcHcalnscint->GetMean();
+    phcHcalnscint->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitphcHcalnscint = (TF1*)phcHcalnscint->GetListOfFunctions()->FindObject("gaus");
+    Double_t fitphcHcalnscint_p0= fitphcHcalnscint->GetParameter(0);
+    Double_t fitphcHcalnscint_p1= fitphcHcalnscint->GetParameter(1);
+    Double_t fitphcHcalnscint_p2= fitphcHcalnscint->GetParameter(2);
+    hovereecalscint=fitphcHcalnscint_p1;
+    
+    arms = phcHcalncer->GetRMS();
+    amean = phcHcalncer->GetMean();
+    phcHcalncer->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
+    TF1 *fitphcHcalncer = (TF1*)phcHcalncer->GetListOfFunctions()->FindObject("gaus");
+    Double_t fitphcHcalncer_p0= fitphcHcalncer->GetParameter(0);
+    Double_t fitphcHcalncer_p1= fitphcHcalncer->GetParameter(1);
+    Double_t fitphcHcalncer_p2= fitphcHcalncer->GetParameter(2);
+    hovereecalcer=fitphcHcalncer_p1;
 
 
     std::cout<<" hoverehcalscint hoverehcalcer kappa hcal are "<<hoverehcalscint<<" "<<hoverehcalcer<<" "<<kappaHcal<<std::endl;
+    
+    kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
+  }
+  
+
+
+
 
       
   // no calculate with dual readout correction  
@@ -890,6 +1024,13 @@ prelecaltimecut,prelhcaltimecut,
     SCEDraw1_2D(ce6b,"ce6b",phcEcalMarco,"junke6b.png",0.,0.);
     TCanvas* ce7;
     SCEDraw2(ce7,"ce7",eecaltime,piecaltime,"junke7.png",1);
+
+    TCanvas* ll1;
+    SCEDraw1(ll1,"ll1",phcEcalncer,"junkll1.png",0);
+    TCanvas* ll2;
+    SCEDraw1(ll2,"ll2",phcEcalnscint,"junkll2.png",0);
+    TCanvas* ll3;
+    SCEDraw1(ll3,"ll3",phcEcalcorr,"junkll3.png",0);
 
   }
 
@@ -1154,6 +1295,13 @@ prelecaltimecut,prelhcaltimecut,
    pinscvni->Write();
    pincevni->Write();
 
+   CalEcalncer->Write();
+   CalEcalnscint->Write();
+   CalHcalncer->Write();
+   CalHcalnscint->Write();
+
+
+   
   out->Close();
 
 }
@@ -1170,6 +1318,7 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, b
   canv->SetFrameBorderMode(0);
   canv->SetTickx(0);
   canv->SetTicky(0);
+  gStyle->SetOptFit();
   if(logy) canv->SetLogy();
 
   h1->SetLineColor(kGreen);
@@ -1355,6 +1504,193 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
   return;
 }
+
+
+
+void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+	      CalHits* &ecalhits, CalHits* &hcalhits, 
+	      float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
+		 TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
+		 ){
+
+  int nbyteecal, nbytehcal, nbyteedge;
+  float ameanscinEcal(0.);
+  float ameancerEcal(0.);
+  float ameanscinHcal(0.);
+  float ameancerHcal(0.);
+
+  
+  if(doecal) {
+    if(ievt<SCECOUNT) std::cout<<"CalibRefine phot ievt is "<<ievt<<std::endl;
+
+    nbyteecal = b_ecal->GetEntry(ievt);
+
+      // ecal hits
+    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+    for(size_t i=0;i<ecalhits->size(); ++i) {
+      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+      long long int ihitchan=aecalhit->cellID;
+      int idet = (ihitchan) & 0x07;
+      int ix = (ihitchan >>3) & 0x3F ;  // is this right?
+      if(ix>32) ix=ix-64;
+      int iy =(ihitchan >>10) & 0x3F ; // is this right?
+      if(iy>32) iy=iy-64;
+      int  islice = (ihitchan >>17) & 0x07;
+      int  ilayer = (ihitchan>> 20) & 0x07;
+      
+      if(gendet==1) {   // use photons as generated in otical material
+	if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	  ameancerEcal+=aecalhit->ncerenkov;
+	  ameanscinEcal+=aecalhit->nscintillator;
+	}
+      }
+      else if(gendet==2) {
+	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
+	  ameancerEcal+=aecalhit->ncerenkov;
+	  ameanscinEcal+=aecalhit->nscintillator;
+	}
+      } 
+      else if(gendet==3||gendet==4){
+	if(idet==5) {
+	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	    ameanscinEcal+=aecalhit->energyDeposit;
+	    if(gendet==3) ameancerEcal+=aecalhit->edeprelativistic;
+	    if(gendet==4) ameancerEcal+=aecalhit->energyDeposit;
+	  }
+	}
+      }
+    }
+  }
+
+  if(dohcal) {
+    nbytehcal = b_hcal->GetEntry(ievt);
+    
+      // hcal hits
+    if(ievt<SCECOUNT) std::cout<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
+    //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet ix iy ifiber iabs iphdet "<<std::endl;
+    //if(ievt<SCECOUNT) std::cout<<"    ihitchan idet iy ix ilayer islice  "<<std::endl;
+
+    for(size_t i=0;i<hcalhits->size(); ++i) {
+      CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
+
+      long long int ihitchan=ahcalhit->cellID;
+
+      if(hcaltype==0) { // fiber
+	int idet = (ihitchan) & 0xFF;
+	int ilayer = (ihitchan >>8) & 0xFFF;  
+	int itube = (ihitchan >>20) & 0xFFF;  
+	int iair = (ihitchan >>32) & 0x7;  
+	int itype = (ihitchan >>35) & 0x7;  
+	int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
+	int ix=0; int iy=0;
+
+	if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
+        if(itype==1) ifiber=1; // scint
+        if(itype==2) ifiber=2; // quartz
+        if(itype==3) iphdet=1; //scint pt
+        if(itype==4) iphdet=2; // quartz pt
+        if(((iair==1)||(iair==2))&&(itype==0)) ihole=1;
+        if(itube==0) ihole=1;
+        ix=itube;
+        iy=ilayer;
+
+
+
+
+	//if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<ilayer<<" "<<itube<<" "<<iair<<" "<<itype<<" "<<ifiber<<" "<<iabs<<" "<<iphdet<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>8)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>20)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>32)<<std::endl;
+	//std::cout<<std::hex<<(ihitchan>>35)<<std::endl;
+
+
+
+	if(gendet==1) {  // take light as generated in fiber
+	  if(ifiber==1) {  // scintillating fibers
+	    ameanscinHcal+=ahcalhit->nscintillator;
+	  }
+	  if(ifiber==2) {  // quartz fibers
+	    ameancerHcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==2) {
+	  if(iphdet==1) {  // take light that hits photodetectors
+	    ameanscinHcal+=ahcalhit->nscintillator;
+	  }
+	  if(iphdet==2) {  // take light that hits photodetectors
+	    ameancerHcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==3||gendet==4) {
+	  if(idet==6) {
+	    if(ifiber==1) {
+	      ameanscinHcal+=ahcalhit->energyDeposit;
+	    }
+	    if(ifiber==2) {
+	      if(gendet==3) ameancerHcal+=ahcalhit->edeprelativistic;
+	      if(gendet==4) ameancerHcal+=ahcalhit->energyDeposit;
+	    }
+	  }
+	}
+      }
+      else {  // sampling
+
+	int idet = (ihitchan) & 0x07;
+	int iy = (ihitchan >>3) & 0xFFF;  
+	int ix = (ihitchan >>15) & 0xFFF;  
+	int ilayer = (ihitchan >>27) & 0xFFF;  
+	int ibox2 = (ihitchan >> 39) & 0x03;
+	int islice = (ihitchan >>41) & 0xF;  
+ 
+	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
+
+	if(gendet==1) {  // take light as generated in media
+	  if(islice==(*sii3).second) {
+	    ameanscinHcal+=ahcalhit->nscintillator;
+	    //	    std::cout<<"add scint"<<std::endl;
+	  }
+	  if(islice==(*sii6).second) {  // cherenkov
+	    ameancerHcal+=ahcalhit->ncerenkov;
+	    //	    std::cout<<"add ceren"<<std::endl;
+	  }
+	}
+	else if(gendet==2) {
+	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
+	    ameanscinHcal+=ahcalhit->nscintillator;
+	  }
+	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
+	    ameancerHcal+=ahcalhit->ncerenkov;
+	  }
+	}
+	else if(gendet==3||gendet==4) {
+	  if(idet==6) {
+	    if( islice==(*sii3).second) { // PS
+	      ameanscinHcal+=ahcalhit->energyDeposit;
+	    }
+	    if( islice==(*sii6).second ) {  // quartz
+	      if(gendet==3) ameancerHcal+=ahcalhit->edeprelativistic;
+	      if(gendet==4) ameancerHcal+=ahcalhit->energyDeposit;
+	    }
+	  }
+	}
+
+
+      }
+
+
+    }  // end loop over hcal hits
+  }
+
+  if(meancerEcal>0) CalEcalncer->Fill(ameancerEcal/meancerEcal);
+  if(meanscinEcal>0) CalEcalnscint->Fill(ameanscinEcal/meanscinEcal);
+  if(meancerHcal>0) CalHcalncer->Fill(ameancerHcal/meancerHcal);
+  if(meanscinHcal>0) CalHcalnscint->Fill(ameanscinHcal/meanscinHcal);
+
+}
+
+
+
+
 
 
 void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
