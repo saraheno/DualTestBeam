@@ -69,7 +69,7 @@ void getStuff(map<string, int> mapecalslice, map<string, int> mapsampcalslice, i
 	      float  &eesum,float &eesumcal, float &eesumem, float &eesumair, float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut,
 	      TH1F* eecaltime, TH1F* ehcaltime,
-	      int &nin,
+	      int &nine,int &ninh,
 	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
 	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
 );
@@ -251,6 +251,20 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
+
+
+
+  TH2F *mes1Ecal = new TH2F("mes1Ecal","Ecal missing energy versus em frac",500,0.,1.5,500,0.,1.5);
+  TH2F *mes2Ecal = new TH2F("mes2Ecal","Ecal missing energy versus num nucl int",500,0.,1.5,500,0.,1000);
+  TH2F *mes3Ecal = new TH2F("mes3Ecal","Ecal missing energy versus ncer",500,0.,1.5,500,0.,1.5);
+  TH2F *mes4Ecal = new TH2F("mes4Ecal","Ecal missing energy versus nscint",500,0.,1.5,500,0.,1.5);
+
+  TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal missing energy versus em frac",500,0.,1.5,500,0.,1.5);
+  TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal missing energy versus num nucl int",500,0.,1.5,500,0.,1000);
+  TH2F *mes3Hcal = new TH2F("mes3Hcal","Hcal missing energy versus ncer",500,0.,1.5,500,0.,1.5);
+  TH2F *mes4Hcal = new TH2F("mes4Hcal","Hcal missing energy versus nscint",500,0.,1.5,500,0.,1.5);
+
+
 
   
   TH2F *ehcEcalNsNctc = new TH2F("ehcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
@@ -512,12 +526,13 @@ if(doplots) {
 
       float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.);
       
-      int nin=0;
+      int nine=0;
+      int ninh=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, ehcaltimecut,
 erelecaltimecut,erelhcaltimecut,
 	       eecaltime,ehcaltime,
-	       nin,
+	       nine,ninh,
 	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,
 	       eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz
 	       );
@@ -566,7 +581,7 @@ erelecaltimecut,erelhcaltimecut,
       float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
       hedepcal->Fill(eedepcal/beamE);
 
-      enscvni->Fill(eedepcal/beamE,nin);
+      enscvni->Fill(eedepcal/beamE,nine+ninh);
 
       std::cout<<"GETSTUFF electrons"<<std::endl;
       std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
@@ -591,7 +606,7 @@ erelecaltimecut,erelhcaltimecut,
       std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
       std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
       std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl<<std::endl;
-      std::cout<<"number inelastic is "<<nin<<std::endl;
+      std::cout<<"number inelastic is "<<nine+ninh<<std::endl;
 
 
 
@@ -706,17 +721,28 @@ erelecaltimecut,erelhcaltimecut,
 
 
       float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.);
-      int nin=0;
+      int nine=0;
+      int ninh=0;
 
       getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,timecut, pecaltimecut, phcaltimecut,
 prelecaltimecut,prelhcaltimecut,
 	       piecaltime,pihcaltime,
-	       nin,
+	       nine,ninh,
 	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
 	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
 	       );
       //      std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
+
+      mes1Ecal->Fill(pesumedge/beamE,pesumem/beamE);
+      mes2Ecal->Fill(pesumedge/beamE,nine);
+      mes3Ecal->Fill(pesumedge/beamE,npcertotecal/meancerEcal);
+      mes4Ecal->Fill(pesumedge/beamE,npscinttotecal/meanscinEcal);
+
+      mes1Hcal->Fill(pesumedge/beamE,pesumem/beamE);
+      mes2Hcal->Fill(pesumedge/beamE,ninh);
+      mes3Hcal->Fill(pesumedge/beamE,npcertothcal/meancerHcal);
+      mes4Hcal->Fill(pesumedge/beamE,npscinttothcal/meanscinHcal);
     
 
       hpesumcal->Fill(pesumcal/beamE);
@@ -779,10 +805,10 @@ prelecaltimecut,prelhcaltimecut,
       hpdepcal->Fill(pedepcal/beamE);
 
       phetrue->Fill(pachecks/beamE);
-      pinalvni->Fill(pedepcal/beamE,nin);
+      pinalvni->Fill(pedepcal/beamE,nine+ninh);
       std::cout<<" rrr rrx "<<rrr<<" "<<rrx<<std::endl;
-      pinscvni->Fill(rrr+rrx,nin);
-      pincevni->Fill(rrr2+rrx2,nin);
+      pinscvni->Fill(rrr+rrx,nine+ninh);
+      pincevni->Fill(rrr2+rrx2,nine+ninh);
 
 
       std::cout<<std::endl<<std::endl;
@@ -811,7 +837,7 @@ prelecaltimecut,prelhcaltimecut,
       std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
       std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
       std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl<<std::endl;
-      std::cout<<" number of inelastic is "<<nin<<std::endl;
+      std::cout<<" number of inelastic is "<<nine+ninh<<std::endl;
 
 
 
@@ -1032,6 +1058,18 @@ prelecaltimecut,prelhcaltimecut,
     TCanvas* ll3;
     SCEDraw1(ll3,"ll3",phcEcalcorr,"junkll3.png",0);
 
+
+
+    TCanvas* ecmes1;
+    SCEDraw1_2D(ecmes1,"ecmes1",mes1Ecal,"junkemes1.png",0.,0.);
+    TCanvas* ecmes2;
+    SCEDraw1_2D(ecmes2,"ecmes2",mes2Ecal,"junkemes2.png",0.,0.);
+    TCanvas* ecmes3;
+    SCEDraw1_2D(ecmes3,"ecmes3",mes3Ecal,"junkemes3.png",0.,0.);
+    TCanvas* ecmes4;
+    SCEDraw1_2D(ecmes4,"ecmes4",mes4Ecal,"junkemes4.png",0.,0.);
+
+    
   }
 
 
@@ -1068,6 +1106,16 @@ prelecaltimecut,prelhcaltimecut,
     SCEDraw2(ch8,"ch8",ehcaltime,pihcaltime,"junkh8.png",1);
 
 
+    TCanvas* hcmes1;
+    SCEDraw1_2D(hcmes1,"hcmes1",mes1Hcal,"junkhmes1.png",0.,0.);
+    TCanvas* hcmes2;
+    SCEDraw1_2D(hcmes2,"hcmes2",mes2Hcal,"junkhmes2.png",0.,0.);
+    TCanvas* hcmes3;
+    SCEDraw1_2D(hcmes3,"hcmes3",mes3Hcal,"junkhmes3.png",0.,0.);
+    TCanvas* hcmes4;
+    SCEDraw1_2D(hcmes4,"hcmes4",mes4Hcal,"junkhmes4.png",0.,0.);
+
+    
   }
 
 
@@ -1087,6 +1135,10 @@ prelecaltimecut,prelhcaltimecut,
 
     TCanvas* cc1;
     SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
+
+    
+
+    
   }
 
   if(dotimingplots) {
@@ -1146,6 +1198,17 @@ prelecaltimecut,prelhcaltimecut,
 
   TFile * out = new TFile(outputfilename,"RECREATE");
 
+  mes1Ecal->Write();
+  mes2Ecal->Write();
+  mes3Ecal->Write();
+  mes4Ecal->Write();
+
+  mes1Hcal->Write();
+  mes2Hcal->Write();
+  mes3Hcal->Write();
+  mes4Hcal->Write();
+
+  
   eecalpd1scint->Write();
   eecalpd1cer->Write();
   pecalpd1scint->Write();
@@ -1909,7 +1972,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,
-	      TH1F* eecaltime, TH1F* ehcaltime, int &nin,
+	      TH1F* eecaltime, TH1F* ehcaltime, int &nine,int &ninh,
 	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
 	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
 	      ){
@@ -1955,7 +2018,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       }
       
       float ae=aecalhit->energyDeposit;
-      nin+=aecalhit->n_inelastic;
+      nine+=aecalhit->n_inelastic;
 
 
       eesum+=ae;
@@ -2041,7 +2104,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
     for(size_t i=0;i<hcalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
-      nin+=ahcalhit->n_inelastic;
+      ninh+=ahcalhit->n_inelastic;
 
 
       eesum+=ah;
