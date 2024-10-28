@@ -16,7 +16,4 @@
 #include "G4Track.hh"
 
 using namespace CalVision;
-
-
-
 /// Assignment operator

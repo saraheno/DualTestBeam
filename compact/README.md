@@ -1,3 +1,10 @@
+To display FSCEPonly geometry: 
+
+ddsim --compactFile=EventDisplay_DRFSCEPonly.xml --runType=vis -G --steeringFile SCEPCALsteering.py --outputFile=out.root --part.userParticleHandler= -G --gun.position="0.,0.,0.0*cm" --gun.direction "0.,0.,1.0" --gun.energy "20 * GeV" --gun.particle="e-" -N 1
+
+
+
+
 DualReadOut Calorimeter using crystal ECAL and fiber HCAL
 
 To setup your environment use instruction on `https://foswiki.web.cern.ch/Calvision/DualCrystalDD4hep#Simulation_with_dual_readout_calorimetry`

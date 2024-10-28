@@ -24,7 +24,7 @@
 #/vis/viewer/set/viewpointThetaPhi 0 0 deg 
 # from the side
 /vis/viewer/set/upVector 0 1 0
-/vis/viewer/set/viewpointThetaPhi 270 0 deg 
+/vis/viewer/set/viewpointThetaPhi 230 -30 deg 
 
 
 # Specify zoom value:
@@ -82,7 +82,7 @@
 /vis/modeling/trajectories/drawByParticleID-0/set mu- red
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ red
 /vis/modeling/trajectories/drawByParticleID-0/set gamma orange
-/vis/modeling/trajectories/drawByParticleID-0/set neutron brown
+/vis/modeling/trajectories/drawByParticleID-0/set neutron cyan
 /vis/modeling/trajectories/drawByParticleID-0/set proton brown
 /vis/modeling/trajectories/drawByParticleID-0/set opticalphoton yellow
 #

@@ -41,6 +41,7 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   std::cout<<"file name is "<<inputfilename<<std::endl;
   TFile *f = new TFile(inputfilename);
   TH1F* nhist = static_cast<TH1F*>(f->Get(histname)->Clone());
+  cout<<"number of histo entries= "<<nhist->GetEntries()<<endl;
   nhist->GetXaxis()->SetLimits(0,1.5);
   Int_t imax = nhist->GetMaximumBin();
   Double_t amax = nhist->GetBinCenter(imax);
@@ -72,20 +73,20 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
 }
 
 void ResvE() {
-  const int npoints=10;
+  const int npoints=8;
   const char* filenames[npoints];
   double aatruemean[npoints];
 
-  filenames[0]="./output/FSCEPonly/res/res_FSCEPonly_10GeV.root"; 
-  filenames[1]="./output/FSCEPonly/res/res_FSCEPonly_15GeV.root"; 
-  filenames[2]="./output/FSCEPonly/res/res_FSCEPonly_20GeV.root";
-  filenames[3]="./output/FSCEPonly/res/res_FSCEPonly_25GeV.root";
-  filenames[4]="./output/FSCEPonly/res/res_FSCEPonly_30GeV.root"; 
-  filenames[5]="./output/FSCEPonly/res/res_FSCEPonly_35GeV.root";
-  filenames[6]="./output/FSCEPonly/res/res_FSCEPonly_40GeV.root"; 
-  filenames[7]="./output/FSCEPonly/res/res_FSCEPonly_45GeV.root";
-  filenames[8]="./output/FSCEPonly/res/res_FSCEPonly_50GeV.root";
-  filenames[9]="./output/FSCEPonly/res/res_FSCEPonly_100GeV.root";
+  filenames[0]="./output/Conly/res/res_Conly_10GeV.root"; 
+  filenames[1]="./output/Conly/res/res_Conly_15GeV.root"; 
+  filenames[2]="./output/Conly/res/res_Conly_20GeV.root";
+  filenames[3]="./output/Conly/res/res_Conly_25GeV.root";
+  filenames[4]="./output/Conly/res/res_Conly_30GeV.root"; 
+  filenames[5]="./output/Conly/res/res_Conly_35GeV.root";
+  filenames[6]="./output/Conly/res/res_Conly_40GeV.root"; 
+  filenames[7]="./output/Conly/res/res_Conly_45GeV.root";
+  filenames[8]="./output/Conly/res/res_Conly_50GeV.root";
+  filenames[9]="./output/Conly/res/res_Conly_100GeV.root";
 
   aatruemean[0]=10;
   aatruemean[1]=15;
@@ -103,12 +104,14 @@ void ResvE() {
   double aamean_err[npoints][nhst],aarms_err[npoints][nhst],rrres_err[npoints][nhst];
  
   vector<string> hnam(nhst);
-  hnam[0]="pinphoton_1";
-  hnam[1]="pinphoton_3";
-  hnam[2]="phcHcalcorr";
+  hnam[0]="pinphoton_0";
+  hnam[1]="pinphoton_2";
+  hnam[2]="phcEcalcorr";
   hnam[3]="pienergy_5";
   hnam[4]="hpdepcal";
 
+
+  //cout<<"number of histo entries= "<<hnam[0].GetEntries()<<endl;
 
 
   double abc,dej,feh,ikl;
@@ -217,12 +220,12 @@ void ResvE() {
   frame->SetMinimum(0.01);
   frame->SetMaximum(0.5);
   frame->SetStats(0);
-  //frame->SetTitle("Sampling HCAL pi- Resolution vs Energy");
-  frame->SetTitle("FSCEP HCAL pi- Resolution vs Energy");
+  //frame->SetTitle("FiberOnly HCAL pi- Resolution vs Energy");
+  frame->SetTitle("Sampling HCAL pi- Resolution vs Energy");
   frame->GetXaxis()->SetTitle("Beam Energy (GeV)");
   frame->GetXaxis()->SetTickLength(0.02);
   frame->GetXaxis()->SetLabelSize(0.03);
-  frame->GetYaxis()->SetTitle("percent resolution");
+  frame->GetYaxis()->SetTitle("resolution");
   frame->GetYaxis()->SetLabelSize(0.03);
   frame->Draw("");
 
@@ -350,7 +353,8 @@ void ResvE() {
   
 
   lgd->Draw();
-  Canvas->Print("resolution.png",".png");
+  Canvas->Print("resolution_samponly.png",".png");
+  //Canvas->Print("resolution_fsceponly.png",".png");
 
 
   return;

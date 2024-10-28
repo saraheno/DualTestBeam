@@ -872,7 +872,7 @@
 		</readout>
 
 		<readout name="DRSNoSegment">
-			<segmentation type="NoSegmentation"/>
+		<segmentation type="NoSegmentation"/>
 			<id>system:3,iy:12,ix:12,layer:12,box2:2,type:4</id>
 		</readout>
 	</readouts>

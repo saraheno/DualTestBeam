@@ -26,8 +26,10 @@ using namespace std;
 // way too slow if track all photons for now
 //   so randomly delete photons after creation according to this fraction
 //   dialScint=1.0, dialCer=1.0 to keep all photons 
-double dialCher= 100./8000.;
-double dialScint=10./200000.;
+double dialCherC  = 10./800000.;
+double dialScintC = 100./20000000.;
+double dialCherO  = 100./800000.;
+double dialScintO = 1./20000000.;
 float betarel=1/1.544;	//depends on the media refractive index
 int printlimitSCE=10;
 int MAXEVENT=10;
@@ -85,8 +87,8 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 				cout << "Info to interpret results:"		 << endl;
 				cout << "	event number is " << eventNumber << endl;
 				cout << "	DANGER DANGER "   		 << endl;
-				cout << "	dialCher = "	  <<dialCher 	 << endl;
-				cout << "	dialScint = "     <<dialScint	 << endl;
+				cout << "	dialCher  for PbWO4 and BGO = "	 << dialCherC  << ", for others" << dialCherO  << endl;
+				cout << "	dialScint for PbWO4 and BGO = "  << dialScintC << ", for others" << dialScintO << endl;
 				cout << "	relativistic particles count with beta = " << betarel << " adjust with media RI" << endl;
 			}
 			
@@ -103,6 +105,9 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 			if (thePrePV)	thePrePVName = thePrePV->GetName();
 			G4String thePostPVName = "";
 			if (thePostPV)	thePostPVName = thePostPV->GetName();
+			G4Track *theTrack = step->GetTrack();
+			G4int TrPDGid = theTrack->GetDefinition()->GetPDGEncoding();
+
 			Geant4StepHandler h(step);
 			HitContribution contrib = DualCrysCalorimeterHit::extractContribution(step);
 			Geant4HitCollection*  coll    = collection(m_collectionID);
@@ -146,7 +151,7 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 					except("+++ Invalid CELL ID for hit!");
 				}
 			}
-			G4Track * track =  step->GetTrack();
+			G4Track *track =  step->GetTrack();
 			string amedia = ((track->GetMaterial())->GetName());
 			float avearrival=(pretime+posttime)/2.;
 			int jbin=-1;
@@ -208,7 +213,11 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 							if(ibin > -1 && ibin < hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
 							if(jbin > -1 && jbin < hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
 							dd4hep::sim::Geant4Random& rnd = evt.random();
-							if(rnd.rndm()>dialCher) track->SetTrackStatus(fStopAndKill);
+							if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
+								if(rnd.rndm()>dialCherC) track->SetTrackStatus(fStopAndKill);
+							} else{
+								if(rnd.rndm()>dialCherO) track->SetTrackStatus(fStopAndKill);
+							}
 						}
 					}
 				}
@@ -241,7 +250,11 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 							if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
 							//Geant4Event&  evt = context()->event();
 							dd4hep::sim::Geant4Random& rnd = evt.random();
-							if(rnd.rndm()>dialScint) track->SetTrackStatus(fStopAndKill);	    
+							if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
+								if(rnd.rndm()>dialScintC) track->SetTrackStatus(fStopAndKill);
+							} else {
+								if(rnd.rndm()>dialScintO) track->SetTrackStatus(fStopAndKill);
+							}
 						}
 					}
 				}
@@ -285,6 +298,9 @@ namespace dd4hep {  // Namespace for the Geant4 based simulation part of the AID
 					if(aabeta>betarel) {
 						hit->edeprelativistic+=contrib.deposit;	  
 						if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
+					}
+					if((abs(TrPDGid)==11)||(abs(TrPDGid)==22)) {
+						hit->edepepgam+=contrib.deposit;
 					}
 				}// comment for this routine says mark the track to be kept for MC truth propagation during hit processing
 			}
