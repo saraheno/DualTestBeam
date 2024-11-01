@@ -41,7 +41,7 @@
 
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 10 cm
-/vis/scene/add/axes 0 0 0
+#/vis/scene/add/axes 0 0 0
 
 
 # Draw smooth trajectories at end of event, showing trajectory points
@@ -79,11 +79,12 @@
 /vis/modeling/trajectories/drawByParticleID-0/set e+ blue
 /vis/modeling/trajectories/drawByParticleID-0/set pi- black
 /vis/modeling/trajectories/drawByParticleID-0/set pi+ black
+/vis/modeling/trajectories/drawByParticleID-0/set pi0 green
 /vis/modeling/trajectories/drawByParticleID-0/set mu- red
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ red
 /vis/modeling/trajectories/drawByParticleID-0/set gamma orange
 /vis/modeling/trajectories/drawByParticleID-0/set neutron brown
-/vis/modeling/trajectories/drawByParticleID-0/set proton brown
+/vis/modeling/trajectories/drawByParticleID-0/set proton yellow
 /vis/modeling/trajectories/drawByParticleID-0/set opticalphoton yellow
 #
 # To superimpose all of the events from a given run:

@@ -41,7 +41,7 @@
 
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 10 cm
-/vis/scene/add/axes 0 0 0
+#/vis/scene/add/axes 0 0 0
 
 
 # Draw smooth trajectories at end of event, showing trajectory points
@@ -78,7 +78,7 @@
 /vis/modeling/trajectories/drawByParticleID-0/set e- red
 /vis/modeling/trajectories/drawByParticleID-0/set pi- brown
 /vis/modeling/trajectories/drawByParticleID-0/set pi+ brown
-/vis/modeling/trajectories/drawByParticleID-0/set pi0 brown
+/vis/modeling/trajectories/drawByParticleID-0/set pi0 black
 /vis/modeling/trajectories/drawByParticleID-0/set nue green
 /vis/modeling/trajectories/drawByParticleID-0/set mu- blue
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ blue

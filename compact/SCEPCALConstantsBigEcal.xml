@@ -11,18 +11,15 @@
      <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
      
 <!-- constants for dual readout crystal calorimeter -->
-    <constant name="DRcrystalwidth" value="100.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength1" value="50.0*cm"/> 
-    <constant name="DRcrystallength2" value="50.0*cm"/> 
+    <constant name="DRcrystalwidth" value="100.0*cm"/>  <!-- should be 1.  was 100 -->
+    <constant name="DRcrystallength1" value="5.0*cm"/> <!-- was 5 -->
+    <constant name="DRcrystallength2" value="15.0*cm"/> <!-- was 15 -->
     <constant name="DRcrystalgapl" value="0.001*cm"/>
     <constant name="DRcrystalgapmat" value="DRcrystalgapl/2"/>
     <constant name="DRcrystalgapt" value="0.001*cm"/>
     <constant name="DRcrystalhont" value="0.999*DRcrystalgapt"/>
 
-    <constant name="DRcrystallength" value="400.0*cm"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
-
-
-    
+    <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
     <constant name="DRcrystalNsize" value="1"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
@@ -70,7 +67,7 @@
 
 
 <!--    <constant name="world_side" value="100*m"/> -->
-    <constant name="world_side" value="2*(DRcrystallength1+DRcrystallength2+DRcrystalgapl+2*DRFiberlengthIDEA+EcalHcalgap+edgeoffset+10.)"/> 
+    <constant name="world_side" value="4*(DRcrystallength1+DRcrystallength2+DRcrystalgapl+2*DRFiberlengthIDEA+EcalHcalgap+edgeoffset+10.)"/> 
     <constant name="world_x" value="world_side/1.5"/>  <!-- should be /4 -->
     <constant name="world_y" value="world_side/1.5"/>  <!-- should be /4 -->
     <constant name="world_z" value="world_side"/>

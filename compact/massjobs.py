@@ -2,7 +2,7 @@ from array import *
 import argparse
 
 
-# python massjobs.py -g FSCEPonly -N 500 -d 0
+# python massjobs.py -g FSCEPonly -N 500 -d 0 -o 0
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g", "--geometry", help="geometry code")
@@ -10,6 +10,7 @@ argParser.add_argument("-g", "--geometry", help="geometry code")
 
 argParser.add_argument("-N", "--number", help="number to make")
 argParser.add_argument("-d", "--direction", help="0 is straight 1 is fiber angle")
+argParser.add_argument("-o", "--origin", help="0 is 0,0,-1  1 is 0,-7,-1  2 is 0,0,200")
 
 args = argParser.parse_args()
 print("args=%s" % args)
@@ -31,13 +32,22 @@ nenergy=2
 energies=[20,50]
 name="condor-executable-"+args.geometry+"-"
 direct="0. 0.0 1."
+pos=" 0. 0. -1*cm"
 
 print(args.direction)
+if args.direction=="0" :
+    direct="0. 0. 1."
 if args.direction=="1" :
     direct="0. 0.05 0.99875"
-poss="0. 0.*mm -1*cm"
-if args.direction=="1" :
+
+
+print(args.origin)
+if args.origin=="0" :
+    poss="0. 0.*mm -1*cm"
+if args.origin=="1" :
     poss="0.,-7*mm,-1*mm"
+if args.origin=="2" :
+    poss="0. 0.*mm 200*cm"
 
 
 print(direct)
