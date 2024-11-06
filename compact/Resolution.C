@@ -1158,7 +1158,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
   TCanvas* x1;
   SCEDraw1(x1,"x1",hpfff,"junkx1.png",0);
   fitffn2->Draw("same");
+  std::cout<<std::endl;
   std::cout<<" rel fract fit params "<<ffn2_p0<<" "<<ffn2_p1<<" "<<ffn2_p2<<std::endl;
+  std::cout<<std::endl;
   
   if(doecal) {
     
@@ -1175,7 +1177,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x2;
     SCEDraw1(x2,"x2",phcEcalncer,"junkx2.png",0);
     fitEcalncer2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Ecal ncer fit params "<<Ecalncer2_p0<<" "<<Ecalncer2_p1<<" "<<Ecalncer2_p2<<std::endl;
+      std::cout<<std::endl;
     
     
     ffm = phcEcalnscint->GetBinCenter(phcEcalnscint->GetMaximumBin());
@@ -1191,7 +1195,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x3;
     SCEDraw1(x3,"x3",phcEcalnscint,"junkx3.png",0);
     fitEcalnscint2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Ecal nscint fit params "<<Ecalnscint2_p0<<" "<<Ecalnscint2_p1<<" "<<Ecalnscint2_p2<<std::endl;
+      std::cout<<std::endl;
     
     
     ffm = phcEcalcorr->GetBinCenter(phcEcalcorr->GetMaximumBin());
@@ -1207,7 +1213,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x4;
     SCEDraw1(x4,"x4",phcEcalcorr,"junkx4.png",0);
     fitEcalcorr2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Ecal corr fit params "<<Ecalcorr2_p0<<" "<<Ecalcorr2_p1<<" "<<Ecalcorr2_p2<<std::endl;
+      std::cout<<std::endl;
     
   }
 
@@ -1226,7 +1234,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x5;
     SCEDraw1(x5,"x5",phcHcalncer,"junkx5.png",0);
     fitHcalncer2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Hcal ncer fit params "<<Hcalncer2_p0<<" "<<Hcalncer2_p1<<" "<<Hcalncer2_p2<<std::endl;
+      std::cout<<std::endl;
     
     
     ffm = phcHcalnscint->GetBinCenter(phcHcalnscint->GetMaximumBin());
@@ -1242,7 +1252,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x6;
     SCEDraw1(x6,"x6",phcHcalnscint,"junkx6.png",0);
     fitHcalnscint2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Hcal nscint fit params "<<Hcalnscint2_p0<<" "<<Hcalnscint2_p1<<" "<<Hcalnscint2_p2<<std::endl;
+      std::cout<<std::endl;
     
     
     ffm = phcHcalcorr->GetBinCenter(phcHcalcorr->GetMaximumBin());
@@ -1258,7 +1270,9 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     TCanvas* x7;
     SCEDraw1(x7,"x7",phcHcalcorr,"junkx7.png",0);
     fitHcalcorr2->Draw("same");
+      std::cout<<std::endl;
     std::cout<<" Hcal corr fit params "<<Hcalcorr2_p0<<" "<<Hcalcorr2_p1<<" "<<Hcalcorr2_p2<<std::endl;
+      std::cout<<std::endl;
     
   }
 
