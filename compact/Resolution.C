@@ -269,17 +269,17 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *enonconsHcalscin = new TH2F("enonconsHcalscin","Hcal nscin versus non conservation of E",500,0.,1.5,500,0.,1.5);
 
 
-  TH2F *enonconsvnni  = new TH2F("enonconsvnni","non conservation of E versus num nucl",500,0.,1.5,500,0.,1000);
-  TH2F *enonconsvf  = new TH2F("enonconsvf","non conservation of E versus f",500,0.,1.5,500,0.,1.1);
-  TH2F *eedgevf  = new TH2F("eedgevf","edge energy versus f",500,0.,0.4,500,0.,1.1);
+  TH2F *enonconsvnni  = new TH2F("enonconsvnni","non conservation of E versus num nucl",500,0.,1000,500,0.,1.5);
+  TH2F *enonconsvf  = new TH2F("enonconsvf","non conservation of E versus f",500,0.,1.1,500,0.,1.5);
+  TH2F *eedgevf  = new TH2F("eedgevf","edge energy versus f",500,0.,1.1,500,0.,0.4);
 
-  TH2F *mes1Ecal = new TH2F("mes1Ecal","Ecal edge energy versus em frac",500,0.,0.15,500,0.,1.5);
-  TH2F *mes2Ecal = new TH2F("mes2Ecal","Ecal edge energy versus num nucl int",500,0.,0.15,500,0.,1000);
+  TH2F *mes1Ecal = new TH2F("mes1Ecal","Ecal edge energy versus em frac",500,0.,1.5,500,0.,0.15);
+  TH2F *mes2Ecal = new TH2F("mes2Ecal","Ecal edge energy versus num nucl int",500,0.,1000,500,0.,0.15);
   TH2F *mes3Ecal = new TH2F("mes3Ecal","Ecal edge energy versus ncer",500,0.,0.15,500,0.,1.5);
   TH2F *mes4Ecal = new TH2F("mes4Ecal","Ecal edge energy versus nscint",500,0.,0.15,500,0.,1.5);
 
-  TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal edge energy versus em frac",500,0.,0.15,500,0.,1.5);
-  TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal edge energy versus num nucl int",500,0.,0.15,500,0.,1000);
+  TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal edge energy versus em frac",500,0.,1.5,500,0.,0.15);
+  TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal edge energy versus num nucl int",500,0.,1000,500,0.,0.15);
   TH2F *mes3Hcal = new TH2F("mes3Hcal","Hcal edge energy versus ncer",500,0.,0.15,500,0.,1.5);
   TH2F *mes4Hcal = new TH2F("mes4Hcal","Hcal edge energy versus nscint",500,0.,0.15,500,0.,1.5);
 
@@ -827,13 +827,13 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
       phcnonconsE3->Fill(nonconsE/(pesumcal-pesumem));
       phcnonconsE4->Fill(nonconsE/(pesumcal-(pesumem/fnorm)));
       
-      mes1Ecal->Fill(pedgeff,pfff);
-      mes2Ecal->Fill(pedgeff,nine);
+      mes1Ecal->Fill(pfff,pedgeff);
+      mes2Ecal->Fill(nine,pedgeff);
       mes3Ecal->Fill(pedgeff,npcertotecal/meancerEcal);
       mes4Ecal->Fill(pedgeff,npscinttotecal/meanscinEcal);
 
-      mes1Hcal->Fill(pedgeff,pfff);
-      mes2Hcal->Fill(pedgeff,ninh);
+      mes1Hcal->Fill(pfff,pedgeff);
+      mes2Hcal->Fill(ninh,pedgeff);
       mes3Hcal->Fill(pedgeff,npcertothcal/meancerHcal);
       mes4Hcal->Fill(pedgeff,npscinttothcal/meanscinHcal);
 
@@ -875,9 +875,9 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
       enonconsHcalscin->Fill(noncons,npscinttothcal/meanscinHcal);
 
 
-      enonconsvnni->Fill(noncons,nine+ninh);
-      enonconsvf->Fill(noncons,pesumem/beamE);
-      eedgevf->Fill(pedgeff,pesumem/beamE);
+      enonconsvnni->Fill(nine+ninh,noncons);
+      enonconsvf->Fill(pfff,noncons);
+      eedgevf->Fill(pfff,pedgeff);
 
       
       phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
@@ -1290,6 +1290,8 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 
   TCanvas* c1b;
   SCEDraw2(c1b,"c1b",ehcEdgeE,phcEdgeE,"junk1b.png",0);
+  TCanvas* c1b2a;
+  SCEDraw1(c1b2a,"c1b2a",phcEdgeE,"junk1b2a.png",0);
   TCanvas* c1b2;
   SCEDraw1(c1b2,"c1b2",phcnonconsE,"junk1b2.png",0);
   TCanvas* c1b21;
