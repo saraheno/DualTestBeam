@@ -812,7 +812,13 @@
     </material>
 
 
-
+    <material name="E_Silicone">
+      <D type="density" unit="g/cm3" value="0.0012"/>
+      <fraction n="0.754" ref="N"/>
+      <fraction n="0.234" ref="O"/>
+      <fraction n="0.012" ref="Ar"/>
+      <property name="RINDEX"        ref="RINDEX__Silicone"/>
+    </material>
 
 
     <material name="killMedia1">
