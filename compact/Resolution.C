@@ -25,7 +25,7 @@ using namespace std;
 
 
 // This file is modified to accound for two-segmented ECAL crystals
-// to run in batch copy: 
+// to run in batch copy:
 //     root -l -b -q 'Resolution.C(nevt,"electron_rootfile.root", "pion_rootfile.root","hcalonly_rootfile.root",energy,doecal,dohcal,hcaltype,doedge,gendet,"output.root","ECALleaf","HCALleaf")'
 //
 //     nevt				number of events to process, e.g. 50;
@@ -47,8 +47,8 @@ using namespace std;
 //     gendet				photon in:
 //						active media (e.g. ecal crystal) = 1;
 //						photodetector                    = 2;
-//						energy deposit                   = 3; --> 
-//						debug                            = 4; 
+//						energy deposit                   = 3; -->
+//						debug                            = 4;
 //     output.root			output root file with all histograms --> to be used in ResvE.C
 //     ECALleaf   			ECAL ttree in electron_rootfile.root and pion_rootfile.root, e.g. DRCNoSegment
 //     HCALleaf   			HCAL ttree in electron_rootfile.root and pion_rootfile.root, e.g. DRFNoSegment
@@ -91,20 +91,21 @@ void SCEDraw3   (TCanvas* canv, const char* name, TH1F* h1,TH1F* h2,TH1F* h3,	co
 void setCanvas  (TCanvas* canv,const char* name, bool hist, bool tprofile, TH1F* h1, TProfile* t1);
 
 
-void getStuff(map<string,int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, 
+void getStuff(map<string,int> mapecalslice, map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal,
 		int hcaltype,  bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge, CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 		float  &eesum,float &eesumcal,float &eesumem,float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,
 		float &eesumfiber1, float &eesumfiber2,float &eesumabs,float &eesumPDh,
-		float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal, float &timecut, float &eecaltimecut, 
+		float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal, float &timecut, float &eecaltimecut,
 		float &ehcaltimecut, TH1F* eecaltime,  TH1F* ehcaltime, int &nine, int &ninh,
 		TH1F *ecalpd1scint,  TH1F *ecalpd1cer, TH1F *ecalpd2scint,TH1F *ecalpd2cer,
 		TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
 	      	TH1F *ecalpd1scintz, TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,
-		TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz);
+	        TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz,
+	        TH2F *eecal2d, TH2F *ehcal2d);
 
 
-void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, 
-		float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, 
+void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal,
+		float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype,
 		TBranch* &b_ecal,TBranch* &b_hcal, CalHits* &ecalhits, CalHits* &hcalhits, float &EEcal, float &EHcal,
 		float &timecut, float &eecaltimecut, float &ehcaltimecut); //
 
@@ -124,7 +125,7 @@ map<string,int>::iterator eii5;
 map<string,int>::iterator eii6;
 map<string,int>::iterator eii7;
 
-map<string,int> mapsampcalslice; 
+map<string,int> mapsampcalslice;
 map<string,int>::iterator sii1;
 map<string,int>::iterator sii2;
 map<string,int>::iterator sii3;
@@ -140,11 +141,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
                 const char* ECALleaf, const char* HCALleaf){
 	mapecalslice["air"]=0;
 	mapecalslice["PD1"]=1;
-	mapecalslice["crystal1"]=2;
-	mapecalslice["gap"]=3;
-	mapecalslice["crystal2"]=4;
-	mapecalslice["PD2"]=5;
-	
+	mapecalslice["crystal1"]=3;
+	mapecalslice["gap"]=4;
+	mapecalslice["crystal2"]=5;
+	mapecalslice["PD2"]=7;
+	// slice 2 & 6:  E_Silicone
+
 	eii0 = mapecalslice.find("air");
 	eii1 = mapecalslice.find("PD1");
 	eii2 = mapecalslice.find("crystal1");
@@ -153,7 +155,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	eii5 = mapecalslice.find("gap2");
 	eii6 = mapecalslice.find("crystal2");
 	eii7 = mapecalslice.find("PD2");
-	
+
 	mapsampcalslice["air"]		=0;
 	mapsampcalslice["Iron"]		=1;
 	mapsampcalslice["PD1"]		=2;
@@ -164,7 +166,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	mapsampcalslice["PD4"]		=7;
 	mapsampcalslice["Sep1"]		=8;
 	mapsampcalslice["Sep2"]		=9;
-	
+
 	sii1 = mapsampcalslice.find("Iron");
 	sii2 = mapsampcalslice.find("PD1");
 	sii3 = mapsampcalslice.find("PS");
@@ -174,8 +176,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	sii7 = mapsampcalslice.find("PD4");
 	sii8 = mapsampcalslice.find("Sep1");
 	sii9 = mapsampcalslice.find("Sep2");
-	 
-	float beamE=beamEE*1000.;  // convert to MeV 
+
+	float beamE=beamEE*1000.;  // convert to MeV
 	// read in libraries that define the classes
 	Long_t result;
 	char text[1024];
@@ -189,12 +191,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	result = gSystem->Load("libDDEvePlugins");
 	result = gSystem->Load("libDualTestBeam");
 	result = gSystem->Load("libDDG4Plugins");
-	int num_evt_mc,num_evt;  
+	int num_evt_mc,num_evt;
 	TBranch* b_mc;
 	TBranch* b_ecal;
 	TBranch* b_hcal;
-	TBranch* b_edge;      
-	
+	TBranch* b_edge;
+
 	const int num_histograms = 6;
 	vector<TH1F*> eenergy;
 	vector<TH1F*> pienergy;
@@ -211,10 +213,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	  ephoton.push_back(new  TH1F(Form("elnphoton_%zu",i), Form("e-: %s", nphoton_title[i]), 100, 0.0, 1.5));
 	  piphoton.push_back(new TH1F(Form("pinphoton_%zu",i), Form("pi-: %s",nphoton_title[i]), 100, 0.0, 1.5));
 	}
-	
-	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 100,0.,1.5);  
+
+	TH1F *phcEcalcorr	= new TH1F("phcEcalcorr","ecal: dualCorrelation", 600,0.,1.5);
 	TH1F *phcHcalcorr	= new TH1F("phcHcalcorr","hcal: dualCorrelation", 100,0.,1.5);
-		
+
 	TH2F *ehcEcalNsNc	= new TH2F("ehcEcalNsNc","e-  ecal ncer vs nscint",500,0.,1.5,500,0.,1.5);
 	TH2F *phcEcalNsNc	= new TH2F("phcEcalNsNc","pi- ecal ncer vs nscint",500,0.,1.5,500,0.,1.5);
 	TH2F *ehcHcalNsNc	= new TH2F("ehcHcalNsNc","e-  hcal ncer vs nscint",500,0.,1.5,500,0.,1.5);
@@ -231,32 +233,32 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 	TH2F *ehcEcalNsNctc     = new TH2F("ehcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
 	TH2F *phcEcalNsNctc     = new TH2F("phcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
-	
+
 	TH2F *ehcEcalMarco	= new TH2F("ehcEcalMarco","e-  ecal c v c/s",500,0.,1.5,500,0.,1.5);
 	TH2F *phcEcalMarco	= new TH2F("phcEcalMarco","pi- ecal c v c/s",500,0.,1.5,500,0.,1.5);
 	TH2F *ehcHcalMarco	= new TH2F("ehcHcalMarco","e-  hcal c v c/s",500,0.,1.5,500,0.,1.5);
 	TH2F *phcHcalMarco	= new TH2F("phcHcalMarco","pi- hcal c v c/s",500,0.,1.5,500,0.,1.5);
-	
+
 	TH2F *ehcHcalf1f2	= new TH2F("ehcHcalf1f2","e-  hcal-fiber scint vs cer",500,0.,2.5,500,0.,2.5);
 	TH2F *phcHcalf1f2	= new TH2F("phcHcalf1f2","pi- hcal-fiber scint vs cer",500,0.,2.5,500,0.,2.5);
-	
+
 	TH1F *ehaphcal		= new TH1F("ehaphcal","e-  hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
 	TH1F *phaphcal		= new TH1F("phaphcal","pi- hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
-	
+
 	TH1F *eheest		= new TH1F("eheest","e-  : (crys+fiber) / beamE",100,0.,1.);
 	TH1F *pheest		= new TH1F("pheest","pi- : (crys+fiber) / beamE",100,0.,1.);
-	
+
 	TH1F *ehetrue		= new TH1F("ehetrue","e-  : alldepositedE / beamE",100,0.,1.1);
 	TH1F *phetrue		= new TH1F("phetrue","pi- : alldepositedE / beamE",100,0.,1.1);
-	
+
 	TH1F *hedepcal		= new TH1F("hedepcal","e-  (alldepositE-edgeE) / beamE",100,0.6,1.1);
 	TH1F *hpdepcal		= new TH1F("hpdepcal","pi- (alldepositE-edgeE) / beamE",100,-0.5,1.1);
-		
+
 	TH1F *eecaltime		= new TH1F("eecaltime","e- ecal: time",100,0.,40.);
 	TH1F *ehcaltime		= new TH1F("ehcaltime","e- hcal: time",100,0.,40.);
 	TH1F *piecaltime	= new TH1F("piecaltime","pi- ecal: time",100,0.,40.);
 	TH1F *pihcaltime	= new TH1F("pihcaltime","pi- hcal: time",100,0.,40.);
-	
+
 	TH2F *enscvni		= new TH2F("enscvni", "e-  (alldepositE-edgeE) vs num_inelastic",500,0.,1.2,100,0.,500);
 	TH2F *pinalvni          = new TH2F("pinalvni","pion all E versus number inelastic",100,0.,1.2,100,0.,1000);
 	TH2F *pinscvni		= new TH2F("pinscvni","pi- (alldepositE-edgeE) vs num_inelastic",500,0.,1.2,100,0.,500);
@@ -285,7 +287,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	TH1F *ehcalpd2cer       = new TH1F("ehcalpd2cer","elec cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
 	TH1F *phcalpd2scint     = new TH1F("phcalpd2scint","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemax);
 	TH1F *phcalpd2cer       = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
-	
+
 	TH1F *eecalpd1scintz    = new TH1F("eecalpd1scintz","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
 	TH1F *eecalpd1cerz      = new TH1F("eecalpd1cerz","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
 	TH1F *pecalpd1scintz    = new TH1F("pecalpd1scintz","pion scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
@@ -303,23 +305,25 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	TH1F *phcalpd2scintz    = new TH1F("phcalpd2scintz","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
 	TH1F *phcalpd2cerz      = new TH1F("phcalpd2cerz","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
 
-	
+	TH2F *eecal2d = new TH2F("eecal2d","lego of ecal elec", 41,-20.,20.,41,-20.,20.);
+	TH2F *ehcal2d = new TH2F("ehcal2d","lego of hcal elec", 41,-20.,20.,41,-20.,20.);
+
 	//****************************************************************************************************************************
 	// process electrons
-	
+
 	TFile* ef = TFile::Open(einputfilename);
 	TTree* et = (TTree*)ef->Get("EVENT;1");
-	
+
 	b_mc= et->GetBranch("MCParticles");
 	if(doecal) b_ecal = et->GetBranch(ECALleaf);
 	if(dohcal) b_hcal = et->GetBranch(HCALleaf);
-	if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment"); 
-	
+	if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
+
 	num_evt_mc = b_mc->GetEntries();
 	num_evt= min(num_evt_mc,num_evtsmax);
 	cout<<"num_evt="<<num_evt<<", MC events="<<num_evt_mc<<endl;
-	  
-	float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);  
+
+	float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
 	float meaneecaltimecut(0),meanehcaltimecut(0);
 	if(num_evt>0) { // loop over events
 		CalHits* ecalhits = new CalHits();
@@ -330,7 +334,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		if(doedge) b_edge->SetAddress(&edgehits);
 		for(int ievt=0;ievt<num_evt; ++ievt) {// first pass through file get hcal & ecal: meanCer and meanScint + timing info
 			getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, //input
-					meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, meaneecaltimecut, meanehcaltimecut); // output: 
+					meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut, meaneecaltimecut, meanehcaltimecut); // output:
 		}
 		cout<<"done with getMeanPhot"<<endl;
 		meanscinEcal=meanscinEcal/num_evt;
@@ -340,7 +344,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 		cout<<"ECAL: meanscint="<<meanscinEcal<<", meancer="<<meancerEcal<<endl;
 		cout<<"HCAL: meanscint="<<meanscinHcal<<", meancer="<<meancerHcal<<endl;
-		
+
 		// second pass through file
 		for(int ievt=0;ievt<num_evt; ++ievt) {
 			float eesum(0), eesumcal(0.),eesumem(0.), eesumair(0), eesumdead(0), eesumcrystal(0), eesumPDe(0);
@@ -349,16 +353,17 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			int nine(0), ninh(0);
 			getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,
 					edgehits,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,
-					eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut, 
+					eesumPDh,eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,timecut, eecaltimecut,
 					ehcaltimecut,  eecaltime,ehcaltime,nine,ninh,
 					eecalpd1scint, eecalpd1cer, eecalpd2scint, eecalpd2cer,
 					ehcalpd1scint, ehcalpd1cer, ehcalpd2scint, ehcalpd2cer,
 					eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,
-					ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz);
+				        ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz,
+				 	eecal2d, ehcal2d);
 
 			vector<float> eesums   = {eesumcrystal, eesumfiber1 + eesumfiber2, eesumfiber1, eesumfiber2, eesumedge, beamE - eesumedge};
 			vector<float> nphotons = {necertotecal/meancerEcal, necertothcal/meancerHcal, nescinttotecal/meanscinEcal, nescinttothcal/meanscinHcal};
-			
+
 			auto eit = eesums.begin();
 			for (auto hist : eenergy) {
 				hist->Fill(*eit/beamE);
@@ -369,7 +374,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 				hist->Fill(*nit);
 				++nit;
 			}
-			
+
 			heesumcal->Fill(eesumcal/beamE);
 			heesumemcal->Fill(eesumem/beamE);
 			if(eesumem>0) hefff->Fill(eesumem/eesumcal);
@@ -378,7 +383,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			ehcHcalf1f2->Fill(eesumfiber1/1000.,eesumfiber2/1000.);
 			if((eesumfiber1+eesumfiber2)>0) ehaphcal->Fill((eesumfiber1+eesumfiber2)/(eesumabs+eesumfiber1+eesumfiber2));
 			eheest->Fill((eesumcrystal+(eesumfiber1+eesumfiber2))/beamE);
-			
+
 			float ttt  = nescinttotecal / meanscinEcal;
 			float ttt2 = necertotecal   / meancerEcal;
 			float tty  = nescinttothcal / meanscinHcal;
@@ -387,7 +392,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			if( (tty>0.1) && (tty2>0.2) ) ehcHcalNsNc->Fill(tty,tty2);
 			ehcEcalMarco->Fill(ttt2/ttt,ttt2);
 			ehcHcalMarco->Fill(tty2/tty,tty2);
-		      
+
 			float eachecks=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge;
 			ehetrue->Fill(eachecks/beamE);
 			float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
@@ -422,30 +427,30 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		num_evt    = min(num_evt,num_evtsmax);
 		cout<<"num_evt_ele hcalcalib file="<<num_evt<<endl;
 		float meanscinEcal(0),meancerEcal(0),meanscinHcal(0),meancerHcal(0),meaneecaltimecut(0),meanehcaltimecut(0);
-		if(num_evt>0) { 
+		if(num_evt>0) {
 		      	CalHits* ecalhitsa = new CalHits();
 		      	CalHits* hcalhitsa = new CalHits();
 			b_hcal->SetAddress(&hcalhitsa);
 			cout<<" branches set"<<endl;
 			// first pass through file
 			for(int ievt=0;ievt<num_evt; ++ievt) {
-				getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, 
+				getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa,
 						meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut);
 			}
 			meanscinHcal=meanscinHcal/num_evt;
 			meancerHcal=meancerHcal/num_evt;
 			cout<<"HCAL meanscint="<<meanscinHcal<<endl;
 			cout<<"HCAL meancer="  <<meancerHcal<<endl;
-		} 
+		}
 		efa->Close();
 		cout<<"END calibration **********************"<<endl;
 	} // end if(doecal&&dohcal)
-	// 
+	//
 	//****************************************************************************************************************************
-	// process pions  
+	// process pions
 	TFile* pif = TFile::Open(piinputfilename);
 	TTree* pit = (TTree*)pif->Get("EVENT;1");
-	
+
 	if(pif==0) cout<<" no file " <<endl;
 	if(pit==0) cout<<" no event "<<endl;
 	cout<<"PION ************************"<<endl;
@@ -453,14 +458,14 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	if(doecal) b_ecal = pit->GetBranch(ECALleaf);
 	if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
 	if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
-	
+
 	float b1Ecal=0.;float m1Ecal=1.;
 	float b1Hcal=0.;float m1Hcal=1.;
-	
+
 	num_evt_mc = b_mc->GetEntries();
 	num_evt    = std::min(num_evt_mc,num_evtsmax);
-	cout<<"num_evt_pi="<<num_evt<<endl;  
-	// loop over events  
+	cout<<"num_evt_pi="<<num_evt<<endl;
+	// loop over events
 	if(num_evt>0) {
 		CalHits* ecalhits = new CalHits();
 		if(doecal) b_ecal->SetAddress(&ecalhits);
@@ -480,7 +485,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 					npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,
 					timecut, eecaltimecut, ehcaltimecut,piecaltime,pihcaltime,nine,ninh,
 					pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
-					pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz);
+				        pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz,
+				        eecal2d, ehcal2d);
 
 			vector<float> piesums   = {pesumcrystal, pesumfiber1 + pesumfiber2, pesumfiber1, pesumfiber2, pesumedge, beamE-pesumedge};
 			vector<float> npiphotons = {npcertotecal/meancerEcal, npcertothcal/meancerHcal, npscinttotecal/meanscinEcal, npscinttothcal/meanscinHcal};
@@ -489,12 +495,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			mes2Ecal->Fill(pesumedge/beamE,nine);
 			mes3Ecal->Fill(pesumedge/beamE,npcertotecal/meancerEcal);
 			mes4Ecal->Fill(pesumedge/beamE,npscinttotecal/meanscinEcal);
-			
+
 			mes1Hcal->Fill(pesumedge/beamE,pesumem/beamE);
 			mes2Hcal->Fill(pesumedge/beamE,ninh);
 			mes3Hcal->Fill(pesumedge/beamE,npcertothcal/meancerHcal);
 			mes4Hcal->Fill(pesumedge/beamE,npscinttothcal/meanscinHcal);
-			
+
 			auto pit = piesums.begin();
 			for (auto hist : pienergy) {
 				hist->Fill(*pit/beamE);
@@ -510,21 +516,21 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			hpesumemcal->Fill(pesumem/beamE);
 			if(pesumem>0) hpfff->Fill(pesumem/pesumcal);
 			else cout << "psumemcal is zero " << endl;
-			
+
 			phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
 			if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
 			pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
-			
+
 			float rrr=npscinttotecal/meanscinEcal;
 			float rrr2=npcertotecal/meancerEcal;
 			float rrx=npscinttothcal/meanscinHcal;
 			float rrx2=npcertothcal/meancerHcal;
-			if( (rrr>0.1)&&(rrr2>0.2) ) phcEcalNsNc->Fill(rrr,rrr2);  
-			if( (rrx>0.1)&&(rrx2>0.2) ) phcHcalNsNc->Fill(rrx,rrx2);  
-			
+			if( (rrr>0.1)&&(rrr2>0.2) ) phcEcalNsNc->Fill(rrr,rrr2);
+			if( (rrx>0.1)&&(rrx2>0.2) ) phcHcalNsNc->Fill(rrx,rrx2);
+
 			phcEcalMarco->Fill(rrr2/rrr,rrr2);
 			phcHcalMarco->Fill(rrx2/rrx,rrx2);
-			
+
 			float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge;
 			float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh;
 			hpdepcal->Fill(pedepcal/beamE);
@@ -546,7 +552,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
                         cout<<"hcal, totnum_cer="<<npcertothcal<<", totnum_scint="<<npscinttothcal<<endl;
                                cout<<"ehcaltimecut= "<<ehcaltimecut/1000.<<", num_inelastic="<<nine+ninh<<endl;
                                cout<<"******************************"<<endl;
-			
+
 		}  //end loop over events
 		if(dodualcorr) {
 			cout<<" starting fits"<<endl;
@@ -587,7 +593,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 			for(int ievt=0;ievt<num_evt; ++ievt) {
 				if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) cout<<"num_evt_pi="<<ievt<<endl;
-				float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0); 
+				float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
 				getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,
 						ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,
 						timecut, eecaltimecutcor, ehcaltimecutcor);
@@ -605,7 +611,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		int ncanv = 7;
 		vector<TCanvas*> canv;
 		for (int i = 0; i < ncanv; ++i) {canv.push_back(new TCanvas(Form("canvas%d", i), Form("Canvas %d", i), 800, 600));}
-		SCEDraw2(canv[0],"allDepE: pi- vs e-",ehetrue,phetrue,"pivse_allE.png",0);		
+		SCEDraw2(canv[0],"allDepE: pi- vs e-",ehetrue,phetrue,"pivse_allE.png",0);
 		SCEDraw2(canv[1],"EdgeE(escaping): pi- vs e-",eenergy[4],pienergy[4],"pivse_edgeE.png",0);
 		SCEDraw2(canv[2],"BeamE-EdgeE: pi- vs e-",eenergy[5],pienergy[5],"pivse_allcaloE.png",0);
 		SCEDraw1(canv[3],"e-: allDepE-EdgeE",hedepcal,"e_allcaloE.png",0);
@@ -725,6 +731,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
         ehcalpd2cerz->Write();
         phcalpd2scintz->Write();
         phcalpd2cerz->Write();
+
+	eecal2d->Write();
+	ehcal2d->Write();
+
 	out->Close();
 } // end of Resolution
 
@@ -809,7 +819,7 @@ void SCEDraw2 (TCanvas* canv,const char* name,TH1F* h1,TH1F* h2,const char* outf
 	h1->SetLineColor(kGreen);
 	h1->SetLineWidth(3);
 	h1->SetStats(111111);
-	h1->Draw("HIST");	
+	h1->Draw("HIST");
 	h2->SetLineColor(kRed);
 	h2->SetLineWidth(3);
 	h2->SetStats(111111);
@@ -829,11 +839,11 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 	  h1->SetMinimum(mn*1.3);
 	  h2->SetLineColor(kRed);
 	  h2->SetLineWidth(3);
-	  h2->SetStats(111111);  
+	  h2->SetStats(111111);
 	  h2->Draw("HIST same");
 	  h3->SetLineColor(kBlue);
 	  h3->SetLineWidth(3);
-	  h3->SetStats(111111);  
+	  h3->SetStats(111111);
 	  h3->Draw("HIST same");
 	  canv->Print(outfile,".png");
 	  canv->Update();
@@ -899,10 +909,10 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 			Contributions zxzz=ahcalhit->truth;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
-				int ilayer = (ihitchan >>8) & 0xFFF;  
-				int itube = (ihitchan >>20) & 0xFFF;  
-				int iair = (ihitchan >>32) & 0x7;  
-				int itype = (ihitchan >>35) & 0x7;  
+				int ilayer = (ihitchan >>8) & 0xFFF;
+				int itube = (ihitchan >>20) & 0xFFF;
+				int iair = (ihitchan >>32) & 0x7;
+				int itype = (ihitchan >>35) & 0x7;
 				int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 				int ix=0; int iy=0;
 				if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
@@ -947,11 +957,11 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 			} // end if hcaltype == fiber
 			else {  // sampling
 				int idet = (ihitchan) & 0x07;
-				int iy = (ihitchan >>3) & 0xFFF;  
-				int ix = (ihitchan >>15) & 0xFFF;  
-				int ilayer = (ihitchan >>27) & 0xFFF;  
+				int iy = (ihitchan >>3) & 0xFFF;
+				int ix = (ihitchan >>15) & 0xFFF;
+				int ilayer = (ihitchan >>27) & 0xFFF;
 				int ibox2 = (ihitchan >> 39) & 0x03;
-				int islice = (ihitchan >>41) & 0xF;  
+				int islice = (ihitchan >>41) & 0xF;
 				if(gendet==1) {  // take light as generated in media
 					if(islice==(*sii3).second) {
 						meanscinHcal+=ahcalhit->nscintillator;
@@ -989,7 +999,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 	} // end of if dohcal
 } // getMeanPhot
 
-void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, //input 
+void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, //input
 		bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge, CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, //input
 		float  &eesum,float &eesumcal,float &eesumem,float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe, //output
 		float &eesumfiber1,float &eesumfiber2, //output
@@ -999,10 +1009,11 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 		TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,
 		TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
 	      	TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,
-		TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz)
+	        TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz,
+	        TH2F *eecal2d, TH2F *ehcal2d)
         {
 	cout<<"getStuff Func **************"<<endl;
-	int nbyteecal(0), nbytehcal(0), nbyteedge(0);	
+	int nbyteecal(0), nbytehcal(0), nbyteedge(0);
 	if(doecal) { // ecal hists
 		nbyteecal = b_ecal->GetEntry(ievt);
 		float eecaltimecut=0.;
@@ -1117,10 +1128,11 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 					}
 				}
 			}
+			eecal2d->Fill(ix,iy,aecalhit->energyDeposit);
 			//cout<<"idet=="<<idet<<", gendet=="<<gendet<<", islice=="<<islice<<endl;
 		} //end loop over ecalhits
 	} //end of doecal
-	
+
 	if(dohcal) {
 		nbytehcal = b_hcal->GetEntry(ievt);
 		// hcal hits
@@ -1147,10 +1159,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			long long int ihitchan=ahcalhit->cellID;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
-				int ilayer = (ihitchan >>8) & 0xFFF;  
-				int itube = (ihitchan >>20) & 0xFFF;  
-				int iair = (ihitchan >>32) & 0x7; 
-				int itype = (ihitchan >>35) & 0x7; 
+				int ilayer = (ihitchan >>8) & 0xFFF;
+				int itube = (ihitchan >>20) & 0xFFF;
+				int iair = (ihitchan >>32) & 0x7;
+				int itype = (ihitchan >>35) & 0x7;
 				int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 				int ix=0; int iy=0;
 				if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
@@ -1196,9 +1208,9 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			} //end of hcaltype=fiber
 			else {  // sampling
 				int idet = (ihitchan) & 0x07;
-				int iy = (ihitchan >>3) & 0xFFF;  
-				int ix = (ihitchan >>15) & 0xFFF;  
-				int ilayer = (ihitchan >>27) & 0xFFF;  
+				int iy = (ihitchan >>3) & 0xFFF;
+				int ix = (ihitchan >>15) & 0xFFF;
+				int ilayer = (ihitchan >>27) & 0xFFF;
 				int ibox2 = (ihitchan >> 39) & 0x03;
 				int islice = (ihitchan >>41) & 0xF;
 				cout<<" idet iy ix ilayer islice are "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<endl;
@@ -1238,6 +1250,8 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 				if( islice==(*sii6).second ) eesumfiber2+=ah;  //cer
 				if( (islice==(*sii1).second) || (islice==(*sii8).second) || (islice==(*sii9).second) ) eesumabs+=ah;
 				if( (islice==(*sii2).second) || (islice==(*sii4).second) || (islice==(*sii5).second) || (islice==(*sii7).second)) eesumPDh+=ah;
+
+				ehcal2d->Fill(ix,iy,ahcalhit->energyDeposit);
 			} //end of hcal sampling
 		}  // end loop over hcal hits
 	}//end of if dohcal
@@ -1251,10 +1265,10 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 			eesumedge+=ae;
 		}  // end loop over escaping hits
 	} // end doedge
-} // end of getStuff 
+} // end of getStuff
 
 void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaEcal, float kappaHcal,
-		float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, 
+		float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype,
 		TBranch* &b_ecal,TBranch* &b_hcal, CalHits* &ecalhits, CalHits* &hcalhits, float &EEcal, float &EHcal,
 		float &timecut, float &eecaltimecut, float &ehcaltimecut){
 
@@ -1299,7 +1313,7 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 			}
 		}  // end loop over ecal hits
 	}  // end do ecal
-	
+
 	if(dohcal) {
 		nbytehcal = b_hcal->GetEntry(ievt);// hcal hits
 		ehcaltimecut=0.;
@@ -1309,10 +1323,10 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 			long long int ihitchan=ahcalhit->cellID;
 			if(hcaltype==0) { // fiber
 				int idet = (ihitchan) & 0xFF;
-				int ilayer = (ihitchan >>8) & 0xFFF;  
-				int itube = (ihitchan >>20) & 0xFFF; 
-				int iair = (ihitchan >>32) & 0x7;  
-				int itype = (ihitchan >>35) & 0x7;  
+				int ilayer = (ihitchan >>8) & 0xFFF;
+				int itube = (ihitchan >>20) & 0xFFF;
+				int iair = (ihitchan >>32) & 0x7;
+				int itype = (ihitchan >>35) & 0x7;
 				int ifiber=0; int iabs=0; int iphdet=0;  int ihole=0;
 				int ix=0; int iy=0;
 				if((itype==0)&&(iair==0)&&(itube!=0)) iabs=1;
@@ -1354,11 +1368,11 @@ void getStuffDualCorr(map<string, int> mapecalslice, map<string, int> mapsampcal
 			}//end of hcaltype=fiber
 			else {  // sampling
 				int idet = (ihitchan) & 0x07;
-				int iy = (ihitchan >>3) & 0xFFF;  
-				int ix = (ihitchan >>15) & 0xFFF;  
-				int ilayer = (ihitchan >>27) & 0xFFF;  
+				int iy = (ihitchan >>3) & 0xFFF;
+				int ix = (ihitchan >>15) & 0xFFF;
+				int ilayer = (ihitchan >>27) & 0xFFF;
 				int ibox2 = (ihitchan >> 39) & 0x03;
-				int islice = (ihitchan >>41) & 0xF;  
+				int islice = (ihitchan >>41) & 0xF;
 				if(gendet==1) {  // take light as generated in media
 					if(islice==(*sii3).second) { nescinttothcal+=ahcalhit->nscintillator; }
 					if(islice==(*sii6).second) { necertothcal+=ahcalhit->ncerenkov; } //add cerenkov
