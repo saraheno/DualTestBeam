@@ -30,7 +30,6 @@
 		<vis name="CrystalAirVis"              alpha="0.1" r="0.5"  g="0.5"  b="0.0"    showDaughters="true" visible="true"/>
 		<vis name="Invisible" 								showDaughters="true" visible="false"/> 
 	</display>
-        <!--  Includes for sensitives and support; it includes DRCrystal for two-segmentation -->
-	<include ref="SCEPCAL_DRCrystal-twoseg.xml"/>
+	<include ref="SCEPCAL_DRCrystal.xml"/>
 
 </lccdd>
