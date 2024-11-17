@@ -1,5 +1,5 @@
 //==========================================================================
-//  AIDA Detector description implementation 
+//  AIDA Detector description implementation
 //--------------------------------------------------------------------------
 // Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
 // All rights reserved.
@@ -12,7 +12,7 @@
 //==========================================================================
 //
 // Specialized generic detector constructor
-// 
+//
 //==========================================================================
 #include "DD4hep/DetFactoryHelper.h"
 #include "XML/Layering.h"
@@ -78,8 +78,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   std::cout<<"honeycomb thickness is "<<hthick<<std::endl;
 
 
-  
-  // detector element for entire detector.  
+
+  // detector element for entire detector.
   DetElement    sdet      (det_name,det_id);
   Volume        motherVol = description.pickMotherVolume(sdet);
 
@@ -114,7 +114,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   towerVol.setVisAttributes(description, x_towers.visStr());
   towerVol.setSensitiveDetector(sens);
 
-  int itower=0; 
+  int itower=0;
   string t_name1 = _toString(itower,"towerp%d") ;
   DetElement tower_det(t_name1,det_id);  // detector element for a tower
 
@@ -175,7 +175,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
         // Loop over the sublayers or slices for this layer.
       int s_num = 1;
 
-      double z_bottoms2=-l_hzthick;  
+      double z_bottoms2=-l_hzthick;
       for(xml_coll_t si(x_layer,_U(slice)); si; ++si)  {
 	std::cout<<" with slice "<<s_num<<std::endl;
 	xml_comp_t x_slice = si;
@@ -186,7 +186,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	      // this is relative to tower bottom, not layer bottom
 
 	double z_mids2 = z_bottoms2+s_hzthick;
-	      
+
 
 	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
 	std::cout<<" placed at "<<z_mids2<<std::endl;
@@ -231,8 +231,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       ++l_num;
     }
   }
-      
-  // now that you put the layers and slices into the tower, place it  
+
+  // now that you put the layers and slices into the tower, place it
 
     // now do the placement
 
@@ -242,7 +242,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   int towernum=-1;
   for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
     for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
-      double mod_x_off = (ijk1)*2*(hwidth+tol+agap);             
+      double mod_x_off = (ijk1)*2*(hwidth+tol+agap);
       double mod_y_off = (ijk2)*2*(hwidth+tol+agap);
       std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
 
@@ -294,5 +294,3 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 }
 
 DECLARE_DETELEMENT(DRCrys,create_detector)
-
-

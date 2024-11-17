@@ -36,9 +36,9 @@
 
 <!--  a tower may have several different patterns that repeat.
 for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
-each of these repeating things is a "layer". (so in this example, two "layers") 
+each of these repeating things is a "layer". (so in this example, two "layers")
 within a layer is a slice os the Pb and scint are slices
-the assembled tower is a Stave 
+the assembled tower is a Stave
 -->
 
       <structure>
@@ -52,17 +52,15 @@ the assembled tower is a Stave
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
 
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/> 
-      <slice material = "NS_Polystyrene" thickness = "(DRcrystalgapmat)" sensitive="yes" limits="cal_limits" vis="CrystalEcalBarrelVis"/> 
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/> 
+      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/>
+      <slice material = "NS_Polystyrene" thickness = "(DRcrystalgapmat)" sensitive="yes" limits="cal_limits" vis="CrystalEcalBarrelVis"/>
+      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/>
 
 
       <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/> 
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
 </layer>
 
 
     </detector>
   </detectors>
-
-
