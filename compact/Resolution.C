@@ -139,13 +139,14 @@ map<string,int>::iterator sii9;
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename, const char* hcalonlyefilename,
                 const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, int gendet, const char* outputfilename,
                 const char* ECALleaf, const char* HCALleaf){
-	mapecalslice["air"]=0;
+        mapecalslice["air"]=0;
 	mapecalslice["PD1"]=1;
-	mapecalslice["crystal1"]=3;
-	mapecalslice["gap"]=4;
-	mapecalslice["crystal2"]=5;
+	mapecalslice["crystal1"]=2;
+	mapecalslice["gap1"]=3;
+	mapecalslice["middlemat"]=4;
+	mapecalslice["gap2"]=5;
+	mapecalslice["crystal2"]=6;
 	mapecalslice["PD2"]=7;
-	// slice 2 & 6:  E_Silicone
 
 	eii0 = mapecalslice.find("air");
 	eii1 = mapecalslice.find("PD1");
@@ -594,6 +595,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			for(int ievt=0;ievt<num_evt; ++ievt) {
 				if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) cout<<"num_evt_pi="<<ievt<<endl;
 				float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
+				kappaEcal=0.;
 				getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,
 						ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,
 						timecut, eecaltimecutcor, ehcaltimecutcor);
