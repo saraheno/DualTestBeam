@@ -246,11 +246,11 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	TH1F *ehaphcal		= new TH1F("ehaphcal","e-  hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
 	TH1F *phaphcal		= new TH1F("phaphcal","pi- hcal-fiber (scint + cer)/ (tot_energy)" ,100,0.,0.2);
 
-	TH1F *eheest		= new TH1F("eheest","e-  : (crys+fiber) / beamE",100,0.,1.);
-	TH1F *pheest		= new TH1F("pheest","pi- : (crys+fiber) / beamE",100,0.,1.);
+	TH1F *eheest		= new TH1F("eheest","e-  : (crys+fiber) / beamE",500,0.,1.25);
+	TH1F *pheest		= new TH1F("pheest","pi- : (crys+fiber) / beamE",500,0.,1.25);
 
-	TH1F *ehetrue		= new TH1F("ehetrue","e-  : alldepositedE / beamE",100,0.,1.1);
-	TH1F *phetrue		= new TH1F("phetrue","pi- : alldepositedE / beamE",100,0.,1.1);
+	TH1F *ehetrue		= new TH1F("ehetrue","e-  : alldepositedE / beamE",500,0.,1.25);
+	TH1F *phetrue		= new TH1F("phetrue","pi- : alldepositedE / beamE",500,0.,1.25);
 
 	TH1F *hedepcal		= new TH1F("hedepcal","e-  (alldepositE-edgeE) / beamE",100,0.6,1.1);
 	TH1F *hpdepcal		= new TH1F("hpdepcal","pi- (alldepositE-edgeE) / beamE",100,-0.5,1.1);
@@ -308,6 +308,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 	TH2F *eecal2d = new TH2F("eecal2d","lego of ecal elec", 41,-20.,20.,41,-20.,20.);
 	TH2F *ehcal2d = new TH2F("ehcal2d","lego of hcal elec", 41,-20.,20.,41,-20.,20.);
+
+	TH1F *eleEcalncer = new TH1F("eleEcalncer","# ecal cerenkov / mean (ele)",  600,0.,1.5);
+	TH1F *eleEcalnscint = new TH1F("eleEcalnscint","# ecal scintillation / mean (ele)", 600,0.,1.5);
 
 	//****************************************************************************************************************************
 	// process electrons
@@ -399,6 +402,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
 			hedepcal->Fill(eedepcal/beamE);
 			enscvni->Fill(eedepcal/beamE,nine+ninh);
+
+			eleEcalncer->Fill(ttt2);
+			eleEcalnscint->Fill(ttt);
 
                         cout<<"******************************"<<endl;
 			cout<<"GETSTUFF electrons"<<endl;
@@ -736,6 +742,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 	eecal2d->Write();
 	ehcal2d->Write();
+
+	eleEcalncer->Write();
+	eleEcalnscint->Write();
 
 	out->Close();
 } // end of Resolution
