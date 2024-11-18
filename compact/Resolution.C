@@ -601,7 +601,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 			for(int ievt=0;ievt<num_evt; ++ievt) {
 				if((ievt<SCECOUNT)||(ievt%SCECOUNT)==0) cout<<"num_evt_pi="<<ievt<<endl;
 				float EcorEcal(0),EcorHcal(0),eecaltimecutcor(0),ehcaltimecutcor(0);
-				kappaEcal=0.;
 				getStuffDualCorr(mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,
 						ievt,doecal,dohcal, hcaltype, b_ecal,b_hcal, ecalhits,hcalhits, EcorEcal, EcorHcal,
 						timecut, eecaltimecutcor, ehcaltimecutcor);
