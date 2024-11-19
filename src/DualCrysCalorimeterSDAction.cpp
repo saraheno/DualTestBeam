@@ -26,10 +26,10 @@ using namespace std;
 // way too slow if track all photons for now
 //   so randomly delete photons after creation according to this fraction
 //   dialScint=1.0, dialCer=1.0 to keep all photons 
-double dialCherC  = 0.1;
-double dialScintC = 0.1;
-double dialCherO  = 0.1;
-double dialScintO = 0.1;
+double dialCherC  = 10./800000.;
+double dialScintC = 100./20000000.;
+double dialCherO  = 100./800000.;
+double dialScintO = 1./20000000.;
 float betarel=1/1.544;	//depends on the media refractive index
 int printlimitSCE=10;
 int MAXEVENT=10;
