@@ -7,14 +7,15 @@
 int dolog=0;
 void Plot() 
 { 
+
   TString canvName = "Fig_";
-  canvName += "Escape";
+  canvName += "NONCONS";
 
 
   std::string str1 = "escaping/nonEM";
   const char* atitle = str1.c_str();
 
-  std::string str2="phcEdgeE";
+  std::string str2="phcnonconsE";
   const char* hname1 =str2.c_str();
 
   std::string str3="PbWOS";
@@ -82,7 +83,7 @@ void Plot()
 
   std::cout<<"getting first"<<std::endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
-  A_pt->Rebin(2);
+  //A_pt->Rebin(2);
   //  int nbin;
   //nbin=A_pt->FindBin(0.6);
   //    A_pt->GetXaxis()->SetRangeUser(0,nbin);
@@ -100,7 +101,7 @@ std::cout<<" first entries is "<<aaA<<std::endl;
   //nbin=B_pt->FindBin(0.6);
   //B_pt->GetXaxis()->SetRangeUser(0,nbin);
     B_pt->GetXaxis()->SetRangeUser(0.,0.6);
-  B_pt->Rebin(2);
+    //B_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
   //B_pt->Rebin(5);
@@ -114,7 +115,7 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   //nbin=C_pt->FindBin(0.6);
   //C_pt->GetXaxis()->SetRangeUser(0,nbin);
     C_pt->GetXaxis()->SetRangeUser(0.,0.6);
-  C_pt->Rebin(2);
+    //C_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
   //C_pt->Rebin(5);
