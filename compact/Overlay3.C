@@ -7,19 +7,21 @@
 int dolog=0;
 void Overlay3() 
 { 
-  std::string str1 = "Yuck";
+  std::string str1 = "escaping/nonEM";
   const char* atitle = str1.c_str();
 
   std::string str2="phcEdgeE";
   const char* hname1 =str2.c_str();
 
-  std::string str3="a";
+  std::string str3="PbWOS";
   const char* lgd1 = str3.c_str();
-  std::string  str4="b";
+  std::string  str4="SampL";
   const char* lgd2 = str4.c_str();
-  std::string  str5="c";
+  std::string  str5="Fiber1";
   const char* lgd3 = str5.c_str();
 
+  std::string str6 = " ";
+  const char* htitle = str6.c_str();
 
 
   TFile *f1 = new TFile("hists_20GeV_Junk.root");
@@ -29,6 +31,7 @@ void Overlay3()
 
  
   gStyle->SetOptStat(0);
+  gStyle->SetOptTitle(0);
  
   TString canvName = "Fig_";
   canvName += "hptdp_A_B";
@@ -78,6 +81,7 @@ void Overlay3()
   std::cout<<"getting first"<<std::endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
  A_pt->SetDirectory(0);
+ A_pt->SetTitle(htitle);
  //A_pt->Rebin(5);
   double aaA = A_pt->Integral();
 std::cout<<" first entries is "<<aaA<<std::endl;
@@ -118,20 +122,20 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
-  A_pt->Draw("");
+  A_pt->Draw("HIST ");
 
   
 
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
   B_pt->SetStats(0);
-  B_pt->Draw("same");
+  B_pt->Draw("HIST same");
 
   
   C_pt->SetLineColor(3);
   C_pt->SetLineWidth(3);
   C_pt->SetStats(0);
-  C_pt->Draw("same");
+  C_pt->Draw("HIST same");
   
   
 
