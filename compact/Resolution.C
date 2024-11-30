@@ -39,7 +39,8 @@ int SCECOUNT2=20;
 int icountyuck=0;
 int SCECOUNT3=10;
 bool dodualcorr=1;
-float timecut=400000;
+
+float timecut=10;
 float betacut=1/1.5;
 const int finenbin=40;
 const float timemin=0.;
@@ -997,7 +998,7 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
     // second loop to calculate covariance
 
 
-
+    /*
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
 
@@ -1026,7 +1027,7 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     }
       
     
-
+    */
 
 
     float arms,amean,hovereecalcer(1.),hovereecalscint(1.),hoverehcalcer(1.),hoverehcalscint(1.);

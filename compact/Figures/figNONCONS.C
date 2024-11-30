@@ -20,18 +20,24 @@ void Plot()
 
   std::string str3="PbWOS";
   const char* lgd1 = str3.c_str();
-  std::string  str4="SampL";
+  std::string  str4="Fiber1";
   const char* lgd2 = str4.c_str();
-  std::string  str5="Fiber1";
+  std::string  str5="SampL";
   const char* lgd3 = str5.c_str();
+  std::string  str6="Fiber2";
+  const char* lgd4 = str6.c_str();
+  std::string  str7="SampS";
+  const char* lgd5 = str7.c_str();
 
-  std::string str6 = " ";
-  const char* htitle = str6.c_str();
+  std::string str8 = " ";
+  const char* htitle = str8.c_str();
 
 
   TFile *f1 = new TFile("hists_20GeV_Junk.root");
   TFile *f2 = new TFile("hists_20GeV_FSCEPonly.root");
   TFile *f3 = new TFile("hists_20GeV_SampOnly.root");
+  TFile *f4 = new TFile("hists_20GeV_FSCEPSAonly.root");
+  TFile *f5 = new TFile("hists_20GeV_SampOnly2.root");
 
 
  
@@ -90,7 +96,6 @@ void Plot()
   A_pt->GetXaxis()->SetRangeUser(0.,0.6);
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
- //A_pt->Rebin(5);
   double aaA = A_pt->Integral();
 std::cout<<" first entries is "<<aaA<<std::endl;
   A_pt->Scale(1./aaA);
@@ -104,7 +109,6 @@ std::cout<<" first entries is "<<aaA<<std::endl;
     //B_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
-  //B_pt->Rebin(5);
   double aaB = B_pt->Integral();
 std::cout<<" second entries is "<<aaB<<std::endl;
   B_pt->Scale(1/aaB);
@@ -118,10 +122,35 @@ std::cout<<" second entries is "<<aaB<<std::endl;
     //C_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
-  //C_pt->Rebin(5);
   double aaC = C_pt->Integral();
 std::cout<<" third entries is "<<aaC<<std::endl;
   C_pt->Scale(1/aaC);
+  
+
+  std::cout<<"getting fourth"<<std::endl;
+  TH1F *D_pt = static_cast<TH1F*>(f4->Get(hname1)->Clone());
+  //nbin=D_pt->FindBin(0.6);
+  //D_pt->GetXaxis()->SetRangeUser(0,nbin);
+    D_pt->GetXaxis()->SetRangeUser(0.,0.6);
+    //B_pt->Rebin(2);
+  std::cout<<"ha"<<std::endl;
+  D_pt->SetDirectory(0);
+  double aaD = D_pt->Integral();
+std::cout<<" fourth entries is "<<aaD<<std::endl;
+  D_pt->Scale(1/aaD);
+
+  
+  std::cout<<"getting fifth"<<std::endl;
+  TH1F *E_pt = static_cast<TH1F*>(f5->Get(hname1)->Clone());
+  //nbin=E_pt->FindBin(0.6);
+  //E_pt->GetXaxis()->SetRangeUser(0,nbin);
+    E_pt->GetXaxis()->SetRangeUser(0.,0.6);
+    //E_pt->Rebin(2);
+  std::cout<<"ha"<<std::endl;
+  E_pt->SetDirectory(0);
+  double aaE = E_pt->Integral();
+std::cout<<" fift entries is "<<aaE<<std::endl;
+  E_pt->Scale(1/aaE);
   
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
@@ -154,11 +183,25 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   C_pt->Draw("HIST same");
   
   
+  D_pt->SetLineColor(4);
+  D_pt->SetLineWidth(4);
+  D_pt->SetStats(0);
+  D_pt->Draw("HIST same");
+  
+  
+  E_pt->SetLineColor(5);
+  E_pt->SetLineWidth(5);
+  E_pt->SetStats(0);
+  E_pt->Draw("HIST same");
+  
+  
 
 
   lgd->AddEntry(A_pt, lgd1, "l");
   lgd->AddEntry(B_pt, lgd2, "l");
   lgd->AddEntry(C_pt, lgd3, "l");
+  lgd->AddEntry(D_pt, lgd4, "l");
+  lgd->AddEntry(E_pt, lgd5, "l");
   //lgd->AddEntry(C_pt, "ModelBx500", "l");
 
  lgd->Draw();
