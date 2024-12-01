@@ -1,0 +1,62 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+
+<!-- please note these are half lengths and widths -->
+
+  <detectors>
+    <detector id="Hcal_ID" name="DRSampling" type="DRSamp" readout="DRSNoSegment" vis="InvisibleWithDaughers">
+
+
+ <comment>Electromagnetic Calorimeter </comment>
+
+
+
+<dimensions width="DRSampxy" dim_x="DRSampNsize" dim_z="DRSampNlayer" gap="0.0*mm" z1="2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgapl+EcalHcalgap" z2="0."
+/>
+
+
+
+<!--  a tower may have several different patterns that repeat.
+for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
+each of these repeating things is a "layer". (so in this example, two "layers") 
+within a layer is a slice os the Pb and scint are slices
+the assembled tower is a Stave 
+-->
+
+<structure>
+  <absorb  name="absorb" material = "Iron" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
+      <kill1  name="kill1"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+      <scint  name="scint"  material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
+      <kill2  name="kill2"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+  <separate1  name="separate1" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
+      <kill3  name="kill3"  material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <ceren   name="ceren" material = "NP_Polystyrene" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
+      <kill4   name="kill4" material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
+  <separate2  name="separate2" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
+
+      <unitbox  name="unitbox"  material = "Air" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
+      <tower  name="tower"  material = "Air"  sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughers"/>
+</structure>
+
+
+    </detector>
+  </detectors>
+
+

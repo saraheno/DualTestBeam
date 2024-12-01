@@ -223,10 +223,10 @@ sii9 = mapsampcalslice.find("Sep2");
 
   TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
-  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
-  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.5);
-  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
-  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.5);
+  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.2);
+  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.2);
+  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
+  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
 
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum edge / beam E",200,0.,1.0);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum edge / beamE-Erel/fnorm",200,0.,1.0);
@@ -1536,7 +1536,7 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 
     
     TCanvas* bbv1;
-    SCEDraw2(bbv1,"bbv1",acovECAL,acovHCAL,"junkbbv1,png",1);
+    SCEDraw2(bbv1,"bbv1",acovECAL,acovHCAL,"junkbbv1.png",1);
 
 
     TCanvas* bbv2;
