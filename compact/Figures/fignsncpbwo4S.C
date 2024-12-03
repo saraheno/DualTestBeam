@@ -5,7 +5,7 @@
 
 
 
-void Plot() 
+void fignsncpbwo4S() 
 { 
   TString canvName = "Fig_";
   canvName += "nsncPbWO4S";

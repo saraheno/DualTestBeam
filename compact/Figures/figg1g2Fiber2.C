@@ -5,34 +5,41 @@
 
 
 int dolog=0;
-void figthreeresSampL() 
+void figg1g2Fiber2() 
 { 
   TString canvName = "Fig_";
-  canvName += "threeresSampL";
+  canvName += "g1g2Fiber2";
 
 
-  std::string str1 = "Signal calibrated to electrons";
-  const char* atitle = str1.c_str();
+  std::string strt = "Sampling Fraction";
+  const char* atitle = strt.c_str();
 
-  std::string strn1="phcHcalncer";
+  std::string strn1="ehcHcalE1";
   const char* hname1 =strn1.c_str();
-  std::string strn2="phcHcalnscint";
+  std::string strn2="phcHcalE1";
   const char* hname2 =strn2.c_str();
-  std::string strn3="phcHcalcorr";
+  std::string strn3="ehcHcalE2";
   const char* hname3 =strn3.c_str();
+  std::string strn4="phcHcalE2";
+  const char* hname4 =strn4.c_str();
 
-  std::string str3="Cherenkov";
-  const char* lgd1 = str3.c_str();
-  std::string  str4="Scintillator";
-  const char* lgd2 = str4.c_str();
-  std::string  str5="Dual corrected";
-  const char* lgd3 = str5.c_str();
+
+  std::string str1="electron g1";
+  const char* lgd1 = str1.c_str();
+  std::string  str2="pion g1";
+  const char* lgd2 = str2.c_str();
+
+  std::string str3="electron g2";
+  const char* lgd3 = str3.c_str();
+  std::string  str4="pion g2";
+  const char* lgd4 = str4.c_str();
+
 
   std::string str6 = " ";
   const char* htitle = str6.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_SampOnly.root");
+  TFile *f1 = new TFile("hists_20GeV_FSCEPSAonly.root");
 
 
 
@@ -82,49 +89,42 @@ void figthreeresSampL()
  TLegend *lgd = new TLegend(x0_l,y0_l,x1_l, y1_l); 
   lgd->SetBorderSize(0); lgd->SetTextSize(0.04); lgd->SetTextFont(32); lgd->SetFillColor(0);
 
+  float arms,amean;
 
   std::cout<<"getting first"<<std::endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
-  A_pt->Rebin(10);
-  //  int nbin;
-  //nbin=A_pt->FindBin(0.6);
-  //    A_pt->GetXaxis()->SetRangeUser(0,nbin);
-  //A_pt->GetXaxis()->SetRangeUser(0.,0.6);
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
- //A_pt->Rebin(5);
   double aaA = A_pt->Integral();
-std::cout<<" first entries is "<<aaA<<std::endl;
+  std::cout<<" first entries is "<<aaA<<std::endl;
   A_pt->Scale(1./aaA);
 
+  
 
   std::cout<<"getting second"<<std::endl;
   TH1F *B_pt = static_cast<TH1F*>(f1->Get(hname2)->Clone());
-  //nbin=B_pt->FindBin(0.6);
-  //B_pt->GetXaxis()->SetRangeUser(0,nbin);
-  //B_pt->GetXaxis()->SetRangeUser(0.,0.6);
-  B_pt->Rebin(10);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
-  //B_pt->Rebin(5);
   double aaB = B_pt->Integral();
-std::cout<<" second entries is "<<aaB<<std::endl;
+  std::cout<<" second entries is "<<aaB<<std::endl;
   B_pt->Scale(1/aaB);
 
-  
   std::cout<<"getting third"<<std::endl;
   TH1F *C_pt = static_cast<TH1F*>(f1->Get(hname3)->Clone());
-  //nbin=C_pt->FindBin(0.6);
-  //C_pt->GetXaxis()->SetRangeUser(0,nbin);
-  //C_pt->GetXaxis()->SetRangeUser(0.,0.6);
-  C_pt->Rebin(10);
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
-  //C_pt->Rebin(5);
   double aaC = C_pt->Integral();
-std::cout<<" third entries is "<<aaC<<std::endl;
+  std::cout<<" third entries is "<<aaC<<std::endl;
   C_pt->Scale(1/aaC);
-  
+
+  std::cout<<"getting fourth"<<std::endl;
+  TH1F *D_pt = static_cast<TH1F*>(f1->Get(hname4)->Clone());
+  std::cout<<"ha"<<std::endl;
+  D_pt->SetDirectory(0);
+  double aaD = D_pt->Integral();
+  std::cout<<" fourth entries is "<<aaD<<std::endl;
+  D_pt->Scale(1/aaD);
+
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
   //  max = std::max(max,C_pt->GetMaximum());
@@ -149,18 +149,26 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   B_pt->SetStats(0);
   B_pt->Draw("HIST same");
 
-  
+
   C_pt->SetLineColor(3);
   C_pt->SetLineWidth(3);
   C_pt->SetStats(0);
   C_pt->Draw("HIST same");
-  
+
+
+  D_pt->SetLineColor(4);
+  D_pt->SetLineWidth(3);
+  D_pt->SetStats(0);
+  D_pt->Draw("HIST same");
+
   
 
 
   lgd->AddEntry(A_pt, lgd1, "l");
   lgd->AddEntry(B_pt, lgd2, "l");
   lgd->AddEntry(C_pt, lgd3, "l");
+  lgd->AddEntry(D_pt, lgd4, "l");
+
   //lgd->AddEntry(C_pt, "ModelBx500", "l");
 
  lgd->Draw();
@@ -185,6 +193,35 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   else{ 
     canv->Print(canvName+".pdf",".pdf");
     canv->Print(canvName+".png",".png");}
+
+  std::cout<<std::endl;
+  std::cout<<"fitting first hist"<<std::endl;
+  arms = A_pt->GetRMS();
+  amean = A_pt->GetMean();
+  A_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+
+  std::cout<<std::endl;
+  std::cout<<"fitting second hist"<<std::endl;
+  arms = B_pt->GetRMS();
+  amean = B_pt->GetMean();
+  B_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+
+  std::cout<<std::endl;
+  std::cout<<"fitting third hist"<<std::endl;
+  arms = C_pt->GetRMS();
+  amean = C_pt->GetMean();
+  C_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+
+  std::cout<<std::endl;
+  std::cout<<"fitting fourth hist"<<std::endl;
+  arms = D_pt->GetRMS();
+  amean = D_pt->GetMean();
+  D_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+
+
+
+
+
   return;
 }
 

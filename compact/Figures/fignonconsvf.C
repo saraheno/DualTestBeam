@@ -5,7 +5,7 @@
 
 
 
-void Plot() 
+void nonconsvf() 
 { 
   TString canvName = "Fig_";
   canvName += "nonconsvf";

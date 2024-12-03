@@ -136,7 +136,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,
 		bool doedgecut, float edgecut,
 		int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots) {
-
+    float arms,amean;
 
   // these must correspond to the "slice" physvolid used in DRCrys_geo
   // these correspond to slices in scepcal_drcrystal.xml
@@ -357,6 +357,7 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *heesumcal = new TH1F("heesumcal","electron energy in calorimeter",400,0.,1.5);
   TH1F *heesumemcal = new TH1F("heesumemcal","electron relativistic energy in calorimeter",400,0.,1.5);
   TH1F *hefff = new TH1F("hefff","electron relativistic fraction in calorimeter",400,0.,1.5);
+
   TH1F *hpesumcal = new TH1F("hpesumcal","pion energy in calorimeter",400,0.,1.5);
   TH1F *hpesumemcal = new TH1F("hpesumemcal","pion relativistic energy in calorimeter",400,0.,1.5);
   TH1F *hpfff = new TH1F("hpfff","gamma fraction in calorimeter",400,0.,1.5);
@@ -490,7 +491,7 @@ sii9 = mapsampcalslice.find("Sep2");
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
       CalibRefine(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
     }
-    float arms,amean;
+
 
     if(doecal ) {
     arms = CalEcalncer->GetRMS();
@@ -595,6 +596,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       heesumemcal->Fill(eesumem/beamE);
       if(eesumem>0) {
 	hefff->Fill(eesumem/eesumcal);
+
       } else {
 	std::cout<<"esumemcal is zero "<<std::endl;
       }
@@ -682,7 +684,15 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
 
 
   // get normalization for f from electron plots
+  arms = heesumemcal->GetRMS();
+  amean = heesumemcal->GetMean();
+  heesumemcal->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+    
   float fnorm = heesumemcal->GetMean();
+  TF1 *fitheesumemcal = (TF1*)heesumemcal->GetListOfFunctions()->FindObject("gaus");
+  fnorm= fitheesumemcal->GetParameter(1);
+
+
   std::cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  fnorm is "<<fnorm<<std::endl;
 
 
@@ -1675,6 +1685,7 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
   heesumcal->Write();
   heesumemcal->Write();
   hefff->Write();
+
   hpesumcal->Write();
   hpesumemcal->Write();
   hpfff->Write();

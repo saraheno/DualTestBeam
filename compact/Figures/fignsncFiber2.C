@@ -5,7 +5,7 @@
 
 
 
-void Plot() 
+void fignsncFiber2() 
 { 
   TString canvName = "Fig_";
   canvName += "nsncFiber2";

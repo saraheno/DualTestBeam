@@ -5,7 +5,7 @@
 
 
 int dolog=0;
-void Plot() 
+void figtimingFiber1() 
 { 
   TString canvName = "Fig_";
   canvName += "timingFiber1";

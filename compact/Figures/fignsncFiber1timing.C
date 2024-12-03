@@ -5,7 +5,7 @@
 
 
 
-void Plot() 
+void fignsncFiber1timing() 
 { 
   TString canvName = "Fig_";
   canvName += "nsncFiber1timing";

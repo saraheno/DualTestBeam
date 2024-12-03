@@ -5,7 +5,7 @@
 
 
 
-void Plot() 
+void fignsncSampL() 
 { 
   TString canvName = "Fig_";
   canvName += "nsncSampOnly";

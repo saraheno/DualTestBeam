@@ -5,7 +5,7 @@
 
 
 int dolog=0;
-void Plot() 
+void figthreeresPbWOS() 
 { 
   TString canvName = "Fig_";
   canvName += "threeresPbWOS";

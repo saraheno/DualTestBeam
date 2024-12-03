@@ -5,10 +5,10 @@
 
 
 int dolog=0;
-void Plot() 
+void figg1g2SampL() 
 { 
   TString canvName = "Fig_";
-  canvName += "threeresSampL";
+  canvName += "g1g2SampL";
 
 
   std::string strt = "Sampling Fraction";

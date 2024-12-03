@@ -28,8 +28,8 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 
 #nenergy=9
 #energies=[10,15,20,25,30,35,40,45,50]
-nenergy=2
-energies=[20,50]
+nenergy=1
+energies=[20]
 name="condor-executable-"+args.geometry+"-"
 direct="0. 0.0 1."
 pos=" 0. 0. -1*cm"

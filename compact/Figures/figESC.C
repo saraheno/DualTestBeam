@@ -5,7 +5,7 @@
 
 
 int dolog=0;
-void Plot() 
+void figESC() 
 { 
 
   TString canvName = "Fig_";
