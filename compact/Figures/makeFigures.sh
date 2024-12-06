@@ -23,5 +23,8 @@ root -b -l -q 'fignsncFiber2.C'
 root -b -l -q 'fignsncSampS.C'
 root -b -l -q 'figthreeresPbWOL.C'
 root -b -l -q 'figtimingFiber1.C'
-
-
+root -b -l -q 'figepifffFiber1.C'
+root -b -l -q 'figepifffPbWOL.C'
+root -b -l -q 'figepifffSampL.C'
+root -b -l -q 'figE1E2vfFiber1.C'
+root -b -l -q 'figE1E2vfSampL.C'

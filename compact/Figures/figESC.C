@@ -7,7 +7,7 @@
 int dolog=0;
 void figESC() 
 { 
-
+  float amean, arms;
   TString canvName = "Fig_";
   canvName += "Escape";
 
@@ -99,7 +99,12 @@ void figESC()
   double aaA = A_pt->Integral();
 std::cout<<" first entries is "<<aaA<<std::endl;
   A_pt->Scale(1./aaA);
-
+  std::cout<<std::endl;
+  std::cout<<"fitting first hist"<<std::endl;
+  arms = A_pt->GetRMS();
+  amean = A_pt->GetMean();
+  std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
+  A_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   std::cout<<"getting second"<<std::endl;
   TH1F *B_pt = static_cast<TH1F*>(f2->Get(hname1)->Clone());
@@ -112,7 +117,12 @@ std::cout<<" first entries is "<<aaA<<std::endl;
   double aaB = B_pt->Integral();
 std::cout<<" second entries is "<<aaB<<std::endl;
   B_pt->Scale(1/aaB);
-
+  std::cout<<std::endl;
+  std::cout<<"fitting second hist"<<std::endl;
+  arms = B_pt->GetRMS();
+  amean = B_pt->GetMean();
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
+  B_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
   
   std::cout<<"getting third"<<std::endl;
   TH1F *C_pt = static_cast<TH1F*>(f3->Get(hname1)->Clone());
@@ -125,7 +135,12 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   double aaC = C_pt->Integral();
 std::cout<<" third entries is "<<aaC<<std::endl;
   C_pt->Scale(1/aaC);
-  
+    std::cout<<std::endl;
+  std::cout<<"fitting third hist"<<std::endl;
+  arms = C_pt->GetRMS();
+  amean = C_pt->GetMean();
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
+  C_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   std::cout<<"getting fourth"<<std::endl;
   TH1F *D_pt = static_cast<TH1F*>(f4->Get(hname1)->Clone());
@@ -138,7 +153,12 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   double aaD = D_pt->Integral();
 std::cout<<" fourth entries is "<<aaD<<std::endl;
   D_pt->Scale(1/aaD);
-
+  std::cout<<std::endl;
+  std::cout<<"fitting fourth hist"<<std::endl;
+  arms = D_pt->GetRMS();
+  amean = D_pt->GetMean();
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
+  D_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
   
   std::cout<<"getting fifth"<<std::endl;
   TH1F *E_pt = static_cast<TH1F*>(f5->Get(hname1)->Clone());
@@ -151,7 +171,12 @@ std::cout<<" fourth entries is "<<aaD<<std::endl;
   double aaE = E_pt->Integral();
 std::cout<<" fift entries is "<<aaE<<std::endl;
   E_pt->Scale(1/aaE);
-  
+    std::cout<<std::endl;
+  std::cout<<"fitting fifth hist"<<std::endl;
+  arms = E_pt->GetRMS();
+  amean = E_pt->GetMean();
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
+  E_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
   //  max = std::max(max,C_pt->GetMaximum());

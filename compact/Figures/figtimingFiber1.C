@@ -29,7 +29,7 @@ void figtimingFiber1()
   const char* htitle = str6.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_FSCEPonly_timingcut.root");
+  TFile *f1 = new TFile("hists_20GeV_FSCEPonly.root");
 
 
 

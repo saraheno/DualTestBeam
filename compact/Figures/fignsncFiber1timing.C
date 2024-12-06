@@ -16,7 +16,7 @@ void fignsncFiber1timing()
   std::string str2="phcHcalNsNctc";
   const char* hname1 =str2.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_FSCEPonly_timingcut.root");
+  TFile *f1 = new TFile("hists_20GeV_FSCEPonly.root");
 
  
   gStyle->SetOptStat(0);

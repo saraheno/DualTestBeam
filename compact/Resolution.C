@@ -228,6 +228,11 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
   TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
 
+
+  TH2F *phcHcalvfE1 = new TH2F("phcHcalvfE1","fiber 1 hcal energy / beam E",200,0.,1.2,200,0.,0.2);
+
+  TH2F *phcHcalvfE2 = new TH2F("phcHcalvfE2","fiber 2 hcal energy / beam E",200,0.,1.2,200,0.,0.2);
+
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum edge / beam E",200,0.,1.0);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum edge / beamE-Erel/fnorm",200,0.,1.0);
   TH1F *ehcnonconsE = new TH1F("ehcnonconsE","non cons / beam E-Erel/fnorm",100,0.,1.5);
@@ -605,6 +610,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       ehcHcalE->Fill((eesumfiber1+eesumfiber2)/beamE);
       ehcHcalE1->Fill(eesumfiber1/beamE);
       ehcHcalE2->Fill(eesumfiber2/beamE);
+
       ehcEdgeE->Fill(eesumedge/beamE);
       ehcEdgeR->Fill((beamE-eesumedge)/beamE);
       ehcnonconsE->Fill(nonconse);
@@ -886,6 +892,8 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
       phcHcalE->Fill((pesumfiber1+pesumfiber2)/beamE);
       phcHcalE1->Fill(pesumfiber1/beamE);
       phcHcalE2->Fill(pesumfiber2/beamE);
+      phcHcalvfE1->Fill(pfff,pesumfiber1/beamE);
+      phcHcalvfE2->Fill(pfff,pesumfiber2/beamE);
 
       phcEdgeE->Fill(pedgeff);
 
@@ -1702,10 +1710,10 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 
   ehcHcalE1->Write();
   phcHcalE1->Write();
-
-
   ehcHcalE2->Write();
   phcHcalE2->Write();
+  phcHcalvfE1->Write();
+  phcHcalvfE2->Write();
 
 
   ehcEdgeE->Write();
