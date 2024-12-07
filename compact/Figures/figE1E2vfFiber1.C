@@ -121,7 +121,7 @@ void figE1E2vfFiber1()
   std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
   std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
   std::cout<<"g at f of 0 is "<<intercept<<std::endl;
-
+  std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
 
   
   return;

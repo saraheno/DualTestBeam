@@ -595,6 +595,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
 	       );
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
+      float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
       float nonconse=(beamE-eachecks)/beamE;
     
       heesumcal->Fill(eesumcal/beamE);
@@ -607,9 +608,9 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       }
 
       ehcEcalE->Fill(eesumcrystal/beamE);
-      ehcHcalE->Fill((eesumfiber1+eesumfiber2)/beamE);
-      ehcHcalE1->Fill(eesumfiber1/beamE);
-      ehcHcalE2->Fill(eesumfiber2/beamE);
+      ehcHcalE->Fill((eesumfiber1+eesumfiber2)/eedepcal);
+      ehcHcalE1->Fill(eesumfiber1/eedepcal);
+      ehcHcalE2->Fill(eesumfiber2/eedepcal);
 
       ehcEdgeE->Fill(eesumedge/beamE);
       ehcEdgeR->Fill((beamE-eesumedge)/beamE);
@@ -640,7 +641,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
 
       ehetrue->Fill(eachecks/beamE);
 
-      float eedepcal=eesumair+eesumdead+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh;
+
       hedepcal->Fill(eedepcal/beamE);
 
       enscvni->Fill(nine+ninh,eedepcal/beamE);
@@ -889,11 +890,11 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
 
 
       phcEcalE->Fill(pesumcrystal/beamE);
-      phcHcalE->Fill((pesumfiber1+pesumfiber2)/beamE);
-      phcHcalE1->Fill(pesumfiber1/beamE);
-      phcHcalE2->Fill(pesumfiber2/beamE);
-      phcHcalvfE1->Fill(pfff,pesumfiber1/beamE);
-      phcHcalvfE2->Fill(pfff,pesumfiber2/beamE);
+      phcHcalE->Fill((pesumfiber1+pesumfiber2)/pedepcal);
+      phcHcalE1->Fill(pesumfiber1/pedepcal);
+      phcHcalE2->Fill(pesumfiber2/pedepcal);
+      phcHcalvfE1->Fill(pfff,pesumfiber1/pedepcal);
+      phcHcalvfE2->Fill(pfff,pesumfiber2/pedepcal);
 
       phcEdgeE->Fill(pedgeff);
 
