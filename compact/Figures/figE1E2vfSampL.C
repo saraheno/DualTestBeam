@@ -3,14 +3,12 @@
 
 #include <string>
 
-
-
 void figE1E2vfSampL() 
 { 
   TString canvName = "Fig_";
   canvName += "E1E2vfSampL";
 
-  std::string str1 = "relativistic fraction";
+  std::string str1 = "EM Obj fraction";
   const char* atitle = str1.c_str();
 
   std::string strn1="phcHcalvfE1";
@@ -77,7 +75,7 @@ void figE1E2vfSampL()
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
   A_pt->Draw("");
-
+  
 
   std::cout<<"getting second"<<std::endl;
   TH2F *B_pt = static_cast<TH2F*>(f1->Get(hname2)->Clone());
@@ -112,6 +110,20 @@ void figE1E2vfSampL()
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
 
+
+
+  TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
+  TProfile* A_pt_pfx = A_pt->ProfileX();
+  A_pt_pfx->Fit("pol1","WW","",0.5,0.9);
+  TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
+  Double_t intercept= fitFun->GetParameter(0);
+  Double_t slope= fitFun->GetParameter(1);
+  std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
+  std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
+  std::cout<<"g at f of 0 is "<<intercept<<std::endl;
+  std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
+
+  
   return;
 }
 

@@ -33,7 +33,7 @@ void figESC()
   const char* htitle = str8.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_Junk.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
   TFile *f2 = new TFile("hists_20GeV_FSCEPonly.root");
   TFile *f3 = new TFile("hists_20GeV_SampOnly.root");
   TFile *f4 = new TFile("hists_20GeV_FSCEPSAonly.root");

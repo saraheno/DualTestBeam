@@ -8,7 +8,7 @@ void figE1E2vfFiber1()
   TString canvName = "Fig_";
   canvName += "E1E2vfFiber1";
 
-  std::string str1 = "relativistic fraction";
+  std::string str1 = "EM Obj fraction";
   const char* atitle = str1.c_str();
 
   std::string strn1="phcHcalvfE1";

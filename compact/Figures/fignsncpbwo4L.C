@@ -16,7 +16,7 @@ void fignsncpbwo4L()
   std::string str2="phcEcalNsNc";
   const char* hname1 =str2.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_JunkR3.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
 
  
   gStyle->SetOptStat(0);

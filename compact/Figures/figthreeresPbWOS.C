@@ -32,7 +32,7 @@ void figthreeresPbWOS()
   const char* htitle = str6.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_JunkR3.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal2.root");
 
 
 

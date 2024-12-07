@@ -19,7 +19,7 @@ void figepifffPbWOL()
   std::string strn2="hpfff2";
   const char* hname2 =strn2.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_Junk.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
 
  
   gStyle->SetOptStat(0);
