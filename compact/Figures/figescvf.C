@@ -46,7 +46,7 @@ void figescvf()
   canv->SetTicky(0);
   
 
-  TLatex latex;
+
   
   int n_ = 2;
   
@@ -92,7 +92,20 @@ void figescvf()
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
-  lgd->Draw();
+  //lgd->Draw();
+
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV pion simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
 
 
   canv->Print(canvName+".pdf",".pdf");

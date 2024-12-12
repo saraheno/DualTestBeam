@@ -70,7 +70,7 @@ void figthreeresFiber2()
   
   int n_ = 2;
   
-  float x1_l = 0.8;
+  float x1_l = 0.5;
   //  float x1_l = 0.75;
   float y1_l = 0.90;
   
@@ -127,7 +127,7 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
-  //  max = std::max(max,C_pt->GetMaximum());
+  max = std::max(max,C_pt->GetMaximum());
   A_pt->SetMaximum(max*1.3);
 
   A_pt->GetYaxis()->SetTitle(" percent  ");  

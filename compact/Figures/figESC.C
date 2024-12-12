@@ -72,16 +72,16 @@ void figESC()
   if (dolog) canv->SetLogy();
 
 
-  TLatex latex;
+
   
   int n_ = 2;
   
   float x1_l = 0.8;
   //  float x1_l = 0.75;
-  float y1_l = 0.90;
+  float y1_l = 0.95;
   
   float dx_l = 0.30;
-  float dy_l = 0.1;
+  float dy_l = 0.25;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
   
@@ -188,6 +188,7 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
 
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
+  A_pt->SetLineStyle(1);
   A_pt->SetStats(0);
   A_pt->Draw("HIST ");
 
@@ -195,24 +196,28 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
 
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
+    B_pt->SetLineStyle(2);
   B_pt->SetStats(0);
   B_pt->Draw("HIST same");
 
   
   C_pt->SetLineColor(3);
   C_pt->SetLineWidth(3);
+    C_pt->SetLineStyle(3);
   C_pt->SetStats(0);
   C_pt->Draw("HIST same");
   
   
   D_pt->SetLineColor(4);
   D_pt->SetLineWidth(4);
+    D_pt->SetLineStyle(4);
   D_pt->SetStats(0);
   D_pt->Draw("HIST same");
   
   
   E_pt->SetLineColor(5);
   E_pt->SetLineWidth(5);
+    E_pt->SetLineStyle(5);
   E_pt->SetStats(0);
   E_pt->Draw("HIST same");
   
@@ -242,6 +247,19 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
   lgd->Draw();
+
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV pion simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
 
  
   if (dolog) {
