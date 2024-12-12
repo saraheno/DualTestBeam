@@ -2873,7 +2873,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       float ae=aedgehit->energyDeposit;
       eesum+=ae;
       eesumedge+=ae;
-      eesumedgerel=aedgehit->edeprelativistic;
+      eesumedgerel=aedgehit->edepepgam;
 
     }  // end loop over escaping hits
   }
