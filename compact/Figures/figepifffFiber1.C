@@ -5,10 +5,10 @@
 
 
 
-void figepifffPbWOL() 
+void figepifffFiber1() 
 { 
   TString canvName = "Fig_";
-  canvName += "epiffPbWOL";
+  canvName += "epiffFiber1";
 
   std::string str1 = "Relativistic fraction E deposits, entire calorimeter";
   const char* atitle = str1.c_str();

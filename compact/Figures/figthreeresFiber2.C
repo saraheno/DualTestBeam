@@ -66,7 +66,7 @@ void figthreeresFiber2()
   if (dolog) canv->SetLogy();
 
 
-  TLatex latex;
+
   
   int n_ = 2;
   
@@ -139,6 +139,7 @@ std::cout<<" third entries is "<<aaC<<std::endl;
 
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
+  A_pt->SetLineStyle(1);
   A_pt->SetStats(0);
   A_pt->Draw("HIST ");
 
@@ -146,12 +147,14 @@ std::cout<<" third entries is "<<aaC<<std::endl;
 
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
+    B_pt->SetLineStyle(2);
   B_pt->SetStats(0);
   B_pt->Draw("HIST same");
 
   
   C_pt->SetLineColor(3);
   C_pt->SetLineWidth(3);
+    C_pt->SetLineStyle(3);
   C_pt->SetStats(0);
   C_pt->Draw("HIST same");
   
@@ -178,7 +181,21 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   canv->GetFrame()->Draw();
   lgd->Draw();
 
- 
+
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV pion simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
+
+  
   if (dolog) {
     canv->Print(canvName+"_log.pdf",".pdf");
     canv->Print(canvName+"_log.png",".png");}

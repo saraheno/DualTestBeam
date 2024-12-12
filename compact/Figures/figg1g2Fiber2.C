@@ -91,7 +91,7 @@ void figg1g2Fiber2()
 
   float arms,amean;
 
-  std::cout<<"getting first"<<std::endl;
+  std::cout<<"getting first "<<hname1<<std::endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
@@ -101,7 +101,7 @@ void figg1g2Fiber2()
 
   
 
-  std::cout<<"getting second"<<std::endl;
+  std::cout<<"getting second "<<hname2<<std::endl;
   TH1F *B_pt = static_cast<TH1F*>(f1->Get(hname2)->Clone());
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
@@ -109,7 +109,7 @@ void figg1g2Fiber2()
   std::cout<<" second entries is "<<aaB<<std::endl;
   B_pt->Scale(1/aaB);
 
-  std::cout<<"getting third"<<std::endl;
+  std::cout<<"getting third "<<hname3<<std::endl;
   TH1F *C_pt = static_cast<TH1F*>(f1->Get(hname3)->Clone());
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
@@ -117,7 +117,7 @@ void figg1g2Fiber2()
   std::cout<<" third entries is "<<aaC<<std::endl;
   C_pt->Scale(1/aaC);
 
-  std::cout<<"getting fourth"<<std::endl;
+  std::cout<<"getting fourth "<<hname4<<std::endl;
   TH1F *D_pt = static_cast<TH1F*>(f1->Get(hname4)->Clone());
   std::cout<<"ha"<<std::endl;
   D_pt->SetDirectory(0);
@@ -195,25 +195,25 @@ void figg1g2Fiber2()
     canv->Print(canvName+".png",".png");}
 
   std::cout<<std::endl;
-  std::cout<<"fitting first hist"<<std::endl;
+  std::cout<<"fitting first hist "<<hname1<<std::endl;
   arms = A_pt->GetRMS();
   amean = A_pt->GetMean();
   A_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   std::cout<<std::endl;
-  std::cout<<"fitting second hist"<<std::endl;
+  std::cout<<"fitting second hist "<<hname2<<std::endl;
   arms = B_pt->GetRMS();
   amean = B_pt->GetMean();
   B_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   std::cout<<std::endl;
-  std::cout<<"fitting third hist"<<std::endl;
+  std::cout<<"fitting third hist "<<hname3<<std::endl;
   arms = C_pt->GetRMS();
   amean = C_pt->GetMean();
   C_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
   std::cout<<std::endl;
-  std::cout<<"fitting fourth hist"<<std::endl;
+  std::cout<<"fitting fourth hist "<<hname4<<std::endl;
   arms = D_pt->GetRMS();
   amean = D_pt->GetMean();
   D_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);

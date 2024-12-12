@@ -5,21 +5,20 @@
 
 
 
-void figepifffPbWOL() 
+void figscvfFiber2() 
 { 
   TString canvName = "Fig_";
-  canvName += "epifffPbWOL";
+  canvName += "scvfFiber2";
 
-  std::string str1 = "Relativistic fraction E deposits, entire calorimeter";
+  std::string str1 = "f";
   const char* atitle = str1.c_str();
 
-  std::string strn1="hefff";
+  std::string strn1="hfncerHcal";
   const char* hname1 =strn1.c_str();
-
-  std::string strn2="hpfff2";
+  std::string strn2="hfnscinHcal";
   const char* hname2 =strn2.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
+  TFile *f1 = new TFile("hists_20GeV_FSCEPSAonly.root");
 
  
   gStyle->SetOptStat(0);
@@ -67,48 +66,29 @@ void figepifffPbWOL()
 
 
   std::cout<<"getting first"<<std::endl;
-  TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
-  double aaA = A_pt->Integral();
-  std::cout<<" first entries is "<<aaA<<std::endl;
-  A_pt->Scale(1./aaA);
-
-  A_pt->GetYaxis()->SetTitle(" percent  ");  
+  TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
+  A_pt->GetYaxis()->SetTitle("Signal (normalized to electron)  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
   A_pt->GetXaxis()->SetTitleSize(0.05);  
+  A_pt->SetMarkerColor(kGreen);
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
-  A_pt->Draw("HIST ");
+  A_pt->Draw("");
 
 
-  std::cout<<"getting first"<<std::endl;
-  TH1F *B_pt = static_cast<TH1F*>(f1->Get(hname2)->Clone());
-  double aaB = B_pt->Integral();
-  std::cout<<" second entries is "<<aaB<<std::endl;
-  B_pt->Scale(10./aaB);
-
-  B_pt->GetYaxis()->SetTitle(" Cherenkov signal (arb. unit)  ");  
+  std::cout<<"getting second"<<std::endl;
+  TH2F *B_pt = static_cast<TH2F*>(f1->Get(hname2)->Clone());
+  B_pt->GetYaxis()->SetTitle("Signal (normalized to electron)  ");  
   B_pt->GetYaxis()->SetTitleSize(0.05);  
   B_pt->GetXaxis()->SetTitle(atitle);  
   B_pt->GetXaxis()->SetTitleSize(0.05);  
-  B_pt->SetLineColor(2);
+  B_pt->SetLineColor(1);
+  B_pt->SetMarkerColor(kRed);
   B_pt->SetLineWidth(3);
   B_pt->SetStats(0);
-  B_pt->Draw("HIST same");
-
-
-
-
-    // Writing the lumi information and the CMS "logo"
-   // second parameter in example_plot is iPos, which drives the position of the CMS logo in the plot
-  // iPos=11 : top-left, left-aligned
-  // iPos=33 : top-right, right-aligned
-  // iPos=22 : center, centered
-  // mode generally : 
-  //   iPos = 10*(alignement 1/2/3) + position (1/2/3 = left/center/right)
-   
-  
+  B_pt->Draw("same");
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
@@ -117,6 +97,25 @@ void figepifffPbWOL()
 
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
+
+
+  
+  Double_t intercept,slope;
+
+  TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
+  TProfile* A_pt_pfx = A_pt->ProfileX();
+  A_pt_pfx->Fit("pol1","WW","",0.5,0.9);
+  TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
+  intercept= fitFun->GetParameter(0);
+  slope= fitFun->GetParameter(1);
+
+
+  TCanvas* canv3 = new TCanvas("yuck2","yuck2",50,50,W,H);
+  TProfile* B_pt_pfx = B_pt->ProfileX();
+  B_pt_pfx->Fit("pol1","WW","",0.5,0.9);
+  TF1 *fitFun2 = (TF1*)B_pt_pfx->GetListOfFunctions()->FindObject("pol1");
+  intercept= fitFun2->GetParameter(0);
+  slope= fitFun2->GetParameter(1);
 
   return;
 }

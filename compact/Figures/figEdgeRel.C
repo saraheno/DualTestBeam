@@ -5,18 +5,18 @@
 
 
 int dolog=0;
-void figNONCONS() 
+void figEdgeRel() 
 { 
-  float arms,amean;
+  float amean, arms;
   TString canvName = "Fig_";
-  canvName += "NONCONS";
+  canvName += "EdgeRelf";
 
 
-  std::string strt = "Binding/nonEM";
+  std::string strt = "escaping rel/escaping all";
   const char* atitle = strt.c_str();
 
-  std::string strn="phcnonconsE";
-  const char* hname1 =strn.c_str();
+  std::string strn1="phcEdgeRelf";
+  const char* hname1 =strn1.c_str();
 
   std::string str1="PbWO";
   const char* lgd1 = str1.c_str();
@@ -34,11 +34,12 @@ void figNONCONS()
   const char* htitle = str8.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal2.root");
   TFile *f2 = new TFile("hists_20GeV_FSCEPonly.root");
   TFile *f3 = new TFile("hists_20GeV_SampOnly.root");
   TFile *f4 = new TFile("hists_20GeV_FSCEPSAonly.root");
   TFile *f5 = new TFile("hists_20GeV_SampOnly2.root");
+
 
 
  
@@ -90,20 +91,15 @@ void figNONCONS()
   std::cout<<std::endl;
   std::cout<<"getting first "<<str1<<std::endl;
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
-  //A_pt->Rebin(2);
-  //  int nbin;
-  //nbin=A_pt->FindBin(0.6);
-  //    A_pt->GetXaxis()->SetRangeUser(0,nbin);
-  A_pt->GetXaxis()->SetRangeUser(0.,0.6);
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
   double aaA = A_pt->Integral();
-std::cout<<" first entries is "<<aaA<<std::endl;
+  std::cout<<" first entries is "<<aaA<<std::endl;
   A_pt->Scale(1./aaA);
   std::cout<<"fitting first hist"<<std::endl;
   arms = A_pt->GetRMS();
   amean = A_pt->GetMean();
-  std::cout<<"mean rms "<<amean<<" "<<arms<<std::endl;
+  std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
   A_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
     std::cout<<std::endl;
@@ -111,7 +107,7 @@ std::cout<<" first entries is "<<aaA<<std::endl;
   TH1F *B_pt = static_cast<TH1F*>(f2->Get(hname1)->Clone());
   //nbin=B_pt->FindBin(0.6);
   //B_pt->GetXaxis()->SetRangeUser(0,nbin);
-    B_pt->GetXaxis()->SetRangeUser(0.,0.6);
+  //  B_pt->GetXaxis()->SetRangeUser(0.,0.6);
     //B_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
@@ -121,15 +117,15 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   std::cout<<"fitting second hist"<<std::endl;
   arms = B_pt->GetRMS();
   amean = B_pt->GetMean();
-    std::cout<<"mean rms "<<amean<<" "<<arms<<std::endl;
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
   B_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-  
-  std::cout<<std::endl;
+
+    std::cout<<std::endl;
   std::cout<<"getting third "<<str3<<std::endl;
   TH1F *C_pt = static_cast<TH1F*>(f3->Get(hname1)->Clone());
   //nbin=C_pt->FindBin(0.6);
   //C_pt->GetXaxis()->SetRangeUser(0,nbin);
-    C_pt->GetXaxis()->SetRangeUser(0.,0.6);
+  //  C_pt->GetXaxis()->SetRangeUser(0.,0.6);
     //C_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
@@ -139,7 +135,7 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   std::cout<<"fitting third hist"<<std::endl;
   arms = C_pt->GetRMS();
   amean = C_pt->GetMean();
-    std::cout<<"mean rms "<<amean<<" "<<arms<<std::endl;
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
   C_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
     std::cout<<std::endl;
@@ -147,40 +143,38 @@ std::cout<<" third entries is "<<aaC<<std::endl;
   TH1F *D_pt = static_cast<TH1F*>(f4->Get(hname1)->Clone());
   //nbin=D_pt->FindBin(0.6);
   //D_pt->GetXaxis()->SetRangeUser(0,nbin);
-    D_pt->GetXaxis()->SetRangeUser(0.,0.6);
+  //  D_pt->GetXaxis()->SetRangeUser(0.,0.6);
     //B_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   D_pt->SetDirectory(0);
   double aaD = D_pt->Integral();
+std::cout<<" fourth entries is "<<aaD<<std::endl;
   D_pt->Scale(1/aaD);
   std::cout<<"fitting fourth hist"<<std::endl;
   arms = D_pt->GetRMS();
   amean = D_pt->GetMean();
-    std::cout<<"mean rms "<<amean<<" "<<arms<<std::endl;
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
   D_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
 
-
-      std::cout<<std::endl;
+  
+    std::cout<<std::endl;
   std::cout<<"getting fifth "<<str5<<std::endl;
   TH1F *E_pt = static_cast<TH1F*>(f5->Get(hname1)->Clone());
   //nbin=E_pt->FindBin(0.6);
   //E_pt->GetXaxis()->SetRangeUser(0,nbin);
-    E_pt->GetXaxis()->SetRangeUser(0.,0.6);
+  //  E_pt->GetXaxis()->SetRangeUser(0.,0.6);
     //E_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   E_pt->SetDirectory(0);
   double aaE = E_pt->Integral();
 std::cout<<" fift entries is "<<aaE<<std::endl;
   E_pt->Scale(1/aaE);
-    std::cout<<std::endl;
   std::cout<<"fitting fifth hist"<<std::endl;
   arms = E_pt->GetRMS();
   amean = E_pt->GetMean();
-    std::cout<<"mean rms "<<amean<<" "<<arms<<std::endl;
+    std::cout<<"mean rms are "<<amean<<" "<<arms<<std::endl;
   E_pt->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-
-
-
+  
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
   //  max = std::max(max,C_pt->GetMaximum());
@@ -217,11 +211,13 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
   D_pt->SetStats(0);
   D_pt->Draw("HIST same");
   
+
   
   E_pt->SetLineColor(5);
   E_pt->SetLineWidth(5);
   E_pt->SetStats(0);
   E_pt->Draw("HIST same");
+  
   
   
 
@@ -233,7 +229,6 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
   lgd->AddEntry(E_pt, lgd5, "l");
 
 
-  //lgd->AddEntry(C_pt, "ModelBx500", "l");
 
  lgd->Draw();
     // Writing the lumi information and the CMS "logo"

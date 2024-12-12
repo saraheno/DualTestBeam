@@ -1,0 +1,753 @@
+
+Processing figscvfPbWOS.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvfPbWOS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvfPbWOS.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  3.73624e-05
+NDf                       =          131
+p0                        =  9.11535e-05   +/-   0.000285421 
+p1                        =      1.00199   +/-   0.000402055 
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =   0.00431667
+NDf                       =          131
+p0                        =      0.61525   +/-   0.00306792  
+p1                        =     0.390091   +/-   0.00432158  
+
+Processing figscvfFiber1.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvfFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvfFiber1.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =    0.0521066
+NDf                       =          131
+p0                        =    0.0515622   +/-   0.010659    
+p1                        =      1.03965   +/-   0.0150146   
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =     0.107875
+NDf                       =          131
+p0                        =      1.31698   +/-   0.0153366   
+p1                        =    -0.362124   +/-   0.0216037   
+
+Processing figscvfFiber2.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvfFiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvfFiber2.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =      2.37602
+NDf                       =          131
+p0                        =     0.209693   +/-   0.0719771   
+p1                        =     0.743859   +/-   0.10139     
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =      2.86836
+NDf                       =          131
+p0                        =      1.26129   +/-   0.0790835   
+p1                        =    -0.376837   +/-   0.1114      
+
+Processing figscvfSampL.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvfSampL.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvfSampL.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =     0.830881
+NDf                       =          131
+p0                        =     0.113335   +/-   0.0425636   
+p1                        =      0.85966   +/-   0.0599567   
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =      1.26092
+NDf                       =          131
+p0                        =      1.45862   +/-   0.0524341   
+p1                        =    -0.487777   +/-   0.0738606   
+
+Processing figscvfSampS.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvfSampS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvfSampS.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =     0.633462
+NDf                       =           98
+p0                        =      0.12734   +/-   0.0609717   
+p1                        =     0.806767   +/-   0.0928407   
+ slope interecept are 0.806767 0.12734
+ value at f =1 is 0.934107
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =     0.921141
+NDf                       =           98
+p0                        =     0.482131   +/-   0.0735243   
+p1                        =     0.482582   +/-   0.111954    
+ slope interecept are 0.482582 0.482131
+ value at f =1 is 0.964714
+
+Processing figefff.C...
+getting first
+ first entries is 2000
+getting second
+ha
+ second entries is 1500
+getting third
+ha
+ third entries is 1500
+getting fourth
+ha
+ fourth entries is 1500
+getting fifth
+ha
+ fift entries is 2000
+Info in <TCanvas::Print>: .pdf file Fig_efff.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_efff.png has been created
+
+Processing figg1g2Fiber1.C...
+getting first ehcHcalE1
+ first entries is 1500
+getting second phcHcalE1
+ha
+ second entries is 1500
+getting third ehcHcalE2
+ha
+ third entries is 1500
+getting fourth phcHcalE2
+ha
+ fourth entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_g1g2Fiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_g1g2Fiber1.png has been created
+
+fitting first hist ehcHcalE1
+ FCN=0.469686 FROM MIGRAD    STATUS=CONVERGED      78 CALLS          79 TOTAL
+                     EDM=7.84711e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.31265e-01   1.24543e-02   5.32981e-06   9.89715e-03
+   2  Mean         2.52672e-02   4.33932e-05   2.42445e-08  -3.61801e-01
+   3  Sigma        1.19957e-03   5.06355e-05   6.58781e-06   1.10593e-02
+
+fitting second hist phcHcalE1
+ FCN=3.4406 FROM MIGRAD    STATUS=CONVERGED      66 CALLS          67 TOTAL
+                     EDM=4.46991e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.13328e-01   4.17004e-03   3.21387e-06  -8.36205e-03
+   2  Mean         3.21151e-02   1.10620e-04   1.12856e-07  -7.46625e-01
+   3  Sigma        3.32242e-03   1.16426e-04   9.89852e-06  -3.95824e-03
+
+fitting third hist ehcHcalE2
+ FCN=9.04268 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=4.58391e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.64811e-01   1.02113e-02   1.11977e-05   9.92740e-03
+   2  Mean         3.92188e-02   5.13918e-05   7.78921e-08   1.32164e-01
+   3  Sigma        1.47875e-03   6.31691e-05   1.74368e-05   8.41672e-03
+
+fitting fourth hist phcHcalE2
+ FCN=5.77476 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=4.14907e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.28121e-01   5.05201e-03   4.55599e-06  -1.24130e-01
+   2  Mean         4.61158e-02   1.25536e-04   1.53670e-07   5.15782e-01
+   3  Sigma        3.12245e-03   1.69222e-04   1.91020e-05   1.67835e-02
+
+Processing figg1g2Fiber2.C...
+getting first ehcHcalE1
+ first entries is 1500
+getting second phcHcalE1
+ha
+ second entries is 1500
+getting third ehcHcalE2
+ha
+ third entries is 1500
+getting fourth phcHcalE2
+ha
+ fourth entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_g1g2Fiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_g1g2Fiber2.png has been created
+
+fitting first hist ehcHcalE1
+ FCN=1.5549 FROM MIGRAD    STATUS=CONVERGED      78 CALLS          79 TOTAL
+                     EDM=6.74667e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.52299e-01   9.51161e-03   5.35630e-06   6.58278e-03
+   2  Mean         5.47184e-02   5.94290e-05   4.53882e-08   4.62339e-01
+   3  Sigma        1.61880e-03   7.45989e-05   9.98368e-06   7.80401e-03
+
+fitting second hist phcHcalE1
+ FCN=18.1608 FROM MIGRAD    STATUS=CONVERGED      73 CALLS          74 TOTAL
+                     EDM=9.4049e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     7.01178e-02   2.66784e-03   4.21224e-06   6.42436e-02
+   2  Mean         6.78464e-02   2.03005e-04   4.29440e-07  -2.58154e-01
+   3  Sigma        5.45074e-03   2.41494e-04   2.69654e-05   5.79989e-03
+
+fitting third hist ehcHcalE2
+ FCN=1.22696 FROM MIGRAD    STATUS=CONVERGED      74 CALLS          75 TOTAL
+                     EDM=9.12256e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.72559e-01   6.60344e-03   3.47295e-06   4.38966e-03
+   2  Mean         9.30661e-02   9.29595e-05   6.38790e-08   3.54918e-02
+   3  Sigma        2.34908e-03   1.17256e-04   9.98141e-06   7.79669e-03
+
+fitting fourth hist phcHcalE2
+ FCN=10.734 FROM MIGRAD    STATUS=CONVERGED      67 CALLS          68 TOTAL
+                     EDM=4.29456e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     8.41258e-02   3.14966e-03   3.87170e-06  -1.27772e-01
+   2  Mean         1.05085e-01   1.50925e-04   2.52233e-07  -4.25250e+00
+   3  Sigma        4.52242e-03   1.68703e-04   1.70286e-05   2.17792e-02
+
+Processing figg1g2SampL.C...
+getting first
+ first entries is 1500
+getting second
+ha
+ second entries is 1500
+getting third
+ha
+ third entries is 1500
+getting fourth
+ha
+ fourth entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_g1g2SampL.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_g1g2SampL.png has been created
+
+fitting first hist
+ FCN=0.796329 FROM MIGRAD    STATUS=CONVERGED      77 CALLS          78 TOTAL
+                     EDM=6.64491e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.61068e-01   9.72703e-03   4.71817e-06  -4.93620e-03
+   2  Mean         3.41814e-02   5.36674e-05   3.29008e-08   3.35756e-02
+   3  Sigma        1.46761e-03   5.82870e-05   6.92768e-06  -2.50346e-03
+
+fitting second hist
+ FCN=8.70925 FROM MIGRAD    STATUS=CONVERGED      70 CALLS          71 TOTAL
+                     EDM=1.7968e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     6.87744e-02   2.56288e-03   2.91297e-06  -2.07552e-02
+   2  Mean         4.49317e-02   2.10558e-04   3.09618e-07   5.73229e-01
+   3  Sigma        5.65254e-03   2.39069e-04   1.81030e-05   8.19519e-03
+
+fitting third hist
+ FCN=2.5182 FROM MIGRAD    STATUS=CONVERGED      74 CALLS          75 TOTAL
+                     EDM=3.37858e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.69182e-01   6.49228e-03   4.30669e-06  -2.82333e-02
+   2  Mean         6.24014e-02   8.94067e-05   8.09322e-08   1.43462e+00
+   3  Sigma        2.34859e-03   1.14304e-04   1.26777e-05   3.86571e-03
+
+fitting fourth hist
+ FCN=25.9328 FROM MIGRAD    STATUS=CONVERGED      75 CALLS          76 TOTAL
+                     EDM=2.89089e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     6.65002e-02   2.59727e-03   4.72803e-06   1.89154e-01
+   2  Mean         6.64177e-02   2.32894e-04   5.58996e-07  -3.98546e-01
+   3  Sigma        5.91534e-03   2.93597e-04   3.41950e-05   4.96337e-02
+
+Processing figg1g2SampS.C...
+getting first
+ first entries is 2000
+getting second
+ha
+ second entries is 2000
+getting third
+ha
+ third entries is 2000
+getting fourth
+ha
+ fourth entries is 2000
+
+fitting first hist
+mean rms are 0.0351454 0.00151283
+ FCN=7.74042 FROM MIGRAD    STATUS=CONVERGED      64 CALLS          65 TOTAL
+                     EDM=1.68166e-11    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.60080e-01   7.10666e-03   8.41355e-06  -9.78289e-04
+   2  Mean         3.51396e-02   3.46057e-05   4.95216e-08  -2.09370e-02
+   3  Sigma        1.52769e-03   2.39756e-05   6.13293e-06  -8.95887e-04
+
+fitting second hist
+mean rms are 0.0398947 0.00495237
+ FCN=212.101 FROM MIGRAD    STATUS=CONVERGED      81 CALLS          82 TOTAL
+                     EDM=9.28331e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.43154e-02   2.99482e-03   1.59131e-05  -2.84998e-03
+   2  Mean         3.93576e-02   1.25976e-04   6.47160e-07  -3.95650e-01
+   3  Sigma        3.78646e-03   8.13585e-05   2.71972e-05   9.29939e-04
+
+fitting third hist
+mean rms are 0.0341506 0.00150381
+ FCN=8.37663 FROM MIGRAD    STATUS=CONVERGED      51 CALLS          52 TOTAL
+                     EDM=8.35828e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.60671e-01   7.12381e-03   8.73349e-06   1.20827e-02
+   2  Mean         3.41496e-02   3.45260e-05   5.11979e-08   1.12359e+01
+   3  Sigma        1.52455e-03   2.39543e-05   6.35998e-06  -2.29711e-02
+
+fitting fourth hist
+mean rms are 0.0390497 0.00479787
+ FCN=243.671 FROM MIGRAD    STATUS=CONVERGED      86 CALLS          87 TOTAL
+                     EDM=3.52779e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.88768e-02   3.13837e-03   1.80355e-05   1.62965e-03
+   2  Mean         3.85843e-02   1.23102e-04   6.53387e-07   9.81073e-01
+   3  Sigma        3.54596e-03   7.49218e-05   2.75205e-05  -1.39466e-02
+Info in <TCanvas::Print>: .pdf file Fig_g1g2SampS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_g1g2SampS.png has been created
+
+Processing fignonconsvf.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nonconsvf.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nonconsvf.png has been created
+
+Processing fignsncpbwo4L.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncPbWO4L.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncPbWO4L.png has been created
+
+Processing figscvniFiber1.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_scvniFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_scvniFiber1.png has been created
+
+Processing figthreeresPbWOS.C...
+getting first
+ first entries is 2000
+getting second
+ha
+ second entries is 2000
+getting third
+ha
+ third entries is 2000
+Info in <TCanvas::Print>: .pdf file Fig_threeresPbWOS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_threeresPbWOS.png has been created
+
+Processing figESC.C...
+
+getting first PbWO
+ first entries is 2000
+fitting first hist
+mean rms are 0.0714232 0.0480195
+ FCN=98.4984 FROM MIGRAD    STATUS=CONVERGED      69 CALLS          70 TOTAL
+                     EDM=7.16491e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     4.55011e-02   1.48675e-03   5.27874e-06  -1.29546e-01
+   2  Mean         6.01935e-02   1.33744e-03   6.29754e-06   8.17492e-01
+   3  Sigma        4.32895e-02   1.55765e-03   4.64587e-05   4.44311e-02
+
+getting second Fiber1
+ha
+ second entries is 1498
+fitting second hist
+mean rms are 0.138866 0.102568
+ FCN=96.7324 FROM MIGRAD    STATUS=CONVERGED      67 CALLS          68 TOTAL
+                     EDM=9.18809e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.50266e-02   1.34408e-03   4.62534e-06  -2.23640e-02
+   2  Mean         1.19189e-01   1.53459e-03   7.02418e-06  -8.83646e-02
+   3  Sigma        5.13412e-02   1.46865e-03   3.13671e-05   6.51780e-03
+
+getting third SampL
+ha
+ third entries is 1493
+fitting third hist
+mean rms are 0.0570996 0.0534301
+ FCN=117.592 FROM MIGRAD    STATUS=CONVERGED      79 CALLS          80 TOTAL
+                     EDM=4.324e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.49838e-02   2.08021e-03   8.10441e-06  -1.51461e-02
+   2  Mean         4.33749e-02   1.44555e-03   6.35493e-06   2.73892e-03
+   3  Sigma        3.58688e-02   1.50456e-03   5.18834e-05  -1.83065e-04
+
+getting fourth Fiber2
+ha
+ fourth entries is 1489
+fitting fourth hist
+mean rms are 0.188561 0.127175
+ FCN=174.165 FROM MIGRAD    STATUS=CONVERGED      75 CALLS          76 TOTAL
+                     EDM=1.58197e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.97688e-02   1.16193e-03   5.52291e-06   2.66166e-02
+   2  Mean         1.53657e-01   1.78736e-03   1.02673e-05   2.84598e-01
+   3  Sigma        5.47159e-02   1.47185e-03   3.52854e-05  -6.89206e-02
+
+getting fifth SampS
+ha
+ fift entries is 1949
+fitting fifth hist
+mean rms are 0.577877 0.125807
+ FCN=68.7784 FROM MIGRAD    STATUS=CONVERGED      73 CALLS          74 TOTAL
+                     EDM=4.09525e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.63450e-02   5.56097e-04   1.63958e-06   8.64292e-02
+   2  Mean         5.49147e-01   3.93665e-03   1.53027e-05   2.13028e-02
+   3  Sigma        1.17919e-01   4.77542e-03   4.45113e-05   5.79708e-03
+Info in <TCanvas::Print>: .pdf file Fig_Escape.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_Escape.png has been created
+
+Processing fignsncFiber1.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncFiber1.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =       3.1555
+NDf                       =          115
+p0                        =      1.04918   +/-   0.155603    
+p1                        =    -0.305792   +/-   0.151144    
+
+Processing fignsncpbwo4S.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncPbWO4S.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncPbWO4S.png has been created
+
+Processing figthreeresFiber1.C...
+getting first
+ first entries is 1500
+getting second
+ha
+ second entries is 1499
+getting third
+ha
+ third entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_threeresFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_threeresFiber1.png has been created
+
+Processing figthreeresSampL.C...
+getting first
+ first entries is 1500
+getting second
+ha
+ second entries is 1489
+getting third
+ha
+ third entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_threeresSampL.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_threeresSampL.png has been created
+
+Processing figescvf.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_escvf.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_escvf.png has been created
+
+Processing fignsncFiber1timing.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncFiber1timing.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncFiber1timing.png has been created
+
+Processing fignsncSampL.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncSampOnly.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncSampOnly.png has been created
+
+Processing figthreeresFiber2.C...
+getting first
+ first entries is 1500
+getting second
+ha
+ second entries is 1500
+getting third
+ha
+ third entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_threeresFiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_threeresFiber2.png has been created
+
+Processing figthreeresSampS.C...
+getting first
+ first entries is 2000
+getting second
+ha
+ second entries is 2000
+getting third
+ha
+ third entries is 1972
+Info in <TCanvas::Print>: .pdf file Fig_threeresSampS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_threeresSampS.png has been created
+
+Processing figNONCONS.C...
+
+getting first PbWO
+ first entries is 1989
+fitting first hist
+mean rms 0.243035 0.0426707
+ FCN=9.30002 FROM MIGRAD    STATUS=CONVERGED      78 CALLS          79 TOTAL
+                     EDM=6.71914e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.57735e-01   5.09070e-03   5.87741e-06  -1.50190e-03
+   2  Mean         2.35841e-01   1.18825e-03   1.85329e-06  -9.92659e-03
+   3  Sigma        3.81423e-02   1.41930e-03   1.65922e-05   1.96346e-03
+
+getting second Fiber1
+ha
+ second entries is 1488
+fitting second hist
+mean rms 0.285887 0.0455889
+ FCN=8.13867 FROM MIGRAD    STATUS=CONVERGED      65 CALLS          66 TOTAL
+                     EDM=2.80098e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.92521e-01   6.90333e-03   7.69797e-06  -1.06856e-02
+   2  Mean         2.85574e-01   8.48725e-04   1.25182e-06  -6.06939e-02
+   3  Sigma        2.91280e-02   7.90624e-04   1.04869e-05  -4.66968e-03
+
+getting third SampL
+ha
+ third entries is 1482
+fitting third hist
+mean rms 0.348765 0.0460326
+ FCN=3.70782 FROM MIGRAD    STATUS=CONVERGED      66 CALLS          67 TOTAL
+                     EDM=1.03583e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.77483e-01   6.31279e-03   5.09453e-06   9.84005e-03
+   2  Mean         3.46250e-01   9.77838e-04   1.03142e-06   8.21613e-02
+   3  Sigma        3.22162e-02   9.26286e-04   8.18953e-06  -6.32338e-03
+
+getting fourth Fiber2
+ha
+fitting fourth hist
+mean rms 0.281313 0.0549327
+ FCN=16.4757 FROM MIGRAD    STATUS=CONVERGED      59 CALLS          60 TOTAL
+                     EDM=3.77585e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.71987e-01   6.28250e-03   9.53547e-06   1.49794e-02
+   2  Mean         2.85683e-01   9.07445e-04   1.85225e-06   8.16257e-01
+   3  Sigma        3.20064e-02   8.51225e-04   1.36905e-05   5.49527e-02
+
+getting fifth SampS
+ha
+ fift entries is 1981
+
+fitting fifth hist
+mean rms 0.213176 0.0570207
+ FCN=6.96852 FROM MIGRAD    STATUS=CONVERGED      59 CALLS          60 TOTAL
+                     EDM=4.05335e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.46938e-01   4.61172e-03   4.79463e-06  -1.55674e-01
+   2  Mean         2.18638e-01   9.77897e-04   1.34578e-06  -4.63853e-01
+   3  Sigma        3.77490e-02   9.29000e-04   8.94235e-06  -1.22177e-01
+Info in <TCanvas::Print>: .pdf file Fig_NONCONS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_NONCONS.png has been created
+
+Processing fignsncFiber2.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncFiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncFiber2.png has been created
+
+Processing fignsncSampS.C...
+getting first
+Info in <TCanvas::Print>: .pdf file Fig_nsncSampOnly2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_nsncSampOnly2.png has been created
+
+Processing figtimingFiber1.C...
+getting first
+ first entries is 7.40425e+07
+getting second
+ha
+ second entries is 1.19665e+08
+Info in <TCanvas::Print>: .pdf file Fig_timingFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_timingFiber1.png has been created
+
+Processing figepifffFiber1.C...
+getting first
+ first entries is 1500
+getting first
+ second entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_epiffFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_epiffFiber1.png has been created
+
+Processing figepifffSampL.C...
+getting first
+ first entries is 1500
+getting first
+ second entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_epiffSampL.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_epiffSampL.png has been created
+
+Processing figepifffFiber2.C...
+getting first
+ first entries is 1500
+getting first
+ second entries is 1500
+Info in <TCanvas::Print>: .pdf file Fig_epiffFiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_epiffFiber2.png has been created
+
+Processing figepifffPbWOS.C...
+getting first
+ first entries is 2000
+getting first
+ second entries is 2000
+Info in <TCanvas::Print>: .pdf file Fig_epiffPbWOS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_epiffPbWOS.png has been created
+
+Processing figepifffSampS.C...
+getting first
+ first entries is 2000
+getting first
+ second entries is 2000
+Info in <TCanvas::Print>: .pdf file Fig_epiffSampS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_epiffSampS.png has been created
+
+Processing figE1E2vfFiber1.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_E1E2vfFiber1.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_E1E2vfFiber1.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  1.43731e-05
+NDf                       =           65
+p0                        =    0.0483914   +/-   0.000350812 
+p1                        =   -0.0252182   +/-   0.000495102 
+for phcHcalvfE1
+p0 p1 are 0.0483914 -0.0252182
+g at f of 1 is 0.0231732
+g at f of 0 is 0.0483914
+ratio is 2.08825
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  5.87937e-05
+NDf                       =           65
+p0                        =    0.0540369   +/-   0.000709519 
+p1                        =   -0.0116912   +/-   0.00100135  
+for phcHcalvfE2
+p0 p1 are 0.0540369 -0.0116912
+g at f of 1 is 0.0423456
+g at f of 0 is 0.0540369
+ratio is 1.27609
+
+Processing figE1E2vfSampL.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_E1E2vfSampL.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_E1E2vfSampL.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  7.31365e-05
+NDf                       =           65
+p0                        =    0.0680284   +/-   0.000791345 
+p1                        =   -0.0343384   +/-   0.00111683  
+ for phcHcalvfE1
+p0 p1 are 0.0680284 -0.0343384
+g at f of 1 is 0.03369
+g at f of 0 is 0.0680284
+ratio is 2.01924
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  8.26474e-05
+NDf                       =           65
+p0                        =    0.0748407   +/-   0.000841227 
+p1                        =   -0.0115196   +/-   0.00118723  
+ for phcHcalvfE2
+p0 p1 are 0.0748407 -0.0115196
+g at f of 1 is 0.0633211
+g at f of 0 is 0.0748407
+ratio is 1.18192
+
+Processing figE1E2vfFiber2.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_E1E2vfFiber2.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_E1E2vfFiber2.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  3.26293e-05
+NDf                       =           65
+p0                        =    0.0921646   +/-   0.00052857  
+p1                        =    -0.039252   +/-   0.000745972 
+for phcHcalvfE1
+p0 p1 are 0.0921646 -0.039252
+g at f of 1 is 0.0529126
+g at f of 0 is 0.0921646
+ratio is 1.74183
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =  9.44049e-05
+NDf                       =           65
+p0                        =     0.119673   +/-   0.000899076 
+p1                        =   -0.0225688   +/-   0.00126887  
+for phcHcalvfE2
+p0 p1 are 0.119673 -0.0225688
+g at f of 1 is 0.0971037
+g at f of 0 is 0.119673
+ratio is 1.23242
+
+Processing figE1E2vfSampS.C...
+getting first
+getting second
+Info in <TCanvas::Print>: .pdf file Fig_E1E2vfSampS.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_E1E2vfSampS.png has been created
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =    0.0012714
+NDf                       =           65
+p0                        =    0.0496327   +/-   0.00329944  
+p1                        =   -0.0174608   +/-   0.00465651  
+for phcHcalvfE1
+p0 p1 are 0.0496327 -0.0174608
+g at f of 1 is 0.0321719
+g at f of 0 is 0.0496327
+ratio is 1.54273
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =   0.00121412
+NDf                       =           65
+p0                        =    0.0496052   +/-   0.00322425  
+p1                        =   -0.0187831   +/-   0.00455039  
+for phcHcalvfE2
+p0 p1 are 0.0496052 -0.0187831
+g at f of 1 is 0.0308221
+g at f of 0 is 0.0496052
+ratio is 1.6094

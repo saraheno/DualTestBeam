@@ -46,7 +46,7 @@ void fignsncSampS()
   canv->SetTicky(0);
   
 
-  TLatex latex;
+
   
   int n_ = 2;
   
@@ -64,7 +64,7 @@ void fignsncSampS()
 
 
   std::cout<<"getting first"<<std::endl;
-  TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
+  TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
   A_pt->GetYaxis()->SetTitle(" Cherenkov signal (normalized to electron)  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
@@ -95,6 +95,20 @@ void fignsncSampS()
   lgd->Draw();
 
 
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV pion SampS simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
+
+  
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
 

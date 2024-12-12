@@ -5,18 +5,20 @@
 
 
 
-void fignsncFiber1() 
+void figscvfSampS() 
 { 
   TString canvName = "Fig_";
-  canvName += "nsncFiber1";
+  canvName += "scvfSampS";
 
-  std::string str1 = "Scintillation signal (normalized to electron)";
+  std::string str1 = "f";
   const char* atitle = str1.c_str();
 
-  std::string str2="phcHcalNsNc";
-  const char* hname1 =str2.c_str();
+  std::string strn1="hfncerHcal";
+  const char* hname1 =strn1.c_str();
+  std::string strn2="hfnscinHcal";
+  const char* hname2 =strn2.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_FSCEPonly.root");
+  TFile *f1 = new TFile("hists_20GeV_SampOnly2.root");
 
  
   gStyle->SetOptStat(0);
@@ -46,7 +48,7 @@ void fignsncFiber1()
   canv->SetTicky(0);
   
 
-
+  TLatex latex;
   
   int n_ = 2;
   
@@ -65,52 +67,34 @@ void fignsncFiber1()
 
   std::cout<<"getting first"<<std::endl;
   TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
-  A_pt->GetYaxis()->SetTitle(" Cherenkov signal (normalized to electron)  ");  
+  A_pt->GetYaxis()->SetTitle("Signal (normalized to electron)  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
   A_pt->GetXaxis()->SetTitleSize(0.05);  
-
-
-
+  A_pt->SetMarkerColor(kGreen);
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
   A_pt->Draw("");
 
 
-
-
-    // Writing the lumi information and the CMS "logo"
-   // second parameter in example_plot is iPos, which drives the position of the CMS logo in the plot
-  // iPos=11 : top-left, left-aligned
-  // iPos=33 : top-right, right-aligned
-  // iPos=22 : center, centered
-  // mode generally : 
-  //   iPos = 10*(alignement 1/2/3) + position (1/2/3 = left/center/right)
-   
-  
+  std::cout<<"getting second"<<std::endl;
+  TH2F *B_pt = static_cast<TH2F*>(f1->Get(hname2)->Clone());
+  B_pt->GetYaxis()->SetTitle("Signal (normalized to electron)  ");  
+  B_pt->GetYaxis()->SetTitleSize(0.05);  
+  B_pt->GetXaxis()->SetTitle(atitle);  
+  B_pt->GetXaxis()->SetTitleSize(0.05);  
+  B_pt->SetLineColor(2);
+  B_pt->SetMarkerColor(kRed);
+  B_pt->SetLineWidth(3);
+  B_pt->SetStats(0);
+  B_pt->Draw("same");
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
   lgd->Draw();
 
 
-
-  float t = canv->GetTopMargin();
-  float r = canv->GetRightMargin();
-  float Offset   = 0.2;
-  TString alabel="20 GeV pion Fiber1 simulation";
-  TLatex latex;
-  latex.SetNDC();
-  latex.SetTextAngle(0);
-  latex.SetTextColor(kBlack);
-  latex.SetTextFont(42);
-  latex.SetTextAlign(31);
-  latex.SetTextSize(0.75*t);
-  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
-
-
-  
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
 
@@ -119,13 +103,21 @@ void fignsncFiber1()
 
   TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
   TProfile* A_pt_pfx = A_pt->ProfileX();
-  A_pt_pfx->Fit("pol1","WW","",0.85,1.2);
+  A_pt_pfx->Fit("pol1","WW","",0.5,0.8);
   TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
   intercept= fitFun->GetParameter(0);
   slope= fitFun->GetParameter(1);
-
-
-
+  std::cout<<" slope interecept are "<<slope<<" "<<intercept<<std::endl;
+  std::cout<<" value at f =1 is "<<slope+intercept<<std::endl;
+  
+  TCanvas* canv3 = new TCanvas("yuck2","yuck2",50,50,W,H);
+  TProfile* B_pt_pfx = B_pt->ProfileX();
+  B_pt_pfx->Fit("pol1","WW","",0.5,0.8);
+  TF1 *fitFun2 = (TF1*)B_pt_pfx->GetListOfFunctions()->FindObject("pol1");
+  intercept= fitFun2->GetParameter(0);
+  slope= fitFun2->GetParameter(1);
+  std::cout<<" slope interecept are "<<slope<<" "<<intercept<<std::endl;
+  std::cout<<" value at f =1 is "<<slope+intercept<<std::endl;
 
   
   return;

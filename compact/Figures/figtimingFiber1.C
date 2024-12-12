@@ -63,7 +63,7 @@ void figtimingFiber1()
   if (dolog) canv->SetLogy();
 
 
-  TLatex latex;
+
   
   int n_ = 2;
   
@@ -89,6 +89,7 @@ void figtimingFiber1()
   //A_pt->GetXaxis()->SetRangeUser(0.,0.6);
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
+  A_pt->SetLineStyle(1);
   double aaA = A_pt->Integral();
 std::cout<<" first entries is "<<aaA<<std::endl;
   A_pt->Scale(1./aaA);
@@ -102,6 +103,7 @@ std::cout<<" first entries is "<<aaA<<std::endl;
     //B_pt->Rebin(2);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
+    B_pt->SetLineStyle(2);
   double aaB = B_pt->Integral();
 std::cout<<" second entries is "<<aaB<<std::endl;
   B_pt->Scale(1/aaB);
@@ -151,7 +153,21 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   // mode generally : 
   //   iPos = 10*(alignement 1/2/3) + position (1/2/3 = left/center/right)
    
-  
+
+
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
+ 
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();

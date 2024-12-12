@@ -65,7 +65,7 @@ void figE1E2vfFiber2()
 
   std::cout<<"getting first"<<std::endl;
   TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
-  A_pt->GetYaxis()->SetRangeUser(0.,0.08);
+  A_pt->GetYaxis()->SetRangeUser(0.,0.15);
   A_pt->GetYaxis()->SetTitle("Sampling fraction  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
@@ -79,7 +79,7 @@ void figE1E2vfFiber2()
 
   std::cout<<"getting second"<<std::endl;
   TH2F *B_pt = static_cast<TH2F*>(f1->Get(hname2)->Clone());
-  B_pt->GetYaxis()->SetRangeUser(0.,0.08);
+  B_pt->GetYaxis()->SetRangeUser(0.,0.15);
   B_pt->GetYaxis()->SetTitle("Sampling fraction  ");  
   B_pt->GetYaxis()->SetTitleSize(0.05);  
   B_pt->GetXaxis()->SetTitle(atitle);  
@@ -118,6 +118,19 @@ void figE1E2vfFiber2()
   TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
   Double_t intercept= fitFun->GetParameter(0);
   Double_t slope= fitFun->GetParameter(1);
+  std::cout<<"for "<<strn1<<std::endl;
+  std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
+  std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
+  std::cout<<"g at f of 0 is "<<intercept<<std::endl;
+  std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
+
+  TCanvas* canv3 = new TCanvas("yuck2","yuck2",50,50,W,H);
+  TProfile* B_pt_pfx = B_pt->ProfileX();
+  B_pt_pfx->Fit("pol1","WW","",0.5,0.9);
+  TF1 *fitFun2 = (TF1*)B_pt_pfx->GetListOfFunctions()->FindObject("pol1");
+  intercept= fitFun2->GetParameter(0);
+  slope= fitFun2->GetParameter(1);
+  std::cout<<"for "<<strn2<<std::endl;
   std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
   std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
   std::cout<<"g at f of 0 is "<<intercept<<std::endl;

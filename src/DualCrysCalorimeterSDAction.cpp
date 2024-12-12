@@ -410,6 +410,9 @@ namespace dd4hep {
 	if(amedia.find("BlackHole")!=std::string::npos) {  //edge detector
 	  // note this is the edge detector, not the kill media of photodetector
 	  hit->energyDeposit += track->GetKineticEnergy();
+	  if((abs(TrPDGid)==11)||(abs(TrPDGid)==22)) {
+	    hit->edepepgam+=contrib.deposit;	  
+	  }
 	  track->SetTrackStatus(fStopAndKill);
 	} else {
       //add information about each contribution to the hit

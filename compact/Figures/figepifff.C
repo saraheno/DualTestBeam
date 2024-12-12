@@ -18,7 +18,7 @@ void figefff()
   std::string str2="hefff";
   const char* hname1 =str2.c_str();
 
-  std::string str3="PbWOS";
+  std::string str3="PbWO";
   const char* lgd1 = str3.c_str();
   std::string  str4="Fiber1";
   const char* lgd2 = str4.c_str();

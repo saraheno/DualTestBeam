@@ -64,7 +64,7 @@ void fignsncpbwo4L()
 
 
   std::cout<<"getting first"<<std::endl;
-  TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
+  TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
   A_pt->GetYaxis()->SetTitle(" Cherenkov signal (normalized to electron)  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  

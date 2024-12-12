@@ -8,7 +8,7 @@
 void figepifffSampL() 
 { 
   TString canvName = "Fig_";
-  canvName += "epifffSampL";
+  canvName += "epiffSampL";
 
   std::string str1 = "Relativistic fraction E deposits, entire calorimeter";
   const char* atitle = str1.c_str();

@@ -12,32 +12,34 @@ void figefff()
   canvName += "efff";
 
 
-  std::string str1 = "electron relativist fraction";
-  const char* atitle = str1.c_str();
+  std::string strt = "electron relativistic fraction";
+  const char* atitle = strt.c_str();
 
-  std::string str2="hefff";
-  const char* hname1 =str2.c_str();
+  std::string strh="hefff";
+  const char* hname1 =strh.c_str();
 
-  std::string str3="PbWOS";
-  const char* lgd1 = str3.c_str();
-  std::string  str4="Fiber1";
-  const char* lgd2 = str4.c_str();
-  std::string  str5="SampL";
-  const char* lgd3 = str5.c_str();
-  std::string  str6="Fiber2";
-  const char* lgd4 = str6.c_str();
-  std::string  str7="SampS";
-  const char* lgd5 = str7.c_str();
+  std::string str1="PbWO";
+  const char* lgd1 = str1.c_str();
+  std::string  str2="Fiber1";
+  const char* lgd2 = str2.c_str();
+  std::string  str3="SampL";
+  const char* lgd3 = str3.c_str();
+  std::string  str4="Fiber2";
+  const char* lgd4 = str4.c_str();
+  std::string  str5="SampS";
+  const char* lgd5 = str5.c_str();
+
 
   std::string str8 = " ";
   const char* htitle = str8.c_str();
 
 
-  TFile *f1 = new TFile("hists_20GeV_BigEcal1.root");
+  TFile *f1 = new TFile("hists_20GeV_BigEcal2.root");
   TFile *f2 = new TFile("hists_20GeV_FSCEPonly.root");
   TFile *f3 = new TFile("hists_20GeV_SampOnly.root");
   TFile *f4 = new TFile("hists_20GeV_FSCEPSAonly.root");
   TFile *f5 = new TFile("hists_20GeV_SampOnly2.root");
+
 
 
  
@@ -70,16 +72,16 @@ void figefff()
   if (dolog) canv->SetLogy();
 
 
-  TLatex latex;
+
   
   int n_ = 2;
   
-  float x1_l = 0.8;
+  float x1_l = 0.4;
   //  float x1_l = 0.75;
   float y1_l = 0.90;
   
-  float dx_l = 0.30;
-  float dy_l = 0.1;
+  float dx_l = 0.2;
+  float dy_l = 0.2;
   float x0_l = x1_l-dx_l;
   float y0_l = y1_l-dy_l;
   
@@ -153,7 +155,10 @@ std::cout<<" fourth entries is "<<aaD<<std::endl;
   double aaE = E_pt->Integral();
 std::cout<<" fift entries is "<<aaE<<std::endl;
   E_pt->Scale(1/aaE);
-  
+
+
+    
+
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
   //  max = std::max(max,C_pt->GetMaximum());
@@ -168,6 +173,7 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
 
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
+  A_pt->SetLineStyle(1);
   A_pt->SetStats(0);
   A_pt->Draw("HIST ");
 
@@ -175,24 +181,28 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
 
   B_pt->SetLineColor(2);
   B_pt->SetLineWidth(3);
+  B_pt->SetLineStyle(2);
   B_pt->SetStats(0);
   B_pt->Draw("HIST same");
 
   
   C_pt->SetLineColor(3);
   C_pt->SetLineWidth(3);
+  C_pt->SetLineStyle(3);
   C_pt->SetStats(0);
   C_pt->Draw("HIST same");
   
   
   D_pt->SetLineColor(4);
-  D_pt->SetLineWidth(4);
+  D_pt->SetLineWidth(3);
+  D_pt->SetLineStyle(4);
   D_pt->SetStats(0);
   D_pt->Draw("HIST same");
   
   
   E_pt->SetLineColor(5);
-  E_pt->SetLineWidth(5);
+  E_pt->SetLineWidth(3);
+  E_pt->SetLineStyle(5);
   E_pt->SetStats(0);
   E_pt->Draw("HIST same");
   
@@ -204,22 +214,28 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
   lgd->AddEntry(C_pt, lgd3, "l");
   lgd->AddEntry(D_pt, lgd4, "l");
   lgd->AddEntry(E_pt, lgd5, "l");
-  //lgd->AddEntry(C_pt, "ModelBx500", "l");
 
- lgd->Draw();
-    // Writing the lumi information and the CMS "logo"
-   // second parameter in example_plot is iPos, which drives the position of the CMS logo in the plot
-  // iPos=11 : top-left, left-aligned
-  // iPos=33 : top-right, right-aligned
-  // iPos=22 : center, centered
-  // mode generally : 
-  //   iPos = 10*(alignement 1/2/3) + position (1/2/3 = left/center/right)
-   
+
+
   
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
   lgd->Draw();
+
+  float t = canv->GetTopMargin();
+  float r = canv->GetRightMargin();
+  float Offset   = 0.2;
+  TString alabel="20 GeV electron simulation";
+  TLatex latex;
+  latex.SetNDC();
+  latex.SetTextAngle(0);
+  latex.SetTextColor(kBlack);
+  latex.SetTextFont(42);
+  latex.SetTextAlign(31);
+  latex.SetTextSize(0.75*t);
+  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
+  
 
  
   if (dolog) {

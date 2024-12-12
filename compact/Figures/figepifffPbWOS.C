@@ -5,18 +5,21 @@
 
 
 
-void fignsncSampL() 
+void figepifffPbWOS() 
 { 
   TString canvName = "Fig_";
-  canvName += "nsncSampOnly";
+  canvName += "epiffPbWOS";
 
-  std::string str1 = "Scintillation signal (normalized to electron)";
+  std::string str1 = "Relativistic fraction E deposits, entire calorimeter";
   const char* atitle = str1.c_str();
 
-  std::string str2="phcHcalNsNc";
-  const char* hname1 =str2.c_str();
+  std::string strn1="hefff";
+  const char* hname1 =strn1.c_str();
 
-  TFile *f1 = new TFile("hists_20GeV_SampOnly.root");
+  std::string strn2="hpfff2";
+  const char* hname2 =strn2.c_str();
+
+  TFile *f1 = new TFile("hists_20GeV_BigEcal2.root");
 
  
   gStyle->SetOptStat(0);
@@ -46,7 +49,7 @@ void fignsncSampL()
   canv->SetTicky(0);
   
 
-
+  TLatex latex;
   
   int n_ = 2;
   
@@ -64,18 +67,35 @@ void fignsncSampL()
 
 
   std::cout<<"getting first"<<std::endl;
-  TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
-  A_pt->GetYaxis()->SetTitle(" Cherenkov signal (normalized to electron)  ");  
+  TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
+  double aaA = A_pt->Integral();
+  std::cout<<" first entries is "<<aaA<<std::endl;
+  A_pt->Scale(1./aaA);
+
+  A_pt->GetYaxis()->SetTitle(" percent  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
   A_pt->GetXaxis()->SetTitleSize(0.05);  
-
-
-
   A_pt->SetLineColor(1);
   A_pt->SetLineWidth(3);
   A_pt->SetStats(0);
-  A_pt->Draw("");
+  A_pt->Draw("HIST ");
+
+
+  std::cout<<"getting first"<<std::endl;
+  TH1F *B_pt = static_cast<TH1F*>(f1->Get(hname2)->Clone());
+  double aaB = B_pt->Integral();
+  std::cout<<" second entries is "<<aaB<<std::endl;
+  B_pt->Scale(10./aaB);
+
+  B_pt->GetYaxis()->SetTitle(" Cherenkov signal (arb. unit)  ");  
+  B_pt->GetYaxis()->SetTitleSize(0.05);  
+  B_pt->GetXaxis()->SetTitle(atitle);  
+  B_pt->GetXaxis()->SetTitleSize(0.05);  
+  B_pt->SetLineColor(2);
+  B_pt->SetLineWidth(3);
+  B_pt->SetStats(0);
+  B_pt->Draw("HIST same");
 
 
 
@@ -95,21 +115,6 @@ void fignsncSampL()
   lgd->Draw();
 
 
-  float t = canv->GetTopMargin();
-  float r = canv->GetRightMargin();
-  float Offset   = 0.2;
-  TString alabel="20 GeV pion SampL simulation";
-  TLatex latex;
-  latex.SetNDC();
-  latex.SetTextAngle(0);
-  latex.SetTextColor(kBlack);
-  latex.SetTextFont(42);
-  latex.SetTextAlign(31);
-  latex.SetTextSize(0.75*t);
-  latex.DrawLatex(1-r,1-t+Offset*t,alabel);
-
-
-  
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
 

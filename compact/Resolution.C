@@ -74,7 +74,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,
 	      float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,
-	      float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh,
 	      TH1F* eecaltime, TH1F* ehcaltime, 
 	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
@@ -82,7 +82,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      );
 
 
-void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
+void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
 		      CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,
 		      float &EEcal, float &EHcal,
 		      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
@@ -223,20 +223,22 @@ sii9 = mapsampcalslice.find("Sep2");
 
   TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
-  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.2);
-  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / beam E",200,0.,0.2);
-  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
-  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / beam E",200,0.,0.2);
+  TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / cal E",200,0.,0.2);
+  TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / cal E",200,0.,0.2);
+  TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / cal E",200,0.,0.2);
+  TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / cal E",200,0.,0.2);
 
 
-  TH2F *phcHcalvfE1 = new TH2F("phcHcalvfE1","fiber 1 hcal energy / beam E",200,0.,1.2,200,0.,0.2);
+  TH2F *phcHcalvfE1 = new TH2F("phcHcalvfE1","fiber 1 hcal energy / cal E",200,0.,1.2,200,0.,0.2);
 
-  TH2F *phcHcalvfE2 = new TH2F("phcHcalvfE2","fiber 2 hcal energy / beam E",200,0.,1.2,200,0.,0.2);
+  TH2F *phcHcalvfE2 = new TH2F("phcHcalvfE2","fiber 2 hcal energy / cal E",200,0.,1.2,200,0.,0.2);
 
+  TH1F *ehcEdgeRelf = new TH1F("ehcEdgeRelf","rel frac edge e",200,0.,1.);
+  TH1F *phcEdgeRelf = new TH1F("phcEdgeRelf","rel frac edge e",200,0.,1.);
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum edge / beam E",200,0.,1.0);
   TH1F *phcEdgeE = new TH1F("phcEdgeE","sum edge / beamE-Erel/fnorm",200,0.,1.0);
   TH1F *ehcnonconsE = new TH1F("ehcnonconsE","non cons / beam E-Erel/fnorm",100,0.,1.5);
-  TH1F *phcnonconsE = new TH1F("phcnonconsE","non cons / beam E",100,0.,1.5);
+  TH1F *phcnonconsE = new TH1F("phcnonconsE","non cons ",100,0.,1.5);
   TH1F *phcnonconsE2 = new TH1F("phcnonconsE2","non cons / Ecal",100,0.,1.5);
   TH1F *phcnonconsE3 = new TH1F("phcnonconsE3","non cons / Ecal-Erel",100,0.,1.5);
   TH1F *phcnonconsE4 = new TH1F("phcnonconsE4","non cons / eCal-Erel/fnorm",100,0.,1.5);
@@ -571,7 +573,7 @@ if(doplots) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number second is "<<ievt<<std::endl;
 
 
-      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.);
+      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.);
 
       float eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
 
@@ -587,7 +589,7 @@ if(doplots) {
 	       eesum,eesumcal,eesumem,
 	       eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,
 	       eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,
-	       eesumedge,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,
+	       eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,
 erelecaltimecut,erelhcaltimecut,  nine,ninh,
 	       eecaltime,ehcaltime,
 	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,
@@ -613,6 +615,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       ehcHcalE2->Fill(eesumfiber2/eedepcal);
 
       ehcEdgeE->Fill(eesumedge/beamE);
+      if(eesumedge>0) ehcEdgeRelf->Fill(eesumedgerel/eesumedge);
       ehcEdgeR->Fill((beamE-eesumedge)/beamE);
       ehcnonconsE->Fill(nonconse);
       ehcEcalncer->Fill(necertotecal/meancerEcal);
@@ -798,7 +801,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
 
 
-      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.);
+      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.);
       float pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
       int nine=0;
       int ninh=0;
@@ -808,7 +811,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
 	       pesum,pesumcal,pesumem,
 	       pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,
 	       pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,
-	       pesumedge,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,
+	       pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,
 prelecaltimecut,prelhcaltimecut,nine,ninh,
 	       piecaltime,pihcaltime,
 	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
@@ -897,6 +900,7 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
       phcHcalvfE2->Fill(pfff,pesumfiber2/pedepcal);
 
       phcEdgeE->Fill(pedgeff);
+      if(pesumedge>0) phcEdgeRelf->Fill(pesumedgerel/pesumedge);
 
 
       phcEdgeR->Fill((beamE-pesumedge)/beamE);
@@ -1195,10 +1199,10 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
 
-      float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.);
+      float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.),desumedgerel(0.);
 
 
-      getStuffDualCorr(domissCorr,beamE,mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,b_ecal,b_hcal,b_edge,ecalhits,hcalhits, edgehits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
+      getStuffDualCorr(domissCorr,beamE,mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhits,hcalhits, edgehits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
 
       float pp2 = desumedge/beamE;
       //std::cout<<"dual pp2 edge cut are "<<pp2<<" "<<edgecut<<std::endl;
@@ -1383,6 +1387,8 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 
   TCanvas* c1b;
   SCEDraw2(c1b,"c1b",ehcEdgeE,phcEdgeE,"junk1b.png",0);
+  TCanvas* c1bqq;
+  SCEDraw2(c1bqq,"c1bqq",ehcEdgeRelf,phcEdgeRelf,"junk1bqq.png",0);
   TCanvas* c1b2a;
   SCEDraw1(c1b2a,"c1b2a",phcEdgeE,"junk1b2a.png",0);
   TCanvas* c1b2;
@@ -1716,7 +1722,8 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
   phcHcalvfE1->Write();
   phcHcalvfE2->Write();
 
-
+  ehcEdgeRelf->Write();
+  phcEdgeRelf->Write();
   ehcEdgeE->Write();
   phcEdgeE->Write();
   ehcnonconsE->Write();
@@ -2469,7 +2476,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,bool &fillhists,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,
 	      float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,
-	      float &eesumedge,float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
+	      float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
 	      float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,
 	       int &nine,int &ninh,
 	      TH1F* eecaltime, TH1F* ehcaltime,
@@ -2866,6 +2873,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       float ae=aedgehit->energyDeposit;
       eesum+=ae;
       eesumedge+=ae;
+      eesumedgerel=aedgehit->edeprelativistic;
 
     }  // end loop over escaping hits
   }
@@ -2877,7 +2885,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype,
-		      bool doedge, float &eesumedge, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
+		      bool doedge, float &eesumedge, float&eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 		      float &EEcal, float &EHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
 		      float &erelecaltimecut, float &erelhcaltimecut)
@@ -3080,6 +3088,7 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslic
 
       float ae=aedgehit->energyDeposit;
       eesumedge+=ae;
+      eesumedgerel=aedgehit->edeprelativistic;
 
     }  //f end loop over escaping hits
     
