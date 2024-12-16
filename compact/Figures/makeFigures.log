@@ -31,6 +31,8 @@ Chi2                      =     0.894848
 NDf                       =          131
 p0                        =     0.118525   +/-   0.0441717   
 p1                        =     0.932499   +/-   0.0622219   
+ slope interecept are 0.932499+-0.0622219 0.118525+-0.0441717
+ value at f =1 is 1.05102=-0.0763066
 
 ****************************************
 Minimizer is Linear / Migrad
@@ -38,6 +40,8 @@ Chi2                      =      1.04656
 NDf                       =          131
 p0                        =      1.37948   +/-   0.0477696   
 p1                        =    -0.471517   +/-   0.0672901   
+ slope interecept are -0.471517+-0.0622219 1.37948+-0.0441717
+ value at f =1 is 0.907965+-0.0763066
 
 Processing figscvfFiber2.C...
 getting first
@@ -51,6 +55,8 @@ Chi2                      =      1.64767
 NDf                       =          131
 p0                        =     0.167501   +/-   0.0599383   
 p1                        =     0.817381   +/-   0.0844313   
+ slope interecept are 0.817381+-0.0844313 0.167501+-0.0599383
+ value at f =1 is 0.984883+-0.103543
 
 ****************************************
 Minimizer is Linear / Migrad
@@ -58,6 +64,8 @@ Chi2                      =      1.99071
 NDf                       =          131
 p0                        =      1.18018   +/-   0.065883    
 p1                        =    -0.249212   +/-   0.0928053   
+ slope interecept are -0.249212+-0.0844313 1.18018+-0.0599383
+ value at f =1 is 0.930972+-0.103543
 
 Processing figscvfSampL.C...
 getting first
@@ -71,6 +79,8 @@ Chi2                      =    0.0281724
 NDf                       =          131
 p0                        =    0.0595845   +/-   0.00783756  
 p1                        =     0.945452   +/-   0.0110403   
+ slope interecept are 0.945452+-0.0110403 0.0595845+-0.00783756
+ value at f =1 is 1.00504=-0.0135394
 
 ****************************************
 Minimizer is Linear / Migrad
@@ -78,6 +88,8 @@ Chi2                      =     0.144241
 NDf                       =          131
 p0                        =      1.36635   +/-   0.0177343   
 p1                        =    -0.350055   +/-   0.0249811   
+ slope interecept are -0.350055+-0.0110403 1.36635+-0.00783756
+ value at f =1 is 1.01629=-0.0135394
 
 Processing figscvfSampS.C...
 getting first
@@ -91,8 +103,8 @@ Chi2                      =    0.0172772
 NDf                       =           98
 p0                        =    0.0334741   +/-   0.0100694   
 p1                        =     0.964382   +/-   0.0153325   
- slope interecept are 0.964382 0.0334741
- value at f =1 is 0.997856
+ slope interecept are 0.964382+-0.0153325 0.0334741+-0.0100694
+ value at f =1 is 0.997856=-0.0183434
 
 ****************************************
 Minimizer is Linear / Migrad
@@ -100,8 +112,8 @@ Chi2                      =    0.0945504
 NDf                       =           98
 p0                        =     0.411386   +/-   0.0235559   
 p1                        =      0.59575   +/-   0.0358682   
- slope interecept are 0.59575 0.411386
- value at f =1 is 1.00714
+ slope interecept are 0.59575+-0.0153325 0.411386+-0.0100694
+ value at f =1 is 1.00714+-0.0183434
 
 Processing figefff.C...
 getting first
@@ -640,9 +652,9 @@ NDf                       =           65
 p0                        =    0.0485529   +/-   0.000384373 
 p1                        =   -0.0253606   +/-   0.000542466 
 for phcHcalvfE1
-p0 p1 are 0.0485529 -0.0253606
-g at f of 1 is 0.0231922
-g at f of 0 is 0.0485529
+p0 p1 are 0.0485529+-0.000384373 -0.0253606+-0.000542466
+g at f of 1 is 0.0231922+-0.000664839
+g at f of 0 is 0.0485529+-0.000384373
 ratio is 2.0935
 
 ****************************************
@@ -652,9 +664,9 @@ NDf                       =           65
 p0                        =      0.05473   +/-   0.000370421 
 p1                        =   -0.0126627   +/-   0.000522776 
 for phcHcalvfE2
-p0 p1 are 0.05473 -0.0126627
-g at f of 1 is 0.0420674
-g at f of 0 is 0.05473
+p0 p1 are 0.05473+-0.000384373 -0.0126627+-0.000542466
+g at f of 1 is 0.0420674+-0.000664839
+g at f of 0 is 0.05473+-0.000384373
 ratio is 1.30101
 
 Processing figE1E2vfSampL.C...
@@ -670,9 +682,9 @@ NDf                       =           65
 p0                        =    0.0671041   +/-   0.000752465 
 p1                        =   -0.0331623   +/-   0.00106195  
  for phcHcalvfE1
-p0 p1 are 0.0671041 -0.0331623
-g at f of 1 is 0.0339418
-g at f of 0 is 0.0671041
+p0 p1 are 0.0671041+-0.000752465 -0.0331623+-0.00106195
+g at f of 1 is 0.0339418+-0.00130152
+g at f of 0 is 0.0671041+-0.000752465
 ratio is 1.97703
 
 ****************************************
@@ -682,9 +694,9 @@ NDf                       =           65
 p0                        =     0.074696   +/-   0.000787192 
 p1                        =   -0.0109574   +/-   0.00111097  
  for phcHcalvfE2
-p0 p1 are 0.074696 -0.0109574
-g at f of 1 is 0.0637386
-g at f of 0 is 0.074696
+p0 p1 are 0.074696+-0.000752465 -0.0109574+-0.00106195
+g at f of 1 is 0.0637386+-0.00130152
+g at f of 0 is 0.074696+-0.000752465
 ratio is 1.17191
 
 Processing figE1E2vfFiber2.C...
@@ -700,9 +712,9 @@ NDf                       =           65
 p0                        =    0.0917665   +/-   0.000473161 
 p1                        =   -0.0388235   +/-   0.000667773 
 for phcHcalvfE1
-p0 p1 are 0.0917665 -0.0388235
-g at f of 1 is 0.0529429
-g at f of 0 is 0.0917665
+p0 p1 are 0.0917665+-0.000473161 -0.0388235+-0.000667773
+g at f of 1 is 0.0529429+-0.000818415
+g at f of 0 is 0.0917665+-0.000473161
 ratio is 1.73331
 
 ****************************************
@@ -712,9 +724,9 @@ NDf                       =           65
 p0                        =     0.120432   +/-   0.000840205 
 p1                        =   -0.0235756   +/-   0.00118578  
 for phcHcalvfE2
-p0 p1 are 0.120432 -0.0235756
-g at f of 1 is 0.0968567
-g at f of 0 is 0.120432
+p0 p1 are 0.120432+-0.000473161 -0.0235756+-0.000667773
+g at f of 1 is 0.0968567+-0.000818415
+g at f of 0 is 0.120432+-0.000473161
 ratio is 1.24341
 
 Processing figE1E2vfSampS.C...
@@ -730,9 +742,9 @@ NDf                       =           65
 p0                        =    0.0481878   +/-   0.00341905  
 p1                        =   -0.0152206   +/-   0.00482531  
 for phcHcalvfE1
-p0 p1 are 0.0481878 -0.0152206
-g at f of 1 is 0.0329672
-g at f of 0 is 0.0481878
+p0 p1 are 0.0481878+-0.00341905 -0.0152206+-0.00482531
+g at f of 1 is 0.0329672+-0.00591384
+g at f of 0 is 0.0481878+-0.00341905
 ratio is 1.46169
 
 ****************************************
@@ -742,7 +754,75 @@ NDf                       =           65
 p0                        =    0.0485711   +/-   0.00321471  
 p1                        =   -0.0173587   +/-   0.00453692  
 for phcHcalvfE2
-p0 p1 are 0.0485711 -0.0173587
-g at f of 1 is 0.0312124
-g at f of 0 is 0.0485711
+p0 p1 are 0.0485711+-0.00341905 -0.0173587+-0.00482531
+g at f of 1 is 0.0312124+-0.00591384
+g at f of 0 is 0.0485711+-0.00341905
 ratio is 1.55615
+
+Processing figEdgeRel.C...
+
+getting first PbWO
+ first entries is 1968
+fitting first hist
+mean rms are 4.45896e-09 1.23803e-07
+ FCN=3.05194e-11 FROM HESSE     STATUS=NOT POSDEF     16 CALLS         106 TOTAL
+                     EDM=6.09776e-11    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.29774e+00   4.36189e-01   2.85612e-06   3.77697e-04
+   2  Mean         1.12927e-01   7.11616e-02   4.66579e-07  -2.31364e-03
+   3  Sigma        1.52952e-01   9.81106e-02   1.07951e-06   1.00082e-03
+
+getting second Fiber1
+ha
+ second entries is 1995
+fitting second hist
+mean rms are 2.00668e-08 3.34874e-07
+ FCN=4.16068e-09 FROM HESSE     STATUS=NOT POSDEF     16 CALLS         110 TOTAL
+                     EDM=8.31304e-09    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.28780e+00   4.29775e-01   2.81057e-06  -4.47440e-03
+   2  Mean         1.58345e-01   1.02841e-01   6.77374e-07   1.87038e-02
+   3  Sigma        2.19116e-01   1.43508e-01   1.35358e-06  -9.40456e-03
+
+getting third SampL
+ha
+ third entries is 1941
+fitting third hist
+mean rms are 4.14571e-09 8.73874e-08
+ FCN=2.59436e-11 FROM HESSE     STATUS=NOT POSDEF     16 CALLS          92 TOTAL
+                     EDM=5.18352e-11    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.29803e+00   4.39310e-01   2.87784e-06   3.45760e-04
+   2  Mean         1.05319e-01   6.66614e-02   4.36670e-07  -2.27717e-03
+   3  Sigma        1.42353e-01   9.18927e-02   1.04274e-06   9.52850e-04
+
+getting fourth Fiber2
+ha
+ fourth entries is 1997
+fitting fourth hist
+mean rms are 2.30947e-08 3.83626e-07
+ FCN=1.4003e-09 FROM HESSE     STATUS=NOT POSDEF     16 CALLS         121 TOTAL
+                     EDM=2.79781e-09    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.30460e+00   4.35301e-01   2.85101e-06   2.56361e-03
+   2  Mean         1.47872e-01   9.11172e-02   5.97330e-07  -1.22347e-02
+   3  Sigma        1.99346e-01   1.24250e-01   1.20946e-06   6.04222e-03
+
+getting fifth SampS
+ha
+ fift entries is 2000
+fitting fifth hist
+mean rms are 2.41869e-08 1.43944e-07
+ FCN=2.14934e-11 FROM HESSE     STATUS=NOT POSDEF     16 CALLS          93 TOTAL
+                     EDM=4.29438e-11    STRATEGY= 1      ERR MATRIX NOT POS-DEF
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.29776e+00   4.32693e-01   2.83333e-06   3.19524e-04
+   2  Mean         1.82967e-01   1.15356e-01   7.56276e-07  -1.19777e-03
+   3  Sigma        2.49954e-01   1.58549e-01   1.39620e-06   6.48536e-04
+Info in <TCanvas::Print>: .pdf file Fig_EdgeRelf.pdf has been created
+Info in <TCanvas::Print>: .png file Fig_EdgeRelf.png has been created

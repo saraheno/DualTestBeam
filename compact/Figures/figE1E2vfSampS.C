@@ -110,18 +110,23 @@ void figE1E2vfSampS()
   canv->Print(canvName+".pdf",".pdf");
   canv->Print(canvName+".png",".png");
 
+  Double_t intercept,slope,int_err,sl_err;
 
 
   TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
   TProfile* A_pt_pfx = A_pt->ProfileX();
   A_pt_pfx->Fit("pol1","WW","",0.5,0.9);
   TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
-  Double_t intercept= fitFun->GetParameter(0);
-  Double_t slope= fitFun->GetParameter(1);
+  intercept= fitFun->GetParameter(0);
+  slope= fitFun->GetParameter(1);
+  int_err=fitFun->GetParError(0);
+  sl_err=fitFun->GetParError(1);
+
   std::cout<<"for "<<strn1<<std::endl;
-  std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
-  std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
-  std::cout<<"g at f of 0 is "<<intercept<<std::endl;
+  std::cout<<"p0 p1 are "<<intercept<<"+-"<<int_err<<" "<<slope<<"+-"<<sl_err<<std::endl;
+  std::cout<<"g at f of 1 is "<<intercept+slope<<"+-"<<sqrt(sl_err*sl_err+int_err*int_err)<<std::endl;
+  std::cout<<"g at f of 0 is "<<intercept<<"+-"<<int_err<<std::endl;
+
   std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
 
   
@@ -131,10 +136,14 @@ void figE1E2vfSampS()
   TF1 *fitFun2 = (TF1*)B_pt_pfx->GetListOfFunctions()->FindObject("pol1");
   intercept= fitFun2->GetParameter(0);
   slope= fitFun2->GetParameter(1);
+    int_err=fitFun->GetParError(0);
+  sl_err=fitFun->GetParError(1);
+
   std::cout<<"for "<<strn2<<std::endl;
-  std::cout<<"p0 p1 are "<<intercept<<" "<<slope<<std::endl;
-  std::cout<<"g at f of 1 is "<<intercept+slope<<std::endl;
-  std::cout<<"g at f of 0 is "<<intercept<<std::endl;
+  std::cout<<"p0 p1 are "<<intercept<<"+-"<<int_err<<" "<<slope<<"+-"<<sl_err<<std::endl;
+  std::cout<<"g at f of 1 is "<<intercept+slope<<"+-"<<sqrt(sl_err*sl_err+int_err*int_err)<<std::endl;
+  std::cout<<"g at f of 0 is "<<intercept<<"+-"<<int_err<<std::endl;
+
   std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
 
   

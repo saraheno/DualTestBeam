@@ -99,7 +99,7 @@ void figscvfSampL()
   canv->Print(canvName+".png",".png");
 
 
-  Double_t intercept,slope;
+  Double_t intercept,slope,sl_err,int_err;
 
   TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
   TProfile* A_pt_pfx = A_pt->ProfileX();
@@ -107,6 +107,12 @@ void figscvfSampL()
   TF1 *fitFun = (TF1*)A_pt_pfx->GetListOfFunctions()->FindObject("pol1");
   intercept= fitFun->GetParameter(0);
   slope= fitFun->GetParameter(1);
+  int_err=fitFun->GetParError(0);
+  sl_err=fitFun->GetParError(1);
+
+
+  std::cout<<" slope interecept are "<<slope<<"+-"<<sl_err<<" "<<intercept<<"+-"<<int_err<<std::endl;
+  std::cout<<" value at f =1 is "<<slope+intercept<<"=-"<<sqrt(sl_err*sl_err+int_err*int_err)<<std::endl;
 
 
   TCanvas* canv3 = new TCanvas("yuck2","yuck2",50,50,W,H);
@@ -115,6 +121,12 @@ void figscvfSampL()
   TF1 *fitFun2 = (TF1*)B_pt_pfx->GetListOfFunctions()->FindObject("pol1");
   intercept= fitFun2->GetParameter(0);
   slope= fitFun2->GetParameter(1);
+  int_err=fitFun->GetParError(0);
+  sl_err=fitFun->GetParError(1);
+
+
+  std::cout<<" slope interecept are "<<slope<<"+-"<<sl_err<<" "<<intercept<<"+-"<<int_err<<std::endl;
+  std::cout<<" value at f =1 is "<<slope+intercept<<"=-"<<sqrt(sl_err*sl_err+int_err*int_err)<<std::endl;
 
   
   return;
