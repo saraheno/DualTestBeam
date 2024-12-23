@@ -78,7 +78,7 @@ void figESC()
   
   float x1_l = 0.8;
   //  float x1_l = 0.75;
-  float y1_l = 0.95;
+  float y1_l = 0.8;
   
   float dx_l = 0.30;
   float dy_l = 0.25;
@@ -176,7 +176,9 @@ std::cout<<" fift entries is "<<aaE<<std::endl;
 
 
   double max = std::max(A_pt->GetMaximum(),B_pt->GetMaximum());
-  //  max = std::max(max,C_pt->GetMaximum());
+  max = std::max(max,C_pt->GetMaximum());
+  max = std::max(max,D_pt->GetMaximum());
+  max = std::max(max,E_pt->GetMaximum());
   A_pt->SetMaximum(max*1.3);
 
   A_pt->GetYaxis()->SetTitle(" percent  ");  

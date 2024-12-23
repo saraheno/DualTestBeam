@@ -355,12 +355,17 @@ Info in <TCanvas::Print>: .png file Fig_scvniFiber1.png has been created
 Processing figthreeresPbWOS.C...
 getting first
  first entries is 2000
+getting first g1
+ first g1 entries is 2000
 getting second
-ha
  second entries is 2000
+getting second g1
+ second g1 entries is 2000
 getting third
 ha
  third entries is 2000
+getting third g1
+ third entries g1 is 2000
 Info in <TCanvas::Print>: .pdf file Fig_threeresPbWOS.pdf has been created
 Info in <TCanvas::Print>: .png file Fig_threeresPbWOS.png has been created
 
@@ -452,24 +457,34 @@ Info in <TCanvas::Print>: .png file Fig_nsncPbWO4S.png has been created
 Processing figthreeresFiber1.C...
 getting first
  first entries is 2000
+getting first g1
+ first g1 entries is 2000
 getting second
-ha
  second entries is 2000
+getting second g1
+ second g1 entries is 2000
 getting third
 ha
  third entries is 2000
+getting third g1
+ third entries g1 is 2000
 Info in <TCanvas::Print>: .pdf file Fig_threeresFiber1.pdf has been created
 Info in <TCanvas::Print>: .png file Fig_threeresFiber1.png has been created
 
 Processing figthreeresSampL.C...
 getting first
  first entries is 2000
+getting first g1
+ first g1 entries is 2000
 getting second
-ha
  second entries is 1988
+getting second g1
+ second g1 entries is 1988
 getting third
 ha
  third entries is 2000
+getting third g1
+ third entries g1 is 2000
 Info in <TCanvas::Print>: .pdf file Fig_threeresSampL.pdf has been created
 Info in <TCanvas::Print>: .png file Fig_threeresSampL.png has been created
 
@@ -491,26 +506,91 @@ Info in <TCanvas::Print>: .png file Fig_nsncSampOnly.png has been created
 Processing figthreeresFiber2.C...
 getting first
  first entries is 2000
+getting first g1
+ first g1 entries is 2000
 getting second
-ha
  second entries is 2000
+getting second g1
+ second g1 entries is 2000
 getting third
 ha
  third entries is 2000
+getting third g1
+ third entries g1 is 2000
 Info in <TCanvas::Print>: .pdf file Fig_threeresFiber2.pdf has been created
 Info in <TCanvas::Print>: .png file Fig_threeresFiber2.png has been created
 
 Processing figthreeresSampS.C...
+Error in <TFile::TFile>: file /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/Figures/hists_20GeV_SampOnly2_g1.root does not exist
 getting first
  first entries is 2000
-getting second
-ha
- second entries is 2000
-getting third
-ha
- third entries is 1972
-Info in <TCanvas::Print>: .pdf file Fig_threeresSampS.pdf has been created
-Info in <TCanvas::Print>: .png file Fig_threeresSampS.png has been created
+getting first g1
+#0  0x00007f470f899e0b in waitpid () from /lib64/libc.so.6
+#1  0x00007f470f7ed747 in do_system () from /lib64/libc.so.6
+#2  0x00007f471061290c in TUnixSystem::StackTrace() () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/bin/../lib/libCore.so
+#3  0x00007f47095ba668 in cling::MultiplexInterpreterCallbacks::PrintStackTrace() () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#4  0x00007f47095aefdc in cling_runtime_internal_throwIfInvalidPointer () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#5  0x00007f471091ae78 in ?? ()
+#6  0x0000000000000258 in ?? ()
+#7  0x00007f47095aef80 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#8  0x0000000000000742 in ?? ()
+#9  0x00007f47101d87d0 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#10 0x0000000003b98500 in ?? ()
+#11 0x000000000270d230 in ?? ()
+#12 0x00007f471023a480 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#13 0x00007f471023b8b0 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#14 0x0000000000000001 in ?? ()
+#15 0x00000000038d3780 in ?? ()
+#16 0x00007f471024c7f0 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#17 0x00007f470cf319b0 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libRIO.so
+#18 0x00007f47101d87b0 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#19 0x00007f471091d790 in ?? ()
+#20 0x3ff0000000000000 in ?? ()
+#21 0x00007f471023c760 in ?? () from /cvmfs/sft.cern.ch/lcg/releases/gcc/11.3.0-ad0f5/x86_64-centos8/lib64/libstdc++.so.6
+#22 0x0000003200000000 in ?? ()
+#23 0x0000000000aed6a8 in ?? ()
+#24 0x0000000002e71660 in ?? ()
+#25 0x000000000205a540 in ?? ()
+#26 0x00007f4710897121 in _dl_lookup_symbol_x (undef_name=0x0, undef_map=0x1547f5f2, undef_map
+entry=0xaed340, ref=0x7ffd31263320, ref
+entry=0x7ffd312633c0, symbol_scope=0xaed6a8, version=0x270d260, type_class=type_class
+entry=1, flags=1, skip_map=0x0) at dl-lookup.c:872
+#27 0x00007f471089d838 in _dl_fixup (l=0xaed340, reloc_arg=1631) at dl-runtime.c:94
+#28 0x00007f471088ad4e in _dl_runtime_resolve_xsavec () at ../sysdeps/x86_64/dl-trampoline.h:126
+#29 0x636c616348636870 in ?? ()
+#30 0x000000000072726f in ?? ()
+#31 0x00007ffd31263e08 in ?? ()
+#32 0x000000000000000d in ?? ()
+#33 0x6e6c616348636870 in ?? ()
+#34 0x000000746e696373 in ?? ()
+#35 0x00007ffd31263e28 in ?? ()
+#36 0x000000000000000b in ?? ()
+#37 0x6e6c616348636870 in ?? ()
+#38 0x0000000000726563 in ?? ()
+#39 0x0000000002fb0d20 in ?? ()
+#40 0x000000000000001e in ?? ()
+#41 0x000000000000001e in ?? ()
+#42 0x00007ffd31264530 in ?? ()
+#43 0x00007f47096245d6 in cling::IncrementalExecutor::executeWrapper(llvm::StringRef, cling::Value*) const () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#44 0x00007f47095b2a81 in cling::Interpreter::RunFunction(clang::FunctionDecl const*, cling::Value*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#45 0x00007f47095b3073 in cling::Interpreter::EvaluateInternal(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, cling::CompilationOptions, cling::Value*, cling::Transaction**, unsigned long) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#46 0x00007f4709676bfa in cling::MetaSema::actOnxCommand(llvm::StringRef, llvm::StringRef, cling::Value*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#47 0x00007f4709684f59 in cling::MetaParser::isXCommand(cling::MetaSema::ActionResult&, cling::Value*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#48 0x00007f4709686864 in cling::MetaParser::isCommand(cling::MetaSema::ActionResult&, cling::Value*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#49 0x00007f470966ffc8 in cling::MetaProcessor::process(llvm::StringRef, cling::Interpreter::CompilationResult&, cling::Value*, bool) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#50 0x00007f47094d5b7c in HandleInterpreterException(cling::MetaProcessor*, char const*, cling::Interpreter::CompilationResult&, cling::Value*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#51 0x00007f47094efd86 in TCling::ProcessLine(char const*, TInterpreter::EErrorCode*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#52 0x00007f47094f00a6 in TCling::ProcessLineSynch(char const*, TInterpreter::EErrorCode*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/lib/libCling.so
+#53 0x00007f47104c3505 in TApplication::ExecuteFile(char const*, int*, bool) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/bin/../lib/libCore.so
+#54 0x00007f4710a9a0dc in TRint::ProcessLineNr(char const*, char const*, int*) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/bin/../lib/libRint.so
+#55 0x00007f4710a9be74 in TRint::Run(bool) () from /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.26.08-69213/x86_64-centos8-gcc11-opt/bin/../lib/libRint.so
+#56 0x00000000004011bd in main ()
+Error in <HandleInterpreterException>: Trying to dereference null pointer or trying to call routine taking non-null arguments.
+Execution of your code was aborted.
+In file included from input_line_8:1:
+/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/Figures/figthreeresSampS.C:106:37: warning: null passed to a callee that requires a non-null argument [-Wnonnull]
+  TH1F *Ag1_pt = static_cast<TH1F*>(f2->Get(hname1)->Clone());
+                                    ^~~~~~~~~~~~~~~
 
 Processing figNONCONS.C...
 
@@ -689,15 +769,15 @@ ratio is 1.97703
 
 ****************************************
 Minimizer is Linear / Migrad
-Chi2                      =  7.23709e-05
+Chi2                      =  7.91134e-05
 NDf                       =           65
-p0                        =     0.074696   +/-   0.000787192 
-p1                        =   -0.0109574   +/-   0.00111097  
+p0                        =    0.0782734   +/-   0.000823046 
+p1                        =   -0.0153329   +/-   0.00116157  
  for phcHcalvfE2
-p0 p1 are 0.074696+-0.000752465 -0.0109574+-0.00106195
-g at f of 1 is 0.0637386+-0.00130152
-g at f of 0 is 0.074696+-0.000752465
-ratio is 1.17191
+p0 p1 are 0.0782734+-0.000752465 -0.0153329+-0.00106195
+g at f of 1 is 0.0629405+-0.00130152
+g at f of 0 is 0.0782734+-0.000752465
+ratio is 1.24361
 
 Processing figE1E2vfFiber2.C...
 getting first

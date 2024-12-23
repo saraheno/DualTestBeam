@@ -31,7 +31,7 @@ hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/
 #energies=[10,15,20,25,30,35,40,45,50]
 nenergy=1
 energies=[20]
-name="s2-condor-executable-"+args.geometry1+"_"+args.geometry2+"-"
+name="s2-condor-executable-"+args.geometry1+"_"+args.geometry2+'_g'+args.gendet+"-"
 
 # create the .sh files 
 i=0
@@ -49,9 +49,9 @@ while (i<nenergy):
     shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
     if args.hcaltype=='0':
-       shfile.write('root -b -l -q \'Resolution.C(5000,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+',0,0,0.,'+args.gendet+',"./output/hists_'+str(energies[i])+'GeV_'+args.geometry1+'.root","DRCNoSegment","DRFNoSegment",0,0)\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+args.geometry1+'_'+args.geometry2+'.log \n' );
+       shfile.write('root -b -l -q \'Resolution.C(5000,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+',0,0,0.,'+args.gendet+',"./output/hists_'+str(energies[i])+'GeV_'+args.geometry1+'_g'+args.gendet+'.root","DRCNoSegment","DRFNoSegment",0,0)\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+args.geometry1+'_'+args.geometry2+'_g'+args.gendet+'.log \n' );
     if args.hcaltype=='1':
-       shfile.write('root -b -l -q \'Resolution.C(5000,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+',0,0,0.,'+args.gendet+',"./output/hists_'+str(energies[i])+'GeV_'+args.geometry1+'.root","DRCNoSegment","DRSNoSegment",0,0)\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+args.geometry1+'_'+args.geometry2+'.log \n' );
+       shfile.write('root -b -l -q \'Resolution.C(5000,"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+args.geometry2+"_"+str(energies[i])+'GeV_e-.root",'+str(energies[i])+','+args.doecal+','+args.dohcal+','+args.hcaltype+','+args.doedge+',0,0,0.,'+args.gendet+',"./output/hists_'+str(energies[i])+'GeV_'+args.geometry1+'_g'+args.gendet+'.root","DRCNoSegment","DRSNoSegment",0,0)\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+args.geometry1+'_'+args.geometry2+'_g'+args.gendet+'.log \n' );
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')

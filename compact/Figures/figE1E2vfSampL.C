@@ -65,7 +65,7 @@ void figE1E2vfSampL()
 
   std::cout<<"getting first"<<std::endl;
   TH2F *A_pt = static_cast<TH2F*>(f1->Get(hname1)->Clone());
-  A_pt->GetYaxis()->SetRangeUser(0.,0.08);
+  A_pt->GetYaxis()->SetRangeUser(0.,0.12);
   A_pt->GetYaxis()->SetTitle("Sampling fraction  ");  
   A_pt->GetYaxis()->SetTitleSize(0.05);  
   A_pt->GetXaxis()->SetTitle(atitle);  
@@ -79,7 +79,7 @@ void figE1E2vfSampL()
 
   std::cout<<"getting second"<<std::endl;
   TH2F *B_pt = static_cast<TH2F*>(f1->Get(hname2)->Clone());
-  B_pt->GetYaxis()->SetRangeUser(0.,0.08);
+  B_pt->GetYaxis()->SetRangeUser(0.,0.12);
   B_pt->GetYaxis()->SetTitle("Sampling fraction  ");  
   B_pt->GetYaxis()->SetTitleSize(0.05);  
   B_pt->GetXaxis()->SetTitle(atitle);  

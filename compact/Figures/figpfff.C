@@ -12,7 +12,7 @@ void figpfff()
   canvName += "pfff";
 
 
-  std::string strt = "pion fraction";
+  std::string strt = "EM object fraction";
   const char* atitle = strt.c_str();
 
   std::string strh="hpfff";
@@ -93,11 +93,8 @@ void figpfff()
   TH1F *A_pt = static_cast<TH1F*>(f1->Get(hname1)->Clone());
 
 
-  //A_pt->Rebin(2);
-  //  int nbin;
-  //nbin=A_pt->FindBin(0.6);
-  //    A_pt->GetXaxis()->SetRangeUser(0,nbin);
-  //A_pt->GetXaxis()->SetRangeUser(0.5,1.0);
+  A_pt->Rebin(8);
+   //A_pt->GetXaxis()->SetRangeUser(0.5,1.0);
   A_pt->SetDirectory(0);
   A_pt->SetTitle(htitle);
   double aaA = A_pt->Integral();
@@ -107,10 +104,8 @@ std::cout<<" first entries is "<<aaA<<std::endl;
   
   std::cout<<"getting second"<<std::endl;
   TH1F *B_pt = static_cast<TH1F*>(f2->Get(hname1)->Clone());
-  //nbin=B_pt->FindBin(0.6);
-  //B_pt->GetXaxis()->SetRangeUser(0,nbin);
-  //B_pt->GetXaxis()->SetRangeUser(0.5,1.0);
-    //B_pt->Rebin(2);
+   B_pt->Rebin(8);
+      //B_pt->GetXaxis()->SetRangeUser(0.5,1.0);
   std::cout<<"ha"<<std::endl;
   B_pt->SetDirectory(0);
   double aaB = B_pt->Integral();
@@ -120,10 +115,8 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   
   std::cout<<"getting third"<<std::endl;
   TH1F *C_pt = static_cast<TH1F*>(f3->Get(hname1)->Clone());
-  //nbin=C_pt->FindBin(0.6);
-  //C_pt->GetXaxis()->SetRangeUser(0,nbin);
   //C_pt->GetXaxis()->SetRangeUser(0.5,1.0);
-    //C_pt->Rebin(2);
+  C_pt->Rebin(8);
   std::cout<<"ha"<<std::endl;
   C_pt->SetDirectory(0);
   double aaC = C_pt->Integral();
@@ -133,10 +126,8 @@ std::cout<<" third entries is "<<aaC<<std::endl;
 
   std::cout<<"getting fourth"<<std::endl;
   TH1F *D_pt = static_cast<TH1F*>(f4->Get(hname1)->Clone());
-  //nbin=D_pt->FindBin(0.6);
-  //D_pt->GetXaxis()->SetRangeUser(0,nbin);
   //D_pt->GetXaxis()->SetRangeUser(0.5,1.0);
-    //B_pt->Rebin(2);
+  D_pt->Rebin(8);
   std::cout<<"ha"<<std::endl;
   D_pt->SetDirectory(0);
   double aaD = D_pt->Integral();
@@ -146,10 +137,8 @@ std::cout<<" fourth entries is "<<aaD<<std::endl;
   
   std::cout<<"getting fifth"<<std::endl;
   TH1F *E_pt = static_cast<TH1F*>(f5->Get(hname1)->Clone());
-  //nbin=E_pt->FindBin(0.6);
-  //E_pt->GetXaxis()->SetRangeUser(0,nbin);
   //E_pt->GetXaxis()->SetRangeUser(0.5,1.0);
-    //E_pt->Rebin(2);
+  E_pt->Rebin(8);
   std::cout<<"ha"<<std::endl;
   E_pt->SetDirectory(0);
   double aaE = E_pt->Integral();
