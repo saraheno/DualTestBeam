@@ -19,7 +19,8 @@
 
 
   <detectors>
-    <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1">
+<!--    <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1"> -->
+      <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis3">
 
 
  <comment>Edge Detector</comment>
@@ -34,7 +35,7 @@ zmin is where the dtector goes
 <dimensions z_length="world_z-10." height="world_x-10." width="world_y-10." thickness="1."/>
 
       <structure>
-        <side name="side" material="BlackHole" vis="EDGEVis2" sensitive="yes"/>
+        <side name="side" material="BlackHole" vis="EDGEVis3" sensitive="yes"/>
       </structure>
 
 

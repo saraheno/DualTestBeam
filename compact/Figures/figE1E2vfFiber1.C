@@ -126,7 +126,7 @@ void figE1E2vfFiber1()
 
   Double_t intercept,slope,int_err,sl_err;
 
-
+  // get means and its error
   TCanvas* canv2 = new TCanvas("yuck","yuck",50,50,W,H);
   TProfile* A_pt_pfx = A_pt->ProfileX();
   A_pt_pfx->Fit("pol1","WW","",0.5,0.9);
@@ -159,6 +159,31 @@ void figE1E2vfFiber1()
   std::cout<<"ratio is "<<intercept/(intercept+slope)<<std::endl;
 
 
+  // get mean and rms
+  
+  TCanvas* canv4 = new TCanvas("yuck4","yuck4",50,50,W,H);
+  TProfile* A_pt_pfx2 = A_pt->ProfileX("_pfx2",1,-1,"s");
+  A_pt_pfx2->Draw();
+  std::cout<<std::endl;
+  std::cout<<"for e1"<<std::endl;
+  for (int jjj=0;jjj<(A_pt_pfx2->GetNbinsX());jjj++) {
+    std::cout<<"  "<<jjj<<" "<<A_pt_pfx2->GetBinError(jjj)<<std::endl;
+  }
+
+  
+  TCanvas* canv5 = new TCanvas("yuck5","yuck5",50,50,W,H);
+  TProfile* B_pt_pfx2 = B_pt->ProfileX("_pfx2",1,-1,"s");
+  B_pt_pfx2->Draw();
+  std::cout<<std::endl;
+  std::cout<<"for e2"<<std::endl;
+  for (int jjj=0;jjj<(B_pt_pfx2->GetNbinsX());jjj++) {
+    std::cout<<"  "<<jjj<<" "<<B_pt_pfx2->GetBinError(jjj)<<std::endl;
+  }
+
+
+
+
+  
   
   return;
 }
