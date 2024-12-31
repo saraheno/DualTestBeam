@@ -110,7 +110,7 @@ void figE1E2vfFiber1()
   float t = canv->GetTopMargin();
   float r = canv->GetRightMargin();
   float Offset   = 0.2;
-  TString alabel="20 GeV pion simulation";
+  TString alabel="20 GeV Fiber1 pion simulation";
   TLatex latex;
   latex.SetNDC();
   latex.SetTextAngle(0);
@@ -162,6 +162,7 @@ void figE1E2vfFiber1()
   // get mean and rms
   
   TCanvas* canv4 = new TCanvas("yuck4","yuck4",50,50,W,H);
+  A_pt->RebinX(8);
   TProfile* A_pt_pfx2 = A_pt->ProfileX("_pfx2",1,-1,"s");
   A_pt_pfx2->Draw();
   std::cout<<std::endl;
@@ -172,6 +173,7 @@ void figE1E2vfFiber1()
 
   
   TCanvas* canv5 = new TCanvas("yuck5","yuck5",50,50,W,H);
+  B_pt->RebinX(8);
   TProfile* B_pt_pfx2 = B_pt->ProfileX("_pfx2",1,-1,"s");
   B_pt_pfx2->Draw();
   std::cout<<std::endl;

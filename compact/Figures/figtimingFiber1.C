@@ -158,7 +158,7 @@ std::cout<<" second entries is "<<aaB<<std::endl;
   float t = canv->GetTopMargin();
   float r = canv->GetRightMargin();
   float Offset   = 0.2;
-  TString alabel="20 GeV simulation";
+  TString alabel="20 GeV Fiber 1 simulation";
   TLatex latex;
   latex.SetNDC();
   latex.SetTextAngle(0);

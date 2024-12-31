@@ -99,7 +99,7 @@ void fignsncFiber1timing()
   float t = canv->GetTopMargin();
   float r = canv->GetRightMargin();
   float Offset   = 0.2;
-  TString alabel="20 GeV pion simulation";
+  TString alabel="20 GeV Fiber1 pion simulation";
   TLatex latex;
   latex.SetNDC();
   latex.SetTextAngle(0);

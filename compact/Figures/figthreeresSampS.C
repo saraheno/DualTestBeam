@@ -232,7 +232,7 @@ std::cout<<" third entries is "<<aaC<<std::endl;
    float t = canv->GetTopMargin();
   float r = canv->GetRightMargin();
   float Offset   = 0.2;
-  TString alabel="20 GeV pion simulation";
+  TString alabel="20 GeV SampS pion simulation";
   TLatex latex;
   latex.SetNDC();
   latex.SetTextAngle(0);

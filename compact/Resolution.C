@@ -296,8 +296,8 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *mes3Ecal = new TH2F("mes3Ecal","Ecal edge energy versus ncer",500,0.,0.3,500,0.,1.5);
   TH2F *mes4Ecal = new TH2F("mes4Ecal","Ecal edge energy versus nscint",500,0.,0.3,500,0.,1.5);
 
-  TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal edge energy versus em frac",500,0.,1.5,500,0.,0.3);
-  TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal edge energy versus num nucl int",500,0.,1000,500,0.,0.3);
+  TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal edge energy versus em frac",500,0.,1.5,500,0.,1.0);
+  TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal edge energy versus num nucl int",500,0.,1000,500,0.,1.0);
   TH2F *mes3Hcal = new TH2F("mes3Hcal","Hcal edge energy versus ncer",500,0.,0.3,500,0.,1.5);
   TH2F *mes4Hcal = new TH2F("mes4Hcal","Hcal edge energy versus nscint",500,0.,0.3,500,0.,1.5);
 
