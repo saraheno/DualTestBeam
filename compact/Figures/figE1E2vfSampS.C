@@ -46,7 +46,7 @@ void figE1E2vfSampS()
   canv->SetTicky(0);
   
 
-  TLatex latex;
+
   
   int n_ = 2;
   
@@ -117,6 +117,8 @@ void figE1E2vfSampS()
   latex.SetTextAlign(31);
   latex.SetTextSize(0.75*t);
   latex.DrawLatex(1-r,1-t+Offset*t,alabel);
+
+  
 lgd->Draw();
 
 

@@ -46,7 +46,7 @@ void figE1E2vfFiber2()
   canv->SetTicky(0);
   
 
-  TLatex latex;
+
   
   int n_ = 2;
   
