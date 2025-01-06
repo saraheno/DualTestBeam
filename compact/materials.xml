@@ -1,32 +1,6 @@
-<!-- ====================================================================== -->
-<!--                                                                        -->
-<!--    XML description of the complete SCEPCAL IDEA detector               -->
-<!--    of the SCEPCAL IDEA collider detector design.                       -->
-<!--                                                                        -->
-<!--    Contained are the required                                          -->
-<!--      ++ global constants used uniquely by this module                  -->
-<!--      ++ visualization attributes                                       -->
-<!--      ++ the definition of the readout structure and the                -->
-<!--         readout segmentation (if necessary)                            -->
-<!--      ++ the include statements for the sensitive detectors and         -->
-<!--         the corresponding support structure(s)                         -->
-<!--                                                                        -->
-<!--                                                                        -->
-<!--   @author  M.Frank                                                     -->
-<!--   @date    14/11/2014                                                  -->
-<!--                                                                        -->
-<!-- ====================================================================== -->
+
 
 <lccdd>
-
-  <info name="SCEPCAL with IDEA"
-        title="SCEPCAL with IDEA"
-        author="Sarah Eno"
-        url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
-        status="development"
-        version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
-    <comment>The compact format for the SCEPCAL IDEA</comment>        
-  </info>
 
 
 <!--  1 eV is 1240 nm
@@ -35,9 +9,8 @@
       4 eV is 309 nm
       5 eV is 238 nm
 -->
-
+ 
   <properties>
-
 
     <matrix name="RINDEX__quartz" coldim="2" values="
  1.033*eV  1.4500069615101
@@ -82,6 +55,8 @@
   3.986*eV  1.3895553417944
   4.126*eV 1.3841208059058
     "/>
+
+
 
     <matrix name="RINDEX__Air" coldim="2" values="  
      1.1*eV 1.
@@ -822,8 +797,7 @@
       <property name="RINDEX"        ref="RINDEX__PbWO4"/>
     </material>
 
-
-<!-- for PS -->
+<!-- for ps -->
     <material name="killMedia2">
       <D type="density" unit="g/cm3" value="0.0012"/>
       <fraction n="0.754" ref="N"/>
@@ -834,7 +808,7 @@
 
 
 
-<!-- for quartz   -->
+<!-- for quartx  -->
     <material name="killMedia3">
       <D type="density" unit="g/cm3" value="0.0012"/>
       <fraction n="0.754" ref="N"/>
@@ -867,12 +841,12 @@
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PbWO4"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PbWO4"/>
-      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>  <!-- should be 0.45 -->
+      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="5.*ns"/>
       <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
       <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
-      <constant name="SCINTILLATIONYIELD1" value="0.3"/>
+      <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fraction of scintil in process 1 -->
   </material>
 
   <material name="DR_Polystyrene">
@@ -882,7 +856,7 @@
       <property name="RINDEX" ref="RI_PS"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PS"/>
-<!-- correct yield 10000/MeV-->
+<!-- correct yield 10000/MeV -->
       <constant name="SCINTILLATIONYIELD" value="10000/MeV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
@@ -897,6 +871,7 @@
             <property name="RINDEX" ref="RI_PS"/>
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
   </material>
+
 
 
   <material name="DR_Quartz">
@@ -950,7 +925,7 @@
 
   
   <define>
-    <include ref="SCEPCALConstantsBigEcal.xml"/>
+    <include ref="SCEPCALConstants.xml"/>
   </define>
 
 <limits>
@@ -972,41 +947,24 @@
 
 
 
+
+
 <comment> some generic readouts </comment>
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id>
-<!--      <id>system:3,ix:-7,iy:-7,slice:3,layer:3</id> -->
  </readout>
 <readout name="DRFNoSegment">
       <segmentation type="NoSegmentation"/>
       <id>system:8,layer:12,tube:12,hole:3,type:3</id>
 </readout>
+ <readout name="DRSNoSegment">
+      <segmentation type="NoSegmentation"/>
+      <id>system:3,iy:12,ix:12,layer:12,box2:2,type:4</id>
+ </readout>
 
   </readouts>
-
-
-
-
-
-
-
-
-
-
-  <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_ECAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
-
-
-
-
-
-
-
-
-
 
 
 
