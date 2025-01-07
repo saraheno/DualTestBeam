@@ -20,38 +20,26 @@
 
 <!-- please note these are half lengths and widths -->
 
-  <detectors>
-    <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="InvisibleWithDaughters">
+<detectors>
+  <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="InvisibleWithDaughters">
+    <comment>Electromagnetic Calorimeter </comment>
+      <dimensions z1="edgeoffset"/>
+
+    <structure>
+      <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/>
+    </structure>
+
+ <staves vis="Invisible"/>
+    <layer repeat="1" vis="Invisible">
+      <dimensions width="DRcrystalwidth" repeat="DRcrystalNsize"  gap="DRcrystalgapt" />
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+      <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+    </layer>
 
 
- <comment>Electromagnetic Calorimeter </comment>
-
-
-
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength1+DRcrystallength2+DRcrystalgapl+2*killthick" repeat="DRcrystalNsize" gap="DRcrystalgapt" z1="edgeoffset"
-/>
-
-
-
-
-<!--  a tower may have several different patterns that repeat.
-for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
-each of these repeating things is a "layer". (so in this example, two "layers") 
-within a layer is a slice os the Pb and scint are slices
-the assembled tower is a Stave 
--->
-
-      <structure>
-        <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/>
-      </structure>
-
-
-
- <staves vis="InvisibleWithDaughters"/>
-<layer repeat="1" vis="InvisibleWithDaughters">
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/>
-      <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-
+<!--
+      
       <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
       <slice material = "NS_Polystyrene" thickness = "(DRcrystalgapmat)" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
       <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
@@ -59,10 +47,10 @@ the assembled tower is a Stave
 
       <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
-</layer>
+-->
 
-
-    </detector>
-  </detectors>
+    
+  </detector>
+</detectors>
 
 
