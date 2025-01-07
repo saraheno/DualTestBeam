@@ -31,23 +31,17 @@
 
  <staves vis="Invisible" sensitive="yes"/>
     <layer repeat="1" vis="Invisible" sensitive="yes">
-      <dimensions width="DRcrystalwidth" repeat="DRcrystalNsize"  gap="DRcrystalgapt" />
+      <dimensions width="DRcrystalwidth1" repeat="DRcrystalNsize1"  gap="DRcrystalgapt" />
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
       <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
     </layer>
-
-
-<!--
-      
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
-      <slice material = "NS_Polystyrene" thickness = "(DRcrystalgapmat)" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
-
-
-      <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="InvisibleWithDaughters"/> 
--->
+    <layer repeat="1" vis="Invisible" sensitive="yes">
+      <dimensions width="DRcrystalwidth2" repeat="DRcrystalNsize2"  gap="DRcrystalgapt" />
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+      <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+    </layer>
 
     
   </detector>

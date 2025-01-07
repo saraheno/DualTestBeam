@@ -11,7 +11,8 @@
      <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
      
 <!-- constants for dual readout crystal calorimeter -->
-    <constant name="DRcrystalwidth" value="1.0*cm"/>  <!-- should be 1 -->
+<constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->
     <constant name="DRcrystallength1" value="5.0*cm"/> 
     <constant name="DRcrystallength2" value="15.0*cm"/> 
     <constant name="DRcrystalgapl" value="0.001*cm"/>
@@ -23,7 +24,8 @@
 
 
     
-    <constant name="DRcrystalNsize" value="45"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize1" value="45"/>    <!-- should be 45 -->
+        <constant name="DRcrystalNsize2" value="45"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
     <constant name="EcalHcalgap" value="0.1*mm"/> <!-- should be small 0.1 mm -->

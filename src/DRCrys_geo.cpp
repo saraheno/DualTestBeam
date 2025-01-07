@@ -17,14 +17,15 @@
 #include "DD4hep/DetFactoryHelper.h"
 #include "XML/Layering.h"
 #include "DD4hep/OpticalSurfaces.h"
-#include <DD4hep/Printout.h>
-#include <iomanip>
+#include "DD4hep/Printout.h"
+
 
 using namespace std;
 using namespace dd4hep;
 using namespace dd4hep::detail;
 
 static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector sens)  {
+
 
   std::cout<<"Creating DRCrys "<<std::endl;
   static double tol = 0.001;
@@ -79,6 +80,15 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   Volume        envelopeVol  (det_name, env_box, air);
   envelopeVol.setAttributes(description, x_det.regionStr(), x_det.limitsStr(), x_det.visStr());
 
+  // put the whole thing into the mother volume
+  std::cout<<"putting calorimeter in mother volume"<<std::endl;
+
+  Volume        motherVol = description.pickMotherVolume(sdet);
+  PlacedVolume env_phv  = motherVol.placeVolume(envelopeVol, Position(0.,0.,zoffset+detectorhthickness));
+  env_phv.addPhysVolID("system", det_id);
+  sdet.setPlacement(env_phv);  // associate the placed volume to the detector element
+  sens.setType("calorimeter");
+  std::cout<<" done"<<std::endl;
 
   
   // crystal wrappings
@@ -90,7 +100,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // Loop over the sets of layer elements in the detector.
 
   std::cout<<" starting to build layers "<<std::endl;
+  int opt_num=0;
   l_num = 0;
+  double z_bottoml=0.;
   for(xml_coll_t li(x_det,_U(layer)); li; ++li)  {
     std::cout<<"DRCrys layer "<<l_num<<std::endl;
     xml_comp_t x_layer = li;
@@ -102,7 +114,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     int repeat = x_layer.repeat();  // how many times slice pattern repeats in layer
     double hthickness=repeat*layering.layer(l_num)->thickness()/2.;
     std::cout<<" ncount hwidth repeat hthickness "<<Ncount<<" "<<hwidth<<" "<<repeat<<" "<<hthickness<<std::endl;
-    double z_bottoml= -hthickness;
+    if(l_num<1) z_bottoml= -hthickness;
     
     // make a layer box volume and a tower volume
     dd4hep::Box LayerBox(detectorhwidth,detectorhwidth,hthickness+tol);
@@ -147,6 +159,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
     
       // Loop over number of repeats for this layer.
+
+    
     for (int j=0; j<repeat; j++)    {
       std::cout<<"  DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
       string l_name = _toString(j,"layer%d");
@@ -157,6 +171,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
       l_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
+      
         // Loop over the sublayers or slices for this layer.
       int s_num = 1;
       double z_bottoms2=-l_hzthick;  
@@ -187,32 +202,61 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // place the layer into the tower
       // Set region, limitset, and vis of layer.
-      double z_midl=z_bottoml + l_hzthick;
+      double z_midl=0.;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume layer_phv = towerVol.placeVolume(l_vol,l_pos);
       layer_phv.addPhysVolID("wc", j+1);
+      string tt_name = _toString(opt_num,"HallCrys%d");
+      BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, layer_phv,env_phv);
+      haha.isValid();
+      opt_num++;
       
     }  //end of repeat for this layer
+    
+    
+    //place towers into a row
+    double dx = 2*(Ncount + Ncount+1)/2e0 * (hwidth+agap) + tol;
+    double dy = hwidth + tol;
+    double dz = hthickness + tol;
+    Box    tube_row_box(dx, dy, dz);
+    Volume tube_row_vol("layer", tube_row_box, air);
+    tube_row_vol.setVisAttributes(description, x_det.visStr());
+    tube_row_vol.setSensitiveDetector(sens);
+    cout << tube_row_vol.name()
+	 << " dx: " << tube_row_box.x()
+	 << " dy: " << tube_row_box.y()
+	 << " dz: " << tube_row_box.z() << endl;
+    tube_row_vol.setVisAttributes(description, "layerVis");
 
-    //place towers into layer box
-    int towernum=-1;
+    
     for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
-      for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
 	double mod_x_off = (ijk1)*2*(hwidth+tol+agap);             
-	double mod_y_off = (ijk2)*2*(hwidth+tol+agap);
-	std::cout<<"placing crystal at ("<<mod_x_off<<","<<mod_y_off<<")"<<std::endl;
-	trafo= Transform3D(RotationZYX(0.,0.,0.),Position(mod_x_off,mod_y_off,0.));
-	pv = LayerBoxVol.placeVolume(towerVol,trafo);
-	pv.addPhysVolID("ix",ijk1);
-	pv.addPhysVolID("iy",ijk2);
-	towernum +=1;
+	std::cout<<"placing crystal at ("<<mod_x_off<<")"<<std::endl;
+	trafo= Transform3D(RotationZYX(0.,0.,0.),Position(mod_x_off,0.,0.));
+	pv = tube_row_vol.placeVolume(towerVol,trafo);
+	int towernum = Ncount + ijk1 + 1;
+	pv.addPhysVolID("ix",towernum);
 	std::cout<<"placing tower "<<towernum<<std::endl;
 	//BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, pv,env_phv);
 	//haha.isValid();
-      }
     }  //end of placing towers in layer envelope
 
+    
+    //place the rows into the layer box
+    for (int ijk2=-Ncount; ijk2<Ncount+1; ijk2++) {
+	double mod_y_off = (ijk2)*2*(hwidth+tol+agap);
+	std::cout<<"placing crystal at ("<<mod_y_off<<")"<<std::endl;
+	trafo= Transform3D(RotationZYX(0.,0.,0.),Position(0.,mod_y_off,0.));
+	pv = LayerBoxVol.placeVolume(tube_row_vol,trafo);
+	int towernum = Ncount + ijk2 + 1;
+	pv.addPhysVolID("iy",towernum);
+	std::cout<<"placing tower "<<towernum<<std::endl;
+	//BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, pv,env_phv);
+	//haha.isValid();
+    }  //end of placing towers in layer envelope
+
+      
     // place layerbox in envelope
     trafo=Transform3D(RotationZYX(0.,0.,0.),Position(0.,0.,z_bottoml+hthickness));
     pv = envelopeVol.placeVolume(LayerBoxVol,trafo);
@@ -234,15 +278,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
   
-  // put the whole thing into the mother volume
-  std::cout<<"putting calorimeter in mother volume"<<std::endl;
-
-  Volume        motherVol = description.pickMotherVolume(sdet);
-  pv  = motherVol.placeVolume(envelopeVol, Position(0.,0.,zoffset+detectorhthickness));
-  pv.addPhysVolID("system", det_id);
-  sdet.setPlacement(pv);  // associate the placed volume to the detector element
-  sens.setType("calorimeter");
-  std::cout<<" done"<<std::endl;
  
 
   std::cout<<"exiting DRCrys creator"<<std::endl;
