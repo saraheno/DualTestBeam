@@ -106,7 +106,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     
     // make a layer box volume and a tower volume
     dd4hep::Box LayerBox(detectorhwidth,detectorhwidth,hthickness+tol);
-    dd4hep::Volume LayerBoxVol( "layerbox", LayerBox, air);
+    string lbox_name = _toString(l_num,"layerbox%d");
+    dd4hep::Volume LayerBoxVol(lbox_name, LayerBox, air);
     LayerBoxVol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
     if ( x_layer.isSensitive() ) {
       LayerBoxVol.setSensitiveDetector(sens);
@@ -147,10 +148,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     
       // Loop over number of repeats for this layer.
     for (int j=0; j<repeat; j++)    {
-      std::cout<<"DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
+      std::cout<<"  DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
       string l_name = _toString(j,"layer%d");
       double l_hzthick = layering.layer(l_num)->thickness()/2.;  // Layer's thickness.
-      std::cout<<"half  thickness is "<<l_hzthick<<std::endl;
+      std::cout<<"  half  thickness is "<<l_hzthick<<std::endl;
       dd4hep::Box l_box(hwidth,hwidth,l_hzthick);
       dd4hep::Volume     l_vol(l_name,l_box,air);
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
