@@ -29,8 +29,8 @@
       <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/>
     </structure>
 
- <staves vis="Invisible"/>
-    <layer repeat="1" vis="Invisible">
+ <staves vis="Invisible" sensitive="yes"/>
+    <layer repeat="1" vis="Invisible" sensitive="yes">
       <dimensions width="DRcrystalwidth" repeat="DRcrystalNsize"  gap="DRcrystalgapt" />
       <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>

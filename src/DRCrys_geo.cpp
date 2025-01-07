@@ -17,6 +17,9 @@
 #include "DD4hep/DetFactoryHelper.h"
 #include "XML/Layering.h"
 #include "DD4hep/OpticalSurfaces.h"
+#include <DD4hep/Printout.h>
+#include <iomanip>
+
 using namespace std;
 using namespace dd4hep;
 using namespace dd4hep::detail;
@@ -100,23 +103,35 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     double hthickness=repeat*layering.layer(l_num)->thickness()/2.;
     std::cout<<" ncount hwidth repeat hthickness "<<Ncount<<" "<<hwidth<<" "<<repeat<<" "<<hthickness<<std::endl;
     double z_bottoml= -hthickness;
+    
     // make a layer box volume and a tower volume
-
     dd4hep::Box LayerBox(detectorhwidth,detectorhwidth,hthickness+tol);
     dd4hep::Volume LayerBoxVol( "layerbox", LayerBox, air);
-    std::cout<<"   layerbox visstr is "<<x_towers.visStr()<<std::endl;
-    LayerBoxVol.setVisAttributes(description, x_towers.visStr());
-    LayerBoxVol.setSensitiveDetector(sens);
-    LayerBoxVol.setVisAttributes(description, "layerVis");
+    LayerBoxVol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
+    if ( x_layer.isSensitive() ) {
+      LayerBoxVol.setSensitiveDetector(sens);
+    }
+    cout << setw(28) << left << LayerBoxVol.name()
+	 << " mat: "   << setw(15) << left << air.name()
+	 << " vis: "   << setw(15) << left<< x_layer.visStr()
+	 << " solid: " << setw(20) << left << LayerBox.type()
+	 << " sensitive: " << yes_no(x_layer.isSensitive()) << endl;
+
     
     // tower which has layers, each of which has slices.
     // a grid of these will be placed in the layer box for this set of layers
     dd4hep::Box towertrap(hwidth+agap,hwidth+agap,hthickness+tol);
     dd4hep::Volume towerVol( "tower", towertrap, air);
-    std::cout<<"   tower visstr is "<<x_towers.visStr()<<std::endl;
-    towerVol.setVisAttributes(description, x_towers.visStr());
-    towerVol.setSensitiveDetector(sens);
-    towerVol.setVisAttributes(description, "towerVis");
+    towerVol.setAttributes(description,x_towers.regionStr(),x_towers.limitsStr(),x_towers.visStr());
+    if ( x_towers.isSensitive() ) {
+      towerVol.setSensitiveDetector(sens);
+    }
+    cout << setw(28) << left << towerVol.name()
+	 << " mat: "   << setw(15) << left << air.name()
+	 << " vis: "   << setw(15) << left<< x_towers.visStr()
+	 << " solid: " << setw(20) << left << towertrap.type()
+	 << " sensitive: " << yes_no(x_towers.isSensitive()) << endl;
+
 
 
     // place the honeycomb into the tower
@@ -125,7 +140,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     dd4hep::Box abox2   (hwidth+0.5*(agap-hthick),hwidth+0.5*(agap-hthick),hthickness);
     dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
     Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
-    honeycomb.setVisAttributes(description,fX_honey.visStr());
+    honeycomb.setAttributes(description, fX_honey.regionStr(), fX_honey.limitsStr(), fX_honey.visStr());
     PlacedVolume honeycomb_phv = towerVol.placeVolume(honeycomb,b_pos);
     honeycomb_phv.addPhysVolID("wc", 0);
 
@@ -133,19 +148,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       // Loop over number of repeats for this layer.
     for (int j=0; j<repeat; j++)    {
       std::cout<<"DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
-      string l_name = _toString(l_num,"layer%d");
+      string l_name = _toString(j,"layer%d");
       double l_hzthick = layering.layer(l_num)->thickness()/2.;  // Layer's thickness.
       std::cout<<"half  thickness is "<<l_hzthick<<std::endl;
-      // find top and bottom lengths at this position and center
-      // relative to tower bottom
-      double z_midl=z_bottoml + l_hzthick;
-
       dd4hep::Box l_box(hwidth,hwidth,l_hzthick);
       dd4hep::Volume     l_vol(l_name,l_box,air);
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
       l_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
-
-
 
         // Loop over the sublayers or slices for this layer.
       int s_num = 1;
@@ -177,10 +186,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // place the layer into the tower
       // Set region, limitset, and vis of layer.
+      double z_midl=z_bottoml + l_hzthick;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume layer_phv = towerVol.placeVolume(l_vol,l_pos);
-      layer_phv.addPhysVolID("wc", l_num+1);
+      layer_phv.addPhysVolID("wc", j);
       
     }  //end of repeat for this layer
 
