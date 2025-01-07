@@ -924,9 +924,7 @@
 
 
   
-  <define>
-    <include ref="SCEPCALConstants.xml"/>
-  </define>
+  
 
 <limits>
     <limitset name="cal_limits">
