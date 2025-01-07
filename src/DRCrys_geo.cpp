@@ -191,7 +191,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume layer_phv = towerVol.placeVolume(l_vol,l_pos);
-      layer_phv.addPhysVolID("wc", j);
+      layer_phv.addPhysVolID("wc", j+1);
       
     }  //end of repeat for this layer
 
