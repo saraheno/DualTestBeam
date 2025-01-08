@@ -70,7 +70,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 
 
-void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
+void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,
 	      float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,
@@ -82,35 +82,26 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	      );
 
 
-void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
+void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
 		      CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,
 		      float &EEcal, float &EHcal,
 		      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
 );
 
-void getMeanPhot(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+void getMeanPhot(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
 		 float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
 );
 
 
-void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 	      float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
 		 TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
 );
 
 
-map<string, int> mapecalslice; 
-map<string,int>::iterator eii0;
-map<string,int>::iterator eii1;
-map<string,int>::iterator eii2;
-map<string,int>::iterator eii3;
-map<string,int>::iterator eii4;
-map<string,int>::iterator eii5;
-map<string,int>::iterator eii6;
-map<string,int>::iterator eii7;
 
 map<string, int> mapsampcalslice; 
 map<string,int>::iterator sii1;
@@ -141,25 +132,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   // these must correspond to the "slice" physvolid used in DRCrys_geo
   // these correspond to slices in scepcal_drcrystal.xml
   // surely there is a better way to do this
-mapecalslice["air"]=0;
-mapecalslice["PD1"]=1;
-mapecalslice["crystal1"]=2;
-mapecalslice["gap1"]=3;
-mapecalslice["middlemat"]=4;
-mapecalslice["gap2"]=5;
-mapecalslice["crystal2"]=6;
-mapecalslice["PD2"]=7;
-
-eii0 = mapecalslice.find("air");
-eii1 = mapecalslice.find("PD1");
-eii2 = mapecalslice.find("crystal1");
-eii3 = mapecalslice.find("gap1");
-eii4 = mapecalslice.find("middlemat");
-eii5 = mapecalslice.find("gap2");
-eii6 = mapecalslice.find("crystal2");
-eii7 = mapecalslice.find("PD2");
-
-
 
 
 mapsampcalslice["air"]=0;
@@ -468,7 +440,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number rough calibration "<<ievt<<std::endl;
-      getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,
+      getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,
 		  meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
     }
 
@@ -496,7 +468,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
-      CalibRefine(mapecalslice, mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
+      CalibRefine(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
     }
 
 
@@ -585,7 +557,7 @@ if(doplots) {
 
 
       fillfill=1;
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,
+      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,
 	       eesum,eesumcal,eesumem,
 	       eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,
 	       eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,
@@ -741,7 +713,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
 
       for(int ievt=0;ievt<num_evt; ++ievt) {
 	if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
-	getMeanPhot(mapecalslice, mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
+	getMeanPhot(mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
       }
 
       std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
@@ -807,7 +779,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       int ninh=0;
 
       fillfill=1;
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,
+      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,
 	       pesum,pesumcal,pesumem,
 	       pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,
 	       pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,
@@ -1202,7 +1174,7 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
       float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.),desumedgerel(0.);
 
 
-      getStuffDualCorr(domissCorr,beamE,mapecalslice, mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhits,hcalhits, edgehits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
+      getStuffDualCorr(domissCorr,beamE,mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhits,hcalhits, edgehits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
 
       float pp2 = desumedge/beamE;
       //std::cout<<"dual pp2 edge cut are "<<pp2<<" "<<edgecut<<std::endl;
@@ -2074,7 +2046,7 @@ void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, c
 
 
 
-void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 	      float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
 		 TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
@@ -2104,22 +2076,32 @@ void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice
       if(iy>32) iy=iy-64;
       int  islice = (ihitchan >>17) & 0x07;
       int  ilayer = (ihitchan>> 20) & 0x07;
+      int wc=  (ihitchan>> 23) & 0x07;
+      int type=0;
+      if((ilayer==0)&&(islice==1))  type=1;  //pd
+      if((ilayer==1)&&(islice==2))  type=1;  //pd
+      if((ilayer==0)&&(islice==2))  type=2;  //crystal
+      if((ilayer==1)&&(islice==1))  type=2;  //crystal
+      if((ilayer==0)&&(islice==3))  type=3;  //air
+      if((ilayer==1)&&(islice==3))  type=3;  //air
+
+
       
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	if(type==2 ) {  // crystal
 	  ameancerEcal+=aecalhit->ncerenkov;
 	  ameanscinEcal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
+	if( type==1 ) { // either photo detector
 	  ameancerEcal+=aecalhit->ncerenkov;
 	  ameanscinEcal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	  if(type==2 ) {  // crystal
 	    ameanscinEcal+=aecalhit->energyDeposit;
 	    if(gendet==3) ameancerEcal+=aecalhit->edeprelativistic;
 	    if(gendet==4) ameancerEcal+=aecalhit->energyDeposit;
@@ -2260,7 +2242,7 @@ void CalibRefine(map<string, int> mapecalslice, map<string, int> mapsampcalslice
 
 
 
-void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
+void getMeanPhot(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
 	      CalHits* &ecalhits, CalHits* &hcalhits, 
 		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut){
   int nbyteecal, nbytehcal, nbyteedge;
@@ -2284,25 +2266,33 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
       if(iy>32) iy=iy-64;
       int  islice = (ihitchan >>17) & 0x07;
       int  ilayer = (ihitchan>> 20) & 0x07;
-      
+      int wc=  (ihitchan>> 23) & 0x07;
+      int type=0;
+      if((ilayer==0)&&(islice==1))  type=1;  //pd
+      if((ilayer==1)&&(islice==2))  type=1;  //pd
+      if((ilayer==0)&&(islice==2))  type=2;  //crystal
+      if((ilayer==1)&&(islice==1))  type=2;  //crystal
+      if((ilayer==0)&&(islice==3))  type=3;  //air
+      if((ilayer==1)&&(islice==3))  type=3;  //air
 
+      
       Contributions zxzz=aecalhit->truth;
 
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	if(type==2 ) {  // crystal
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
+	if( type==1 ) { // either photo detector
 	  meancerEcal+=aecalhit->ncerenkov;
 	  meanscinEcal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	  if(type==2 ) {  // crystal
 	    meanscinEcal+=aecalhit->energyDeposit;
 	    if(gendet==3) meancerEcal+=aecalhit->edeprelativistic;
 	    if(gendet==4) meancerEcal+=aecalhit->energyDeposit;
@@ -2472,7 +2462,7 @@ void getMeanPhot(map<string, int> mapecalslice,  map<string, int> mapsampcalslic
 
 
 
-void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
+void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,bool &fillhists,
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,
 	      float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,
@@ -2515,6 +2505,15 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
       if(iy>32) iy=iy-64;
       int  islice = (ihitchan >>17) & 0x07;
       int  ilayer = (ihitchan>> 20) & 0x07;
+      int wc=  (ihitchan>> 23) & 0x07;
+      int type=0;
+      if((ilayer==0)&&(islice==1))  type=1;  //pd
+      if((ilayer==1)&&(islice==2))  type=1;  //pd
+      if((ilayer==0)&&(islice==2))  type=2;  //crystal
+      if((ilayer==1)&&(islice==1))  type=2;  //crystal
+      if((ilayer==0)&&(islice==3))  type=3;  //air
+      if((ilayer==1)&&(islice==3))  type=3;  //air
+
       	
       if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
       if(islice>nsliceecal) {
@@ -2529,16 +2528,13 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       eesum+=ae;
-      if(islice==(*eii0).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii1).second) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumPDeem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii2).second) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumcrystalem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii3).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii4).second) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumdeadem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii5).second) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii6).second) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumcrystalem+=aecalhit->edeprelativistic;};
-      if(islice==(*eii7).second) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumPDeem+=aecalhit->edeprelativistic;};
+      if(type==3) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
+      if(type==1) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumPDeem+=aecalhit->edeprelativistic;};
+      if(type==2) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumcrystalem+=aecalhit->edeprelativistic;};
+      if(type==0) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumdeadem+=aecalhit->edeprelativistic;};
 
-      if(islice==(*eii1).second) {  // pd on entrance to ecal
+
+      if((ilayer==0)&&(islice==1)) {  // pd on entrance to ecal
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  if(fillhists) {
 	  ecalpd1scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
@@ -2549,7 +2545,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 	  }
 	}
       }
-      if(islice==(*eii7).second) {  // pd on exist of ecal
+      if((ilayer==1)&&(islice==2)) {  // pd on exist of ecal
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  if(fillhists) {
 	  ecalpd2scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
@@ -2563,20 +2559,20 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 
 
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii6).second)) {  // crystal
+	if(type==2) {  // crystal
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) { // either photo detector
+	if( type==1 ) { // either photo detector
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	  if( type==2 ) {  // crystal
 	    nescinttotecal+=aecalhit->energyDeposit;
 	    if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
 	    if(gendet==4) necertotecal+=aecalhit->energyDeposit;
@@ -2884,7 +2880,7 @@ void getStuff(map<string, int> mapecalslice,  map<string, int> mapsampcalslice, 
 }
 
 
-void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslice, map<string, int> mapsampcalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype,
+void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaEcal, float kappaHcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype,
 		      bool doedge, float &eesumedge, float&eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
 	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits,
 		      float &EEcal, float &EHcal, 	      float &timecut, float &eecaltimecut, float &ehcaltimecut,
@@ -2913,7 +2909,15 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslic
       if(iy>32) iy=iy-64;
       int  islice = (ihitchan >>17) & 0x07;
       int  ilayer = (ihitchan>> 20) & 0x07;
-      
+      int wc=  (ihitchan>> 23) & 0x07;
+      int type=0;
+      if((ilayer==0)&&(islice==1))  type=1;  //pd
+      if((ilayer==1)&&(islice==2))  type=1;  //pd
+      if((ilayer==0)&&(islice==2))  type=2;  //crystal
+      if((ilayer==1)&&(islice==1))  type=2;  //crystal
+      if((ilayer==0)&&(islice==3))  type=3;  //air
+      if((ilayer==1)&&(islice==3))  type=3;  //air
+
 
       Contributions zxzz=aecalhit->truth;
 
@@ -2923,20 +2927,20 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapecalslic
 
       
       if(gendet==1) {   // use photons as generated in otical material
-	if((islice==(*eii2).second)||(islice==(*eii6).second)) {
+	if(type==2) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendet==2) {
-	if( (islice==(*eii1).second)||(islice==(*eii7).second) ) {
+	if( type==1 ) {
 	  necertotecal+=aecalhit->ncerenkov;
 	  nescinttotecal+=aecalhit->nscintillator;
 	}
       } 
       else if(gendet==3||gendet==4){
 	if(idet==5) {
-	  if((islice==(*eii2).second)||(islice==(*eii6).second) ) {  // crystal
+	  if(type==2) {  // crystal
 	    nescinttotecal+=aecalhit->energyDeposit;
 	    if(gendet==3) necertotecal+=aecalhit->edeprelativistic;
 	    if(gendet==4) necertotecal+=aecalhit->energyDeposit;

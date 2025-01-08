@@ -40,7 +40,7 @@
 
   <comment>EM Calorimeters</comment>
   <include ref="SCEPCAL_ECAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
+  <include ref="SCEPCAL_BOUND.xml"/> 
 
 
   </lccdd>

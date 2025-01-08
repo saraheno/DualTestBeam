@@ -1,4 +1,3 @@
-    <constant name="DRcrystalwidth" value="1.0*cm"/>  <!-- should be 1 -->
 <define>
 
 <!-- Upstream material
@@ -13,7 +12,7 @@
      
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystalwidth2" value="2.0*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->
     <constant name="DRcrystallength1" value="5.0*cm"/> 
     <constant name="DRcrystallength2" value="15.0*cm"/> 
     <constant name="DRcrystalgapl" value="0.001*cm"/>

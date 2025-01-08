@@ -38,8 +38,8 @@
     </layer>
     <layer repeat="1" vis="Invisible" sensitive="yes">
       <dimensions width="DRcrystalwidth2" repeat="DRcrystalNsize2"  gap="DRcrystalgapt" />
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
+      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
       <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
     </layer>
 
