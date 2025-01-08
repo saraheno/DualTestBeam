@@ -34,12 +34,13 @@
 
 
   <define>
-    <include ref="SCEPCALConstantsJunk.xml"/>
+    <include ref="SCEPCALConstants.xml"/>
   </define>
 
 
   <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_ECAL.xml"/>
+  <include ref="SCEPCAL_Upstream.xml"/>
+
 
 
 

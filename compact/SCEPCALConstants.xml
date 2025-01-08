@@ -1,14 +1,15 @@
 <define>
 
-<!-- Upstream material
+<!-- Upstream material -->
+<constant name="UPoffset" value="-50.0*cm"/>  
+<constant name="UPL1width" value="50*cm"/>
+<constant name="UPL1gap" value="2*cm"/>
+<constant name="UPL1thick" value="1*cm"/>
 
-
-  
 
 <!-- photodetector thicknesses -->    
      <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
-     <constant name="Upstreamwidth" value="10.0*cm"/>  <!-- should be 1 -->
-     <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
+
      
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->

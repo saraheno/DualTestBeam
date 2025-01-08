@@ -28,16 +28,6 @@
 
 
 
-  <readouts>
-    <readout name="EdgeDetNoSegment">
-      <segmentation type="NoSegmentation"/>
-      <id>system:3,side:3</id>
-    </readout>
-  </readouts>
-
-
-
-
 <!-- <include ref="SCEPCAL_DRcal.xml"/> -->
 <include ref="SCEPCAL_EdgeDet.xml"/>
 

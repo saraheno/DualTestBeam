@@ -44,7 +44,7 @@
   <include ref="SCEPCAL_ECAL.xml"/>
   <include ref="SCEPCAL_HCAL.xml"/>
   <include ref="SCEPCAL_BOUND.xml"/>
-
+<include ref="SCEPCAL_Upstream.xml"/>
 
 
 
