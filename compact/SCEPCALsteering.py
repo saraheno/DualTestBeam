@@ -2,6 +2,7 @@ from DDSim.DD4hepSimulation import DD4hepSimulation
 from g4units import mm, GeV, MeV
 SIM = DD4hepSimulation()
 
+
 ## The compact XML file, or multiple compact files, if the last one is the closer.
 SIM.compactFile = []
 ## Lorentz boost for the crossing angle, in radian!
@@ -74,6 +75,21 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 #SIM.action.calorimeterSDTypes = ['calorimeter']
 
 SIM.action.calo = "DualCrysCalorimeterSDAction"
+## parameters for Calvision sensitive action
+SIM.action.calo = ("DualCrysCalorimeterSDAction",
+  {"dialCherC": 0.0000125,
+   "dialScintC": 0.000005,
+   "dialCherO": 0.000125,
+   "dialScintO": 0.00000005,
+   "betarel": 0.648,
+   "printlimitSCE": 10,
+   "MAXEVENTSCE": 10,
+   # etc.
+  })
+
+
+
+
 
 ## List of patterns matching sensitive detectors of type Calorimeter.
 SIM.action.calorimeterSDTypes = [u'calorimeter']
@@ -428,6 +444,7 @@ SIM.physics.rejectPDGs = {1, 2, 3, 4, 5, 6, 3201, 3203, 4101, 4103, 21, 23, 24, 
 ##     The properTime of 0 indicates a documentation to add FSR to a lepton for example.
 ##     
 SIM.physics.zeroTimePDGs = {17, 11, 13, 15}
+
 
 
 ################################################################################

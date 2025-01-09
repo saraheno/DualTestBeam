@@ -27,27 +27,16 @@
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
 
-//double dialCherC= 1.2;
-//double dialScintC=1.2;
-//double dialCherO= 1.2;
-//double dialScintO=1.2;
-
-//double dialCherC= 10./8000.;
-//double dialScintC=100./200000.;
-//double dialCherO= 100./8000.;
-//double dialScintO=1./200000.;
 
 
-double dialCherC= 10./800000.;
-double dialScintC=100./20000000.;
-double dialCherO= 100./800000.;
-double dialScintO=1./20000000.;
 
-float betarel=1/1.544;
-//float betarel=0.;
-//float betarel=0.95;
-int printlimitSCE=10;
-int MAXEVENT=10;
+double m_dialCherC= 10./800000.;
+double m_dialScintC=100./20000000.;
+double m_dialCherO= 100./800000.;
+double m_dialScintO=1./20000000.;
+float m_betarel=1/1.544;
+int m_printlimitSCE=10;
+int m_MAXEVENTSCE=10;
 
 // this doesn't work.  it is in mks
 //double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
@@ -70,6 +59,7 @@ namespace CalVision {
   int OLDEVENTNUMBER=-1;
 
 
+  
   class DualCrysCalorimeterSD {
   public:
     typedef DualCrysCalorimeterHit Hit;
@@ -97,6 +87,17 @@ namespace dd4hep {
      * @}
      */
 
+template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
+      declareProperty("dialCherC", m_dialCherC);
+      declareProperty("dialScintC", m_dialScintC);
+      declareProperty("dialCherO", m_dialCherO);
+      declareProperty("dialScintO", m_dialScintO);
+      declareProperty("betarel", m_betarel);
+      declareProperty("printlimitSCE", m_printlimitSCE);
+      declareProperty("MAXEVENTSCE", m_MAXEVENTSCE);
+    }
+
+    
     /// Define collections created by this sensitivie action object
     template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::defineCollections()    {
       m_collectionID = declareReadoutFilteredCollection<CalVision::DualCrysCalorimeterSD::Hit>();
@@ -115,7 +116,7 @@ namespace dd4hep {
 
 
       if(eventNumber != OLDEVENTNUMBER) {
-	if(eventNumber<MAXEVENT) {
+	if(eventNumber<m_MAXEVENTSCE) {
         std::cout<<" SDAction event number is "<<eventNumber<<std::endl;
         OLDEVENTNUMBER=eventNumber;
         SCECOUNT=0;
@@ -125,21 +126,21 @@ namespace dd4hep {
 
 
 
-      //      std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
+      //std::cout<<" in SD action event number is "<<eventNumber<<std::endl;
 
 
       if((eventNumber==1)&&(SCECOUNT==1)) {
 	std::cout<<"event number is "<<eventNumber<<std::endl;
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
-	std::cout<<"dialCher for PbWO4 and BGO is "<<dialCherC<<std::endl;
-	std::cout<<"dialScint for PbWO4 and BGO is "<<dialScintC<<std::endl;
-	std::cout<<"dialCher for others is "<<dialCherO<<std::endl;
-	std::cout<<"dialScint for others is "<<dialScintO<<std::endl;
+	std::cout<<"dialCher for PbWO4 and BGO is "<<m_dialCherC<<std::endl;
+	std::cout<<"dialScint for PbWO4 and BGO is "<<m_dialScintC<<std::endl;
+	std::cout<<"dialCher for others is "<<m_dialCherO<<std::endl;
+	std::cout<<"dialScint for others is "<<m_dialScintO<<std::endl;
 	std::cout<<" you need to use this to interpret your results"<<std::endl;
-	std::cout<<" also counting as relativiistic particles with beta >"<<betarel<<" you should adjust according to the index of your media"<<std::endl;
+	std::cout<<" also counting as relativiistic particles with beta >"<<m_betarel<<" you should adjust according to the index of your media"<<std::endl;
       }
 
-      bool SCEPRINT=(SCECOUNT<printlimitSCE);
+      bool SCEPRINT=(SCECOUNT<m_printlimitSCE);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
 
 
@@ -206,9 +207,9 @@ namespace dd4hep {
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	if(SCECOUNT2<printlimitSCE) {
+	if(SCECOUNT2<m_printlimitSCE) {
 	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<std::endl;
-	  if(SCECOUNT2<printlimitSCE+1) SCECOUNT2+=1;
+	  if(SCECOUNT2<m_printlimitSCE+1) SCECOUNT2+=1;
 	}
 
         if ( 0 == hit->cellID )  { // for debugging only!
@@ -244,7 +245,7 @@ namespace dd4hep {
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
 	if(SCEPRINT) std::cout<<"     in volume ID "<<cell<<std::endl;
 
-	if(SCECOUNT<printlimitSCE+1) SCECOUNT+=1;
+	if(SCECOUNT<m_printlimitSCE+1) SCECOUNT+=1;
 	//	if(SCEPRINT) std::cout<<"optical photon"<<std::endl;
 
 	bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")||(track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
@@ -316,9 +317,9 @@ namespace dd4hep {
 	      //Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
-		if(rnd.rndm()>dialCherC) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>m_dialCherC) track->SetTrackStatus(fStopAndKill);
 	      } else{
-		if(rnd.rndm()>dialCherO) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>m_dialCherO) track->SetTrackStatus(fStopAndKill);
 	      }
 	    }
 	  }
@@ -366,9 +367,9 @@ namespace dd4hep {
 		//Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
-		if(rnd.rndm()>dialScintC) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>m_dialScintC) track->SetTrackStatus(fStopAndKill);
 	      } else {
-		if(rnd.rndm()>dialScintO) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>m_dialScintO) track->SetTrackStatus(fStopAndKill);
 	      }
 	    }
 	  }
@@ -424,7 +425,7 @@ namespace dd4hep {
 	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
 	  if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
-	  if(aabeta>betarel) {
+	  if(aabeta>m_betarel) {
 	    hit->edeprelativistic+=contrib.deposit;	  
 	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
 	  }

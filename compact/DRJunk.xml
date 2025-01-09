@@ -29,18 +29,17 @@
   </info>
 
   <includes>
-    <file  ref="materials.xml"/>
+    <file  ref="materialsJunk.xml"/>
   </includes>
 
 
   <define>
-    <include ref="SCEPCALConstants.xml"/>
+    <include ref="SCEPCALConstantsJunk.xml"/>
   </define>
 
 
   <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_Upstream.xml"/>
-
+  <include ref="SCEPCAL_ECAL.xml"/>
 
 
 

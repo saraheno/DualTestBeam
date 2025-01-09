@@ -1,31 +1,32 @@
 <define>
 
-<!-- Upstream material
+<!-- Upstream material -->
+<constant name="UPoffset" value="-50.0*cm"/>  
+<constant name="UPL1width" value="50*cm"/>
+<constant name="UPL1gap" value="2*cm"/>
+<constant name="UPL1thick" value="1*cm"/>
 
-
-  
 
 <!-- photodetector thicknesses -->    
-     <constant name="killthick" value="1.0*cm"/> <!-- should be 0.1 mm-->
-     <constant name="Upstreamwidth" value="10.0*cm"/>  <!-- should be 1 -->
-     <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
+     <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
+
      
 <!-- constants for dual readout crystal calorimeter -->
     <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystalwidth2" value="2.0*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->
     <constant name="DRcrystallength1" value="5.0*cm"/> 
-    <constant name="DRcrystallength2" value="7.0*cm"/> 
-    <constant name="DRcrystalgapl" value="1.0*cm"/>
+    <constant name="DRcrystallength2" value="15.0*cm"/> 
+    <constant name="DRcrystalgapl" value="0.001*cm"/>
     <constant name="DRcrystalgapmat" value="DRcrystalgapl/2"/>
-    <constant name="DRcrystalgapt" value="1.0*cm"/>
-    <constant name="DRcrystalhont" value="0.5*DRcrystalgapt"/>
+    <constant name="DRcrystalgapt" value="0.001*cm"/>
+    <constant name="DRcrystalhont" value="0.999*DRcrystalgapt"/>
 
     <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
 
     
     <constant name="DRcrystalNsize1" value="1"/>    <!-- should be 45 -->
-    <constant name="DRcrystalNsize2" value="0"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize2" value="1"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
     <constant name="EcalHcalgap" value="0.1*mm"/> <!-- should be small 0.1 mm -->
