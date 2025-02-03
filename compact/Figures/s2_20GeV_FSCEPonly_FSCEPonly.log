@@ -1,0 +1,1234 @@
+
+ Beginning new ROOT session
+
+Processing Resolution.C(5000,"./output/out_FSCEPonly_20GeV_e-.root","./output/out_FSCEPonly_20GeV_pi-.root","./output/out_FSCEPonly_20GeV_e-.root",20,0,1,0,1,0,0,0.,3,"./output/hists_FSCEPonly_20GeV.root","DRCNoSegment","DRFNoSegment",0,0)...
+Error in <TSystem::ExpandFileName>: input: $HOME/.root.mimes, output: $HOME/.root.mimes
+Warning in <TClassTable::Add>: class _Rb_tree_iterator<pair<const int,dd4hep::sim::Geant4Particle*> > already in TClassTable
+Warning in <TClassTable::Add>: class _Rb_tree_const_iterator<pair<const int,dd4hep::sim::Geant4Particle*> > already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::SimpleRun already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::SimpleEvent already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::DataExtension already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4HitData already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4HitData::MonteCarloContrib already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4Tracker already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4Tracker::Hit already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4Calorimeter already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4Calorimeter::Hit already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::ParticleExtension already in TClassTable
+Warning in <TClassTable::Add>: class dd4hep::sim::Geant4Particle already in TClassTable
+warning warning if you change the timing histograms, please read the comment in the code
+
+
+num_evt for electron file is  2000
+
+event number rough calibration 0
+ number of hcal hits is 40425
+
+event number rough calibration 1
+ number of hcal hits is 43256
+
+event number rough calibration 2
+ number of hcal hits is 42646
+
+event number rough calibration 3
+ number of hcal hits is 42612
+
+event number rough calibration 4
+ number of hcal hits is 46470
+
+event number rough calibration 20
+
+event number rough calibration 40
+
+event number rough calibration 60
+
+event number rough calibration 80
+
+event number rough calibration 100
+
+event number rough calibration 120
+
+event number rough calibration 140
+
+event number rough calibration 160
+
+event number rough calibration 180
+
+event number rough calibration 200
+
+event number rough calibration 220
+
+event number rough calibration 240
+
+event number rough calibration 260
+
+event number rough calibration 280
+
+event number rough calibration 300
+
+event number rough calibration 320
+
+event number rough calibration 340
+
+event number rough calibration 360
+
+event number rough calibration 380
+
+event number rough calibration 400
+
+event number rough calibration 420
+
+event number rough calibration 440
+
+event number rough calibration 460
+
+event number rough calibration 480
+
+event number rough calibration 500
+
+event number rough calibration 520
+
+event number rough calibration 540
+
+event number rough calibration 560
+
+event number rough calibration 580
+
+event number rough calibration 600
+
+event number rough calibration 620
+
+event number rough calibration 640
+
+event number rough calibration 660
+
+event number rough calibration 680
+
+event number rough calibration 700
+
+event number rough calibration 720
+
+event number rough calibration 740
+
+event number rough calibration 760
+
+event number rough calibration 780
+
+event number rough calibration 800
+
+event number rough calibration 820
+
+event number rough calibration 840
+
+event number rough calibration 860
+
+event number rough calibration 880
+
+event number rough calibration 900
+
+event number rough calibration 920
+
+event number rough calibration 940
+
+event number rough calibration 960
+
+event number rough calibration 980
+
+event number rough calibration 1000
+
+event number rough calibration 1020
+
+event number rough calibration 1040
+
+event number rough calibration 1060
+
+event number rough calibration 1080
+
+event number rough calibration 1100
+
+event number rough calibration 1120
+
+event number rough calibration 1140
+
+event number rough calibration 1160
+
+event number rough calibration 1180
+
+event number rough calibration 1200
+
+event number rough calibration 1220
+
+event number rough calibration 1240
+
+event number rough calibration 1260
+
+event number rough calibration 1280
+
+event number rough calibration 1300
+
+event number rough calibration 1320
+
+event number rough calibration 1340
+
+event number rough calibration 1360
+
+event number rough calibration 1380
+
+event number rough calibration 1400
+
+event number rough calibration 1420
+
+event number rough calibration 1440
+
+event number rough calibration 1460
+
+event number rough calibration 1480
+
+event number rough calibration 1500
+
+event number rough calibration 1520
+
+event number rough calibration 1540
+
+event number rough calibration 1560
+
+event number rough calibration 1580
+
+event number rough calibration 1600
+
+event number rough calibration 1620
+
+event number rough calibration 1640
+
+event number rough calibration 1660
+
+event number rough calibration 1680
+
+event number rough calibration 1700
+
+event number rough calibration 1720
+
+event number rough calibration 1740
+
+event number rough calibration 1760
+
+event number rough calibration 1780
+
+event number rough calibration 1800
+
+event number rough calibration 1820
+
+event number rough calibration 1840
+
+event number rough calibration 1860
+
+event number rough calibration 1880
+
+event number rough calibration 1900
+
+event number rough calibration 1920
+
+event number rough calibration 1940
+
+event number rough calibration 1960
+
+event number rough calibration 1980
+done with getMeanPhot
+mean scint ecal is 0
+mean scint hcal is 504.778
+mean cer ecal is 0
+mean cer hcal is 689.065
+mean e ecal timecut is 0
+mean e hcal timecut is 374.276
+mean rel ecal timecut is 0
+mean rel hcal timecut is 599.18
+
+event number calibration refinement is 0
+ number of hcal hits is 40425
+
+event number calibration refinement is 1
+ number of hcal hits is 43256
+
+event number calibration refinement is 2
+ number of hcal hits is 42646
+
+event number calibration refinement is 3
+ number of hcal hits is 42612
+
+event number calibration refinement is 4
+ number of hcal hits is 46470
+
+event number calibration refinement is 20
+
+event number calibration refinement is 40
+
+event number calibration refinement is 60
+
+event number calibration refinement is 80
+
+event number calibration refinement is 100
+
+event number calibration refinement is 120
+
+event number calibration refinement is 140
+
+event number calibration refinement is 160
+
+event number calibration refinement is 180
+
+event number calibration refinement is 200
+
+event number calibration refinement is 220
+
+event number calibration refinement is 240
+
+event number calibration refinement is 260
+
+event number calibration refinement is 280
+
+event number calibration refinement is 300
+
+event number calibration refinement is 320
+
+event number calibration refinement is 340
+
+event number calibration refinement is 360
+
+event number calibration refinement is 380
+
+event number calibration refinement is 400
+
+event number calibration refinement is 420
+
+event number calibration refinement is 440
+
+event number calibration refinement is 460
+
+event number calibration refinement is 480
+
+event number calibration refinement is 500
+
+event number calibration refinement is 520
+
+event number calibration refinement is 540
+
+event number calibration refinement is 560
+
+event number calibration refinement is 580
+
+event number calibration refinement is 600
+
+event number calibration refinement is 620
+
+event number calibration refinement is 640
+
+event number calibration refinement is 660
+
+event number calibration refinement is 680
+
+event number calibration refinement is 700
+
+event number calibration refinement is 720
+
+event number calibration refinement is 740
+
+event number calibration refinement is 760
+
+event number calibration refinement is 780
+
+event number calibration refinement is 800
+
+event number calibration refinement is 820
+
+event number calibration refinement is 840
+
+event number calibration refinement is 860
+
+event number calibration refinement is 880
+
+event number calibration refinement is 900
+
+event number calibration refinement is 920
+
+event number calibration refinement is 940
+
+event number calibration refinement is 960
+
+event number calibration refinement is 980
+
+event number calibration refinement is 1000
+
+event number calibration refinement is 1020
+
+event number calibration refinement is 1040
+
+event number calibration refinement is 1060
+
+event number calibration refinement is 1080
+
+event number calibration refinement is 1100
+
+event number calibration refinement is 1120
+
+event number calibration refinement is 1140
+
+event number calibration refinement is 1160
+
+event number calibration refinement is 1180
+
+event number calibration refinement is 1200
+
+event number calibration refinement is 1220
+
+event number calibration refinement is 1240
+
+event number calibration refinement is 1260
+
+event number calibration refinement is 1280
+
+event number calibration refinement is 1300
+
+event number calibration refinement is 1320
+
+event number calibration refinement is 1340
+
+event number calibration refinement is 1360
+
+event number calibration refinement is 1380
+
+event number calibration refinement is 1400
+
+event number calibration refinement is 1420
+
+event number calibration refinement is 1440
+
+event number calibration refinement is 1460
+
+event number calibration refinement is 1480
+
+event number calibration refinement is 1500
+
+event number calibration refinement is 1520
+
+event number calibration refinement is 1540
+
+event number calibration refinement is 1560
+
+event number calibration refinement is 1580
+
+event number calibration refinement is 1600
+
+event number calibration refinement is 1620
+
+event number calibration refinement is 1640
+
+event number calibration refinement is 1660
+
+event number calibration refinement is 1680
+
+event number calibration refinement is 1700
+
+event number calibration refinement is 1720
+
+event number calibration refinement is 1740
+
+event number calibration refinement is 1760
+
+event number calibration refinement is 1780
+
+event number calibration refinement is 1800
+
+event number calibration refinement is 1820
+
+event number calibration refinement is 1840
+
+event number calibration refinement is 1860
+
+event number calibration refinement is 1880
+
+event number calibration refinement is 1900
+
+event number calibration refinement is 1920
+
+event number calibration refinement is 1940
+
+event number calibration refinement is 1960
+
+event number calibration refinement is 1980
+ FCN=23.1592 FROM MIGRAD    STATUS=CONVERGED      78 CALLS          79 TOTAL
+                     EDM=9.14614e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.45035e+01   1.81823e+00   3.16512e-03  -3.91459e-05
+   2  Mean         9.98348e-01   1.36734e-03   3.27635e-06  -3.32558e-02
+   3  Sigma        4.27354e-02   1.70887e-03   2.70741e-05   4.51456e-03
+
+Hcal cer refine calib fit params 54.5035 0.998348 0.0427354
+
+ FCN=41.2736 FROM MIGRAD    STATUS=CONVERGED      72 CALLS          73 TOTAL
+                     EDM=1.38784e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.15945e+01   1.71929e+00   3.98938e-03   5.46508e-06
+   2  Mean         9.97726e-01   1.49963e-03   4.73883e-06   1.02869e-02
+   3  Sigma        4.53077e-02   1.89008e-03   3.82174e-05   5.60551e-04
+
+Hcal scint refine calib fit params 51.5945 0.997726 0.0453077
+
+event number second is 0
+getstuff phot ievt is 0
+
+ number of hcal hits is 40425
+
+ number of edge hits is 3
+GETSTUFF electrons
+ ehcaltimecut is 0.487436
+
+
+total energy deposit 19.9787
+       cal total energy deposit 19.9766
+       cal EM total energy deposit 16.7827
+       in air 0
+       in ecal dead material 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.489096
+       in fiber2 0.837072
+       in absorber 18.6492
+       in photodetect hcal 0
+       edge detector 0.00216165
+       sum individual 19.9776
+   incident energy 20
+   ratio to incident energy 0.998879
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 738.365
+total number of scintillator hcal is 489.096
+number inelastic is 1
+
+event number second is 1
+getstuff phot ievt is 1
+
+ number of hcal hits is 43256
+
+ number of edge hits is 1
+GETSTUFF electrons
+ ehcaltimecut is 0.531709
+
+
+total energy deposit 19.9807
+       cal total energy deposit 19.9782
+       cal EM total energy deposit 16.7948
+       in air 0
+       in ecal dead material 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.532995
+       in fiber2 0.768979
+       in absorber 18.675
+       in photodetect hcal 0
+       edge detector 0.00256228
+       sum individual 19.9796
+   incident energy 20
+   ratio to incident energy 0.998979
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 673.396
+total number of scintillator hcal is 532.995
+number inelastic is 2
+
+event number second is 2
+getstuff phot ievt is 2
+
+ number of hcal hits is 42646
+
+ number of edge hits is 3
+GETSTUFF electrons
+ ehcaltimecut is 0.523803
+
+
+total energy deposit 19.9817
+       cal total energy deposit 19.9801
+       cal EM total energy deposit 16.7525
+       in air 0
+       in ecal dead material 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.525346
+       in fiber2 0.733981
+       in absorber 18.7196
+       in photodetect hcal 0
+       edge detector 0.00156925
+       sum individual 19.9805
+   incident energy 20
+   ratio to incident energy 0.999023
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 646.169
+total number of scintillator hcal is 525.346
+number inelastic is 4
+
+event number second is 3
+getstuff phot ievt is 3
+
+ number of hcal hits is 42612
+
+ number of edge hits is 5
+GETSTUFF electrons
+ ehcaltimecut is 0.548337
+
+
+total energy deposit 19.9566
+       cal total energy deposit 19.9521
+       cal EM total energy deposit 16.7041
+       in air 0
+       in ecal dead material 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.549818
+       in fiber2 0.777
+       in absorber 18.624
+       in photodetect hcal 0
+       edge detector 0.004484
+       sum individual 19.9553
+   incident energy 20
+   ratio to incident energy 0.997766
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 674.004
+total number of scintillator hcal is 549.818
+number inelastic is 4
+
+event number second is 4
+getstuff phot ievt is 4
+
+ number of hcal hits is 46470
+
+ number of edge hits is 3
+GETSTUFF electrons
+ ehcaltimecut is 0.511544
+
+
+total energy deposit 19.9289
+       cal total energy deposit 19.8018
+       cal EM total energy deposit 16.6376
+       in air 0
+       in ecal dead material 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.515458
+       in fiber2 0.809196
+       in absorber 18.4759
+       in photodetect hcal 0
+       edge detector 0.127145
+       sum individual 19.9277
+   incident energy 20
+   ratio to incident energy 0.996387
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 705.24
+total number of scintillator hcal is 515.458
+number inelastic is 5
+
+event number second is 20
+event number second is 40
+event number second is 60
+event number second is 80
+event number second is 100
+event number second is 120
+event number second is 140
+event number second is 160
+event number second is 180
+event number second is 200
+event number second is 220
+event number second is 240
+event number second is 260
+event number second is 280
+event number second is 300
+event number second is 320
+event number second is 340
+event number second is 360
+event number second is 380
+event number second is 400
+event number second is 420
+event number second is 440
+event number second is 460
+event number second is 480
+event number second is 500
+event number second is 520
+event number second is 540
+event number second is 560
+event number second is 580
+event number second is 600
+event number second is 620
+event number second is 640
+event number second is 660
+event number second is 680
+event number second is 700
+event number second is 720
+event number second is 740
+event number second is 760
+event number second is 780
+event number second is 800
+event number second is 820
+event number second is 840
+event number second is 860
+event number second is 880
+event number second is 900
+event number second is 920
+event number second is 940
+event number second is 960
+event number second is 980
+event number second is 1000
+event number second is 1020
+event number second is 1040
+event number second is 1060
+event number second is 1080
+event number second is 1100
+event number second is 1120
+event number second is 1140
+event number second is 1160
+event number second is 1180
+event number second is 1200
+event number second is 1220
+event number second is 1240
+event number second is 1260
+event number second is 1280
+event number second is 1300
+event number second is 1320
+event number second is 1340
+event number second is 1360
+event number second is 1380
+event number second is 1400
+event number second is 1420
+event number second is 1440
+event number second is 1460
+event number second is 1480
+event number second is 1500
+event number second is 1520
+event number second is 1540
+event number second is 1560
+event number second is 1580
+event number second is 1600
+event number second is 1620
+event number second is 1640
+event number second is 1660
+event number second is 1680
+event number second is 1700
+event number second is 1720
+event number second is 1740
+event number second is 1760
+event number second is 1780
+event number second is 1800
+event number second is 1820
+event number second is 1840
+event number second is 1860
+event number second is 1880
+event number second is 1900
+event number second is 1920
+event number second is 1940
+event number second is 1960
+event number second is 1980
+done with getstuff electrons
+ FCN=113.14 FROM MIGRAD    STATUS=CONVERGED      83 CALLS          84 TOTAL
+                     EDM=9.90325e-11    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.07523e+03   3.58683e+01   1.33475e-01  -2.08767e-07
+   2  Mean         8.37808e-01   6.09084e-05   3.99498e-07   1.91495e-01
+   3  Sigma        2.46598e-03   6.00360e-05   2.59272e-05   4.34910e-04
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  fnorm is 0.837808
+pion file open
+pion branches found
+num_evt for pion file is  2000
+event number pion is 0
+getstuff phot ievt is 0
+
+ number of hcal hits is 127422
+
+ number of edge hits is 6
+
+
+GETSTUFF pions
+ phcaltimecut is 0.471551
+ prelhcaltimecut is 0.589091
+total energy deposit 18.736
+       cal total energy deposit 18.4344
+       cal EM total energy deposit 13.4645
+       in air 0
+       in ecal dead 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.524882
+       in fiber2 0.821873
+       sum of fibers 1.34675
+       in absorber 17.0867
+       in photodetect hcal 0
+       edge detector 0.301559
+       sum individual 18.735
+   incident energy 20
+   ratio to incident energy 0.93675
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 599.177
+total number of scintillator hcal is 524.882
+
+ number of inelastic is 129
+event number pion is 1
+getstuff phot ievt is 1
+
+ number of hcal hits is 159828
+
+ number of edge hits is 6
+
+
+GETSTUFF pions
+ phcaltimecut is 0.435919
+ prelhcaltimecut is 0.430902
+total energy deposit 17.8088
+       cal total energy deposit 16.4484
+       cal EM total energy deposit 9.67785
+       in air 0
+       in ecal dead 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.570894
+       in fiber2 0.79246
+       sum of fibers 1.36335
+       in absorber 15.0841
+       in photodetect hcal 0
+       edge detector 1.36035
+       sum individual 17.8078
+   incident energy 20
+   ratio to incident energy 0.890388
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 465.414
+total number of scintillator hcal is 570.894
+
+ number of inelastic is 239
+event number pion is 2
+getstuff phot ievt is 2
+
+ number of hcal hits is 98584
+
+ number of edge hits is 5
+
+
+GETSTUFF pions
+ phcaltimecut is 0.437541
+ prelhcaltimecut is 0.622019
+total energy deposit 18.6241
+       cal total energy deposit 18.2759
+       cal EM total energy deposit 13.3054
+       in air 0
+       in ecal dead 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.488078
+       in fiber2 0.790843
+       sum of fibers 1.27892
+       in absorber 16.9959
+       in photodetect hcal 0
+       edge detector 0.348213
+       sum individual 18.623
+   incident energy 20
+   ratio to incident energy 0.931151
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 634.31
+total number of scintillator hcal is 488.078
+
+ number of inelastic is 112
+event number pion is 3
+getstuff phot ievt is 3
+
+ number of hcal hits is 185831
+
+ number of edge hits is 6
+
+
+GETSTUFF pions
+ phcaltimecut is 0.468778
+ prelhcaltimecut is 0.374393
+total energy deposit 17.7446
+       cal total energy deposit 16.5732
+       cal EM total energy deposit 9.20015
+       in air 0
+       in ecal dead 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.596053
+       in fiber2 0.747608
+       sum of fibers 1.34366
+       in absorber 15.2286
+       in photodetect hcal 0
+       edge detector 1.17142
+       sum individual 17.7437
+   incident energy 20
+   ratio to incident energy 0.887183
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 409.528
+total number of scintillator hcal is 596.053
+
+ number of inelastic is 254
+event number pion is 4
+getstuff phot ievt is 4
+
+ number of hcal hits is 129504
+
+ number of edge hits is 6
+
+
+GETSTUFF pions
+ phcaltimecut is 0.483737
+ prelhcaltimecut is 0.515898
+total energy deposit 18.5752
+       cal total energy deposit 17.9183
+       cal EM total energy deposit 11.932
+       in air 0
+       in ecal dead 0
+       in photodetector ecal 0
+       in crystal 0
+       in fiber1 0.586538
+       in fiber2 0.822335
+       sum of fibers 1.40887
+       in absorber 16.5084
+       in photodetect hcal 0
+       edge detector 0.656859
+       sum individual 18.5741
+   incident energy 20
+   ratio to incident energy 0.928706
+total number of cherenkov ecal is 0
+total number of scintillator ecal is 0
+total number of cherenkov hcal is 537.994
+total number of scintillator hcal is 586.538
+
+ number of inelastic is 145
+event number pion is 20
+event number pion is 40
+event number pion is 60
+event number pion is 80
+event number pion is 100
+event number pion is 120
+event number pion is 140
+event number pion is 160
+event number pion is 180
+event number pion is 200
+event number pion is 220
+event number pion is 240
+event number pion is 260
+event number pion is 280
+event number pion is 300
+event number pion is 320
+event number pion is 340
+event number pion is 360
+event number pion is 380
+event number pion is 400
+event number pion is 420
+event number pion is 440
+event number pion is 460
+event number pion is 480
+event number pion is 500
+event number pion is 520
+event number pion is 540
+event number pion is 560
+event number pion is 580
+event number pion is 600
+event number pion is 620
+event number pion is 640
+event number pion is 660
+event number pion is 680
+event number pion is 700
+event number pion is 720
+event number pion is 740
+event number pion is 760
+event number pion is 780
+event number pion is 800
+event number pion is 820
+event number pion is 840
+event number pion is 860
+event number pion is 880
+event number pion is 900
+event number pion is 920
+event number pion is 940
+event number pion is 960
+event number pion is 980
+event number pion is 1000
+event number pion is 1020
+event number pion is 1040
+event number pion is 1060
+event number pion is 1080
+event number pion is 1100
+event number pion is 1120
+event number pion is 1140
+event number pion is 1160
+event number pion is 1180
+event number pion is 1200
+event number pion is 1220
+event number pion is 1240
+event number pion is 1260
+event number pion is 1280
+event number pion is 1300
+event number pion is 1320
+event number pion is 1340
+event number pion is 1360
+event number pion is 1380
+event number pion is 1400
+event number pion is 1420
+event number pion is 1440
+event number pion is 1460
+event number pion is 1480
+event number pion is 1500
+event number pion is 1520
+event number pion is 1540
+event number pion is 1560
+event number pion is 1580
+event number pion is 1600
+event number pion is 1620
+event number pion is 1640
+event number pion is 1660
+event number pion is 1680
+event number pion is 1700
+event number pion is 1720
+event number pion is 1740
+event number pion is 1760
+event number pion is 1780
+event number pion is 1800
+event number pion is 1820
+event number pion is 1840
+event number pion is 1860
+event number pion is 1880
+event number pion is 1900
+event number pion is 1920
+event number pion is 1940
+event number pion is 1960
+event number pion is 1980
+meanSEcal is 0
+meanCEcal is 0
+meanSHcal is 1.07413
+meanCHcal is 0.712275
+ starting fits
+arms amean are 0.109027 1.07413
+Info in <TCanvas::MakeDefCanvas>:  created default TCanvas with name c1
+ FCN=87.2683 FROM MIGRAD    STATUS=CONVERGED      66 CALLS          67 TOTAL
+                     EDM=1.05991e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.69767e+01   8.41131e-01   2.94640e-03   7.64990e-05
+   2  Mean         1.07991e+00   2.25365e-03   1.02154e-05   4.39621e-02
+   3  Sigma        8.20794e-02   2.14923e-03   3.23724e-05   1.30478e-02
+ p0 p1 p2 26.9767 1.07991 0.0820794
+Info in <TCanvas::Print>: .png file junkxx5.png has been created
+
+ Hcal nscint fit params 26.9767 1.07991 0.0820794
+
+arms amean are 0.13407 0.712275
+ FCN=118.539 FROM MIGRAD    STATUS=CONVERGED      68 CALLS          69 TOTAL
+                     EDM=1.1577e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.82052e+01   6.11388e-01   2.39661e-03   6.26960e-04
+   2  Mean         6.96899e-01   3.68176e-03   1.96220e-05   3.94558e-01
+   3  Sigma        1.19284e-01   4.23898e-03   5.23839e-05   5.48700e-02
+ p0 p1 p2 26.9767 1.07991 0.0820794
+Info in <TCanvas::Print>: .png file junkxx6.png has been created
+
+ Hcal ncer fit params 18.2052 0.696899 0.119284
+
+1.07991 0.696899
+ hoverehcalscint hoverehcalcer kappa hcal are 1.07991 0.696899 -0.263631
+event number pion is 0
+getstuffdualcorr phot ievt is 0
+ number of hcal hits is 127422
+
+ number of edge hits is 6
+event number pion is 1
+getstuffdualcorr phot ievt is 1
+ number of hcal hits is 159828
+
+ number of edge hits is 6
+event number pion is 2
+getstuffdualcorr phot ievt is 2
+ number of hcal hits is 98584
+
+ number of edge hits is 5
+event number pion is 3
+getstuffdualcorr phot ievt is 3
+ number of hcal hits is 185831
+
+ number of edge hits is 6
+event number pion is 4
+getstuffdualcorr phot ievt is 4
+ number of hcal hits is 129504
+
+ number of edge hits is 6
+event number pion is 20
+event number pion is 40
+event number pion is 60
+event number pion is 80
+event number pion is 100
+event number pion is 120
+event number pion is 140
+event number pion is 160
+event number pion is 180
+event number pion is 200
+event number pion is 220
+event number pion is 240
+event number pion is 260
+event number pion is 280
+event number pion is 300
+event number pion is 320
+event number pion is 340
+event number pion is 360
+event number pion is 380
+event number pion is 400
+event number pion is 420
+event number pion is 440
+event number pion is 460
+event number pion is 480
+event number pion is 500
+event number pion is 520
+event number pion is 540
+event number pion is 560
+event number pion is 580
+event number pion is 600
+event number pion is 620
+event number pion is 640
+event number pion is 660
+event number pion is 680
+event number pion is 700
+event number pion is 720
+event number pion is 740
+event number pion is 760
+event number pion is 780
+event number pion is 800
+event number pion is 820
+event number pion is 840
+event number pion is 860
+event number pion is 880
+event number pion is 900
+event number pion is 920
+event number pion is 940
+event number pion is 960
+event number pion is 980
+event number pion is 1000
+event number pion is 1020
+event number pion is 1040
+event number pion is 1060
+event number pion is 1080
+event number pion is 1100
+event number pion is 1120
+event number pion is 1140
+event number pion is 1160
+event number pion is 1180
+event number pion is 1200
+event number pion is 1220
+event number pion is 1240
+event number pion is 1260
+event number pion is 1280
+event number pion is 1300
+event number pion is 1320
+event number pion is 1340
+event number pion is 1360
+event number pion is 1380
+event number pion is 1400
+event number pion is 1420
+event number pion is 1440
+event number pion is 1460
+event number pion is 1480
+event number pion is 1500
+event number pion is 1520
+event number pion is 1540
+event number pion is 1560
+event number pion is 1580
+event number pion is 1600
+event number pion is 1620
+event number pion is 1640
+event number pion is 1660
+event number pion is 1680
+event number pion is 1700
+event number pion is 1720
+event number pion is 1740
+event number pion is 1760
+event number pion is 1780
+event number pion is 1800
+event number pion is 1820
+event number pion is 1840
+event number pion is 1860
+event number pion is 1880
+event number pion is 1900
+event number pion is 1920
+event number pion is 1940
+event number pion is 1960
+event number pion is 1980
+ FCN=201.339 FROM MIGRAD    STATUS=CONVERGED      66 CALLS          67 TOTAL
+                     EDM=1.84996e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.42254e+01   7.69019e-01   3.97395e-03  -2.65177e-04
+   2  Mean         6.26753e-01   2.86355e-03   1.89584e-05   3.78133e-02
+   3  Sigma        1.11868e-01   2.51163e-03   3.60622e-05  -3.08839e-02
+ FCN=80.8234 FROM MIGRAD    STATUS=CONVERGED      83 CALLS          84 TOTAL
+                     EDM=2.6113e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.52988e+01   9.31205e-01   2.95475e-03  -3.84171e-05
+   2  Mean         6.06047e-01   4.91460e-03   1.94742e-05   4.19167e-03
+   3  Sigma        1.08750e-01   6.96538e-03   8.00022e-05   1.74112e-03
+
+ rel fract fit params 25.2988 0.606047 0.10875
+
+ FCN=199.235 FROM MIGRAD    STATUS=CONVERGED      67 CALLS          68 TOTAL
+                     EDM=1.19827e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.78623e+01   5.61007e-01   2.93305e-03   2.27143e-04
+   2  Mean         7.06600e-01   3.08168e-03   2.07261e-05   1.81520e-02
+   3  Sigma        1.20524e-01   2.70088e-03   3.79243e-05  -5.23053e-03
+ FCN=95.0461 FROM MIGRAD    STATUS=CONVERGED      88 CALLS          89 TOTAL
+                     EDM=1.56705e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.81849e+01   6.83159e-01   2.30965e-03  -5.52973e-04
+   2  Mean         6.89749e-01   5.54077e-03   2.50595e-05  -6.24151e-02
+   3  Sigma        1.23169e-01   8.66663e-03   9.98398e-05   8.28180e-04
+
+ Hcal ncer fit params 18.1849 0.689749 0.123169
+
+ FCN=141.322 FROM MIGRAD    STATUS=CONVERGED      60 CALLS          61 TOTAL
+                     EDM=9.17605e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.66316e+01   7.94903e-01   3.61304e-03  -5.66660e-04
+   2  Mean         1.08000e+00   2.00136e-03   1.16464e-05   1.12140e-01
+   3  Sigma        8.35275e-02   1.64666e-03   2.87011e-05  -6.04271e-02
+ FCN=56.024 FROM MIGRAD    STATUS=CONVERGED      75 CALLS          76 TOTAL
+                     EDM=1.10467e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     2.70193e+01   9.98379e-01   2.64145e-03  -3.66817e-04
+   2  Mean         1.07584e+00   3.37767e-03   1.24109e-05   1.11744e-01
+   3  Sigma        8.09535e-02   5.12539e-03   7.16722e-05  -9.23766e-03
+
+ Hcal nscint fit params 27.0193 1.07584 0.0809535
+
+ FCN=132.786 FROM MIGRAD    STATUS=CONVERGED      68 CALLS          69 TOTAL
+                     EDM=3.73723e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     4.04599e+01   1.21420e+00   5.30860e-03  -6.07095e-05
+   2  Mean         1.00408e+00   1.31851e-03   7.32881e-06  -5.00518e-02
+   3  Sigma        5.50186e-02   1.07694e-03   2.60820e-05  -6.22527e-03
+ FCN=36.2369 FROM MIGRAD    STATUS=CONVERGED      80 CALLS          81 TOTAL
+                     EDM=1.06281e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     4.09328e+01   1.51535e+00   3.21151e-03  -6.18882e-04
+   2  Mean         9.98304e-01   2.46797e-03   6.83609e-06  -2.30750e-01
+   3  Sigma        5.49973e-02   3.72192e-03   5.93137e-05   1.21790e-02
+
+ Hcal corr fit params 40.9328 0.998304 0.0549973
+
+biggest hit time was 13918.2
