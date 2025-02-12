@@ -25,8 +25,8 @@
 
 
     
-    <constant name="DRcrystalNsize1" value="45"/>    <!-- should be 45 -->
-    <constant name="DRcrystalNsize2" value="45"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize1" value="1"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize2" value="1"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
     <constant name="EcalHcalgap" value="0.1*mm"/> <!-- should be small 0.1 mm -->
