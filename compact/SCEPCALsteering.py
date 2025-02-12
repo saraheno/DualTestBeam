@@ -369,7 +369,22 @@ SIM.output.random = 7
 ##       # arbitrary options can be created and set via the steering file or command line
 ##       SIM.outputConfig.myExtension = '.csv'
 ##     
-SIM.outputConfig.userOutputPlugin = None
+#SIM.outputConfig.userOutputPlugin = None
+def exampleUserPlugin(dd4hepSimulation):
+     from DDG4 import EventAction, Kernel
+     dd = dd4hepSimulation
+     evt_root = EventAction(Kernel(), 'SCEGeant4Output2ROOT/' + dd.outputFile, True)
+     evt_root.HandleMCTruth = True
+     evt_root.Control = True
+     output = dd.outputFile
+     if not dd.outputFile.endswith(dd.outputConfig.myExtension):
+          output = dd.outputFile + dd.outputConfig.myExtension
+     evt_root.Output = output
+     evt_root.enableUI()
+     Kernel().eventAction().add(evt_root)
+     return None
+SIM.outputConfig.userOutputPlugin = exampleUserPlugin
+SIM.outputConfig.myExtension = '.root'
 
 
 ################################################################################
