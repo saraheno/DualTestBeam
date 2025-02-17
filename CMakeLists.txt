@@ -53,7 +53,7 @@ endif()
 if (DD4HEP_USE_GEANT4)
   #---------------------------  Plugin library for the simulation framework  ---------
   dd4hep_add_dictionary(G__DualTestBeam
-    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h src/DualCrysCalorimeterHit.h src/SCEGeant4Output2ROOT.h src/DualCrysCalDigi.h
+    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h src/DualCrysCalorimeterHit.h src/SCEGeant4Output2ROOT.h src/DualCrysCalDigi.h src/CalorimeterHitType.h
     LINKDEF ${DD4hep_DIR}/include/ROOT/LinkDef.h
     OUTPUT  ${LIBRARY_OUTPUT_PATH}
     USES    DD4hep::DDCore DD4hep::DDG4 Geant4::Interface
