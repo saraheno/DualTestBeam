@@ -1,7 +1,7 @@
 <!-- ====================================================================== -->
 <!--                                                                        -->
-<!--    XML description of the complete SCEPCAL IDEA detector               -->
-<!--    of the SCEPCAL IDEA collider detector design.                       -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
 <!--                                                                        -->
 <!--    Contained are the required                                          -->
 <!--      ++ global constants used uniquely by this module                  -->
@@ -18,27 +18,20 @@
 <!-- ====================================================================== -->
 
 <lccdd>
-
-  <info name="SCEPCAL with IDEA"
-	title="SCEPCAL with IDEA"
-	author="Sarah Eno"
-	url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
-	status="development"
-	version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
-    <comment>The compact format for the SCEPCAL IDEA</comment>
-  </info>
-
-  <includes>
-    <file  ref="materials.xml"/>
-  </includes>
-
+  <!--  Definition of global dictionary constants          -->
   <define>
-    <include ref="SCEPCALConstants.xml"/>
   </define>
 
-  <comment>EM Calorimeters</comment>
-  <include ref="SCEPCAL_ECAL.xml"/>
-  <include ref="SCEPCAL_HCALSamp.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/>
+  <!--  Definition of the used visualization attributes    -->
+  <display>
+    <vis name="UpstreamL1S1Vis"       alpha="0.7" r="1.0"  g="0.0"  b="0.0"  showDaughters="true" visible="true"/>
+    <vis name="UpstreamL1S2Vis"        alpha="0.7" r="0.0"  g="0.0"  b="1.0"   showDaughters="true" visible="true"/>
+  </display>
 
+
+  <!--  Includes for sensitives and support                -->
+  <include ref="SCEPCAL_DRUpstream.xml"/>
+
+<!--
+-->
 </lccdd>
