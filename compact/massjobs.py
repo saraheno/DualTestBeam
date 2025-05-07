@@ -2,7 +2,7 @@ from array import *
 import argparse
 
 
-# python massjobs.py -g FSCEPonly -N 500 -d 0 -o 0
+# python massjobs.py -g DualTestBeam -N 500 -d 0 -o 2
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g", "--geometry", help="geometry code")
@@ -10,7 +10,7 @@ argParser.add_argument("-g", "--geometry", help="geometry code")
 
 argParser.add_argument("-N", "--number", help="number to make")
 argParser.add_argument("-d", "--direction", help="0 is straight 1 is fiber angle")
-argParser.add_argument("-o", "--origin", help="0 is 0,0,-1  1 is 0,-7,-1  2 is 0,0,200")
+argParser.add_argument("-o", "--origin", help="0 is 0,0,-1  1 is 0,-7,-1  2 is 0,0,-80")
 
 args = argParser.parse_args()
 print("args=%s" % args)
@@ -19,8 +19,8 @@ print("args.name=%s" % args.geometry)
 
 
 
-outputarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/output/"
-hostarea="/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/"
+outputarea="/data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/"
+hostarea="/data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/"
 
 
 
@@ -32,7 +32,7 @@ nenergy=1
 energies=[20]
 name="condor-executable-"+str(args.geometry)+"-"
 direct="0. 0.0 1."
-poss=" 0. 0. -1*cm"
+poss=" 0. 0. -80.*cm"
 
 print(args.direction)
 if args.direction=="0" :
@@ -48,7 +48,7 @@ if args.origin=="0" :
 if args.origin=="1" :
     poss="0.,-7*mm,-1*mm"
 if args.origin=="2" :
-    poss="0. 0.*mm 200*cm"
+    poss="0. 0.*mm -80*cm"
 
 
 print(direct)
@@ -61,18 +61,19 @@ while (i<nenergy):
     shfile = open(hostarea+name+str(energies[i])+'_GeV-e.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
-    shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
+    shfile.write('cd /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/'+'\n')
     shfile.write('START_TIME=`/bin/date`'+'\n')
     shfile.write('echo "started at $START_TIME"'+'\n')
     shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
-    shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos8-gcc11-opt/setup.sh'+'\n')
+    shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
+    shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisdd4hep.sh'+'\n')
-    shfile.write('echo "ran thisdd4hep"'+'\n')
+    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('echo "ran thisDualTestBeam"'+'\n')
 # another good direction is  "0 0.05 0.99875"  and position 0.,-7*mm,-1*cm use this for pure fiber
 # DO IT BOTH PLACES!!!
-    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DR'
-                 +str(args.geometry)+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_e-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N '+str(args.number)+' >& '+outputarea+'sce_e_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
+    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/DR'
+                 +str(args.geometry)+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_e-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N '+str(args.number)+' >& '+outputarea+'sce_e_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -90,15 +91,16 @@ while (i<nenergy):
     shfile = open(hostarea+name+str(energies[i])+'_GeV-pi.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
-    shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
+    shfile.write('cd /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/'+'\n')
     shfile.write('START_TIME=`/bin/date`'+'\n')
     shfile.write('echo "started at $START_TIME"'+'\n')
     shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
-    shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos8-gcc11-opt/setup.sh'+'\n')
+    shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
+    shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisdd4hep.sh'+'\n')
-    shfile.write('echo "ran thisdd4hep"'+'\n')
-    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
+    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('echo "ran thisDualTestBeam"'+'\n')
+    shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')

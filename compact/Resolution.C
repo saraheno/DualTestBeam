@@ -404,26 +404,20 @@ sii9 = mapsampcalslice.find("Sep2");
   TFile* ef = TFile::Open(einputfilename);
   TTree* et = (TTree*)ef->Get("EVENT;1");
 
-  b_mc= et->GetBranch("MCParticles");
-  //  if(doecal) b_ecal = et->GetBranch("DRCNoSegment");
-  //  if(dohcal) b_hcal = et->GetBranch("DRFNoSegment");
+
   if(doecal) b_ecal = et->GetBranch(ECALleaf);
   if(dohcal) b_hcal = et->GetBranch(HCALleaf);
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
-
-
-
+  b_mc= et->GetBranch("MCParticles");
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<std::endl<<std::endl<<"num_evt for electron file is  "<<num_evt<<std::endl;
   
 
   float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
-
   float meaneecaltimecut(0),meanehcaltimecut(0),meanerelecaltimecut(0),meanerelhcaltimecut(0);
-
   float meanSEcal(0.),meanSHcal(0.),meanCEcal(0.),meanCHcal(0.);
 
   
