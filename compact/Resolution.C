@@ -53,7 +53,8 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile, bool logy);
 
 
-void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh,TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz);
+void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh,
+	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz);
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
@@ -303,11 +304,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     // first pass through file for rough calibration
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number rough calibration "<<ievt<<std::endl;
+      if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"  event number rough calibration "<<ievt<<std::endl;
       getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
     }
 
-    std::cout<<"done with getMeanPhot"<<std::endl;
+    std::cout<<std::endl<<"done with getMeanPhot"<<std::endl<<std::endl;
+
     meanscinEcal=meanscinEcal/num_evt;
     meanscinHcal=meanscinHcal/num_evt;
     meancerEcal=meancerEcal/num_evt;
@@ -316,15 +318,15 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     meanehcaltimecut=meanehcaltimecut/num_evt;
     meanerelecaltimecut=meanerelecaltimecut/num_evt;
     meanerelhcaltimecut=meanerelhcaltimecut/num_evt;
-    std::cout<<"mean scint ecal is "<<meanscinEcal<<std::endl;
-    std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
-    std::cout<<"mean cer ecal is "<<meancerEcal<<std::endl;
-    std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+    std::cout<<"mean scint ecal is "<<meanscinEcal/1000.<<std::endl;
+    std::cout<<"mean scint hcal is "<<meanscinHcal/1000.<<std::endl;
+    std::cout<<"mean cer ecal is "<<meancerEcal/1000.<<std::endl;
+    std::cout<<"mean cer hcal is "<<meancerHcal/1000.<<std::endl;
     
-    std::cout<<"mean e ecal timecut is "<<meaneecaltimecut<<std::endl;
-    std::cout<<"mean e hcal timecut is "<<meanehcaltimecut<<std::endl;
-    std::cout<<"mean rel ecal timecut is "<<meanerelecaltimecut<<std::endl;
-    std::cout<<"mean rel hcal timecut is "<<meanerelhcaltimecut<<std::endl;
+    std::cout<<"mean e ecal timecut is "<<meaneecaltimecut/1000.<<std::endl;
+    std::cout<<"mean e hcal timecut is "<<meanehcaltimecut/1000.<<std::endl;
+    std::cout<<"mean rel ecal timecut is "<<meanerelecaltimecut/1000.<<std::endl;
+    std::cout<<"mean rel hcal timecut is "<<meanerelhcaltimecut/1000.<<std::endl;
 
 
     // refine calibration
@@ -416,8 +418,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
       float nonconse=(beamE-eachecks)/beamE;
     
-      egEcal=(eesumcrystal)/beamE;
-      egHcal=(eesumfiber1+eesumfiber2)/beamE;
+      egEcal+=(eesumcrystal)/beamE;
+      egHcal+=(eesumfiber1+eesumfiber2)/beamE;
 
 
 
@@ -459,7 +461,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       enscvni->Fill(nine+ninh,eedepcal/beamE);
 
       if(ievt<SCECOUNT) {
-	std::cout<<"GETSTUFF electrons full calorimeter"<<std::endl;
+	std::cout<<std::endl<<std::endl<<"GETSTUFF electrons full calorimeter"<<std::endl;
 	std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
 	std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
 	std::cout<<"       cal total energy deposit "<<eesumcal/1000.<<std::endl;
@@ -476,8 +478,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
 	std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
 	std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
-	std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
-	std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
 	std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
 	std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
 	std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
@@ -488,12 +488,18 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     }  //end loop over events
   }  // end if no events
+  egEcal/=num_evt;
+  egHcal/=num_evt;
+  std::cout<<std::endl<<"!! sampling fractions for electrons"<<std::endl;
+  std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
+  std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
 
   ef->Close();
-  std::cout<<"done with getstuff electrons"<<std::endl;
+  std::cout<<"done with getstuff electrons"<<std::endl<<std::endl;
 
 
   // get normalization for f, which is the shower em fraction, from electron plots
+  std::cout<<std::endl<<" getting the em shower fraction "<<std::endl;
   arms = heesumemcal->GetRMS();
   amean = heesumemcal->GetMean();
   heesumemcal->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
@@ -536,8 +542,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
       meanscinHcal=meanscinHcal/num_evt;
       meancerHcal=meancerHcal/num_evt;
-      std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
-      std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+      std::cout<<"mean scint hcal is "<<meanscinHcal/1000.<<std::endl;
+      std::cout<<"mean cer hcal is "<<meancerHcal/1000.<<std::endl;
     
 
 
@@ -556,7 +562,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
 	float nonconse=(beamE-eachecks)/beamE;
 
-	egHcal=(eesumfiber1+eesumfiber2)/beamE;
+	egHcal+=(eesumfiber1+eesumfiber2)/beamE;
       
 	if(ievt<SCECOUNT) {
 	  std::cout<<"GETSTUFF electrons hcal calorimeter"<<std::endl;
@@ -576,8 +582,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	  std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
 	  std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
 	  std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
-	  std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
-	  std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
 	  std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
 	  std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
 	  std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
@@ -586,6 +590,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	  std::cout<<std::endl;
 	}
       }
+      egHcal/=num_evt;
+      std::cout<<std::endl<<"!! sampling fractions for electrons"<<std::endl;
+      std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
+      std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
 
       
     }
@@ -597,12 +605,11 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   }
 
   //****************************************************************************************************************************
-  // process pions
+  // process pions for full calorimeter
+  std::cout<<std::endl<<std::endl<<"!! processing pions for full calorimeter "<<std::endl;
 
   TFile* pif = TFile::Open(piinputfilename);
   TTree* pit = (TTree*)pif->Get("EVENT;1");
-
-
   if(pif==0) std::cout<<" no file "<<std::endl;
   if(pit==0) std::cout<<" no event "<<std::endl;
   std::cout<<"pion file open"<<std::endl;
@@ -612,8 +619,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
   if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
   std::cout<<"pion branches found"<<std::endl;
-
-
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<"num_evt for pion file is  "<<num_evt<<std::endl;
@@ -621,17 +626,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   // loop over events 
   
   if(num_evt>0) {  
-
-
     CalHits* ecalhits = new CalHits();
     if(doecal) b_ecal->SetAddress(&ecalhits);
     CalHits* hcalhits = new CalHits();
     if(dohcal) b_hcal->SetAddress(&hcalhits);
     CalHits* edgehits = new CalHits();
     if(doedge) b_edge->SetAddress(&edgehits);
-
-
-
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
 
@@ -790,8 +790,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     // get kappa for calorimeter in preparation for doing dual readout correction
     float arms,amean,hovereecalcer(1.),hovereecalscint(1.),hoverehcalcer(1.),hoverehcalscint(1.);
     if(dodualcorr) {
-
+      
       if(doecal) {
+	std::cout<<"!! calculating kappa for ecal "<<std::endl;
 	arms = phcEcalnscint2->GetRMS();
 	amean = phcEcalnscint2->GetMean();
 	phcEcalnscint2->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
@@ -830,6 +831,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
       if(dohcal) {
+	std::cout<<"!! calculating kappa for hcal "<<std::endl;
 	float hoverehcalscint,hoverehcalcer;
 	float arms,amean;
 	arms = phcHcalnscint2->GetRMS();
@@ -873,7 +875,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 	std::cout<<" hoverehcalscint hoverehcalcer kappa hcal are "<<hoverehcalscint<<" "<<hoverehcalcer<<" "<<kappaHcal<<std::endl;
       }
- 
+
+
+      // now calculate kappa for ecal when have both ecal and hcal
+      if(doecal&&dohcal) {
+	std::cout<<"!! calculating kappa for ecal when have hcal "<<std::endl;
+      }
       
   // now calculate with dual readout correction  
     for(int ievt=0;ievt<num_evt; ++ievt) {
