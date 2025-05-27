@@ -68,7 +68,7 @@ while (i<nenergy):
     shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
     shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('source  /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/install/bin/thisDualTestBeam.sh'+'\n')
     shfile.write('echo "ran thisDualTestBeam"'+'\n')
 # another good direction is  "0 0.05 0.99875"  and position 0.,-7*mm,-1*cm use this for pure fiber
 # DO IT BOTH PLACES!!!
@@ -98,7 +98,7 @@ while (i<nenergy):
     shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
     shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('source  /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/install/bin/thisDualTestBeam.sh'+'\n')
     shfile.write('echo "ran thisDualTestBeam"'+'\n')
     shfile.write('ddsim --compactFile=/home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile /home/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
@@ -120,8 +120,8 @@ while (i<nenergy):
     jdlfile.write("universe = vanilla"+'\n')
     jdlfile.write("Executable ="+hostarea+name+str(energies[i])+"_GeV-e.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
-#    jdlfile.write("Requirements = machine == \"hepcms-rubin.privnet\""+'\n')
-    jdlfile.write("request_memory = 15GB"+'\n')
+    jdlfile.write("Requirements = machine == \"hepcms-henrietta.privnet\""+'\n')
+#    jdlfile.write("request_memory = 15GB"+'\n')
 #    jdlfile.write("RequestCpus = 4"+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stdout"+'\n')
     jdlfile.write("Error = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stderr"+'\n')
@@ -132,7 +132,7 @@ while (i<nenergy):
     i=i+1
     print("file closed")
 
-# create the .jdl files for pins
+# create the .jdl files for pions
 i=0
 while (i<nenergy):
     print(i)
@@ -140,8 +140,8 @@ while (i<nenergy):
     jdlfile.write("universe = vanilla"+'\n')
     jdlfile.write("Executable ="+hostarea+name+str(energies[i])+"_GeV-pi.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
-#    jdlfile.write("Requirements = machine == \"hepcms-rubin.privnet\""+'\n')
-    jdlfile.write("request_memory = 15GB"+'\n')
+    jdlfile.write("Requirements = machine == \"hepcms-henrietta.privnet\""+'\n')
+#    jdlfile.write("request_memory = 15GB"+'\n')
 #    jdlfile.write("RequestCpus = 4"+'\n')
     jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).stdout"+'\n')
     jdlfile.write("Error = "+hostarea+name+str(energies[i])+"-pi_sce_$(cluster)_$(process).stderr"+'\n')

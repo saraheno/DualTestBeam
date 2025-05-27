@@ -13,32 +13,18 @@
 #include "DD4hep/Factories.h"
 #include "DDG4/Geant4Particle.h"
 #include "DDG4/Geant4Data.h"
-#include "../src/DualCrysCalorimeterHit.h"
+#include "../include/DualCrysCalorimeterHit.h"
 
 #include <vector>
 #include <map>
 #include <algorithm>
 
 
-
-
-
-// IGNORE THIS!!!!!!!!!!!!!!
-// LOOK AT THE DECLARATION JUST AT THE crystalana def!!!!!!!!!!!!!!!!!!!!
-const int nsliceecal = 8;
-std::string nameecalslice[nsliceecal] = {"air","PD1","crystal1","gap1","middlemat","gap2","crystal2","PD2"};
-
-
-
-// this is now hardwared in DualCrysCalorimeterHit.h
-// need to figure out how to charge this
-//const int HARDWIREDmax=1000;
-
 int SCECOUNT=5;
 int SCECOUNT2=20;
 int icountyuck=0;
 int SCECOUNT3=10;
-bool dodualcorr=1;
+
 
 float timecut=10;
 float betacut=1/1.5;
@@ -49,16 +35,14 @@ const float timemaxz=40.;
 const float timebinsize=(timemax-timemin)/float(finenbin);
 const float timebinsizez=(timemaxz-timemin)/float(finenbin);
 
-float       kappaEcal(1.),kappaHcal(1.);
-
-
+float kappaEcal(1.),kappaHcal(1.);
 float biggesttime=0.;
+map<string, int> mapsampcalslice; 
 
-
-  typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
-  typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
-  typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
-  typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
+typedef std::vector<dd4hep::sim::Geant4Particle*> GenParts;
+typedef std::vector<CalVision::DualCrysCalorimeterHit*> CalHits;
+typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
+typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
 
 
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile, bool logy);
@@ -69,94 +53,40 @@ void SCEDraw2 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, const char*
 void SCEDraw3 (TCanvas* canv,  const char* name, TH1F* h1, TH1F* h2, TH1F* h3, const char* outfile, bool logy);
 
 
+void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh,TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz);
 
-void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,
-	      CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut, bool &fillhists,
-	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,
-	      float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,
-	      float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,
-	      float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh,
-	      TH1F* eecaltime, TH1F* ehcaltime, 
-	      TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,
-	      	      TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz
-	      );
+void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
+void getMeanPhot(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,CalHits* &ecalhits, CalHits* &hcalhits,float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
-void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,
-		      CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,
-		      float &EEcal, float &EHcal,
-		      float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
+void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,CalHits* &ecalhits, CalHits* &hcalhits, float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
 );
-
-void getMeanPhot(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
-	      CalHits* &ecalhits, CalHits* &hcalhits, 
-		 float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
-		 float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut
-);
-
-
-void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, TBranch* &b_ecal,TBranch* &b_hcal,
-	      CalHits* &ecalhits, CalHits* &hcalhits, 
-	      float &meanscinEcal, float &meanscinHcal, float &meancerEcal, float &meancerHcal,
-		 TH1F *CalEcalncer, TH1F *CalEcalnscint, TH1F *CalHcalncer, TH1F *CalHcalnscint
-);
-
-
-
-map<string, int> mapsampcalslice; 
-map<string,int>::iterator sii1;
-map<string,int>::iterator sii2;
-map<string,int>::iterator sii3;
-map<string,int>::iterator sii4;
-map<string,int>::iterator sii5;
-map<string,int>::iterator sii6;
-map<string,int>::iterator sii7;
-map<string,int>::iterator sii8;
-map<string,int>::iterator sii9;
 
 
 // hcal type 0=fiber, 1 = sampling
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet
 // ECALleaf is 
-// Resolution(100,"./output/out_FSCEPonly_30GeV_e-_100.root",
-// "./output/out_FSCEPonly_30GeV_pi-_100.root","./output/out_FSCEPonly_30GeV_pi-_100.root",
-// 20,0,1,0,1,3,"hists_30GeV.root","DRFNoSegment","DRFNoSegment",1)
+
+//Resolution(2,"./output/out_DualTestBeam_20GeV_e-.root","./output/out_DualTestBeam_20GeV_pi-.root","./output/out_FSCEPonly_20GeV_e-.root",20,1,1,0,1,0,0,0,3,"hists_20GeV.root","DRCNoSegment","DRFNoSegment",1,0,1)
+
+
 
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
-		const char* hcalonlyefilename,
-		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,
-		bool doedgecut, float edgecut,
-		int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots) {
-    float arms,amean;
+		const char* hcalonlyefilename,const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots,bool dodualcorr) {
 
   // these must correspond to the "slice" physvolid used in DRCrys_geo
   // these correspond to slices in scepcal_drcrystal.xml
   // surely there is a better way to do this
-
-
-mapsampcalslice["air"]=0;
-mapsampcalslice["Iron"]=1;
-mapsampcalslice["PD1"]=2;
-mapsampcalslice["PS"]=3;
-mapsampcalslice["PD2"]=4;
-mapsampcalslice["PD3"]=5;
-mapsampcalslice["Quartz"]=6;
-mapsampcalslice["PD4"]=7;
-mapsampcalslice["Sep1"]=8;
-mapsampcalslice["Sep2"]=9;
-
-sii1 = mapsampcalslice.find("Iron");
-sii2 = mapsampcalslice.find("PD1");
-sii3 = mapsampcalslice.find("PS");
-sii4 = mapsampcalslice.find("PD2");
-sii5 = mapsampcalslice.find("PD3");
-sii6 = mapsampcalslice.find("Quartz");
-sii7 = mapsampcalslice.find("PD4");
-sii8 = mapsampcalslice.find("Sep1");
-sii9 = mapsampcalslice.find("Sep2");
-
- bool fillfill;
-
+  mapsampcalslice["air"]=0;
+  mapsampcalslice["Iron"]=1;
+  mapsampcalslice["PD1"]=2;
+  mapsampcalslice["PS"]=3;
+  mapsampcalslice["PD2"]=4;
+  mapsampcalslice["PD3"]=5;
+  mapsampcalslice["Quartz"]=6;
+  mapsampcalslice["PD4"]=7;
+  mapsampcalslice["Sep1"]=8;
+  mapsampcalslice["Sep2"]=9;
 
   float beamE=beamEE*1000.;  // convert to MeV
 
@@ -175,36 +105,27 @@ sii9 = mapsampcalslice.find("Sep2");
   result = gSystem->Load("libDDG4Plugins");
 
   int ihaha,num_evt;
-
-
+  float arms,amean;    
+  bool fillfill;  // filling some timing histograms in getstuff
   TBranch* b_mc;
-  TBranch*  b_ecal;
+  TBranch* b_ecal;
   TBranch* b_hcal;
   TBranch* b_edge;
    
-
-
   // define histograms
 
-  // calorimeter infor
   TH1F *ehchan = new TH1F("ehchan","channel ID number",1028,0.,1028);
   TH1F *phchan = new TH1F("phchan","channel ID number",1028,0.,1028);
-
   TH1F *ehcEcalE = new TH1F("ehcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
   TH1F *phcEcalE = new TH1F("phcEcalE","sum crystal ecal energy / beam E",100,0.,1.5);
-
   TH1F *ehcHcalE = new TH1F("ehcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *phcHcalE = new TH1F("phcHcalE","sum fiber hcal energy / beam E",200,0.,0.5);
   TH1F *ehcHcalE1 = new TH1F("ehcHcalE1","fiber 1 hcal energy / cal E",200,0.,0.2);
   TH1F *phcHcalE1 = new TH1F("phcHcalE1","fiber 1 hcal energy / cal E",200,0.,0.2);
   TH1F *ehcHcalE2 = new TH1F("ehcHcalE2","fiber 2 hcal energy / cal E",200,0.,0.2);
   TH1F *phcHcalE2 = new TH1F("phcHcalE2","fiber 2 hcal energy / cal E",200,0.,0.2);
-
-
   TH2F *phcHcalvfE1 = new TH2F("phcHcalvfE1","fiber 1 hcal energy / cal E",200,0.,1.2,200,0.,0.2);
-
   TH2F *phcHcalvfE2 = new TH2F("phcHcalvfE2","fiber 2 hcal energy / cal E",200,0.,1.2,200,0.,0.2);
-
   TH1F *ehcEdgeRelf = new TH1F("ehcEdgeRelf","rel frac edge e",200,0.,1.);
   TH1F *phcEdgeRelf = new TH1F("phcEdgeRelf","rel frac edge e",200,0.,1.);
   TH1F *ehcEdgeE = new TH1F("ehcEdgeE","sum edge / beam E",200,0.,1.0);
@@ -214,115 +135,73 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *phcnonconsE2 = new TH1F("phcnonconsE2","non cons / Ecal",100,0.,1.5);
   TH1F *phcnonconsE3 = new TH1F("phcnonconsE3","non cons / Ecal-Erel",100,0.,1.5);
   TH1F *phcnonconsE4 = new TH1F("phcnonconsE4","non cons / eCal-Erel/fnorm",100,0.,1.5);
-
-
   TH1F *ehcEdgeR = new TH1F("ehcEdgeR","beam - sum edge / beam E",100,0.,1.5);
   TH1F *phcEdgeR = new TH1F("phcEdgeR","beam - sum edge / beam E",100,0.,1.5);
-
-
-
   TH1F *ehcEcalncer = new TH1F("ehcEcalncer","total number of ecal cerenkov",  500,0.,1.5);
   TH1F *phcEcalncer = new TH1F("phcEcalncer","total number of ecal cerenkov", 500,0.,1.5);
   TH1F *phcEcalncer2 = new TH1F("phcEcalncer2","total number of ecal cerenkov", 500,0.,1.5);
-
   TH1F *ehcHcalncer = new TH1F("ehcHcalncer","total number of hcal cerenkov",   500,0.,1.5);
   TH1F *phcHcalncer = new TH1F("phcHcalncer","total number of hcal cerenkov",  500,0.,1.5);
   TH1F *phcHcalncer2 = new TH1F("phcHcalncer2","total number of hcal cerenkov",  500,0.,1.5);
-
-
   TH1F *ehcEcalnscint = new TH1F("ehcEcalnscint","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalnscint = new TH1F("phcEcalnscint","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalnscint2 = new TH1F("phcEcalnscint2","total number of ecal scintillation", 500,0.,1.5);
-
   TH1F *ehcHcalnscint = new TH1F("ehcHcalnscint","total number of hcal scintillation", 500,0.,1.5);
   TH1F *phcHcalnscint = new TH1F("phcHcalnscint","total number of hcal scintillation", 500,0.,1.5);
   TH1F *phcHcalnscint2 = new TH1F("phcHcalnscint2","total number of hcal scintillation", 500,0.,1.5);
-
   TH1F *ehcEcalcorr = new TH1F("ehcEcalcorr","ecal dual corr", 500,0.,1.5);
   TH1F *phcEcalcorr = new TH1F("phcEcalcorr","ecal dual corr", 500,0.,1.5);
-
   TH1F *ehcHcalcorr = new TH1F("ehcHcalcorr","e hcal dual", 500,0.,1.5);
   TH1F *phcHcalcorr = new TH1F("phcHcalcorr","pi hcal dual", 500,0.,1.5);
-
- 
   TH2F *ehcEcalNsNc = new TH2F("ehcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalNsNc = new TH2F("phcEcalNsNc","ecal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *ehcHcalNsNc = new TH2F("ehcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
   TH2F *phcHcalNsNc = new TH2F("phcHcalNsNc","hcal ncer versus nscint",500,0.,1.5,500,0.,1.5);
-
-
   TH2F *enonconsEcalcer = new TH2F("enonconsEcalcer","Ecal ncer versus non conservation of E",500,0.,1.0,500,0.,1.4);
   TH2F *enonconsEcalscin = new TH2F("enonconsEcalscin","Ecal nscin versus non conservation of E",500,0.,1.0,500,0.,1.4);
   TH2F *enonconsHcalcer = new TH2F("enonconsHcalcer","Hcal ncer versus non conservation of E",500,0.,1.0,500,0.,1.4);
   TH2F *enonconsHcalscin = new TH2F("enonconsHcalscin","Hcal nscin versus non conservation of E",500,0.,1.0,500,0.,1.4);
-
-
   TH2F *hcnonconsvesc = new TH2F("hcnonconsvesc","pion escaping versus noncons",500,0.,1.,500,0.,1.);
-  
   TH2F *enonconsvnni  = new TH2F("enonconsvnni","non conservation of E versus num nucl",500,0.,1000,500,0.,1.0);
   TH2F *enonconsvf  = new TH2F("enonconsvf","non conservation of E versus f",500,0.,1.1,500,0.,1.0);
-
-
   TH2F *mes1Ecal = new TH2F("mes1Ecal","Ecal edge energy versus em frac",500,0.,1.5,500,0.,0.3);
   TH2F *mes2Ecal = new TH2F("mes2Ecal","Ecal edge energy versus num nucl int",500,0.,1000,500,0.,0.3);
   TH2F *mes3Ecal = new TH2F("mes3Ecal","Ecal edge energy versus ncer",500,0.,0.3,500,0.,1.5);
   TH2F *mes4Ecal = new TH2F("mes4Ecal","Ecal edge energy versus nscint",500,0.,0.3,500,0.,1.5);
-
   TH2F *mes1Hcal = new TH2F("mes1Hcal","Hcal edge energy versus em frac",500,0.,1.5,500,0.,1.0);
   TH2F *mes2Hcal = new TH2F("mes2Hcal","Hcal edge energy versus num nucl int",500,0.,1000,500,0.,1.0);
   TH2F *mes3Hcal = new TH2F("mes3Hcal","Hcal edge energy versus ncer",500,0.,0.3,500,0.,1.5);
   TH2F *mes4Hcal = new TH2F("mes4Hcal","Hcal edge energy versus nscint",500,0.,0.3,500,0.,1.5);
-
   TH2F *hfnscinEcal = new TH2F("hfnscinEcal","scin versus f ECAL",500,0.,1.5,500,0.,1.5);
   TH2F *hfncerEcal = new TH2F("hfncerEcal","cer versus f ECAL",500,0.,1.5,500,0.,1.5);
   TH2F *hfnscinHcal = new TH2F("hfnscinHcal","scin versus f ECAL",500,0.,1.5,500,0.,1.5);
   TH2F *hfncerHcal = new TH2F("hfncerHcal","cer versus f ECAL",500,0.,1.5,500,0.,1.5);
-
-  
   TH2F *ehcEcalNsNctc = new TH2F("ehcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalNsNctc = new TH2F("phcEcalNsNctc","ecal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
   TH2F *ehcHcalNsNctc = new TH2F("ehcHcalNsNctc","hcal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
   TH2F *phcHcalNsNctc = new TH2F("phcHcalNsNctc","hcal ncer versus nscint time cut",500,0.,1.5,500,0.,1.5);
-
-
   TH2F *ehcEcalMarco = new TH2F("ehcEcalMarco","ecal c v c/s",500,0.,1.5,500,0.,1.5);
   TH2F *phcEcalMarco = new TH2F("phcEcalMarco","ecal c v c/s",500,0.,1.5,500,0.,1.5);
   TH2F *ehcHcalMarco = new TH2F("ehcHcalMarco","hcal c v c/s",500,0.,1.5,500,0.,1.5);
   TH2F *phcHcalMarco = new TH2F("phcHcalMarco","hcal c v c/s",500,0.,1.5,500,0.,1.5);
-
-
   TH2F *ehcHcalf1f2 = new TH2F("ehcHcalf1f2","hcal f1e versus f2e",500,0.,2.5,500,0.,2.5);
   TH2F *phcHcalf1f2 = new TH2F("phcHcalf1f2","hcal f1e versus f2e",500,0.,2.5,500,0.,2.5);
-
-
   TH2F *ehecal2d = new TH2F("ehecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *phecal2d = new TH2F("phecal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
-
   TH2F *ehhcal2d = new TH2F("ehhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
   TH2F *phhcal2d = new TH2F("phhcal2d","lego of ecal", 41,-20.,20.,41,-20.,20.);
-
   TH1F *ehaphcal = new TH1F("ehaphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
   TH1F *phaphcal = new TH1F("phaphcal","ratio of fiber to total to  energy hcal",50,0.,0.2);
-
   TH1F *eheest = new TH1F("eheest","ratio estimated to true energy",500,0.,1.);
   TH1F *pheest = new TH1F("pheest","ratio estimated to true energy",500,0.,1.);
-
   TH1F *ehetrue = new TH1F("ehetrue","ratio deposited to incident energy",500,0.,1.1);
   TH1F *phetrue = new TH1F("phetrue","ratio deposited to incident energy",500,0.,1.1);
-
-
   TH1F *hedepcal = new TH1F("hedepcal","elec all deposited energies",500,0.,1.1);
   TH1F *hpdepcal = new TH1F("hpdepcal","pi all deposited energies",500,0.,1.1);
-
-
-
   TH1F *ehnecalcon = new TH1F("ehnecalcon","number contribs to ecal hit",1010,-10.,1000.);
   TH1F *phnecalcon = new TH1F("phnecalcon","number contribs to ecal hit",1010,-10.,1000.);
-
   TH2F *ehzvst = new TH2F("ehzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
   TH2F *phzvst = new TH2F("phzvst","z position of hit versus time ",100,-50.,300.,100,0.,100.); 
-
-
   TH1F *eecaltime = new TH1F("eecaltime","time of ecal const",100,0.,40.);
   TH1F *ehcaltime = new TH1F("ehcaltime","time of hcal const",100,0.,40.);
   TH1F *piecaltime = new TH1F("piecaltime","time of ecal const",100,0.,40.);
@@ -331,12 +210,9 @@ sii9 = mapsampcalslice.find("Sep2");
   TH2F *pinalvni = new TH2F("pinalvni","pion all E versus number inelastic",100,0.,1000,100,0.,1.4);
   TH2F *pinscvni = new TH2F("pinscvni","pion scint  versus number inelastic",100,0.,1000,100,0.,1.4);
   TH2F *pincevni = new TH2F("pincevni","pion cherenkov  versus number inelastic",100,0.,1000,100,0.,1.4);
-
-
   TH1F *heesumcal = new TH1F("heesumcal","electron energy in calorimeter",400,0.,1.5);
   TH1F *heesumemcal = new TH1F("heesumemcal","electron relativistic energy in calorimeter",400,0.,1.5);
   TH1F *hefff = new TH1F("hefff","electron relativistic fraction in calorimeter",400,0.,1.5);
-
   TH1F *hpesumcal = new TH1F("hpesumcal","pion energy in calorimeter",400,0.,1.5);
   TH1F *hpesumemcal = new TH1F("hpesumemcal","pion relativistic energy in calorimeter",400,0.,1.5);
   TH1F *hpfff = new TH1F("hpfff","gamma fraction in calorimeter",400,0.,1.5);
@@ -344,15 +220,10 @@ sii9 = mapsampcalslice.find("Sep2");
   TH1F *hpfff3 = new TH1F("hpfff3","pion relativistic energy over cal energy",400,0.,1.5);
   TH1F *hpfffabs = new TH1F("hpfffabs","pion relativistic fraction in absorber",400,0.,1.5);
   TH1F *hpffffib = new TH1F("hpffffib","pion relativistic fraction in fiber",400,0.,1.5);
-
-
-  // for calibration refinement
   TH1F *CalEcalncer = new TH1F("CalEcalncer","total number of ecal cerenkov",  500,0.,1.5);
   TH1F *CalEcalnscint = new TH1F("CalEcalnscint","total number of ecal scint",  500,0.,1.5);
   TH1F *CalHcalncer = new TH1F("CalHcalncer","total number of ecal cerenkov",  500,0.,1.5);
   TH1F *CalHcalnscint = new TH1F("CalHcalnscint","total number of ecal scint",  500,0.,1.5);
-
-
   TH1F *acovECAL = new TH1F("acovECAL","covariance ecal",500,0.,1.);
   TH1F *acovHCAL = new TH1F("acovHCAL","covariance hcal",500,0.,1.);
   TH1F *ffscinffcer = new TH1F("ffscinffcer","f from scin and cer",100,0.,1.2);
@@ -410,17 +281,16 @@ sii9 = mapsampcalslice.find("Sep2");
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
 
 
+  // get number of events in the file
   b_mc= et->GetBranch("MCParticles");
   ihaha = b_mc->GetEntries();
   num_evt= std::min(ihaha,num_evtsmax);
   std::cout<<std::endl<<std::endl<<"num_evt for electron file is  "<<num_evt<<std::endl;
   
 
-  float meanscinEcal(0),meanscinHcal(0),meancerEcal(0),meancerHcal(0);
+  float meanscinEcal(0.),meanscinHcal(0.),meancerEcal(0),meancerHcal(0),egEcal(0.),egHcal(0.);
   float meaneecaltimecut(0),meanehcaltimecut(0),meanerelecaltimecut(0),meanerelhcaltimecut(0);
   float meanSEcal(0.),meanSHcal(0.),meanCEcal(0.),meanCHcal(0.);
-
-  
   if(num_evt>0) {  
 
     CalHits* ecalhits = new CalHits();
@@ -434,8 +304,7 @@ sii9 = mapsampcalslice.find("Sep2");
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number rough calibration "<<ievt<<std::endl;
-      getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,
-		  meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
+      getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
     }
 
     std::cout<<"done with getMeanPhot"<<std::endl;
@@ -467,105 +336,91 @@ sii9 = mapsampcalslice.find("Sep2");
 
 
     if(doecal ) {
-    arms = CalEcalncer->GetRMS();
-    amean = CalEcalncer->GetMean();
-    CalEcalncer->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-    TF1 *fitEcalncer = (TF1*)CalEcalncer->GetListOfFunctions()->FindObject("gaus");
-    Double_t Ecalncer_p0= fitEcalncer->GetParameter(0);
-    Double_t Ecalncer_p1= fitEcalncer->GetParameter(1);
-    Double_t Ecalncer_p2= fitEcalncer->GetParameter(2);
-    std::cout<<std::endl;
-    std::cout<<"Ecal cer refine calib fit params "<<Ecalncer_p0<<" "<<Ecalncer_p1<<" "<<Ecalncer_p2<<std::endl;
-    std::cout<<std::endl;
-    meancerEcal=meancerEcal/Ecalncer_p1;
+      arms = CalEcalncer->GetRMS();
+      amean = CalEcalncer->GetMean();
+      CalEcalncer->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitEcalncer = (TF1*)CalEcalncer->GetListOfFunctions()->FindObject("gaus");
+      Double_t Ecalncer_p0= fitEcalncer->GetParameter(0);
+      Double_t Ecalncer_p1= fitEcalncer->GetParameter(1);
+      Double_t Ecalncer_p2= fitEcalncer->GetParameter(2);
+      std::cout<<std::endl;
+      std::cout<<"Ecal cer refine calib fit params "<<Ecalncer_p0<<" "<<Ecalncer_p1<<" "<<Ecalncer_p2<<std::endl;
+      std::cout<<std::endl;
+      meancerEcal=meancerEcal/Ecalncer_p1;
     
-    arms = CalEcalnscint->GetRMS();
-    amean = CalEcalnscint->GetMean();
-    CalEcalnscint->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-    TF1 *fitEcalnscint = (TF1*)CalEcalnscint->GetListOfFunctions()->FindObject("gaus");
-    Double_t Ecalnscint_p0= fitEcalnscint->GetParameter(0);
-    Double_t Ecalnscint_p1= fitEcalnscint->GetParameter(1);
-    Double_t Ecalnscint_p2= fitEcalnscint->GetParameter(2);
-    meanscinEcal=meanscinEcal/Ecalnscint_p1;
-    std::cout<<std::endl;
-    std::cout<<"Ecal scint refine calib fit params "<<Ecalnscint_p0<<" "<<Ecalnscint_p1<<" "<<Ecalnscint_p2<<std::endl;
-    std::cout<<std::endl;
+      arms = CalEcalnscint->GetRMS();
+      amean = CalEcalnscint->GetMean();
+      CalEcalnscint->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitEcalnscint = (TF1*)CalEcalnscint->GetListOfFunctions()->FindObject("gaus");
+      Double_t Ecalnscint_p0= fitEcalnscint->GetParameter(0);
+      Double_t Ecalnscint_p1= fitEcalnscint->GetParameter(1);
+      Double_t Ecalnscint_p2= fitEcalnscint->GetParameter(2);
+      meanscinEcal=meanscinEcal/Ecalnscint_p1;
+      std::cout<<std::endl;
+      std::cout<<"Ecal scint refine calib fit params "<<Ecalnscint_p0<<" "<<Ecalnscint_p1<<" "<<Ecalnscint_p2<<std::endl;
+      std::cout<<std::endl;
 
     }
 
     if(dohcal) {
-    arms = CalHcalncer->GetRMS();
-    amean = CalHcalncer->GetMean();
-    CalHcalncer->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-    TF1 *fitHcalncer = (TF1*)CalHcalncer->GetListOfFunctions()->FindObject("gaus");
-    Double_t Hcalncer_p0= fitHcalncer->GetParameter(0);
-    Double_t Hcalncer_p1= fitHcalncer->GetParameter(1);
-    Double_t Hcalncer_p2= fitHcalncer->GetParameter(2);
-    meancerHcal=meancerHcal/Hcalncer_p1;
-    std::cout<<std::endl;
-    std::cout<<"Hcal cer refine calib fit params "<<Hcalncer_p0<<" "<<Hcalncer_p1<<" "<<Hcalncer_p2<<std::endl;
-    std::cout<<std::endl;
-
-    arms = CalHcalnscint->GetRMS();
-    amean = CalHcalnscint->GetMean();
-    CalHcalnscint->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-    TF1 *fitHcalnscint = (TF1*)CalHcalnscint->GetListOfFunctions()->FindObject("gaus");
-    Double_t Hcalnscint_p0= fitHcalnscint->GetParameter(0);
-    Double_t Hcalnscint_p1= fitHcalnscint->GetParameter(1);
-    Double_t Hcalnscint_p2= fitHcalnscint->GetParameter(2);
-    meanscinHcal=meanscinHcal/Hcalnscint_p1;
-    std::cout<<std::endl;
-    std::cout<<"Hcal scint refine calib fit params "<<Hcalnscint_p0<<" "<<Hcalnscint_p1<<" "<<Hcalnscint_p2<<std::endl;
-        std::cout<<std::endl;
+      arms = CalHcalncer->GetRMS();
+      amean = CalHcalncer->GetMean();
+      CalHcalncer->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitHcalncer = (TF1*)CalHcalncer->GetListOfFunctions()->FindObject("gaus");
+      Double_t Hcalncer_p0= fitHcalncer->GetParameter(0);
+      Double_t Hcalncer_p1= fitHcalncer->GetParameter(1);
+      Double_t Hcalncer_p2= fitHcalncer->GetParameter(2);
+      meancerHcal=meancerHcal/Hcalncer_p1;
+      std::cout<<std::endl;
+      std::cout<<"Hcal cer refine calib fit params "<<Hcalncer_p0<<" "<<Hcalncer_p1<<" "<<Hcalncer_p2<<std::endl;
+      std::cout<<std::endl;
+      
+      arms = CalHcalnscint->GetRMS();
+      amean = CalHcalnscint->GetMean();
+      CalHcalnscint->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitHcalnscint = (TF1*)CalHcalnscint->GetListOfFunctions()->FindObject("gaus");
+      Double_t Hcalnscint_p0= fitHcalnscint->GetParameter(0);
+      Double_t Hcalnscint_p1= fitHcalnscint->GetParameter(1);
+      Double_t Hcalnscint_p2= fitHcalnscint->GetParameter(2);
+      meanscinHcal=meanscinHcal/Hcalnscint_p1;
+      std::cout<<std::endl;
+      std::cout<<"Hcal scint refine calib fit params "<<Hcalnscint_p0<<" "<<Hcalnscint_p1<<" "<<Hcalnscint_p2<<std::endl;
+      std::cout<<std::endl;
 	
     }
     
-    
-if(doplots) {
-  TCanvas* z1;
-  SCEDraw1(z1,"z1",CalEcalncer,"junkz1.png",0);
-  TCanvas* z2;
-  SCEDraw1(z2,"z2",CalEcalnscint,"junkz2.png",0);
-  TCanvas* z3;
-  SCEDraw1(z3,"z3",CalHcalncer,"junkz3.png",0);
-  TCanvas* z4;
-  SCEDraw1(z4,"z4",CalEcalnscint,"junkz4.png",0);
+    if(doplots) {
+      TCanvas* z1;
+      SCEDraw1(z1,"z1",CalEcalncer,"junkz1.png",0);
+      TCanvas* z2;
+      SCEDraw1(z2,"z2",CalEcalnscint,"junkz2.png",0);
+      TCanvas* z3;
+      SCEDraw1(z3,"z3",CalHcalncer,"junkz3.png",0);
+      TCanvas* z4;
+      SCEDraw1(z4,"z4",CalEcalnscint,"junkz4.png",0);
 
-  }
+    }
 
 
-    // now that have calibration, do the real work
+    // now that have calibration, do the real work for the electrons
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number second is "<<ievt<<std::endl;
 
-
-      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.);
-
-      float eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
-
-      
-      int nine=0;
-      int ninh=0;
-
-
-
+      float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.),eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
+      int nine(0),ninh(0);
 
       fillfill=1;
-      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,
-	       eesum,eesumcal,eesumem,
-	       eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,
-	       eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,
-	       eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,
-erelecaltimecut,erelhcaltimecut,  nine,ninh,
-	       eecaltime,ehcaltime,
-	       eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,
-	       eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz
-	       );
+      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz);
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
       float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
       float nonconse=(beamE-eachecks)/beamE;
     
+      egEcal=(eesumcrystal)/beamE;
+      egHcal=(eesumfiber1+eesumfiber2)/beamE;
+
+
+
       heesumcal->Fill(eesumcal/beamE);
       heesumemcal->Fill(eesumem/beamE);
       if(eesumem>0) {
@@ -574,12 +429,10 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       } else {
 	std::cout<<"esumemcal is zero "<<std::endl;
       }
-
       ehcEcalE->Fill(eesumcrystal/beamE);
       ehcHcalE->Fill((eesumfiber1+eesumfiber2)/eedepcal);
       ehcHcalE1->Fill(eesumfiber1/eedepcal);
       ehcHcalE2->Fill(eesumfiber2/eedepcal);
-
       ehcEdgeE->Fill(eesumedge/beamE);
       if(eesumedge>0) ehcEdgeRelf->Fill(eesumedgerel/eesumedge);
       ehcEdgeR->Fill((beamE-eesumedge)/beamE);
@@ -588,10 +441,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       ehcHcalncer->Fill(necertothcal/meancerHcal);
       ehcEcalnscint->Fill(nescinttotecal/meanscinEcal);
       ehcHcalnscint->Fill(nescinttothcal/meanscinHcal);
-
-
       ehcHcalf1f2->Fill(eesumfiber1/1000.,eesumfiber2/1000.);
-
       if((eesumfiber1+eesumfiber2)>0) ehaphcal->Fill((eesumfiber1+eesumfiber2)/(eesumabs+eesumfiber1+eesumfiber2));
       eheest->Fill((eesumcrystal+(eesumfiber1+eesumfiber2))/beamE);
       float ttt=nescinttotecal/meanscinEcal;
@@ -602,73 +452,54 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
       ehcEcalNsNc->Fill(ttt,ttt2);  
       if( (tty>0.1)&& (tty2>0.2) )
       ehcHcalNsNc->Fill(tty,tty2);  
-
       ehcEcalMarco->Fill(ttt2/ttt,ttt2);
       ehcHcalMarco->Fill(tty2/tty,tty2);
-
-
-
       ehetrue->Fill(eachecks/beamE);
-
-
       hedepcal->Fill(eedepcal/beamE);
-
       enscvni->Fill(nine+ninh,eedepcal/beamE);
 
       if(ievt<SCECOUNT) {
-      std::cout<<"GETSTUFF electrons"<<std::endl;
-      std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
-      std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
-      std::cout<<"       cal total energy deposit "<<eesumcal/1000.<<std::endl;
-      std::cout<<"       cal EM total energy deposit "<<eesumem/1000.<<std::endl;
-      std::cout<<"       in air "<<eesumair/1000.<<std::endl;
-      std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
-      std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
-      std::cout<<"       in crystal "<<eesumcrystal/1000.<<std::endl;
-      std::cout<<"       in fiber1 "<<eesumfiber1/1000.<<std::endl;
-      std::cout<<"       in fiber2 "<<eesumfiber2/1000.<<std::endl;
-      std::cout<<"       in absorber "<<eesumabs/1000.<<std::endl;
-      std::cout<<"       in photodetect hcal "<<eesumPDh/1000.<<std::endl;
-      std::cout<<"       edge detector "<<eesumedge/1000.<<std::endl;
-
-      std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
-      std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
-      std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
-
-      std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
-      std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
-      std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
-      std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl;
-      std::cout<<"number inelastic is "<<nine+ninh<<std::endl;
-      std::cout<<std::endl;
-
+	std::cout<<"GETSTUFF electrons full calorimeter"<<std::endl;
+	std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+	std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
+	std::cout<<"       cal total energy deposit "<<eesumcal/1000.<<std::endl;
+	std::cout<<"       cal EM total energy deposit "<<eesumem/1000.<<std::endl;
+	std::cout<<"       in air "<<eesumair/1000.<<std::endl;
+	std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
+	std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
+	std::cout<<"       in crystal "<<eesumcrystal/1000.<<std::endl;
+	std::cout<<"       in fiber1 "<<eesumfiber1/1000.<<std::endl;
+	std::cout<<"       in fiber2 "<<eesumfiber2/1000.<<std::endl;
+	std::cout<<"       in absorber "<<eesumabs/1000.<<std::endl;
+	std::cout<<"       in photodetect hcal "<<eesumPDh/1000.<<std::endl;
+	std::cout<<"       edge detector "<<eesumedge/1000.<<std::endl;
+	std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
+	std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
+	std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
+	std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
+	std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
+	std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
+	std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
+	std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl;
+	std::cout<<"number inelastic is "<<nine+ninh<<std::endl;
+	std::cout<<std::endl;
       }
-
-
-
-
-
-
 
     }  //end loop over events
   }  // end if no events
-
-  //  float amean = hceest->GetMean();
 
   ef->Close();
   std::cout<<"done with getstuff electrons"<<std::endl;
 
 
-  // get normalization for f from electron plots
+  // get normalization for f, which is the shower em fraction, from electron plots
   arms = heesumemcal->GetRMS();
   amean = heesumemcal->GetMean();
   heesumemcal->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-    
   float fnorm = heesumemcal->GetMean();
   TF1 *fitheesumemcal = (TF1*)heesumemcal->GetListOfFunctions()->FindObject("gaus");
   fnorm= fitheesumemcal->GetParameter(1);
-
-
   std::cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  fnorm is "<<fnorm<<std::endl;
 
 
@@ -680,47 +511,89 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
   if(doecal&&dohcal ) {
     TFile* efa = TFile::Open(hcalonlyefilename);
     TTree* eta = (TTree*)efa->Get("EVENT;1");
-
     b_mc= eta->GetBranch("MCParticles");
     b_hcal = eta->GetBranch(HCALleaf);
     std::cout<<"b_mc b_hcal are "<<b_mc<<" "<<b_hcal<<std::endl;
-
-
     ihaha = b_mc->GetEntries();
     num_evt= std::min(ihaha,num_evtsmax);
     std::cout<<std::endl<<std::endl<<"num_evt for electron hcal calibration file is  "<<num_evt<<std::endl;
   
   // loop over events 
-
-    float meanscinEcala(0),meanfscinHcala(0),meancerEcala(0),meancerHcala(0), meaneecaltimecut(0),meanehcaltimecut(0),meanerelecaltimecut(0),meanerelhcaltimecut(0);
-
-  
-    if(num_evt>0) {  
-
+    if(num_evt>0) {
       CalHits* ecalhitsa = new CalHits();
       CalHits* hcalhitsa = new CalHits();
-      b_hcal->SetAddress(&hcalhitsa);
+      CalHits* edgehitsa = new CalHits();
+      if(dohcal) b_hcal->SetAddress(&hcalhitsa);
+      if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
+      if(doedge) b_edge->SetAddress(&edgehitsa);
+            std::cout<<"6"<<std::endl;
 
       std::cout<<" branches set"<<std::endl;
-
-    // first pass through file
-
       for(int ievt=0;ievt<num_evt; ++ievt) {
 	if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number first pass is "<<ievt<<std::endl;
 	getMeanPhot(mapsampcalslice, gendet, ievt, 0, dohcal, hcaltype, b_ecal,b_hcal, ecalhitsa, hcalhitsa, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut,meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
       }
-
       std::cout<<"done with getMeanPhot for hcal calibration file"<<std::endl;
       meanscinHcal=meanscinHcal/num_evt;
       meancerHcal=meancerHcal/num_evt;
       std::cout<<"mean scint hcal is "<<meanscinHcal<<std::endl;
       std::cout<<"mean cer hcal is "<<meancerHcal<<std::endl;
+    
 
+
+
+    // now that have calibration, do the real work for the electrons
+      for(int ievt=0;ievt<num_evt; ++ievt) {
+	if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number second is "<<ievt<<std::endl;
+      
+	float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.),eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
+	int nine(0),ninh(0);
+
+	fillfill=1;
+	getStuff(mapsampcalslice,  gendet, ievt, 0, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhitsa,hcalhitsa,edgehitsa, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz);
+
+	float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
+	float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
+	float nonconse=(beamE-eachecks)/beamE;
+
+	egHcal=(eesumfiber1+eesumfiber2)/beamE;
+      
+	if(ievt<SCECOUNT) {
+	  std::cout<<"GETSTUFF electrons hcal calorimeter"<<std::endl;
+	  std::cout<<" ehcaltimecut is "<<ehcaltimecut/1000.<<std::endl;
+	  std::cout<<std::endl<<std::endl<<"total energy deposit "<<eesum/1000.<<std::endl;
+	  std::cout<<"       cal total energy deposit "<<eesumcal/1000.<<std::endl;
+	  std::cout<<"       cal EM total energy deposit "<<eesumem/1000.<<std::endl;
+	  std::cout<<"       in air "<<eesumair/1000.<<std::endl;
+	  std::cout<<"       in ecal dead material "<<eesumdead/1000.<<std::endl;
+	  std::cout<<"       in photodetector ecal "<<eesumPDe/1000.<<std::endl;
+	  std::cout<<"       in crystal "<<eesumcrystal/1000.<<std::endl;
+	  std::cout<<"       in fiber1 "<<eesumfiber1/1000.<<std::endl;
+	  std::cout<<"       in fiber2 "<<eesumfiber2/1000.<<std::endl;
+	  std::cout<<"       in absorber "<<eesumabs/1000.<<std::endl;
+	  std::cout<<"       in photodetect hcal "<<eesumPDh/1000.<<std::endl;
+	  std::cout<<"       edge detector "<<eesumedge/1000.<<std::endl;
+	  std::cout<<"       sum individual "<<eachecks/1000.<<std::endl;
+	  std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	  std::cout<<"   ratio to incident energy "<<eachecks/beamE<<std::endl;
+	  std::cout<<"   ecal sampling fraction "<<egEcal<<std::endl;
+	  std::cout<<"   hcal sampling fraction "<<egHcal<<std::endl;
+	  std::cout<<"total number of cherenkov ecal is "<<necertotecal<<std::endl;
+	  std::cout<<"total number of scintillator ecal is "<<nescinttotecal<<std::endl;
+	  std::cout<<"total number of cherenkov hcal is "<<necertothcal<<std::endl;
+	  std::cout<<"total number of scintillator hcal is "<<nescinttothcal<<std::endl;
+	  std::cout<<"number inelastic is "<<nine+ninh<<std::endl;
+	  std::cout<<std::endl;
+	}
+      }
+
+      
     }
 
+
+    
     efa->Close();
     std::cout<<"done with with electron calibration of hcal"<<std::endl;
-
   }
 
   //****************************************************************************************************************************
@@ -738,11 +611,7 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
   if(doecal) b_ecal = pit->GetBranch(ECALleaf);
   if(dohcal) b_hcal = pit->GetBranch(HCALleaf);
   if(doedge) b_edge = pit->GetBranch("EdgeDetNoSegment");
-
   std::cout<<"pion branches found"<<std::endl;
-
-  float b1Ecal=0.;float m1Ecal=1.;
-  float b1Hcal=0.;float m1Hcal=1.;
 
 
   ihaha = b_mc->GetEntries();
@@ -766,49 +635,26 @@ erelecaltimecut,erelhcaltimecut,  nine,ninh,
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
 
-
-      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.);
-      float pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
-      int nine=0;
-      int ninh=0;
+      float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.),pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
+      int nine(0),ninh(0);
 
       fillfill=1;
-      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,
-	       pesum,pesumcal,pesumem,
-	       pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,
-	       pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,
-	       pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,
-prelecaltimecut,prelhcaltimecut,nine,ninh,
-	       piecaltime,pihcaltime,
-	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
-	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
-	       );
-      //      std::cout<<" yuck ehcaltimecut is "<<ehcaltimecut<<std::endl;
-
+      getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,prelecaltimecut,prelhcaltimecut,nine,ninh,piecaltime,pihcaltime,pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz);
 
       // gamma fraction from em fraction
       float pfff=0.;
       pfff=(pesumem/beamE/fnorm);
       
-
-
       //edge fraction
       float pedgeff=0.;
-      //      pedgeff=pesumedge/beamE;
       pedgeff=pesumedge/(beamE-(pesumem/fnorm));
 
       // non cons fraction
       float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
       float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
-
       float nonconsE=(beamE-pachecks);
       float noncons=0.;
-      //noncons=nonconsE/beamE;
       noncons=nonconsE/(beamE-(pesumem/fnorm));
-
-
-
-
       
       if(domissCorr) {
 	float ContainedEnergy=beamE-pesumedge;
@@ -824,154 +670,110 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
       if((!doedgecut)||(ppp<edgecut) ) {
 	//	std::cout<<"passed edge cut "<<std::endl;
 
-      phcnonconsE->Fill(noncons);
-      phcnonconsE2->Fill(nonconsE/pesumcal);
-      phcnonconsE3->Fill(nonconsE/(pesumcal-pesumem));
-      phcnonconsE4->Fill(nonconsE/(pesumcal-(pesumem/fnorm)));
+	phcnonconsE->Fill(noncons);
+	phcnonconsE2->Fill(nonconsE/pesumcal);
+	phcnonconsE3->Fill(nonconsE/(pesumcal-pesumem));
+	phcnonconsE4->Fill(nonconsE/(pesumcal-(pesumem/fnorm)));
+	mes1Ecal->Fill(pfff,pedgeff);
+	mes2Ecal->Fill(nine,pedgeff);
+	mes3Ecal->Fill(pedgeff,npcertotecal/meancerEcal);
+	mes4Ecal->Fill(pedgeff,npscinttotecal/meanscinEcal);
+	mes1Hcal->Fill(pfff,pedgeff);
+	mes2Hcal->Fill(ninh,pedgeff);
+	mes3Hcal->Fill(pedgeff,npcertothcal/meancerHcal);
+	mes4Hcal->Fill(pedgeff,npscinttothcal/meanscinHcal);
+	hpfff->Fill(pfff);
+	hpfff2->Fill(pesumem/beamE);
+	hpfff3->Fill(pesumem/pesumcal);
+	if(pesumabs>0) hpfffabs->Fill(pesumabsem/pesumabs);
+	if((pesumfiber1+pesumfiber2)>0) hpffffib->Fill((pesumfiber1em+pesumfiber2em)/(pesumfiber1+pesumfiber2));
+	hpesumcal->Fill(pesumcal/beamE);
+	hpesumemcal->Fill(pesumem/beamE);
+	hfnscinEcal->Fill(pfff,npscinttotecal/meanscinEcal);
+	hfncerEcal->Fill(pfff,npcertotecal/meancerEcal);
+	hfnscinHcal->Fill(pfff,npscinttothcal/meanscinHcal);
+	hfncerHcal->Fill(pfff,npcertothcal/meancerHcal);
+	phcEcalE->Fill(pesumcrystal/beamE);
+	phcHcalE->Fill((pesumfiber1+pesumfiber2)/pedepcal);
+	phcHcalE1->Fill(pesumfiber1/pedepcal);
+	phcHcalE2->Fill(pesumfiber2/pedepcal);
+	phcHcalvfE1->Fill(pfff,pesumfiber1/pedepcal);
+	phcHcalvfE2->Fill(pfff,pesumfiber2/pedepcal);
+	phcEdgeE->Fill(pedgeff);
+	if(pesumedge>0) phcEdgeRelf->Fill(pesumedgerel/pesumedge);
+	phcEdgeR->Fill((beamE-pesumedge)/beamE);
+	phcEcalncer->Fill(npcertotecal/meancerEcal);
+	phcEcalncer2->Fill(npcertotecal/meancerEcal);
+	phcHcalncer->Fill(npcertothcal/meancerHcal);
+	phcHcalncer2->Fill(npcertothcal/meancerHcal);
+	phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
+	phcEcalnscint2->Fill(npscinttotecal/meanscinEcal);
+	phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
+	phcHcalnscint2->Fill(npscinttothcal/meanscinHcal);
+	enonconsEcalcer->Fill(noncons,npcertotecal/meancerEcal);
+	enonconsEcalscin->Fill(noncons,npscinttotecal/meanscinEcal);
+	enonconsHcalcer->Fill(noncons,npcertothcal/meancerHcal);
+	enonconsHcalscin->Fill(noncons,npscinttothcal/meanscinHcal);
+	enonconsvnni->Fill(nine+ninh,noncons);
+	enonconsvf->Fill(pfff,noncons);
+	hcnonconsvesc->Fill(noncons,pedgeff);
+	phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
+	if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
+	pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
 
-      
-      mes1Ecal->Fill(pfff,pedgeff);
-      mes2Ecal->Fill(nine,pedgeff);
-      mes3Ecal->Fill(pedgeff,npcertotecal/meancerEcal);
-      mes4Ecal->Fill(pedgeff,npscinttotecal/meanscinEcal);
+	float rrr=0.;float rrr2=0.;float rrx=0.;float rrx2=0.;
+	if(meanscinEcal>0) rrr=npscinttotecal/meanscinEcal;
+	if(meancerEcal>0) rrr2=npcertotecal/meancerEcal;
+	if(meanscinHcal>0) rrx=npscinttothcal/meanscinHcal;
+	if(meancerHcal>0) rrx2=npcertothcal/meancerHcal;
+	phcEcalNsNc->Fill(rrr,rrr2);  
+	phcHcalNsNc->Fill(rrx,rrx2);  
+	phcEcalMarco->Fill(rrr2/rrr,rrr2);
+	phcHcalMarco->Fill(rrx2/rrx,rrx2);
 
-      mes1Hcal->Fill(pfff,pedgeff);
-      mes2Hcal->Fill(ninh,pedgeff);
-      mes3Hcal->Fill(pedgeff,npcertothcal/meancerHcal);
-      mes4Hcal->Fill(pedgeff,npscinttothcal/meanscinHcal);
+	float rrrtc=0.;float rrr2tc=0.;float rrxtc=0.;float rrx2tc=0.;
+	if(meaneecaltimecut>0) rrrtc=pecaltimecut/meaneecaltimecut;
+	if(meanerelecaltimecut>0) rrr2tc=prelecaltimecut/meanerelecaltimecut;
+	if(meanehcaltimecut>0) rrxtc=phcaltimecut/meanehcaltimecut;
+	if(meanerelhcaltimecut>0) rrx2tc=prelhcaltimecut/meanerelhcaltimecut;
+	phcEcalNsNctc->Fill(rrrtc,rrr2tc);  
+	phcHcalNsNctc->Fill(rrxtc,rrx2tc);  
 
-
-      hpfff->Fill(pfff);
-      hpfff2->Fill(pesumem/beamE);
-      hpfff3->Fill(pesumem/pesumcal);
-      if(pesumabs>0) hpfffabs->Fill(pesumabsem/pesumabs);
-      if((pesumfiber1+pesumfiber2)>0) hpffffib->Fill((pesumfiber1em+pesumfiber2em)/(pesumfiber1+pesumfiber2));
-
-
-      hpesumcal->Fill(pesumcal/beamE);
-      hpesumemcal->Fill(pesumem/beamE);
-
-
-      hfnscinEcal->Fill(pfff,npscinttotecal/meanscinEcal);
-      hfncerEcal->Fill(pfff,npcertotecal/meancerEcal);
-      hfnscinHcal->Fill(pfff,npscinttothcal/meanscinHcal);
-      hfncerHcal->Fill(pfff,npcertothcal/meancerHcal);
-
-
-      phcEcalE->Fill(pesumcrystal/beamE);
-      phcHcalE->Fill((pesumfiber1+pesumfiber2)/pedepcal);
-      phcHcalE1->Fill(pesumfiber1/pedepcal);
-      phcHcalE2->Fill(pesumfiber2/pedepcal);
-      phcHcalvfE1->Fill(pfff,pesumfiber1/pedepcal);
-      phcHcalvfE2->Fill(pfff,pesumfiber2/pedepcal);
-
-      phcEdgeE->Fill(pedgeff);
-      if(pesumedge>0) phcEdgeRelf->Fill(pesumedgerel/pesumedge);
-
-
-      phcEdgeR->Fill((beamE-pesumedge)/beamE);
-      phcEcalncer->Fill(npcertotecal/meancerEcal);
-      phcEcalncer2->Fill(npcertotecal/meancerEcal);
-      phcHcalncer->Fill(npcertothcal/meancerHcal);
-      phcHcalncer2->Fill(npcertothcal/meancerHcal);
-      phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
-      phcEcalnscint2->Fill(npscinttotecal/meanscinEcal);
-      phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
-      phcHcalnscint2->Fill(npscinttothcal/meanscinHcal);
-
-
-      enonconsEcalcer->Fill(noncons,npcertotecal/meancerEcal);
-      enonconsEcalscin->Fill(noncons,npscinttotecal/meanscinEcal);
-      enonconsHcalcer->Fill(noncons,npcertothcal/meancerHcal);
-      enonconsHcalscin->Fill(noncons,npscinttothcal/meanscinHcal);
-
-
-      enonconsvnni->Fill(nine+ninh,noncons);
-      enonconsvf->Fill(pfff,noncons);
-      hcnonconsvesc->Fill(noncons,pedgeff);
-
-
-      
-      phcHcalf1f2->Fill(pesumfiber1/1000.,pesumfiber2/1000.);
-
-      if((pesumfiber1+pesumfiber2)>0) phaphcal->Fill((pesumfiber1+pesumfiber2)/(pesumabs+pesumfiber1+pesumfiber2));
-      pheest->Fill((pesumcrystal+(pesumfiber1+pesumfiber2))/beamE);
-
-      float rrr=0.;float rrr2=0.;float rrx=0.;float rrx2=0.;
-      if(meanscinEcal>0) rrr=npscinttotecal/meanscinEcal;
-      if(meancerEcal>0) rrr2=npcertotecal/meancerEcal;
-      if(meanscinHcal>0) rrx=npscinttothcal/meanscinHcal;
-      if(meancerHcal>0) rrx2=npcertothcal/meancerHcal;
-      //if( (rrr>0.1)&&(rrr2>0.2) )
-      phcEcalNsNc->Fill(rrr,rrr2);  
-      //if( (rrx>0.1)&&(rrx2>0.2) )
-      phcHcalNsNc->Fill(rrx,rrx2);  
-
-      phcEcalMarco->Fill(rrr2/rrr,rrr2);
-      phcHcalMarco->Fill(rrx2/rrx,rrx2);
+	hpdepcal->Fill(pedepcal/beamE);
+	phetrue->Fill(pachecks/beamE);
+	pinalvni->Fill(nine+ninh,pedepcal/beamE);
+	pinscvni->Fill(nine+ninh,rrr+rrx);
+	pincevni->Fill(nine+ninh,rrr2+rrx2);
 
 
-      float rrrtc=0.;float rrr2tc=0.;float rrxtc=0.;float rrx2tc=0.;
-      //      std::cout<<"lala "<<pecaltimecut<<" "<<prelecaltimecut<<" "<<meaneecaltimecut<<" "<<meanerelecaltimecut<<std::endl;
-      //      std::cout<<"lalah "<<phcaltimecut<<" "<<prelhcaltimecut<<" "<<meanehcaltimecut<<" "<<meanerelhcaltimecut<<std::endl;
-      if(meaneecaltimecut>0) rrrtc=pecaltimecut/meaneecaltimecut;
-      if(meanerelecaltimecut>0) rrr2tc=prelecaltimecut/meanerelecaltimecut;
-      if(meanehcaltimecut>0) rrxtc=phcaltimecut/meanehcaltimecut;
-      if(meanerelhcaltimecut>0) rrx2tc=prelhcaltimecut/meanerelhcaltimecut;
-      //      std::cout<<"lalar "<<rrrtc<<" "<<rrr2tc<<" "<<rrxtc<<" "<<rrx2tc<<std::endl;
-      //if( (rrrtc>0.1)&&(rrr2tc>0.2) )
-      phcEcalNsNctc->Fill(rrrtc,rrr2tc);  
-      //if( (rrxtc>0.1)&&(rrx2tc>0.2) )
-      phcHcalNsNctc->Fill(rrxtc,rrx2tc);  
-
-      
-
-      hpdepcal->Fill(pedepcal/beamE);
-
-      phetrue->Fill(pachecks/beamE);
-      pinalvni->Fill(nine+ninh,pedepcal/beamE);
-      //      std::cout<<" rrr rrx "<<rrr<<" "<<rrx<<std::endl;
-      pinscvni->Fill(nine+ninh,rrr+rrx);
-      pincevni->Fill(nine+ninh,rrr2+rrx2);
-
-
-      if(ievt<SCECOUNT) {
-      std::cout<<std::endl<<std::endl;
-      std::cout<<"GETSTUFF pions"<<std::endl;
-      std::cout<<" phcaltimecut is "<<phcaltimecut/1000.<<std::endl;
-      std::cout<<" prelhcaltimecut is "<<prelhcaltimecut/1000.<<std::endl;
-      std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
-      std::cout<<"       cal total energy deposit "<<pesumcal/1000.<<std::endl;
-      std::cout<<"       cal EM total energy deposit "<<pesumem/1000.<<std::endl;
-      std::cout<<"       in air "<<pesumair/1000.<<std::endl;
-      std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
-      std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
-      std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
-      std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
-      std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
-      std::cout<<"       sum of fibers "<<(pesumfiber1+pesumfiber2)/1000.<<std::endl;
-      std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
-      std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
-      std::cout<<"       edge detector "<<pesumedge/1000.<<std::endl;
-
-      std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
-      std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
-      std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
-
-      std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
-      std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
-      std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
-      std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl<<std::endl;
-      std::cout<<" number of inelastic is "<<nine+ninh<<std::endl;
-
-      }
-
-
-
+	if(ievt<SCECOUNT) {
+	  std::cout<<std::endl<<std::endl;
+	  std::cout<<"GETSTUFF pions"<<std::endl;
+	  std::cout<<" phcaltimecut is "<<phcaltimecut/1000.<<std::endl;
+	  std::cout<<" prelhcaltimecut is "<<prelhcaltimecut/1000.<<std::endl;
+	  std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
+	  std::cout<<"       cal total energy deposit "<<pesumcal/1000.<<std::endl;
+	  std::cout<<"       cal EM total energy deposit "<<pesumem/1000.<<std::endl;
+	  std::cout<<"       in air "<<pesumair/1000.<<std::endl;
+	  std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
+	  std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
+	  std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
+	  std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
+	  std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
+	  std::cout<<"       sum of fibers "<<(pesumfiber1+pesumfiber2)/1000.<<std::endl;
+	  std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
+	  std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
+	  std::cout<<"       edge detector "<<pesumedge/1000.<<std::endl;
+	  std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
+	  std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	  std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
+	  std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
+	  std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
+	  std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
+	  std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl<<std::endl;
+	  std::cout<<" number of inelastic is "<<nine+ninh<<std::endl;
+	}
       } //edge cut
-
-
-
     }  //end loop over events
 
     // get mean of S and C for covariance calculation
@@ -984,74 +786,12 @@ prelecaltimecut,prelhcaltimecut,nine,ninh,
     std::cout<<"meanSHcal is "<<meanSHcal<<std::endl;
     std::cout<<"meanCHcal is "<<meanCHcal<<std::endl;
     
-    // second loop to calculate covariance
 
-
-    /*
-    for(int ievt=0;ievt<num_evt; ++ievt) {
-      if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
-
-
-      float qpesum(0.),qpesumcal(0.),qpesumem(0.),qpesumair(0.),qpesumdead(0.),qpesumcrystal(0.),qpesumPDe(0.),qpesumfiber1(0.),qpesumfiber2(0.),qpesumabs(0.),qpesumPDh(0.),qpesumedge(0.),qnpcertotecal(0.),qnpscinttotecal(0.),qnpcertothcal(0.),qnpscinttothcal(0.),qpecaltimecut(0.),qphcaltimecut(0.),qprelecaltimecut(0.),qprelhcaltimecut(0.);
-      float qpesumairem(0.),qpesumdeadem(0.),qpesumcrystalem(0.),qpesumPDeem(0.),qpesumfiber1em(0.),qpesumfiber2em(0.),qpesumabsem(0.),qpesumPDhem(0.);
-      int qnine=0;
-      int qninh=0;
-
-      fillfill=0;
-      getStuff(mapecalslice, mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,
-	       qpesum,qpesumcal,qpesumem,
-	       qpesumair,qpesumdead,qpesumcrystal,qpesumPDe,qpesumfiber1,qpesumfiber2,qpesumabs,qpesumPDh,
-	       qpesumairem,qpesumdeadem,qpesumcrystalem,qpesumPDeem,qpesumfiber1em,qpesumfiber2em,qpesumabsem,qpesumPDhem,
-	       qpesumedge,qnpcertotecal,qnpscinttotecal,qnpcertothcal,qnpscinttothcal,qpecaltimecut, qphcaltimecut,
-qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
-	       piecaltime,pihcaltime,
-	       pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,
-	       pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz
-	       );
-
-      acovECAL->Fill((qnpcertotecal-meanCEcal)*(qnpscinttotecal-meanSEcal));
-      acovHCAL->Fill((qnpcertothcal-meanCHcal)*(qnpscinttothcal-meanSHcal));
-
-
-    }
-      
-    
-    */
-
-
+    // get kappa for calorimeter in preparation for doing dual readout correction
     float arms,amean,hovereecalcer(1.),hovereecalscint(1.),hoverehcalcer(1.),hoverehcalscint(1.);
-
-
-    
     if(dodualcorr) {
-      std::cout<<" starting fits"<<std::endl;
-
-      TF1 *gEcale = new TF1("gEcale","[0]*(x-1.)+1",0.,1.);
-      TF1 *gHcale = new TF1("gHcale","[0]*(x-1.)+1",0.,1.);
-      TF1 *gEcalp = new TF1("gEcalp","[0]*(x-1.)+1",0.,1.);
-      TF1 *gHcalp = new TF1("gHcalp","[0]*(x-1.)+1",0.,1.);
-
-      // an attempt to do something that didn't work
-      if(doecal) {
-	//TProfile* ehcEcalNsNc_pfx = ehcEcalNsNc->ProfileX();
-	//ehcEcalNsNc_pfx->Fit("gEcale","W");
-      }
-      if(dohcal) {
-	//TProfile* ehcHcalNsNc_pfx = ehcHcalNsNc->ProfileX();
-	//ehcHcalNsNc_pfx->Fit("gHcale","W");
-      }
-
 
       if(doecal) {
-// another attempt to do something that didn't work
-	//TProfile* phcEcalNsNc_pfx = phcEcalNsNc->ProfileX();
-	//phcEcalNsNc_pfx->Fit("gEcalp","W");
-	//m1Ecal=gEcalp->GetParameter(0);
-	//b1Ecal=1-m1Ecal;
-	//std::cout<<"for ecal b m are "<<b1Ecal<<" "<<m1Ecal<<std::endl;
-	//kappaEcal = 1+(b1Ecal/m1Ecal);
-
-// here is the real deal
 	arms = phcEcalnscint2->GetRMS();
 	amean = phcEcalnscint2->GetMean();
 	phcEcalnscint2->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
@@ -1067,9 +807,6 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 	std::cout<<std::endl;
 	std::cout<<" Ecal nscint fit params "<<fitphcEcalnscint_p0<<" "<<fitphcEcalnscint_p1<<" "<<fitphcEcalnscint_p2<<std::endl;
 	std::cout<<std::endl;
-
-
-
 	
 	arms = phcEcalncer2->GetRMS();
 	amean = phcEcalncer2->GetMean();
@@ -1085,30 +822,14 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 	fitphcEcalncer->Draw("same");
 	std::cout<<std::endl;
 	std::cout<<" Ecal ncer fit params "<<fitphcEcalncer_p0<<" "<<fitphcEcalncer_p1<<" "<<fitphcEcalncer_p2<<std::endl;
-	std::cout<<std::endl;
-
-	
+	std::cout<<std::endl;	
 	kappaEcal= (1-hovereecalscint)/(1.-hovereecalcer);
-
 	std::cout<<" hovereecalcer hovereecalscint "<<hovereecalcer<<" "<<hovereecalscint<<std::endl;
 	std::cout<<" kappa ecal is "<<kappaEcal<<std::endl;
-
       }
 
 
       if(dohcal) {
-
-    // crap
-	//TProfile* phcHcalNsNc_pfx = phcHcalNsNc->ProfileX();
-	//phcHcalNsNc_pfx->Fit("gHcalp","W");
-	//m1Hcal=gHcalp->GetParameter(0);
-	//b1Hcal=1-m1Hcal;
-	//std::cout<<"for hcal b m are "<<b1Hcal<<" "<<m1Hcal<<std::endl;
-	//TCanvas* cyuck;
-	//if(doplots) SCEDraw1tp(cyuck,"cyuck",phcHcalNsNc_pfx,"junkyuck.png");
-	//kappaHcal = 1+(b1Hcal/m1Hcal);
-
-    //real deal
 	float hoverehcalscint,hoverehcalcer;
 	float arms,amean;
 	arms = phcHcalnscint2->GetRMS();
@@ -1122,15 +843,12 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 	std::cout<<" p0 p1 p2 "<<fitphcHcalnscint_p0<<" "<<fitphcHcalnscint_p1<<" "<<fitphcHcalnscint_p2<<std::endl;
 	hoverehcalscint=fitphcHcalnscint_p1;
 
-
 	TCanvas* xx5;
 	SCEDraw1(xx5,"xx5",phcHcalnscint2,"junkxx5.png",0);
 	fitphcHcalnscint->Draw("same");
 	std::cout<<std::endl;
 	std::cout<<" Hcal nscint fit params "<<fitphcHcalnscint_p0<<" "<<fitphcHcalnscint_p1<<" "<<fitphcHcalnscint_p2<<std::endl;
 	std::cout<<std::endl;
-
-
 	
 	arms = phcHcalncer2->GetRMS();
 	amean = phcHcalncer2->GetMean();
@@ -1143,14 +861,12 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
 	std::cout<<" p0 p1 p2 "<<fitphcHcalnscint_p0<<" "<<fitphcHcalnscint_p1<<" "<<fitphcHcalnscint_p2<<std::endl;
 	hoverehcalcer=fitphcHcalncer_p1;
 
-
 	TCanvas* xx6;
 	SCEDraw1(xx6,"xx6",phcHcalncer2,"junkxx6.png",0);
 	fitphcHcalncer->Draw("same");
 	std::cout<<std::endl;
 	std::cout<<" Hcal ncer fit params "<<fitphcHcalncer_p0<<" "<<fitphcHcalncer_p1<<" "<<fitphcHcalncer_p2<<std::endl;
 	std::cout<<std::endl;
-
 
 	std::cout<<hoverehcalscint<<" "<<hoverehcalcer<<std::endl;
 	kappaHcal= (1-hoverehcalscint)/(1.-hoverehcalcer);
@@ -1160,31 +876,19 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
  
       
   // now calculate with dual readout correction  
-
-
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
-
       float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.),desumedgerel(0.);
-
-
       getStuffDualCorr(domissCorr,beamE,mapsampcalslice, gendet, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhits,hcalhits, edgehits, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
-
       float pp2 = desumedge/beamE;
-      //std::cout<<"dual pp2 edge cut are "<<pp2<<" "<<edgecut<<std::endl;
-
       if((!doedgecut)||(pp2<edgecut) ) {
-	//	std::cout<<"passed edge cut "<<std::endl;
 	phcEcalcorr->Fill(EcorEcal);
 	phcHcalcorr->Fill(EcorHcal);
       }
-
-
-
     }  //end loop over events
 
 
-    }
+    }  // end dodual readout
 
   }  // end if no events
 
@@ -1204,16 +908,15 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
   float ffn2_p1= fitffn2->GetParameter(1);
   float ffn2_p2= fitffn2->GetParameter(2);
   if(doplots) {
-  TCanvas* x1;
-  SCEDraw1(x1,"x1",hpfff,"junkx1.png",0);
-  fitffn2->Draw("same");
+    TCanvas* x1;
+    SCEDraw1(x1,"x1",hpfff,"junkx1.png",0);
+    fitffn2->Draw("same");
   }
   std::cout<<std::endl;
   std::cout<<" rel fract fit params "<<ffn2_p0<<" "<<ffn2_p1<<" "<<ffn2_p2<<std::endl;
   std::cout<<std::endl;
   
   if(doecal) {
-    
     ffm = phcEcalncer->GetBinCenter(phcEcalncer->GetMaximumBin());
     phcEcalncer->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
     TF1 *fitEcalncer1 = (TF1*)phcEcalncer->GetListOfFunctions()->FindObject("gaus");
@@ -1225,15 +928,14 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     float Ecalncer2_p1= fitEcalncer2->GetParameter(1);
     float Ecalncer2_p2= fitEcalncer2->GetParameter(2);
     if(doplots) {
-    TCanvas* x2;
-    SCEDraw1(x2,"x2",phcEcalncer,"junkx2.png",0);
-    fitEcalncer2->Draw("same");
+      TCanvas* x2;
+      SCEDraw1(x2,"x2",phcEcalncer,"junkx2.png",0);
+      fitEcalncer2->Draw("same");
     }
-      std::cout<<std::endl;
+    std::cout<<std::endl;
     std::cout<<" Ecal ncer fit params "<<Ecalncer2_p0<<" "<<Ecalncer2_p1<<" "<<Ecalncer2_p2<<std::endl;
-      std::cout<<std::endl;
-    
-    
+    std::cout<<std::endl;
+        
     ffm = phcEcalnscint->GetBinCenter(phcEcalnscint->GetMaximumBin());
     phcEcalnscint->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
     TF1 *fitEcalnscint1 = (TF1*)phcEcalnscint->GetListOfFunctions()->FindObject("gaus");
@@ -1245,101 +947,99 @@ qprelecaltimecut,qprelhcaltimecut,  qnine,qninh,
     float Ecalnscint2_p1= fitEcalnscint2->GetParameter(1);
     float Ecalnscint2_p2= fitEcalnscint2->GetParameter(2);
     if(doplots) {
-    TCanvas* x3;
-    SCEDraw1(x3,"x3",phcEcalnscint,"junkx3.png",0);
-    fitEcalnscint2->Draw("same");
+      TCanvas* x3;
+      SCEDraw1(x3,"x3",phcEcalnscint,"junkx3.png",0);
+      fitEcalnscint2->Draw("same");
     }
-      std::cout<<std::endl;
+    std::cout<<std::endl;
     std::cout<<" Ecal nscint fit params "<<Ecalnscint2_p0<<" "<<Ecalnscint2_p1<<" "<<Ecalnscint2_p2<<std::endl;
-      std::cout<<std::endl;
-    
-    
-    ffm = phcEcalcorr->GetBinCenter(phcEcalcorr->GetMaximumBin());
-    phcEcalcorr->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
-    TF1 *fitEcalcorr1 = (TF1*)phcEcalcorr->GetListOfFunctions()->FindObject("gaus");
-    ffm = fitEcalcorr1->GetParameter(1);
-    rms1 = rmsscale*fitEcalcorr1->GetParameter(2);
-    phcEcalcorr->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
-    TF1 *fitEcalcorr2 = (TF1*)phcEcalcorr->GetListOfFunctions()->FindObject("gaus");
-    float Ecalcorr2_p0= fitEcalcorr2->GetParameter(0);
-    float Ecalcorr2_p1= fitEcalcorr2->GetParameter(1);
-    float Ecalcorr2_p2= fitEcalcorr2->GetParameter(2);
-    if(doplots) {
-    TCanvas* x4;
-    SCEDraw1(x4,"x4",phcEcalcorr,"junkx4.png",0);
-      fitEcalcorr2->Draw("same");
-    }
+    std::cout<<std::endl;
 
+    if(dodualcorr) {
+      ffm = phcEcalcorr->GetBinCenter(phcEcalcorr->GetMaximumBin());
+      phcEcalcorr->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
+      TF1 *fitEcalcorr1 = (TF1*)phcEcalcorr->GetListOfFunctions()->FindObject("gaus");
+      ffm = fitEcalcorr1->GetParameter(1);
+      rms1 = rmsscale*fitEcalcorr1->GetParameter(2);
+      phcEcalcorr->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
+      TF1 *fitEcalcorr2 = (TF1*)phcEcalcorr->GetListOfFunctions()->FindObject("gaus");
+      float Ecalcorr2_p0= fitEcalcorr2->GetParameter(0);
+      float Ecalcorr2_p1= fitEcalcorr2->GetParameter(1);
+      float Ecalcorr2_p2= fitEcalcorr2->GetParameter(2);
+      if(doplots) {
+	TCanvas* x4;
+	SCEDraw1(x4,"x4",phcEcalcorr,"junkx4.png",0);
+	fitEcalcorr2->Draw("same");
+      }
       std::cout<<std::endl;
-    std::cout<<" Ecal corr fit params "<<Ecalcorr2_p0<<" "<<Ecalcorr2_p1<<" "<<Ecalcorr2_p2<<std::endl;
+      std::cout<<" Ecal corr fit params "<<Ecalcorr2_p0<<" "<<Ecalcorr2_p1<<" "<<Ecalcorr2_p2<<std::endl;
       std::cout<<std::endl;
+    }
     
   }
 
     if(dohcal) {
+      ffm = phcHcalncer->GetBinCenter(phcHcalncer->GetMaximumBin());
+      phcHcalncer->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
+      TF1 *fitHcalncer1 = (TF1*)phcHcalncer->GetListOfFunctions()->FindObject("gaus");
+      ffm = fitHcalncer1->GetParameter(1);
+      rms1 = rmsscale*fitHcalncer1->GetParameter(2);
+      phcHcalncer->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
+      TF1 *fitHcalncer2 = (TF1*)phcHcalncer->GetListOfFunctions()->FindObject("gaus");
+      float Hcalncer2_p0= fitHcalncer2->GetParameter(0);
+      float Hcalncer2_p1= fitHcalncer2->GetParameter(1);
+      float Hcalncer2_p2= fitHcalncer2->GetParameter(2);
+      if(doplots) {
+	TCanvas* x5;
+	SCEDraw1(x5,"x5",phcHcalncer,"junkx5.png",0);
+	fitHcalncer2->Draw("same");
+      }
+      std::cout<<std::endl;
+      std::cout<<" Hcal ncer fit params "<<Hcalncer2_p0<<" "<<Hcalncer2_p1<<" "<<Hcalncer2_p2<<std::endl;
+      std::cout<<std::endl;
+        
+      ffm = phcHcalnscint->GetBinCenter(phcHcalnscint->GetMaximumBin());
+      phcHcalnscint->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
+      TF1 *fitHcalnscint1 = (TF1*)phcHcalnscint->GetListOfFunctions()->FindObject("gaus");
+      ffm = fitHcalnscint1->GetParameter(1);
+      rms1 = rmsscale*fitHcalnscint1->GetParameter(2);
+      phcHcalnscint->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
+      TF1 *fitHcalnscint2 = (TF1*)phcHcalnscint->GetListOfFunctions()->FindObject("gaus");
+      float Hcalnscint2_p0= fitHcalnscint2->GetParameter(0);
+      float Hcalnscint2_p1= fitHcalnscint2->GetParameter(1);
+      float Hcalnscint2_p2= fitHcalnscint2->GetParameter(2);
+      if(doplots) {
+	TCanvas* x6;
+	SCEDraw1(x6,"x6",phcHcalnscint,"junkx6.png",0);
+	fitHcalnscint2->Draw("same");
+      }
+      std::cout<<std::endl;
+      std::cout<<" Hcal nscint fit params "<<Hcalnscint2_p0<<" "<<Hcalnscint2_p1<<" "<<Hcalnscint2_p2<<std::endl;
+      std::cout<<std::endl;
     
-    ffm = phcHcalncer->GetBinCenter(phcHcalncer->GetMaximumBin());
-    phcHcalncer->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
-    TF1 *fitHcalncer1 = (TF1*)phcHcalncer->GetListOfFunctions()->FindObject("gaus");
-    ffm = fitHcalncer1->GetParameter(1);
-    rms1 = rmsscale*fitHcalncer1->GetParameter(2);
-    phcHcalncer->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
-    TF1 *fitHcalncer2 = (TF1*)phcHcalncer->GetListOfFunctions()->FindObject("gaus");
-    float Hcalncer2_p0= fitHcalncer2->GetParameter(0);
-    float Hcalncer2_p1= fitHcalncer2->GetParameter(1);
-    float Hcalncer2_p2= fitHcalncer2->GetParameter(2);
-    if(doplots) {
-    TCanvas* x5;
-    SCEDraw1(x5,"x5",phcHcalncer,"junkx5.png",0);
-    fitHcalncer2->Draw("same");
+      if(dodualcorr) {
+	ffm = phcHcalcorr->GetBinCenter(phcHcalcorr->GetMaximumBin());
+	phcHcalcorr->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
+	TF1 *fitHcalcorr1 = (TF1*)phcHcalcorr->GetListOfFunctions()->FindObject("gaus");
+	ffm = fitHcalcorr1->GetParameter(1);
+	rms1 = rmsscale*fitHcalcorr1->GetParameter(2);
+	phcHcalcorr->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
+	TF1 *fitHcalcorr2 = (TF1*)phcHcalcorr->GetListOfFunctions()->FindObject("gaus");
+	float Hcalcorr2_p0= fitHcalcorr2->GetParameter(0);
+	float Hcalcorr2_p1= fitHcalcorr2->GetParameter(1);
+	float Hcalcorr2_p2= fitHcalcorr2->GetParameter(2);
+	if(doplots) {
+	  TCanvas* x7;
+	  SCEDraw1(x7,"x7",phcHcalcorr,"junkx7.png",0);
+	  fitHcalcorr2->Draw("same");
+	}
+	std::cout<<std::endl;
+	std::cout<<" Hcal corr fit params "<<Hcalcorr2_p0<<" "<<Hcalcorr2_p1<<" "<<Hcalcorr2_p2<<std::endl;
+	std::cout<<std::endl;
+      }
+      
     }
-      std::cout<<std::endl;
-    std::cout<<" Hcal ncer fit params "<<Hcalncer2_p0<<" "<<Hcalncer2_p1<<" "<<Hcalncer2_p2<<std::endl;
-      std::cout<<std::endl;
-    
-    
-    ffm = phcHcalnscint->GetBinCenter(phcHcalnscint->GetMaximumBin());
-    phcHcalnscint->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
-    TF1 *fitHcalnscint1 = (TF1*)phcHcalnscint->GetListOfFunctions()->FindObject("gaus");
-    ffm = fitHcalnscint1->GetParameter(1);
-    rms1 = rmsscale*fitHcalnscint1->GetParameter(2);
-    phcHcalnscint->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
-    TF1 *fitHcalnscint2 = (TF1*)phcHcalnscint->GetListOfFunctions()->FindObject("gaus");
-    float Hcalnscint2_p0= fitHcalnscint2->GetParameter(0);
-    float Hcalnscint2_p1= fitHcalnscint2->GetParameter(1);
-    float Hcalnscint2_p2= fitHcalnscint2->GetParameter(2);
-    if(doplots) {
-    TCanvas* x6;
-    SCEDraw1(x6,"x6",phcHcalnscint,"junkx6.png",0);
-    fitHcalnscint2->Draw("same");
-    }
-      std::cout<<std::endl;
-    std::cout<<" Hcal nscint fit params "<<Hcalnscint2_p0<<" "<<Hcalnscint2_p1<<" "<<Hcalnscint2_p2<<std::endl;
-      std::cout<<std::endl;
-    
-    
-    ffm = phcHcalcorr->GetBinCenter(phcHcalcorr->GetMaximumBin());
-    phcHcalcorr->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
-    TF1 *fitHcalcorr1 = (TF1*)phcHcalcorr->GetListOfFunctions()->FindObject("gaus");
-    ffm = fitHcalcorr1->GetParameter(1);
-    rms1 = rmsscale*fitHcalcorr1->GetParameter(2);
-    phcHcalcorr->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
-    TF1 *fitHcalcorr2 = (TF1*)phcHcalcorr->GetListOfFunctions()->FindObject("gaus");
-    float Hcalcorr2_p0= fitHcalcorr2->GetParameter(0);
-    float Hcalcorr2_p1= fitHcalcorr2->GetParameter(1);
-    float Hcalcorr2_p2= fitHcalcorr2->GetParameter(2);
-    if(doplots) {
-    TCanvas* x7;
-    SCEDraw1(x7,"x7",phcHcalcorr,"junkx7.png",0);
-    fitHcalcorr2->Draw("same");
-    }
-      std::cout<<std::endl;
-    std::cout<<" Hcal corr fit params "<<Hcalcorr2_p0<<" "<<Hcalcorr2_p1<<" "<<Hcalcorr2_p2<<std::endl;
-      std::cout<<std::endl;
-    
-  }
 
-  
 
   // close pion file
   pif->Close();
@@ -2188,29 +1888,29 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool d
 	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*sii3).second) {
+	  if(islice==(*mapsampcalslice.find("PS")).second) {
 	    ameanscinHcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*sii6).second) {  // cherenkov
+	  if(islice==(*mapsampcalslice.find("Quartz")).second) {  // cherenkov
 	    ameancerHcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
+	  if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second) ) { // either photo detector
 	    ameanscinHcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // take light that hits photodetectors
 	    ameancerHcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	    if( islice==(*sii3).second) { // PS
+	    if( islice==(*mapsampcalslice.find("PS")).second) { // PS
 	      ameanscinHcal+=ahcalhit->energyDeposit;
 	    }
-	    if( islice==(*sii6).second ) {  // quartz
+	    if( islice==(*mapsampcalslice.find("Quartz")).second ) {  // quartz
 	      if(gendet==3) ameancerHcal+=ahcalhit->edeprelativistic;
 	      if(gendet==4) ameancerHcal+=ahcalhit->energyDeposit;
 	    }
@@ -2402,35 +2102,35 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendet, int ievt, bool do
 	//	if(ievt<SCECOUNT) std::cout<<"   "<<ihitchan<<" " <<std::hex<<ihitchan<<std::dec<<" "<<idet<<" "<<iy<<" "<<ix<<" "<<ilayer<<" "<<islice<<std::endl;
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*sii3).second) {
+	  if(islice==(*mapsampcalslice.find("PS")).second) {
 	    meanscinHcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*sii6).second) {  // cherenkov
+	  if(islice==(*mapsampcalslice.find("Quartz")).second) {  // cherenkov
 	    meancerHcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
+	  if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second) ) { // either photo detector
 	    meanscinHcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // take light that hits photodetectors
 	    meancerHcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	    if( islice==(*sii3).second) { // PS
+	    if( islice==(*mapsampcalslice.find("PS")).second) { // PS
 	      meanscinHcal+=ahcalhit->energyDeposit;
 	      if(ievt<SCECOUNT) std::cout<<" meanscinHcal "<<meanscinHcal<<std::endl;
 	    }
-	    if( islice==(*sii6).second ) {  // quartz
+	    if( islice==(*mapsampcalslice.find("Quartz")).second ) {  // quartz
 	      if(gendet==3) meancerHcal+=ahcalhit->edeprelativistic;
 	      if(gendet==4) meancerHcal+=ahcalhit->energyDeposit;
 	      if(ievt<SCECOUNT) std::cout<<" meancerHcal "<<meancerHcal<<std::endl;
 	    }
-	    if(( islice==(*sii3).second)||( islice==(*sii6).second)) {
+	    if(( islice==(*mapsampcalslice.find("PS")).second)||( islice==(*mapsampcalslice.find("Quartz")).second)) {
 	      for(size_t j=0;j<zxzz.size(); j++) {
 		if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
 		if((zxzz.at(j)).time<timecut) {
@@ -2510,12 +2210,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
       	
       if((ilayer!=0)&&(ilayer!=1)) std::cout<<"danger danger will robinson ilayer not zero"<<std::endl;
-      if(islice>nsliceecal) {
-	std::cout<<"  danger danger will robinson islice nsliceecal are "<<islice<<" "<<nsliceecal<<std::endl;
-	std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<std::endl;
-      } else {
-	//if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
-      }
+
       
       float ae=aecalhit->energyDeposit;
       nine+=aecalhit->n_inelastic;
@@ -2751,12 +2446,8 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	//std::cout<<"energy nscint ncer is "<<ahcalhit->energyDeposit<<" "<<ahcalhit->nscintillator<<" "<<ahcalhit->ncerenkov<<std::endl;
 
 
-	//std::cout<<" ps ii is "<<(*sii3).second<<std::endl;
-	//std::cout<<" quartz ii is "<<(*sii6).second<<std::endl;
 
-
-
-	if( (islice==(*sii2).second)||(islice==(*sii4).second)) {  // pd on scint?
+	if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second)) {  // pd on scint?
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    if(fillhists) {
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
@@ -2766,7 +2457,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	    }
 	  }
 	}
-	if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // pd on quartz?
+	if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // pd on quartz?
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    if(fillhists) {
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
@@ -2779,36 +2470,36 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 	
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*sii3).second) {
+	  if(islice==(*mapsampcalslice.find("PS")).second) {
 	    nescinttothcal+=ahcalhit->nscintillator;
 	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*sii6).second) {  // chereknov
+	  if(islice==(*mapsampcalslice.find("Quartz")).second) {  // chereknov
 	    necertothcal+=ahcalhit->ncerenkov;
 	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
+	  if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // take light that hits photodetectors
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  //std::cout<<" here "<<std::endl;
 	  if(idet==6) {
-	  if( islice==(*sii3).second) { //  ps
+	  if( islice==(*mapsampcalslice.find("PS")).second) { //  ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	    //	    if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
-	  if( islice==(*sii6).second ) {  // quartz
+	  if( islice==(*mapsampcalslice.find("Quartz")).second ) {  // quartz
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
 	  }
-	  if((islice==(*sii3).second)||(islice==(*sii6).second) ){
+	  if((islice==(*mapsampcalslice.find("PS")).second)||(islice==(*mapsampcalslice.find("Quartz")).second) ){
       // check contribs
 	      Contributions zxzz=ahcalhit->truth;
 	      float hacheck=0.;
@@ -2836,10 +2527,10 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 
 
-	if( islice==(*sii3).second ) {eesumfiber1+=ah;eesumfiber1em+=aarel;}; // scint
-	if( islice==(*sii6).second ) {eesumfiber2+=ah;eesumfiber2em+=aarel;};  //cer
-	if( (islice==(*sii1).second)||(islice==(*sii8).second)||(islice==(*sii9).second) ) {eesumabs+=ah;eesumabsem+=aarel;};
-	if(  (islice==(*sii2).second) || (islice==(*sii4).second) ||  (islice==(*sii5).second) || (islice==(*sii7).second)) {eesumPDh+=ah;eesumPDhem+=aarel;};
+	if( islice==(*mapsampcalslice.find("PS")).second ) {eesumfiber1+=ah;eesumfiber1em+=aarel;}; // scint
+	if( islice==(*mapsampcalslice.find("Quartz")).second ) {eesumfiber2+=ah;eesumfiber2em+=aarel;};  //cer
+	if( (islice==(*mapsampcalslice.find("Iron")).second)||(islice==(*mapsampcalslice.find("Sep1")).second)||(islice==(*mapsampcalslice.find("Sep2")).second) ) {eesumabs+=ah;eesumabsem+=aarel;};
+	if(  (islice==(*mapsampcalslice.find("PD1")).second) || (islice==(*mapsampcalslice.find("PD2")).second) ||  (islice==(*mapsampcalslice.find("PD3")).second) || (islice==(*mapsampcalslice.find("PD4")).second)) {eesumPDh+=ah;eesumPDhem+=aarel;};
 
 
       }
@@ -2915,7 +2606,7 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 
       Contributions zxzz=aecalhit->truth;
 
-      //      if(i<SCECOUNT&&ievt<SCECOUNT) std::cout<<"getstuffdualcorr  idet,ix,iy,ilayer, islice is ("<<idet<<","<<ix<<","<<iy<<","<<std::dec<<ilayer<<","<<islice<<")"<<" slice name is "<<nameecalslice[islice]<<std::endl;
+
 
 
 
@@ -3034,30 +2725,30 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 
 
 	if(gendet==1) {  // take light as generated in media
-	  if(islice==(*sii3).second) {
+	  if(islice==(*mapsampcalslice.find("PS")).second) {
 	    nescinttothcal+=ahcalhit->nscintillator;
 	    //	    std::cout<<"add scint"<<std::endl;
 	  }
-	  if(islice==(*sii6).second) {  // cherenkov
+	  if(islice==(*mapsampcalslice.find("Quartz")).second) {  // cherenkov
 	    necertothcal+=ahcalhit->ncerenkov;
 	    //	    std::cout<<"add ceren"<<std::endl;
 	  }
 	}
 	else if(gendet==2) {
-	  if( (islice==(*sii2).second)||(islice==(*sii4).second) ) { // either photo detector
+	  if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second) ) { // either photo detector
 	    nescinttothcal+=ahcalhit->nscintillator;
 	  }
-	  if( (islice==(*sii5).second)||(islice==(*sii7).second)) {  // take light that hits photodetectors
+	  if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // take light that hits photodetectors
 	    necertothcal+=ahcalhit->ncerenkov;
 	  }
 	}
 	else if(gendet==3||gendet==4) {
 	  if(idet==6) {
-	  if( islice==(*sii3).second ) { // ps
+	  if( islice==(*mapsampcalslice.find("PS")).second ) { // ps
 	    nescinttothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i nescinttothcal "<<i<<" "<<nescinttothcal<<std::endl;
 	  }
-	  if( islice==(*sii6).second ) {  // quartz
+	  if( islice==(*mapsampcalslice.find("Quartz")).second ) {  // quartz
 	    if(gendet==3) necertothcal+=ahcalhit->edeprelativistic;
 	    if(gendet==4) necertothcal+=ahcalhit->energyDeposit;
 	    //if(i<10) std::cout<<" i necertothcal "<<i<<" "<<necertothcal<<std::endl;
