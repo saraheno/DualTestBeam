@@ -70,12 +70,13 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendet, int ievt, bool d
 // gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet
 // ECALleaf is 
 
-//Resolution(2,"./output/out_DualTestBeam_20GeV_e-.root","./output/out_DualTestBeam_20GeV_pi-.root","./output/out_FSCEPonly_20GeV_e-.root",20,1,1,0,1,0,0,0,3,"hists_20GeV.root","DRCNoSegment","DRFNoSegment",1,0,1,1)
+//Resolution(2,"./output/out_DualTestBeam_20GeV_e-.root","./output/out_DualTestBeam_20GeV_pi-.root","./output/out_FSCEPonly_20GeV_e-.root","./output/out_FSCEPonly_20GeV_pi-.root",20,1,1,0,1,0,0,0,3,"hists_20GeV.root","DRCNoSegment","DRFNoSegment",1,0,1,1)
 
 
 
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
-		const char* hcalonlyefilename,const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots,bool dodualcorr,bool twocalecalcorr) {
+		const char* hcalonlyefilename, const char* hcalonlypifilename,
+		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendet, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots,bool dodualcorr,bool twocalecalcorr) {
 
   // these must correspond to the "slice" physvolid used in DRCrys_geo
   // these correspond to slices in scepcal_drcrystal.xml
@@ -721,10 +722,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	phcEdgeR->Fill((beamE-pesumedge)/beamE);
 	phcEcalncer->Fill(npcertotecal/meancerEcal);
 	phcEcalncer2->Fill(npcertotecal/meancerEcal);
+	phcEcalncer3->Fill(npcertotecal/(meanscinEcal*avedepecal/beamE));
 	phcHcalncer->Fill(npcertothcal/meancerHcal);
 	phcHcalncer2->Fill(npcertothcal/meancerHcal);
 	phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
 	phcEcalnscint2->Fill(npscinttotecal/meanscinEcal);
+	phcEcalnscint3->Fill(npscinttotecal/(meanscinEcal*avedepecal/beamE));
 	phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
 	phcHcalnscint2->Fill(npscinttothcal/meanscinHcal);
 	enonconsEcalcer->Fill(noncons,npcertotecal/meancerEcal);
@@ -805,6 +808,109 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     std::cout<<"meanCEcal is "<<meanCEcal<<std::endl;
     std::cout<<"meanSHcal is "<<meanSHcal<<std::endl;
     std::cout<<"meanCHcal is "<<meanCHcal<<std::endl;
+
+
+  //****************************************************************************************************************************
+  // process pions for hcal only calorimeter
+    if(doecal&&dohcal) {
+      std::cout<<std::endl<<std::endl<<"!! processing pions for hcal only calorimeter "<<std::endl;
+      phcHcalnscint2->Reset();
+
+      TFile* pifa = TFile::Open(hcalonlypifilename);
+      TTree* pita = (TTree*)pif->Get("EVENT;1");
+      if(pifa==0) std::cout<<" no file "<<std::endl;
+      if(pita==0) std::cout<<" no event "<<std::endl;
+      std::cout<<"hcal only pion file open"<<std::endl;
+
+      b_mc= pita->GetBranch("MCParticles");
+      if(doecal) b_ecal = pita->GetBranch(ECALleaf);
+      if(dohcal) b_hcal = pita->GetBranch(HCALleaf);
+      if(doedge) b_edge = pita->GetBranch("EdgeDetNoSegment");
+      std::cout<<"pion branches found"<<std::endl;
+      ihaha = b_mc->GetEntries();
+      num_evt= std::min(ihaha,num_evtsmax);
+      std::cout<<"num_evt for hcal only pion file is  "<<num_evt<<std::endl;
+  
+  // loop over events 
+  
+      if(num_evt>0) {  
+	CalHits* ecalhitsa = new CalHits();
+	if(doecal) b_ecal->SetAddress(&ecalhitsa);
+	CalHits* hcalhitsa = new CalHits();
+	if(dohcal) b_hcal->SetAddress(&hcalhitsa);
+	CalHits* edgehitsa = new CalHits();
+	if(doedge) b_edge->SetAddress(&edgehitsa);
+
+
+	for(int ievt=0;ievt<num_evt; ++ievt) {
+	  if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number hcal only pion is "<<ievt<<std::endl;
+
+	  float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.),pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
+	  int nine(0),ninh(0);
+
+
+	  getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,prelecaltimecut,prelhcaltimecut,nine,ninh);
+
+      // gamma fraction from em fraction
+	  float pfff=0.;
+	  pfff=(pesumem/beamE/fnorm);
+      //edge fraction
+	  float pedgeff=0.;
+	  pedgeff=pesumedge/(beamE-(pesumem/fnorm));
+      // non cons fraction
+	  float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
+	  float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
+	  float nonconsE=(beamE-pachecks);
+	  float noncons=0.;
+	  noncons=nonconsE/(beamE-(pesumem/fnorm));
+
+	  if(domissCorr) {
+	    float ContainedEnergy=beamE-pesumedge;
+	    float ContainedFrac=ContainedEnergy/beamE;
+	    npcertotecal=npcertotecal/ContainedFrac;
+	    npscinttotecal=npscinttotecal/ContainedFrac;
+	    npcertothcal=npcertothcal/ContainedFrac;
+	    npscinttothcal=npscinttothcal/ContainedFrac;
+	  }
+	  float ppp = pesumedge/beamE;
+      // std::cout<<"getstuff pion ppp edge cut are "<<ppp<<" "<<edgecut<<std::endl;
+
+	  if((!doedgecut)||(ppp<edgecut) ) {
+	//	std::cout<<"passed edge cut "<<std::endl;
+	    phcHcalnscint2->Fill(npscinttothcal/meanscinHcal);
+
+	    if(ievt<SCECOUNT) {
+	      std::cout<<std::endl<<std::endl;
+	      std::cout<<"GETSTUFF pions"<<std::endl;
+	      std::cout<<" phcaltimecut is "<<phcaltimecut/1000.<<std::endl;
+	      std::cout<<" prelhcaltimecut is "<<prelhcaltimecut/1000.<<std::endl;
+	      std::cout<<"total energy deposit "<<pesum/1000.<<std::endl;
+	      std::cout<<"       cal total energy deposit "<<pesumcal/1000.<<std::endl;
+	      std::cout<<"       cal EM total energy deposit "<<pesumem/1000.<<std::endl;
+	      std::cout<<"       in air "<<pesumair/1000.<<std::endl;
+	      std::cout<<"       in ecal dead "<<pesumdead/1000.<<std::endl;
+	      std::cout<<"       in photodetector ecal "<<pesumPDe/1000.<<std::endl;
+	      std::cout<<"       in crystal "<<pesumcrystal/1000.<<std::endl;
+	      std::cout<<"       in fiber1 "<<pesumfiber1/1000.<<std::endl;
+	      std::cout<<"       in fiber2 "<<pesumfiber2/1000.<<std::endl;
+	      std::cout<<"       sum of fibers "<<(pesumfiber1+pesumfiber2)/1000.<<std::endl;
+	      std::cout<<"       in absorber "<<pesumabs/1000.<<std::endl;
+	      std::cout<<"       in photodetect hcal "<<pesumPDh/1000.<<std::endl;
+	      std::cout<<"       edge detector "<<pesumedge/1000.<<std::endl;
+	      std::cout<<"       sum individual "<<pachecks/1000.<<std::endl;
+	      std::cout<<"   incident energy "<<beamE/1000.<<std::endl;
+	      std::cout<<"   ratio to incident energy "<<pachecks/beamE<<std::endl;
+	      std::cout<<"total number of cherenkov ecal is "<<npcertotecal<<std::endl;
+	      std::cout<<"total number of scintillator ecal is "<<npscinttotecal<<std::endl;
+	      std::cout<<"total number of cherenkov hcal is "<<npcertothcal<<std::endl;
+	      std::cout<<"total number of scintillator hcal is "<<npscinttothcal<<std::endl<<std::endl;
+	      std::cout<<" number of inelastic is "<<nine+ninh<<std::endl;
+	    }
+	  } //edge cut
+	}  //end loop over events
+
+      }  // num evt >0
+    } // do ecal && do hcal
     
 
     // get kappa for calorimeter in preparation for doing dual readout correction
@@ -1441,6 +1547,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
    ehcEcalncer->Write();
    phcEcalncer->Write();
+   phcEcalncer2->Write();
+   phcEcalncer3->Write();
 
    ehcHcalncer->Write();
    phcHcalncer->Write();
@@ -1459,6 +1567,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
    ehcEcalnscint->Write();
    phcEcalnscint->Write();
+   phcEcalnscint2->Write();
+   phcEcalnscint3->Write();
 
 
    ehcHcalnscint->Write();
