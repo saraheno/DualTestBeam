@@ -538,9 +538,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       CalHits* hcalhitsa = new CalHits();
       CalHits* edgehitsa = new CalHits();
       if(dohcal) b_hcal->SetAddress(&hcalhitsa);
-      if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
+      if(doedge) b_edge = eta->GetBranch("EdgeDetNoSegment");
       if(doedge) b_edge->SetAddress(&edgehitsa);
-            std::cout<<"6"<<std::endl;
+            std::cout<<"7"<<std::endl;
 
       std::cout<<" branches set"<<std::endl;
       for(int ievt=0;ievt<num_evt; ++ievt) {
