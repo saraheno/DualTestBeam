@@ -3,7 +3,9 @@ mkdir stuff4stuff
 cd stuff4stuff
 
 git clone git@githubNOSPAM.com:saraheno/DualTestBeam.git
+
 cd DualTestBeam
+
 mkdir build
 
 mkdir install
