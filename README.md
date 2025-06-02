@@ -1,32 +1,32 @@
-all times:
+##  all times:
 
-    source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh
+source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh
 
 
-First time only:
+## First time only:
 
-      mkdir stuff4stuff
+mkdir stuff4stuff
 
-      cd stuff4stuff
+cd stuff4stuff
  
- git clone git@githubNOSPAM.com:saraheno/DualTestBeam.git
+git clone git@githubNOSPAM.com:saraheno/DualTestBeam.git
 
- cd DualTestBeam
+cd DualTestBeam
 
- mkdir build
+mkdir build
 
- mkdir install
+mkdir install
 
- cd build
+cd build
 
- cmake -DDD4HEP_USE_GEANT4=ON -DBoost_NO_BOOST_CMAKE=ON -DDD4HEP_USE_LCIO=ON -DROOT_DIR=$ROOTSYS -D CMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install -D DD4HEP _USE_EDM4HEP=ON ..
+cmake -DDD4HEP_USE_GEANT4=ON -DBoost_NO_BOOST_CMAKE=ON -DDD4HEP_USE_LCIO=ON -DROOT_DIR=$ROOTSYS -D CMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install -D DD4HEP _USE_EDM4HEP=ON ..
 
- make -j4
+make -j4
 
- make install
+make install
 
 
-all times
+## all times
 
     cd to stuff4stuff/DualTestBeam	
 
