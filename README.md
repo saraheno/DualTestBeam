@@ -38,3 +38,5 @@ cd compact
 ## running
 
 look in massjobs.py to see how to run it
+
+to analyze the output, look at massjobs_s2.py
