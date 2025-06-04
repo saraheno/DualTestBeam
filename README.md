@@ -1,3 +1,4 @@
+markdown 
 ##  all times:
 
 source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh
@@ -28,10 +29,12 @@ make install
 
 ## all times
 
-    cd to stuff4stuff/DualTestBeam	
+cd to stuff4stuff/DualTestBeam	
 
-    source ./install/bin/thisDualTestBeam.sh
+source ./install/bin/thisDualTestBeam.sh
 
-    cd compact
+cd compact
 
-ddsim --compactFile=DRConly.xml --runType=batch -G --steeringFile SCEPCALsteering.py --outputFile=junk.root --part.userParticleHandler= -G --gun.position="0. 0. -1*cm" --gun.direction "0. 0. 1." --gun.energy "20*GeV" --gun.particle="pi-" --outputFile=junk.root -v VERBOSE -N 1 >& crash.txt
+## running
+
+look in massjobs.py to see how to run it
