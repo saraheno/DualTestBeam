@@ -149,6 +149,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   TH1F *phcHcalncer = new TH1F("phcHcalncer","total number of hcal cerenkov",  500,0.,1.5);
   TH1F *phcHcalncer2 = new TH1F("phcHcalncer2","total number of hcal cerenkov",  500,0.,1.5);
   TH1F *phcHcalncer3 = new TH1F("phcHcalncer3","total number of hcal cerenkov",  500,0.,1.5);
+  TH1F *phcEandHcalncer = new TH1F("phcEandHcalncer","total number of ecal+hcal cerenkov", 500,0.,1.5);
+  TH1F *phcEandHcalnscint = new TH1F("phcEandHcalnscint","total number of ecal+hcal scintillation", 500,0.,1.5);
   TH1F *ehcEcalnscint = new TH1F("ehcEcalnscint","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalnscint = new TH1F("phcEcalnscint","total number of ecal scintillation", 500,0.,1.5);
   TH1F *phcEcalnscint2 = new TH1F("phcEcalnscint2","total number of ecal scintillation", 500,0.,1.5);
@@ -508,7 +510,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   float fnorm = heesumemcal->GetMean();
   TF1 *fitheesumemcal = (TF1*)heesumemcal->GetListOfFunctions()->FindObject("gaus");
   fnorm= fitheesumemcal->GetParameter(1);
-  std::cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  fnorm is "<<fnorm<<std::endl;
+  std::cout<<"!!  fnorm is "<<fnorm<<std::endl;
 
   //****************************************************************************************************************************
   // for calibration of hcal,  if have both an ecal and hcal
@@ -650,6 +652,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       // non cons fraction
       float pachecks=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumedge+pesumdead;
       float pedepcal=pesumair+pesumPDe+pesumcrystal+pesumfiber1+pesumfiber2+pesumabs+pesumPDh+pesumdead;
+      float edepEcal = pesumcrystal;
       avedepecal+=pesumcrystal;
       avedephcal+=pesumfiber1+pesumfiber2+pesumabs;
       float nonconsE=(beamE-pachecks);
@@ -704,14 +707,18 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	phcEdgeE->Fill(pedgeff);
 	if(pesumedge>0) phcEdgeRelf->Fill(pesumedgerel/pesumedge);
 	phcEdgeR->Fill((beamE-pesumedge)/beamE);
+	phcEandHcalncer->Fill((npcertotecal/meancerEcal)+(npcertothcal/meancerHcal));
+	phcEandHcalnscint->Fill((npscinttotecal/meanscinEcal)+(npscinttothcal/meanscinHcal));
 	phcEcalncer->Fill(npcertotecal/meancerEcal);
 	phcEcalncer2->Fill(npcertotecal/meancerEcal);
-	phcEcalncer3->Fill(npcertotecal/(meanscinEcal*avedepecal/beamE));
+	if(pesumcrystal>0.1*20000) phcEcalncer3->Fill(npcertotecal/(meancerEcal*edepEcal/beamE));
+	if(ievt<SCECOUNT) std::cout<<" pesumcrystal npcertotecal meancerecal edepEcal beamE fill "<<pesumcrystal<<" "<<npcertotecal<<" "<<meancerEcal<<" "<<edepEcal<<" "<<beamE<<" "<<(npcertotecal/(meancerEcal*edepEcal/beamE))<<std::endl;
 	phcHcalncer->Fill(npcertothcal/meancerHcal);
 	phcHcalncer2->Fill(npcertothcal/meancerHcal);
 	phcEcalnscint->Fill(npscinttotecal/meanscinEcal);
 	phcEcalnscint2->Fill(npscinttotecal/meanscinEcal);
-	phcEcalnscint3->Fill(npscinttotecal/(meanscinEcal*avedepecal/beamE));
+	if(pesumcrystal>0.1*20000) phcEcalnscint3->Fill(npscinttotecal/(meanscinEcal*edepEcal/beamE));
+	if(ievt<SCECOUNT) std::cout<<" pesumcrystal npscinttotecal meanscinecal edepEcal beamE fill "<<pesumcrystal<<" "<<npscinttotecal<<" "<<meanscinEcal<<" "<<edepEcal<<" "<<beamE<<" "<<(npscinttotecal/(meanscinEcal*edepEcal/beamE))<<std::endl;
 	phcHcalnscint->Fill(npscinttothcal/meanscinHcal);
 	phcHcalnscint2->Fill(npscinttothcal/meanscinHcal);
 	enonconsEcalcer->Fill(noncons,npcertotecal/meancerEcal);
@@ -937,7 +944,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<"hovereecalscint after correct is "<<hovereecalscint<<std::endl;
       
       TCanvas* xx3;
-      SCEDraw1(xx3,"xx3",phcEcalnscint2,"junkxx3.png",0);
+      if(doecal&&dohcal) {
+	SCEDraw1(xx3,"xx3",phcEcalnscint3,"junkxx3.png",0);
+      } else {
+	SCEDraw1(xx3,"xx3",phcEcalnscint2,"junkxx3.png",0);
+      }
+
       fitphcEcalnscint->Draw("same");
       std::cout<<std::endl;
       std::cout<<" Ecal nscint fit params "<<fitphcEcalnscint_p0<<" "<<fitphcEcalnscint_p1<<" "<<fitphcEcalnscint_p2<<std::endl;
@@ -1034,7 +1046,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       
   // now calculate with dual readout correction
-    std::cout<<std::endl<<std::endl<<"!!! staring dual readout loop "<<std::endl;
+    std::cout<<std::endl<<std::endl<<"!! staring dual readout loop "<<std::endl;
     TFile* pifc = TFile::Open(piinputfilename);
     TTree* pitc = (TTree*)pifc->Get("EVENT;1");
     if(pifc==0) std::cout<<" no file "<<std::endl;
@@ -1267,7 +1279,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     TCanvas* ce4;
     SCEDraw3(ce4,"ce4",phcEcalncer,phcEcalnscint,phcEcalcorr,"junke4.png",0);
     TCanvas* ce4dd;
-    SCEDraw3(ce4dd,"ce4dd",phcEcalncer,phcEcalnscint,phcEandHcalcorr,"junke4dd.png",0);
+    SCEDraw3(ce4dd,"ce4dd",phcEandHcalncer,phcEandHcalnscint,phcEandHcalcorr,"junke4dd.png",0);
     TCanvas* ce5;
     SCEDraw1_2D(ce5,"ce5",ehcEcalNsNc,"junke5.png",0,0.,0.);
     //TCanvas* ce5b;
