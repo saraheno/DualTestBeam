@@ -1,7 +1,6 @@
 ## If you are not on alma9-like OS, but can use singularity
 ```
 singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
-# /data:/data -> /cms/data:/cms/data at Baylor
 ```
 
 ## All times:
