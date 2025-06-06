@@ -1,4 +1,10 @@
-##  all times:
+## If you are not on alma9-like OS, but can use singularity
+```
+singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
+# /data:/data -> /cms/data:/cms/data at Baylor
+```
+
+## All times:
 ```
 source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh
 ```
@@ -20,7 +26,7 @@ make -j4
 make install
 ```
 
-## all times
+## All times
 ```
 cd to stuff4stuff/DualTestBeam	
 source ./install/bin/thisDualTestBeam.sh
