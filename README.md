@@ -8,6 +8,7 @@ source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh
 # setup directory
 mkdir stuff4stuff
 cd stuff4stuff
+
 # git clone, compile, install
 git clone git@github.com:saraheno/DualTestBeam.git
 cd DualTestBeam
