@@ -14,6 +14,15 @@
 #==========================================================================
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
+
+set( PackageName DualTestBeam )
+#---------------------------
+
+project(${PackageName})
+
+
+
+
 IF(NOT TARGET DD4hep::DDCore)
   find_package ( DD4hep REQUIRED )
   include ( ${DD4hep_DIR}/cmake/DD4hep.cmake )
@@ -44,7 +53,7 @@ endif()
 if (DD4HEP_USE_GEANT4)
   #---------------------------  Plugin library for the simulation framework  ---------
   dd4hep_add_dictionary(G__DualTestBeam
-    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h src/DualCrysCalorimeterHit.h 
+    SOURCES ${DD4hep_DIR}/include/ROOT/Warnings.h include/DualCrysCalorimeterHit.h
     LINKDEF ${DD4hep_DIR}/include/ROOT/LinkDef.h
     OUTPUT  ${LIBRARY_OUTPUT_PATH}
     USES    DD4hep::DDCore DD4hep::DDG4 Geant4::Interface
@@ -78,14 +87,14 @@ dd4hep_configure_output ()
 dd4hep_add_plugin ( DualTestBeam
     GENERATED G__DualTestBeam.cxx 
   SOURCES src/*.cpp src/plugins/*.cpp
-  USES    DD4hep::DDCore DD4hep::DDAlign DD4hep::DDCond DD4hep::DDG4 DDDetectors
+  USES    DD4hep::DDCore DD4hep::DDAlign DD4hep::DDCond DD4hep::DDG4
           ROOT::Core ROOT::Geom ROOT::GenVector CLHEP::CLHEP Geant4::Interface
 )
 
 
 
 
-
+dd4hep_instantiate_package(${PackageName})
 target_include_directories(DualTestBeam PUBLIC include)
 target_link_options(DualTestBeam PRIVATE -L${Geant4_DIR}/..)
 #message (STATUS "CLHEP: ${CLHEP}")
