@@ -16,45 +16,27 @@
 <!--   @date    14/11/2014                                                  -->
 <!--                                                                        -->
 <!-- ====================================================================== -->
-
 <lccdd>
 
   <info name="SCEPCAL with IDEA"
-        title="SCEPCAL with IDEA"
-        author="Sarah Eno"
-        url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
-        status="development"
-        version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
-    <comment>The compact format for the SCEPCAL IDEA</comment>        
+	title="SCEPCAL with IDEA"
+	author="Sarah Eno"
+	url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
+	status="development"
+	version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
+    <comment>The compact format for the SCEPCAL IDEA</comment>
   </info>
 
   <includes>
     <file  ref="materials.xml"/>
   </includes>
 
-  
   <define>
     <include ref="SCEPCALConstants.xml"/>
   </define>
 
-
   <comment>EM Calorimeters</comment>
   <include ref="SCEPCAL_HCAL.xml"/>
-  <include ref="SCEPCAL_BOUND.xml"/> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <include ref="SCEPCAL_BOUND.xml"/>
 
 </lccdd>

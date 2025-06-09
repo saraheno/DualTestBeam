@@ -18,25 +18,18 @@
 <!-- ====================================================================== -->
 
 <lccdd>
-  <!--  Definition of global dictionary constants          -->
-  <define>
-  </define>
+	<!--  Definition of global dictionary constants          -->
+	<define>
+	</define>
+        <!--  Definition of the used visualization attributes    -->
+	<display>
+		<vis name="CrystalEcalBarrelVis"       alpha="0.1" r="1.0"  g="1.0"  b="1.0"	showDaughters="true" visible="true"/>
+		<vis name="CrystalEcalTowerVis"        alpha="0.1" r="0.0"  g="0.0"  b="1.0"	showDaughters="true" visible="true"/>
+		<vis name="CrystalEcalLayerVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"	showDaughters="true" visible="true"/>
+		<vis name="CrystalEcalSensitiveVis"    alpha="0.1" r="1.0"  g="0.0"  b="0.0"	showDaughters="true" visible="true"/>
+		<vis name="CrystalAirVis"              alpha="0.1" r="0.5"  g="0.5"  b="0.0"    showDaughters="true" visible="true"/>
+		<vis name="Invisible" 								showDaughters="true" visible="false"/>
+	</display>
+	<include ref="SCEPCAL_DRCrystal.xml"/>
 
-  <!--  Definition of the used visualization attributes    -->
-  <display>
-    <vis name="CrystalEcalBarrelVis"       alpha="0.1" r="1.0"  g="1.0"  b="1.0"  showDaughters="true" visible="true"/>
-    <vis name="CrystalEcalTowerVis"        alpha="0.1" r="1.0"  g="0.0"  b="1.0"   showDaughters="true" visible="true"/>
-    <vis name="CrystalEcalCrystalVis"      alpha="1.0" r="0.0"  g="0.0"  b="1.0"   showDaughters="true" visible="true"/>
-    <vis name="CrystalEcalLayerVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"  showDaughters="true" visible="true"/>
-    <vis name="CrystalEcalSensitiveVis"    alpha="1.0" r="1.0"  g="0.0"  b="0.0"  showDaughters="true" visible="true"/>
-    <vis name="CrystalEcalHoneyVis"    alpha="0.1" r="1.0"  g="0.0"  b="1.0"  showDaughters="true" visible="true"/>
-    <vis name="Invisible" showDaughers="true" visible="false"/> 
-  </display>
-
-
-  <!--  Includes for sensitives and support                -->
-  <include ref="SCEPCAL_DRCrystal.xml"/>
-
-<!--
--->
 </lccdd>

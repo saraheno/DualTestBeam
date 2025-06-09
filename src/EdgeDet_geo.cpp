@@ -178,7 +178,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
 
 
-  std::cout<<"exiting DRFiber creator"<<std::endl;
+  std::cout<<"exiting EdgeDetector creator"<<std::endl;
+  std::cout<<"**********************************************************************************"<<endl;
 
   return sdet;
 }
