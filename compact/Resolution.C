@@ -1951,11 +1951,20 @@ void DecodeEcal (long long int ihitchan, int& idet, int& ix, int&iy, int& islice
   wc=  (ihitchan>> 23) & 0x07;
   type=0;
   if((ilayer==0)&&(islice==1))  type=1;  //pd
-  if((ilayer==1)&&(islice==2))  type=1;  //pd
-  if((ilayer==0)&&(islice==2))  type=2;  //crystal
+  if((ilayer==0)&&(islice==2))  type=4;  //resin
+  if((ilayer==0)&&(islice==3))  type=4;  //cookie
+  if((ilayer==0)&&(islice==4))  type=2;  //crystal
+  if((ilayer==0)&&(islice==5))  type=3;  //air
+
+
+
+
   if((ilayer==1)&&(islice==1))  type=2;  //crystal
-  if((ilayer==0)&&(islice==3))  type=3;  //air
-  if((ilayer==1)&&(islice==3))  type=3;  //air
+  if((ilayer==1)&&(islice==2))  type=4;  //cookie
+  if((ilayer==1)&&(islice==3))  type=4;  //resin
+  if((ilayer==1)&&(islice==4))  type=1;  //pd
+  if((ilayer==1)&&(islice==5))  type=3;  //air
+  
   return;
 }
 
@@ -2385,7 +2394,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
       if(type==3) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
       if(type==1) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumPDeem+=aecalhit->edeprelativistic;};
       if(type==2) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumcrystalem+=aecalhit->edeprelativistic;};
-      if(type==0) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumdeadem+=aecalhit->edeprelativistic;};
+      if(type==0||type==4) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumdeadem+=aecalhit->edeprelativistic;};
 
 
 
