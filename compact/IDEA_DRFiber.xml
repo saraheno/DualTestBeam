@@ -32,7 +32,7 @@ z1 is the photodetector length gap is the distance between modules, and dz is ho
 zmin is where the dtector goes
  -->
 
-<dimensions numsides="DRFiberNsizeIDEA" thickness="DRFiberAbswidthIDEA" z_length="DRFiberlengthIDEA" gap="gapIDEA"  zmin="-world_side/2.+2*killthick+edgeoffset+DRcrystallength+EcalHcalgap" z1="killthick"/>
+<dimensions numsides="DRFiberNsizeIDEA" thickness="DRFiberAbswidthIDEA" z_length="DRFiberlengthIDEA" gap="gapIDEA"  zmin="-world_side/2.+2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgapl+EcalHcalgap" z1="killthick"/>
 
 
 

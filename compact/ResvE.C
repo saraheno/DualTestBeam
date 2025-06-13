@@ -19,15 +19,13 @@ using std::vector;
 TTree          *fChain;   //!pointer to the analyzed TTree or TChain               
 Int_t           fCurrent; //!current Tree number in a TChain                       
 
-
-
-
-
 void resolution(const char* inputfilename,const char* histname,double* aamean,double* aarms, double* aamean_err, double* aarms_err) {
 
   std::string name1(histname);
   std::string name2(inputfilename);
-  std::string name=name1+name2;
+  name2.erase(name2.size()-5,name2.size());
+  name2.erase(0,9);
+  std::string name=name1+"-"+name2+".png";
   TCanvas* canv= new TCanvas(name.c_str(),name.c_str(),200,10,700,500);
   canv->SetFillColor(0);
   canv->SetBorderMode(0);
@@ -68,26 +66,32 @@ void resolution(const char* inputfilename,const char* histname,double* aamean,do
   *aarms_err=p2e;
 
   nhist->Draw("");
-  canv->Print(name.c_str(),".png");
+  canv->Print(name.c_str());
   canv->Update();
 }
 
+
 void ResvE() {
+
   const int npoints=8;
-  const char* filenames[npoints];
+  //const int npoints=2;
+  std::string filenames[npoints];
   double aatruemean[npoints];
+  std::string aatype = "FSCEPonly";
 
-  filenames[0]="./output/Conly/res/res_Conly_10GeV.root"; 
-  filenames[1]="./output/Conly/res/res_Conly_15GeV.root"; 
-  filenames[2]="./output/Conly/res/res_Conly_20GeV.root";
-  filenames[3]="./output/Conly/res/res_Conly_25GeV.root";
-  filenames[4]="./output/Conly/res/res_Conly_30GeV.root"; 
-  filenames[5]="./output/Conly/res/res_Conly_35GeV.root";
-  filenames[6]="./output/Conly/res/res_Conly_40GeV.root"; 
-  filenames[7]="./output/Conly/res/res_Conly_45GeV.root";
-  filenames[8]="./output/Conly/res/res_Conly_50GeV.root";
-  filenames[9]="./output/Conly/res/res_Conly_100GeV.root";
-
+  filenames[0]="./output/hists_"+aatype+"_10GeV.root";
+  filenames[1]="./output/hists_"+aatype+"_15GeV.root";
+  filenames[2]="./output/hists_"+aatype+"_20GeV.root";
+  filenames[3]="./output/hists_"+aatype+"_25GeV.root";
+  filenames[4]="./output/hists_"+aatype+"_30GeV.root";
+  filenames[5]="./output/hists_"+aatype+"_35GeV.root";
+  filenames[6]="./output/hists_"+aatype+"_40GeV.root";
+  filenames[7]="./output/hists_"+aatype+"_45GeV.root";
+  //filenames[8]="./output/hists_"+aatype+"_50GeV.root";
+  //filenames[9]="./output/hists_"+aatype+"_100GeV.root";
+  //filenames[0]="./output/hists_"+aatype+"_20GeV.root";
+  //filenames[1]="./output/hists_"+aatype+"_50GeV.root";
+  
   aatruemean[0]=10;
   aatruemean[1]=15;
   aatruemean[2]=20;
@@ -96,8 +100,8 @@ void ResvE() {
   aatruemean[5]=35;
   aatruemean[6]=40;
   aatruemean[7]=45;
-  aatruemean[8]=50;
-  aatruemean[9]=100;
+  //aatruemean[8]=50;
+  //aatruemean[9]=100;
 
   const int nhst=5;
   double aamean[npoints][nhst],aarms[npoints][nhst],rrres[npoints][nhst];
@@ -118,8 +122,8 @@ void ResvE() {
   for(int k=0;k<nhst;k++) {
     for(int j=0;j<npoints;j++){
       std::cout<<"k j are "<<k<<" "<<j<<" fitting "<<hnam[k]<<" at energy "<<aatruemean[j]<<std::endl;
-      resolution(filenames[j],hnam[k].c_str(),&abc,&dej,&feh,&ikl);
-      aamean[j][k]=abc;
+      resolution(filenames[j].c_str(),hnam[k].c_str(),&abc,&dej);
+      aaamean[j][k]=abc;
       aarms[j][k]=dej;
       aamean_err[j][k]=feh;
       aarms_err[j][k]=ikl;
@@ -279,8 +283,8 @@ void ResvE() {
   C40LPFQ_s_g->SetMarkerSize(1.0);
   C40LPFQ_s_g->SetMarkerStyle(4.0);
   C40LPFQ_s_g->SetMarkerColor(kGreen);
-  C40LPFQ_s_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
+  //  C40LPFQ_s_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_s_g, "Chekanov C40LPFQ's S resolution", "l");
   auto C40LPFQ_c_g = new TGraph(npts,C40LPFQ_c_x,C40LPFQ_c_y);
   f2->SetParameter(0,0.5);
   C40LPFQ_c_g->Fit("f2");
@@ -293,10 +297,8 @@ void ResvE() {
   C40LPFQ_c_g->SetMarkerSize(1.0);
   C40LPFQ_c_g->SetMarkerStyle(4.0);
   C40LPFQ_c_g->SetMarkerColor(kBlue);
-  C40LPFQ_c_g->Draw("P");
-  lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");*/
-
-
+  //C40LPFQ_c_g->Draw("P");
+  //lgd->AddEntry(C40LPFQ_c_g, "Chekanov C40LPFQ's C resolution", "l");
 
   f2 = g1->GetFunction("f2");
   f2->SetLineColor(kBlue);
@@ -353,8 +355,7 @@ void ResvE() {
   
 
   lgd->Draw();
-  Canvas->Print("resolution_samponly.png",".png");
-  //Canvas->Print("resolution_fsceponly.png",".png");
+  Canvas->Print("resolution.png");
 
 
   return;

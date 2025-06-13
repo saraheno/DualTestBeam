@@ -1,7 +1,7 @@
 <!-- ====================================================================== -->
 <!--                                                                        -->
-<!--    XML description of the complete SiD tracker detector                -->
-<!--    of the SiD linear collider detector design.                         -->
+<!--    XML description of the complete SCEPCAL IDEA detector               -->
+<!--    of the SCEPCAL IDEA collider detector design.                       -->
 <!--                                                                        -->
 <!--    Contained are the required                                          -->
 <!--      ++ global constants used uniquely by this module                  -->
@@ -17,23 +17,45 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
+<lccdd>
 
-<!-- please note these are half lengths and widths -->
+  <info name="SCEPCAL with IDEA"
+        title="SCEPCAL with IDEA"
+        author="Sarah Eno"
+        url="https://twiki.cern.ch/twiki/bin/view/CLIC/xxx"
+        status="development"
+        version="$Id: compact.xml 1374 2014-11-05 10:49:55Z markus.frank@cern.ch $">
+    <comment>The compact format for the SCEPCAL IDEA</comment>        
+  </info>
 
-  <detectors>
-    <detector id="Upstream_ID" name="DRUpstream" type="DRUpS" readout="DRUNoSegment" vis="Invisible">
- <comment>Upstream material </comment>
-  <dimensions z1="UPoffset"/>
+  <includes>
+    <file  ref="materials.xml"/>
+  </includes>
+
+  
+  <define>
+    <include ref="SCEPCALConstants3.xml"/>
+  </define>
 
 
-<layer repeat="2" vis="Invisible" sensitive="yes">
-  <dimensions width="UPL1width"/>
-  <slice material = "NS_Polystyrene" thickness = "UPL1thick" sensitive="yes" limits="cal_limits" vis="UpstreamL1S1Vis"/>
-  <slice material = "Air" thickness = "UPL1gap" sensitive="yes" limits="cal_limits" vis="UpstreamL1S2Vis"/>
-</layer>
+
+  <comment>EM Calorimeters</comment>
+  <include ref="SCEPCAL_HCAL.xml"/>
+  <include ref="SCEPCAL_BOUND.xml"/> 
 
 
-    </detector>
-  </detectors>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+</lccdd>

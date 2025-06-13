@@ -1,6 +1,6 @@
 # Use this open statement to create an OpenGL view:
 #/vis/open OGL 2400x600-0+0
-/vis/open OGLIX 900x900-0+0
+/vis/open OGLIX  1200x600-0+0
 
 
 # Disable auto refresh and quieten vis messages whilst scene and
@@ -18,20 +18,20 @@
 #/vis/viewer/set/viewpointThetaPhi 90 90 deg
 #from the front
 #/vis/viewer/set/upVector 0 1 0
-#/vis/viewer/set/viewpointThetaPhi 180 0 deg 
+#/vis/viewer/set/viewpointThetaPhi 180 0 deg
 # from the back
 #/vis/viewer/set/upVector 0 1 0
-#/vis/viewer/set/viewpointThetaPhi 0 0 deg 
+#/vis/viewer/set/viewpointThetaPhi 0 0 deg
 # from the side
 /vis/viewer/set/upVector 0 1 0
-/vis/viewer/set/viewpointThetaPhi 230 -30 deg 
+/vis/viewer/set/viewpointThetaPhi 230 -30 deg
 
 
 # Specify zoom value:
 #/vis/viewer/zoomTo 35
 
 # specify center point
-#/vis/viewer/dolly 
+#/vis/viewer/dolly
 #/vis/viewer/pan 0 100 cm
 
 # Specify style (surface or wireframe):
@@ -41,7 +41,7 @@
 
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 10 cm
-/vis/scene/add/axes 0 0 0
+#/vis/scene/add/axes 0 0 0
 
 
 # Draw smooth trajectories at end of event, showing trajectory points
@@ -79,11 +79,12 @@
 /vis/modeling/trajectories/drawByParticleID-0/set e+ blue
 /vis/modeling/trajectories/drawByParticleID-0/set pi- black
 /vis/modeling/trajectories/drawByParticleID-0/set pi+ black
+/vis/modeling/trajectories/drawByParticleID-0/set pi0 green
 /vis/modeling/trajectories/drawByParticleID-0/set mu- red
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ red
 /vis/modeling/trajectories/drawByParticleID-0/set gamma orange
-/vis/modeling/trajectories/drawByParticleID-0/set neutron cyan
-/vis/modeling/trajectories/drawByParticleID-0/set proton brown
+/vis/modeling/trajectories/drawByParticleID-0/set neutron brown
+/vis/modeling/trajectories/drawByParticleID-0/set proton yellow
 /vis/modeling/trajectories/drawByParticleID-0/set opticalphoton yellow
 #
 # To superimpose all of the events from a given run:
@@ -98,8 +99,4 @@
 
 /units/list
 
-
-
 #/tracking/verbose 1
-
-
