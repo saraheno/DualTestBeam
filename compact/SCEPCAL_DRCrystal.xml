@@ -20,47 +20,33 @@
 
 <!-- please note these are half lengths and widths -->
 
-  <detectors>
-    <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="Invisible">
+<detectors>
+  <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="InvisibleWithDaughters">
+    <comment>Electromagnetic Calorimeter </comment>
+      <dimensions z1="edgeoffset"/>
+
+    <structure>
+      <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/>
+    </structure>
+
+    <staves vis="Invisible" sensitive="yes"/>
+    <layer repeat="1" vis="Invisible" sensitive="yes">
+      <dimensions width="DRcrystalwidth1" repeat="DRcrystalNsize1"  gap="DRcrystalgapt" />
+      <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+            <slice material = "Resin_Window" thickness = "DRcrystalResinthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalResinVis"/>
+      <slice material = "Silicone_gap" thickness = "DRcrystalCookiethick" sensitive="yes" limits="cal_limits" vis="CrystalEcalCookieVis"/>
+      <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+    </layer>
+    <layer repeat="1" vis="Invisible" sensitive="yes">
+      <dimensions width="DRcrystalwidth2" repeat="DRcrystalNsize2"  gap="DRcrystalgapt" />
+      <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
+  <slice material = "Silicone_gap" thickness = "DRcrystalCookiethick" sensitive="yes" limits="cal_limits" vis="CrystalEcalCookieVis"/>  
+  <slice material = "Resin_Window" thickness = "DRcrystalResinthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalResinVis"/> 
+      <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+    </layer>
 
 
- <comment>Electromagnetic Calorimeter </comment>
-
-
-
-<dimensions width="DRcrystalwidth" z_length="DRcrystallength1+DRcrystallength2+DRcrystalgapl+2*killthick" repeat="DRcrystalNsize" gap="DRcrystalgapt" z1="edgeoffset"
-/>
-
-
-
-
-<!--  a tower may have several different patterns that repeat.
-for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
-each of these repeating things is a "layer". (so in this example, two "layers")
-within a layer is a slice os the Pb and scint are slices
-the assembled tower is a Stave
--->
-
-      <structure>
-        <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/>
-      </structure>
-
-
-
- <staves vis="Invisible"/>
-<layer repeat="1" vis="Invisible">
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
-      <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/>
-      <slice material = "NS_Polystyrene" thickness = "(DRcrystalgapmat)" sensitive="yes" limits="cal_limits" vis="CrystalEcalBarrelVis"/>
-      <slice material = "Air" thickness = "(DRcrystalgapl-DRcrystalgapmat)/2" sensitive="yes" limits="cal_limits" vis="CrystalEcalTowerVis"/>
-
-
-      <slice material = "E_PbWO4" thickness = "DRcrystallength2" sensitive="yes" limits="cal_limits" vis="CrystalEcalLayerVis"/>
-      <slice material = "killMedia1" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
-</layer>
-
-
-    </detector>
-  </detectors>
+  </detector>
+</detectors>

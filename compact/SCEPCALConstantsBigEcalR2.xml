@@ -6,33 +6,29 @@
      <constant name="UPL1gap" value="2*cm"/>
      <constant name="UPL1thick" value="1*cm"/>
 
-<!-- photodetector thicknesses -->
-     <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
-     <constant name="Upstreamwidth" value="10.0*cm"/>  <!-- should be 1 -->
-     <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
 
 <!-- photodetector thicknesses -->
      <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
 
 
 <!-- constants for dual readout crystal calorimeter -->
-    <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength1" value="5.0*cm"/>
-    <constant name="DRcrystallength2" value="15.0*cm"/>
-    <constant name="DRcrystalCookiethick" value="0.5*cm"/>
-    <constant name="DRcrystalResinthick" value="0.5*cm"/>
+    <constant name="DRcrystalwidth1" value="900.0*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystalwidth2" value="900.0*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystallength1" value="400.0*cm"/> <!-- was 5 -->
+    <constant name="DRcrystallength2" value="5.0*cm"/> <!-- was 15 -->
     <constant name="DRcrystalgapl" value="0.001*cm"/>
     <constant name="DRcrystalgapmat" value="DRcrystalgapl/2"/>
     <constant name="DRcrystalgapt" value="0.001*cm"/>
     <constant name="DRcrystalhont" value="0.999*DRcrystalgapt"/>
+    <constant name="DRcrystalCookiethick" value="0.5*cm"/>
+    <constant name="DRcrystalResinthick" value="0.5*cm"/>
 
     <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
 
 
-    <constant name="DRcrystalNsize1" value="45"/>    <!-- should be 45 -->
-    <constant name="DRcrystalNsize2" value="45"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize1" value="0"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize2" value="0"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
     <constant name="EcalHcalgap" value="0.1*mm"/> <!-- should be small 0.1 mm -->
@@ -63,8 +59,8 @@
     <constant name="DRSampQthick" value="5.*mm"/>   <!-- should be 5 -->
     <constant name="DRSeparate" value="1.*mm"/>   <!-- should be 5 -->
     <constant name="DRSampxy" value="20.*cm"/> <!-- should be 20 -->
-    <constant name="DRSampNsize" value="10"/>        <!-- should be 25 -->
-    <constant name="DRSampNlayer" value="80"/>  <!-- should be 40 -->
+    <constant name="DRSampNsize" value="0"/>        <!-- should be 25 -->
+    <constant name="DRSampNlayer" value="40"/>  <!-- should be 40 -->
     <constant name="shave" value="0.1*mm"/>  <!-- should be small -->
 
 <!-- detector numbering scheme -->

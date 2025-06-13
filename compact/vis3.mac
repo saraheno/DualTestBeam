@@ -1,6 +1,6 @@
 # Use this open statement to create an OpenGL view:
 #/vis/open OGL 2400x600-0+0
-/vis/open OGLIX
+/vis/open OGLIX  1200x600-0+0
 
 
 # Disable auto refresh and quieten vis messages whilst scene and
@@ -41,7 +41,7 @@
 
 # Draw coordinate axes:
 #/vis/scene/add/axes 0 0 0 10 cm
-/vis/scene/add/axes 0 0 0
+#/vis/scene/add/axes 0 0 0
 
 
 # Draw smooth trajectories at end of event, showing trajectory points
@@ -62,7 +62,7 @@
 #/vis/filtering/trajectories/particleFilter-0/add e-
 #/vis/filtering/trajectories/particleFilter-0/add e+
 /vis/filtering/trajectories/particleFilter-0/add opticalphoton
-#/vis/filtering/trajectories/particleFilter-0/add mu-
+/vis/filtering/trajectories/particleFilter-0/add mu-
 #/vis/filtering/trajectories/particleFilter-0/add gamma
 
 #
@@ -74,12 +74,12 @@
 # For example, to select colour by particle ID:
 /vis/modeling/trajectories/create/drawByParticleID
 /vis/modeling/trajectories/drawByParticleID-0/set geantino red
-/vis/modeling/trajectories/drawByParticleID-0/set e- red
+/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
 /vis/modeling/trajectories/drawByParticleID-0/set pi- brown
 /vis/modeling/trajectories/drawByParticleID-0/set mu- blue
 /vis/modeling/trajectories/drawByParticleID-0/set mu+ blue
 /vis/modeling/trajectories/drawByParticleID-0/set gamma red
-/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton black
+/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton red
 #
 # To superimpose all of the events from a given run:
 /vis/scene/endOfEventAction accumulate 1

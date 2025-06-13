@@ -2,7 +2,6 @@ from DDSim.DD4hepSimulation import DD4hepSimulation
 from g4units import mm, GeV, MeV
 SIM = DD4hepSimulation()
 
-
 ## The compact XML file, or multiple compact files, if the last one is the closer.
 SIM.compactFile = []
 ## Lorentz boost for the crossing angle, in radian!
@@ -18,7 +17,7 @@ SIM.macroFile = ""
 ## number of events to simulate, used in batch mode
 SIM.numberOfEvents = 0
 ## Outputfile from the simulation: .slcio, edm4hep.root and .root output files are supported
-SIM.outputFile = "dummyOutput.edm4hep.root"
+SIM.outputFile = "dummyOutput.slcio"
 ## Physics list to use in simulation
 SIM.physicsList = None
 ## Verbosity use integers from 1(most) to 7(least) verbose
@@ -75,7 +74,6 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 #SIM.action.calorimeterSDTypes = ['calorimeter']
 
 SIM.action.calo = "DualCrysCalorimeterSDAction"
-## parameters for Calvision sensitive action
 SIM.action.calo = ("DualCrysCalorimeterSDAction",
   {"dialCherC": 0.0000125,
    "dialScintC": 0.000005,
@@ -86,10 +84,6 @@ SIM.action.calo = ("DualCrysCalorimeterSDAction",
    "MAXEVENTSCE": 10,
    # etc.
   })
-
-
-
-
 
 ## List of patterns matching sensitive detectors of type Calorimeter.
 SIM.action.calorimeterSDTypes = [u'calorimeter']
@@ -195,7 +189,7 @@ SIM.guineapig.particlesPerEvent = "-1"
 ################################################################################
 
 ##  direction of the particle gun, 3 vector 
-SIM.gun.direction = (0, 0, 1) # along the z-axis
+SIM.gun.direction = (0, 0, 1)
 
 ## choose the distribution of the random direction for theta
 ## 
@@ -369,22 +363,7 @@ SIM.output.random = 7
 ##       # arbitrary options can be created and set via the steering file or command line
 ##       SIM.outputConfig.myExtension = '.csv'
 ##     
-#SIM.outputConfig.userOutputPlugin = None
-def exampleUserPlugin(dd4hepSimulation):
-     from DDG4 import EventAction, Kernel
-     dd = dd4hepSimulation
-     evt_root = EventAction(Kernel(), 'SCEGeant4Output2ROOT/' + dd.outputFile, True)
-     evt_root.HandleMCTruth = True
-     evt_root.Control = True
-     output = dd.outputFile
-     if not dd.outputFile.endswith(dd.outputConfig.myExtension):
-          output = dd.outputFile + dd.outputConfig.myExtension
-     evt_root.Output = output
-     evt_root.enableUI()
-     Kernel().eventAction().add(evt_root)
-     return None
-SIM.outputConfig.userOutputPlugin = exampleUserPlugin
-SIM.outputConfig.myExtension = '.root'
+SIM.outputConfig.userOutputPlugin = None
 
 
 ################################################################################
@@ -461,7 +440,6 @@ SIM.physics.rejectPDGs = {1, 2, 3, 4, 5, 6, 3201, 3203, 4101, 4103, 21, 23, 24, 
 SIM.physics.zeroTimePDGs = {17, 11, 13, 15}
 
 
-
 ################################################################################
 ## Properties for the random number generator 
 ################################################################################
@@ -485,13 +463,13 @@ def setupCerenkovScint(kernel):
      scint.enableUI()
      seq.adopt(scint)
 
-     cerenkov = PhysicsList(kernel, 'Geant4CerenkovPhysics/CerenkovPhys')
-     cerenkov.VerboseLevel = 0
-     cerenkov.MaxNumPhotonsPerStep = 10
-     cerenkov.MaxBetaChangePerStep = 10.0
-     cerenkov.TrackSecondariesFirst = True
-     cerenkov.enableUI()
-     seq.adopt(cerenkov)
+     #cerenkov = PhysicsList(kernel, 'Geant4CerenkovPhysics/CerenkovPhys')
+     #cerenkov.VerboseLevel = 0
+     #cerenkov.MaxNumPhotonsPerStep = 10
+     #cerenkov.MaxBetaChangePerStep = 10.0
+     #cerenkov.TrackSecondariesFirst = True
+     #cerenkov.enableUI()
+     #seq.adopt(cerenkov)
 
      ph = PhysicsList(kernel, 'Geant4OpticalPhotonPhysics/OpticalGammaPhys')
      ph.addParticleConstructor('G4OpticalPhoton')
