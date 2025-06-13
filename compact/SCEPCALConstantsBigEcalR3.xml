@@ -19,6 +19,7 @@
     <constant name="DRcrystalgapmat" value="DRcrystalgapl/2"/>
     <constant name="DRcrystalgapt" value="0.001*cm"/>
     <constant name="DRcrystalhont" value="0.999*DRcrystalgapt"/>
+    <constant name="DRcrystalCookiethick" value="0.5*cm"/>
 
     <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
     <constant name="DRcrystalNsize1" value="0"/>    <!-- should be 45 -->
