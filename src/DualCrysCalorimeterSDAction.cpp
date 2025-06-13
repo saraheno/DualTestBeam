@@ -12,7 +12,6 @@
 //==========================================================================
 
 // Framework include files
-
 #include <algorithm>
 #include <CLHEP/Units/PhysicalConstants.h>
 #include "DualCrysCalorimeterHit.h"
@@ -22,14 +21,11 @@
 #include "DD4hep/InstanceCount.h"
 #include "DDG4/Geant4Random.h"
 #include <G4Event.hh>
-
+using namespace std;
 
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-
-
-
-
+//   dialScint=1.0, dialCer=1.0 to keep all photons 
 double m_dialCherC= 10./800000.;
 double m_dialScintC=100./20000000.;
 double m_dialCherO= 100./800000.;
@@ -37,11 +33,6 @@ double m_dialScintO=1./20000000.;
 float m_betarel=1/1.544;
 int m_printlimitSCE=10;
 int m_MAXEVENTSCE=10;
-
-// this doesn't work.  it is in mks
-//double conversioneVnm=2.*CLHEP::pi*CLHEP::hbarc;
-
-
 
 namespace CalVision {
 
@@ -459,107 +450,86 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
     }
 	
   }
+
 } // end namespace calvision
 
-
-
-
-
-
-
-namespace dd4hep { namespace sim {
-
-    using namespace CalVision;
-
-    struct WavelengthMinimumCut : public dd4hep::sim::Geant4Filter  {
-  /// Energy cut value
-      double m_wavelengthCut;
-    public:
-  /// Constructor.
-      WavelengthMinimumCut(dd4hep::sim::Geant4Context* c, const std::string& n);
-  /// Standard destructor
-      virtual ~WavelengthMinimumCut();
-  /// Filter action. Return true if hits should be processed
-      virtual bool operator()(const G4Step* step) const  override  final  {
-	bool test=true;
-	G4Track *theTrack = step->GetTrack();
-	if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
-	  float energy=theTrack->GetTotalEnergy()/eV;
-	  float wave=fromEvToNm(energy);
-	  if(wave < m_wavelengthCut) {
-	    theTrack->SetTrackStatus(fStopAndKill);
-	    test=false;}
+namespace dd4hep { 
+	namespace sim {
+		using namespace CalVision;
+		struct WavelengthMinimumCut : public dd4hep::sim::Geant4Filter  {// Energy cut value
+			double m_wavelengthCut;
+			public: // Constructor.
+			WavelengthMinimumCut(dd4hep::sim::Geant4Context* c, const std::string& n);
+			virtual ~WavelengthMinimumCut(); // Standard destructor
+			
+			// Filter action. Return true if hits should be processed
+			virtual bool operator()(const G4Step* step) const  override  final  {
+				bool test=true;
+				G4Track *theTrack = step->GetTrack();
+				if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
+					float energy = theTrack->GetTotalEnergy()/eV;
+					float wave   = fromEvToNm(energy);
+					if(wave < m_wavelengthCut) {
+						theTrack->SetTrackStatus(fStopAndKill);
+						test=false;
+					}
+				}
+				return test;
+			}
+			virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
+				return true;
+			}
+		};
+		WavelengthMinimumCut::WavelengthMinimumCut(Geant4Context* c, const std::string& n) //Constructor
+			: Geant4Filter(c,n) {
+				InstanceCount::increment(this);
+				declareProperty("Cut",m_wavelengthCut=0.0);
+			}
+		WavelengthMinimumCut::~WavelengthMinimumCut() { // Standard destructor
+			InstanceCount::decrement(this);
+		}
+		
+		struct WavelengthnmwindCut : public dd4hep::sim::Geant4Filter  { // Energy cut value
+			double m_wavelengthstart;
+			public: // Constructor.
+			WavelengthnmwindCut(dd4hep::sim::Geant4Context* c, const std::string& n);
+			virtual ~WavelengthnmwindCut(); // Standard destructor
+			// Filter action. Return true if hits should be processed
+			virtual bool operator()(const G4Step* step) const  override  final  {
+				bool test=true;
+				G4Track *theTrack = step->GetTrack();
+				if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
+					float energy = theTrack->GetTotalEnergy()/eV;
+					float wave   = fromEvToNm(energy);
+					if((wave < m_wavelengthstart) || (wave > m_wavelengthstart+0.5) ) {
+						theTrack->SetTrackStatus(fStopAndKill);
+						test=false;
+					}
+				}
+				return test;
+			}
+			virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
+				return true;
+			}
+		};
+		WavelengthnmwindCut::WavelengthnmwindCut(Geant4Context* c, const std::string& n) // Constructor.
+			: Geant4Filter(c,n) {
+				InstanceCount::increment(this);
+				declareProperty("Cut",m_wavelengthstart=0.0);
+			}
+		WavelengthnmwindCut::~WavelengthnmwindCut() { // Standard destructor
+			InstanceCount::decrement(this);
+		}
 	}
-	return test;
-      }
-      virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
-	return true;
-      }
-    };
-
-  /// Constructor.
-    WavelengthMinimumCut::WavelengthMinimumCut(Geant4Context* c, const std::string& n)
-      : Geant4Filter(c,n) {
-      InstanceCount::increment(this);
-      declareProperty("Cut",m_wavelengthCut=0.0);
-    }
-
-  /// Standard destructor
-    WavelengthMinimumCut::~WavelengthMinimumCut() {
-      InstanceCount::decrement(this);
-    }
-
-
-
-    struct WavelengthnmwindCut : public dd4hep::sim::Geant4Filter  {
-  /// Energy cut value
-      double m_wavelengthstart;
-    public:
-  /// Constructor.
-      WavelengthnmwindCut(dd4hep::sim::Geant4Context* c, const std::string& n);
-  /// Standard destructor
-      virtual ~WavelengthnmwindCut();
-  /// Filter action. Return true if hits should be processed
-      virtual bool operator()(const G4Step* step) const  override  final  {
-	bool test=true;
-	G4Track *theTrack = step->GetTrack();
-	if(theTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() ) {
-	  float energy=theTrack->GetTotalEnergy()/eV;
-	  float wave=fromEvToNm(energy);
-	  if((wave<m_wavelengthstart) || (wave > m_wavelengthstart+0.5) ) {
-	    theTrack->SetTrackStatus(fStopAndKill);
-	    test=false;}
-	}
-	return test;
-      }
-      virtual bool operator()(const Geant4FastSimSpot* spot) const  override  final  {
-	return true;
-      }
-    };
-
-  /// Constructor.
-    WavelengthnmwindCut::WavelengthnmwindCut(Geant4Context* c, const std::string& n)
-      : Geant4Filter(c,n) {
-      InstanceCount::increment(this);
-      declareProperty("Cut",m_wavelengthstart=0.0);
-    }
-
-  /// Standard destructor
-    WavelengthnmwindCut::~WavelengthnmwindCut() {
-      InstanceCount::decrement(this);
-    }
-
-
-  }}  // end using namespace
-
-
-
-
+}  // end using namespace
 
 //--- Factory declaration
-namespace dd4hep { namespace sim {
-    typedef Geant4SensitiveAction<DualCrysCalorimeterSD> DualCrysCalorimeterSDAction;
-  }}
+namespace dd4hep { 
+	namespace sim {
+		typedef Geant4SensitiveAction<DualCrysCalorimeterSD> DualCrysCalorimeterSDAction;
+	}
+}
+
 DECLARE_GEANT4SENSITIVE(DualCrysCalorimeterSDAction)
 DECLARE_GEANT4ACTION(WavelengthMinimumCut)
 DECLARE_GEANT4ACTION(WavelengthnmwindCut)

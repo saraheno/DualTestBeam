@@ -18,28 +18,22 @@
 <!-- ====================================================================== -->
 
 
-  <detectors>
-<!--    <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1"> -->
-      <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis3">
-
+<detectors>
+  <!--    <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis1"> -->
+  <detector id="EdgeDet_ID" name="EdgeDet" type="EdgeDet" readout="EdgeDetNoSegment" vis="EDGEVis3">
 
  <comment>Edge Detector</comment>
-
-
 
 <!-- here z_length is the absorber length, thickness is length of an end side
 z1 is the photodetector length gap is the distance between modules, and dz is how far the fiber sticks out of the absorber.  Nsize is the number of cells to make
 zmin is where the dtector goes
  -->
 
-<dimensions z_length="world_z-10." height="world_x-10." width="world_y-10." thickness="1."/>
+  <dimensions z_length="world_z-10." height="world_x-10." width="world_y-10." thickness="1."/>
 
-      <structure>
-        <side name="side" material="BlackHole" vis="EDGEVis3" sensitive="yes"/>
-      </structure>
+  <structure>
+    <side name="side" material="BlackHole" vis="EDGEVis3" sensitive="yes"/>
+  </structure>
 
-
-    </detector>
-  </detectors>
-
-
+  </detector>
+</detectors>

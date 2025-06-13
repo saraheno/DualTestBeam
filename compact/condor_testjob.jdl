@@ -1,9 +1,0 @@
-universe = vanilla
-Executable =/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/condor_testjob.sh
-should_transfer_files = NO
-Requirements = TARGET.FileSystemDomain == "privnet"
-Output = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/condor-testjob.stdout
-Error = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/condor-testjob.stderr
-Log = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/condor-testjob.condor
-Arguments = SCE
-Queue 1

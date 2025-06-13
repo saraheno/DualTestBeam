@@ -33,8 +33,6 @@
     <file  ref="materials.xml"/>
   </includes>
 
-
-
   
   <define>
     <include ref="SCEPCALConstantsBigEcal.xml"/>

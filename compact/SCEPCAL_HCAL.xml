@@ -19,23 +19,14 @@
 
 <lccdd>
 
-
   <display>
-
-
     <vis name="AbsVis" alpha="1.0" r="0.0" g="1.0" b="0.0" showDaughters="true" visible="true"/>
     <vis name="CerenVis" alpha="0.5" r="0.0" g="0.0" b="1.0" showDaughters="true" visible="true"/>
     <vis name="ScintVis" alpha="0.5" r="1.0" g="0.0" b="0.0" showDaughters="true" visible="true"/>
     <vis name="phdetVis" alpha="0.5" r="0.0" g="1.0" b="1.0" showDaughters="true" visible="true"/>
     <vis name="towerVis" alpha="0.5" r="0.3" g="0.3" b="0.3" showDaughters="true" visible="true"/>
-
   </display>
 
-
-
-<!-- <include ref="SCEPCAL_DRcal.xml"/> -->
-<include ref="SCEPCAL_DRFiber.xml"/>
+  <include ref="SCEPCAL_DRFiber.xml"/>
 
 </lccdd>
-
-

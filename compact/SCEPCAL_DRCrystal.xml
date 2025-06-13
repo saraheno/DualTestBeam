@@ -29,7 +29,7 @@
       <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/>
     </structure>
 
- <staves vis="Invisible" sensitive="yes"/>
+    <staves vis="Invisible" sensitive="yes"/>
     <layer repeat="1" vis="Invisible" sensitive="yes">
       <dimensions width="DRcrystalwidth1" repeat="DRcrystalNsize1"  gap="DRcrystalgapt" />
       <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
@@ -47,8 +47,6 @@
       <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
     </layer>
 
-    
+
   </detector>
 </detectors>
-
-
