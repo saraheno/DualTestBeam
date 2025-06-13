@@ -1,9 +1,0 @@
-universe = vanilla
-Executable =/data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/ProcessResvE.sh
-should_transfer_files = NO
-Requirements = TARGET.FileSystemDomain == "privnet"
-Output = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/condor-executable-ProcessResvE.stdout
-Error = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/condor-executable-condor-executable-ProcessResvE.stderr
-Log = /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/jobs/condor-executable-condor-executable-ProcessResvE.condor
-Arguments = SCE
-Queue 1

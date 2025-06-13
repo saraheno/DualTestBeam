@@ -18,20 +18,20 @@
 #/vis/viewer/set/viewpointThetaPhi 90 90 deg
 #from the front
 #/vis/viewer/set/upVector 0 1 0
-#/vis/viewer/set/viewpointThetaPhi 180 0 deg 
+#/vis/viewer/set/viewpointThetaPhi 180 0 deg
 # from the back
 #/vis/viewer/set/upVector 0 1 0
-#/vis/viewer/set/viewpointThetaPhi 0 0 deg 
+#/vis/viewer/set/viewpointThetaPhi 0 0 deg
 # from the side
 /vis/viewer/set/upVector 0 1 0
-/vis/viewer/set/viewpointThetaPhi 270 0 deg 
+/vis/viewer/set/viewpointThetaPhi 230 -30 deg
 
 
 # Specify zoom value:
 #/vis/viewer/zoomTo 35
 
 # specify center point
-#/vis/viewer/dolly 
+#/vis/viewer/dolly
 #/vis/viewer/pan 0 100 cm
 
 # Specify style (surface or wireframe):
@@ -99,8 +99,4 @@
 
 /units/list
 
-
-
 #/tracking/verbose 1
-
-

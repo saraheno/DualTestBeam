@@ -1,6 +1,3 @@
-// 30 cm/ns
-// 210 cm = 7 ns
-
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -16,8 +13,14 @@
 #include "../include/DualCrysCalorimeterHit.h"
 
 #include <vector>
+#include <functional>
 #include <map>
 #include <algorithm>
+
+#include <iostream>
+#include <sstream> // for ostringstream
+#include <string>
+using namespace std;
 
 
 int SCECOUNT=5;
@@ -1236,11 +1239,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   }  //end do hcal
 
 
-
-
-
-
-
   //***********************************************************************************************************************
   if(doplots) {
 
@@ -1655,53 +1653,54 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   ehzvst->Write();
   phzvst->Write();
 
-   ehchan->Write();
-   phchan->Write();
+  ehchan->Write();
+  phchan->Write();
 
-   ehcEcalNsNc->Write();
-   phcEcalNsNc->Write();
-   ehcHcalNsNc->Write();
-   phcHcalNsNc->Write();
+  ehcEcalNsNc->Write();
+  phcEcalNsNc->Write();
+  ehcHcalNsNc->Write();
+  phcHcalNsNc->Write();
 
-   ehcEcalNsNctc->Write();
-   phcEcalNsNctc->Write();
-   ehcHcalNsNctc->Write();
-   phcHcalNsNctc->Write();
+  ehcEcalNsNctc->Write();
+  phcEcalNsNctc->Write();
+  ehcHcalNsNctc->Write();
+  phcHcalNsNctc->Write();
 
 
-   ehcEcalMarco->Write();
-   phcEcalMarco->Write();
-   ehcHcalMarco->Write();
-   phcHcalMarco->Write();
+  ehcEcalMarco->Write();
+  phcEcalMarco->Write();
+  ehcHcalMarco->Write();
+  phcHcalMarco->Write();
 
-   ehcHcalf1f2->Write();
-   phcHcalf1f2->Write();
+  ehcHcalf1f2->Write();
+  phcHcalf1f2->Write();
 
-   //ehcEcalNsNc_pfx->Write();
-   //ehcHcalNsNc_pfx->Write();
-   //phcEcalNsNc_pfx->Write();
-   //phcHcalNsNc_pfx->Write();
+  //ehcEcalNsNc_pfx->Write();
+  //ehcHcalNsNc_pfx->Write();
+  //phcEcalNsNc_pfx->Write();
+  //phcHcalNsNc_pfx->Write();
 
-   eecaltime->Write();
-   ehcaltime->Write();
-   piecaltime->Write();
-   pihcaltime->Write();
+  eecaltime->Write();
+  ehcaltime->Write();
+  piecaltime->Write();
+  pihcaltime->Write();
 
-   enscvni->Write();
-   pinalvni->Write();
-   pinscvni->Write();
-   pincevni->Write();
+  enscvni->Write();
+  pinalvni->Write();
+  pinscvni->Write();
+  pincevni->Write();
 
-   CalEcalncer->Write();
-   CalEcalnscint->Write();
-   CalHcalncer->Write();
-   CalHcalnscint->Write();
-
+  CalEcalncer->Write();
+  CalEcalnscint->Write();
+  CalHcalncer->Write();
+  CalHcalnscint->Write();
 
 
   out->Close();
 
+
 }
+
 
 void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, bool logy) {
 

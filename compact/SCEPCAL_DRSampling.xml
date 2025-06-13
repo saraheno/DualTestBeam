@@ -35,18 +35,18 @@
 
 <!--  a tower may have several different patterns that repeat.
 for example, there may be 10 layers with one thickness of Pb and scint and 20 with another set of thicknesses.
-each of these repeating things is a "layer". (so in this example, two "layers") 
+each of these repeating things is a "layer". (so in this example, two "layers")
 within a layer is a slice os the Pb and scint are slices
-the assembled tower is a Stave 
+the assembled tower is a Stave
 -->
 
 <structure>
   <absorb  name="absorb" material = "Iron" thickness = "DRSampAthick" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
       <kill1  name="kill1"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
       <scint  name="scint"  material = "DR_Polystyrene" thickness = "DRSampSthick" sensitive="yes" limits="cal_limits" vis="ScintVis"/>
-      <kill2  name="kill2"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <kill2  name="kill2"  material = "killMedia2" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
   <separate1  name="separate1" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
-      <kill3  name="kill3"  material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/> 
+      <kill3  name="kill3"  material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
       <ceren   name="ceren" material = "DR_Quartz" thickness = "DRSampQthick" sensitive="yes" limits="cal_limits" vis="CerenVis"/>
       <kill4   name="kill4" material = "killMedia3" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="phdetVis"/>
   <separate2  name="separate2" material = "Iron" thickness = "DRSeparate" sensitive="yes" limits="cal_limits" vis="AbsVis"/>
@@ -58,5 +58,3 @@ the assembled tower is a Stave
 
     </detector>
   </detectors>
-
-
