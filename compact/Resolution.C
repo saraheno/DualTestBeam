@@ -928,6 +928,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       }
       std::cout<<" hist mean rms are "<<amean<<" "<<arms<<std::endl;
       if(doecal&&dohcal) {
+	if (arms==0.) arms=0.05;
 	phcEcalnscint3->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
       } else {
 	phcEcalnscint2->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
