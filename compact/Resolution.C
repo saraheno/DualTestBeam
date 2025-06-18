@@ -4,7 +4,14 @@
 #include "TBranch.h"
 #include "TBrowser.h"
 #include "TH2.h"
+#include "TF1.h"
+#include "TCanvas.h"
+#include "TProfile.h"
 #include "TRandom.h"
+#include "TSystem.h"
+#include "TStyle.h"
+#include "TLine.h"
+#include "TMath.h"
 #include "DD4hep/Printout.h"
 #include "DD4hep/Objects.h"
 #include "DD4hep/Factories.h"
@@ -236,8 +243,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   TH1F *hpffffib = new TH1F("hpffffib","pion relativistic fraction in fiber",400,0.,1.5);
   TH1F *CalEcalncer = new TH1F("CalEcalncer","total number of ecal cerenkov",  500,0.,1.5);
   TH1F *CalEcalnscint = new TH1F("CalEcalnscint","total number of ecal scint",  500,0.,1.5);
-  TH1F *CalHcalncer = new TH1F("CalHcalncer","total number of ecal cerenkov",  500,0.,1.5);
-  TH1F *CalHcalnscint = new TH1F("CalHcalnscint","total number of ecal scint",  500,0.,1.5);
+  TH1F *CalHcalncer = new TH1F("CalHcalncer","total number of hcal cerenkov",  500,0.,1.5);
+  TH1F *CalHcalnscint = new TH1F("CalHcalnscint","total number of hcal scint",  500,0.,1.5);
   TH1F *acovECAL = new TH1F("acovECAL","covariance ecal",500,0.,1.);
   TH1F *acovHCAL = new TH1F("acovHCAL","covariance hcal",500,0.,1.);
   TH1F *ffscinffcer = new TH1F("ffscinffcer","f from scin and cer",100,0.,1.2);
@@ -314,7 +321,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"  event number rough calibration "<<ievt<<std::endl;
-      getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal,timecut,meaneecaltimecut, meanehcaltimecut,meanerelecaltimecut,meanerelhcaltimecut);
+      getMeanPhot(mapsampcalslice, gendet, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, timecut, meaneecaltimecut, meanehcaltimecut, meanerelecaltimecut, meanerelhcaltimecut);
     }
 
     std::cout<<std::endl<<"done with getMeanPhot"<<std::endl<<std::endl;
@@ -347,10 +354,16 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
     if(doecal ) {
-      arms = CalEcalncer->GetRMS();
+
+      TF1 *gs = new TF1("gs", "gaus", 0, 1.5);
+
+      arms = TMath::Max(CalEcalncer->GetRMS(),0.02); // keep at least +-0.02 (x1.5) width for fit for stability
+      //arms = CalEcalncer->GetRMS();
       amean = CalEcalncer->GetMean();
-      CalEcalncer->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-      TF1 *fitEcalncer = (TF1*)CalEcalncer->GetListOfFunctions()->FindObject("gaus");
+      gs->SetParameter(1, amean);
+      gs->SetParLimits(1, amean-0.02, amean+0.02); // keep mu within a "reasonable" range
+      CalEcalncer->Fit("gs","R0L","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitEcalncer = (TF1*)CalEcalncer->GetListOfFunctions()->FindObject("gs");
       Double_t Ecalncer_p0= fitEcalncer->GetParameter(0);
       Double_t Ecalncer_p1= fitEcalncer->GetParameter(1);
       Double_t Ecalncer_p2= fitEcalncer->GetParameter(2);
@@ -359,10 +372,13 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<std::endl;
       meancerEcal=meancerEcal/Ecalncer_p1;
 
-      arms = CalEcalnscint->GetRMS();
+      arms = TMath::Max(CalEcalncer->GetRMS(),0.02); // keep at least +-0.02 (x1.5) width for fit for stability
+      //arms = CalEcalnscint->GetRMS();
       amean = CalEcalnscint->GetMean();
-      CalEcalnscint->Fit("gaus","R0","",amean-1.5*arms,amean+1.5*arms);
-      TF1 *fitEcalnscint = (TF1*)CalEcalnscint->GetListOfFunctions()->FindObject("gaus");
+      gs->SetParameter(1, amean);
+      gs->SetParLimits(1, amean-0.02, amean+0.02); // keep mu within a "reasonable" range
+      CalEcalnscint->Fit("gs","R0L","",amean-1.5*arms,amean+1.5*arms);
+      TF1 *fitEcalnscint = (TF1*)CalEcalnscint->GetListOfFunctions()->FindObject("gs");
       Double_t Ecalnscint_p0= fitEcalnscint->GetParameter(0);
       Double_t Ecalnscint_p1= fitEcalnscint->GetParameter(1);
       Double_t Ecalnscint_p2= fitEcalnscint->GetParameter(2);
@@ -401,13 +417,13 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     }
 
     if(doplots) {
-      TCanvas* z1;
+      TCanvas* z1 = new TCanvas();
       SCEDraw1(z1,"z1",CalEcalncer,"junkz1.png",0);
-      TCanvas* z2;
+      TCanvas* z2 = new TCanvas();
       SCEDraw1(z2,"z2",CalEcalnscint,"junkz2.png",0);
-      TCanvas* z3;
+      TCanvas* z3 = new TCanvas();
       SCEDraw1(z3,"z3",CalHcalncer,"junkz3.png",0);
-      TCanvas* z4;
+      TCanvas* z4 = new TCanvas();
       SCEDraw1(z4,"z4",CalHcalnscint,"junkz4.png",0);
 
     }
@@ -823,7 +839,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     std::cout<<"hcal only pion file open"<<std::endl;
 
     b_mc= pita->GetBranch("MCParticles");
-    //    if(doecal) b_ecal = pita->GetBranch(ECALleaf);
+    //if(doecal) b_ecal = pita->GetBranch(ECALleaf);
     if(dohcal) b_hcal = pita->GetBranch(HCALleaf);
     if(doedge) b_edge = pita->GetBranch("EdgeDetNoSegment");
     std::cout<<"pion branches found"<<std::endl;
@@ -835,7 +851,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     if(num_evt>0) {
       CalHits* ecalhitsa = new CalHits();
-      if(doecal) b_ecal->SetAddress(&ecalhitsa);
+      //if(doecal) b_ecal->SetAddress(&ecalhitsa);
       CalHits* hcalhitsa = new CalHits();
       if(dohcal) b_hcal->SetAddress(&hcalhitsa);
       CalHits* edgehitsa = new CalHits();
@@ -847,7 +863,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 	float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.),pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
 	int nine(0),ninh(0);
-	getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhitsa,hcalhitsa,edgehitsa,timecut,fillfill,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,prelecaltimecut,prelhcaltimecut,nine,ninh);
+	// doecal is forced to zero here since the analysis is done for hcalonlypifile
+	getStuff(mapsampcalslice,  gendet, ievt, 0, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhitsa,hcalhitsa,edgehitsa,timecut,fillfill,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,prelecaltimecut,prelhcaltimecut,nine,ninh);
 
       // gamma fraction from em fraction
 	float pfff=0.;
@@ -928,7 +945,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       }
       std::cout<<" hist mean rms are "<<amean<<" "<<arms<<std::endl;
       if(doecal&&dohcal) {
-	if (arms==0.) arms=0.05;
+	if (arms==0.) arms=0.05; // protection against rare crash
 	phcEcalnscint3->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
       } else {
 	phcEcalnscint2->Fit("gaus","R","",amean-1.5*arms,amean+1.5*arms);
@@ -947,7 +964,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       if(twocalecalcorr) hovereecalscint*=beamE/avedepecal;
       std::cout<<"hovereecalscint after correct is "<<hovereecalscint<<std::endl;
 
-      TCanvas* xx3;
+      TCanvas* xx3 = new TCanvas();;
       if(doecal&&dohcal) {
 	SCEDraw1(xx3,"xx3",phcEcalnscint3,"junkxx3.png",0);
       } else {
@@ -986,7 +1003,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       if(twocalecalcorr) hovereecalcer*=beamE/avedepecal;
       std::cout<<"hovereecalcer after correct is "<<hovereecalcer<<std::endl;
 
-      TCanvas* xx4;
+      TCanvas* xx4 = new TCanvas();;
       if(doecal&&dohcal) {
 	SCEDraw1(xx4,"xx4",phcEcalncer3,"junkxx4.png",0);
       } else {
@@ -1017,7 +1034,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<" p0 p1 p2 "<<fitphcHcalnscint_p0<<" "<<fitphcHcalnscint_p1<<" "<<fitphcHcalnscint_p2<<std::endl;
       hoverehcalscint=fitphcHcalnscint_p1;
 
-      TCanvas* xx5;
+      TCanvas* xx5 = new TCanvas();
       SCEDraw1(xx5,"xx5",phcHcalnscint2,"junkxx5.png",0);
       fitphcHcalnscint->Draw("same");
       std::cout<<std::endl;
@@ -1035,7 +1052,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<" p0 p1 p2 "<<fitphcHcalnscint_p0<<" "<<fitphcHcalnscint_p1<<" "<<fitphcHcalnscint_p2<<std::endl;
       hoverehcalcer=fitphcHcalncer_p1;
 
-      TCanvas* xx6;
+      TCanvas* xx6 = new TCanvas();
       SCEDraw1(xx6,"xx6",phcHcalncer2,"junkxx6.png",0);
       fitphcHcalncer->Draw("same");
       std::cout<<std::endl;
@@ -1107,7 +1124,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   float ffn2_p1= fitffn2->GetParameter(1);
   float ffn2_p2= fitffn2->GetParameter(2);
   if(doplots) {
-    TCanvas* x1;
+    TCanvas* x1 = new TCanvas();
     SCEDraw1(x1,"x1",hpfff,"junkx1.png",0);
     fitffn2->Draw("same");
   }
@@ -1127,7 +1144,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     float Ecalncer2_p1= fitEcalncer2->GetParameter(1);
     float Ecalncer2_p2= fitEcalncer2->GetParameter(2);
     if(doplots) {
-      TCanvas* x2;
+      TCanvas* x2 = new TCanvas();
       SCEDraw1(x2,"x2",phcEcalncer,"junkx2.png",0);
       fitEcalncer2->Draw("same");
     }
@@ -1146,7 +1163,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     float Ecalnscint2_p1= fitEcalnscint2->GetParameter(1);
     float Ecalnscint2_p2= fitEcalnscint2->GetParameter(2);
     if(doplots) {
-      TCanvas* x3;
+      TCanvas* x3 = new TCanvas();
       SCEDraw1(x3,"x3",phcEcalnscint,"junkx3.png",0);
       fitEcalnscint2->Draw("same");
     }
@@ -1166,7 +1183,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       float Ecalcorr2_p1= fitEcalcorr2->GetParameter(1);
       float Ecalcorr2_p2= fitEcalcorr2->GetParameter(2);
       if(doplots) {
-	TCanvas* x4;
+	TCanvas* x4 = new TCanvas();
 	SCEDraw1(x4,"x4",phcEcalcorr,"junkx4.png",0);
 	fitEcalcorr2->Draw("same");
       }
@@ -1189,7 +1206,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     float Hcalncer2_p1= fitHcalncer2->GetParameter(1);
     float Hcalncer2_p2= fitHcalncer2->GetParameter(2);
     if(doplots) {
-      TCanvas* x5;
+      TCanvas* x5 = new TCanvas();
       SCEDraw1(x5,"x5",phcHcalncer,"junkx5.png",0);
       fitHcalncer2->Draw("same");
     }
@@ -1208,7 +1225,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     float Hcalnscint2_p1= fitHcalnscint2->GetParameter(1);
     float Hcalnscint2_p2= fitHcalnscint2->GetParameter(2);
     if(doplots) {
-      TCanvas* x6;
+      TCanvas* x6 = new TCanvas();
       SCEDraw1(x6,"x6",phcHcalnscint,"junkx6.png",0);
       fitHcalnscint2->Draw("same");
     }
@@ -1228,7 +1245,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       float Hcalcorr2_p1= fitHcalcorr2->GetParameter(1);
       float Hcalcorr2_p2= fitHcalcorr2->GetParameter(2);
       if(doplots) {
-	TCanvas* x7;
+	TCanvas* x7 = new TCanvas();
 	SCEDraw1(x7,"x7",phcHcalcorr,"junkx7.png",0);
 	fitHcalcorr2->Draw("same");
       }
@@ -1243,16 +1260,16 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   //***********************************************************************************************************************
   if(doplots) {
 
-  TCanvas* c1;
+  TCanvas* c1 = new TCanvas();
   SCEDraw2(c1,"c1",ehetrue,phetrue,"junk1.png",0);
 
-  TCanvas* c1b;
+  TCanvas* c1b = new TCanvas();
   SCEDraw2(c1b,"c1b",ehcEdgeE,phcEdgeE,"junk1b.png",0);
-  TCanvas* c1bqq;
+  TCanvas* c1bqq = new TCanvas();
   SCEDraw2(c1bqq,"c1bqq",ehcEdgeRelf,phcEdgeRelf,"junk1bqq.png",0);
-  TCanvas* c1b2a;
+  TCanvas* c1b2a = new TCanvas();
   SCEDraw1(c1b2a,"c1b2a",phcEdgeE,"junk1b2a.png",0);
-  TCanvas* c1b2;
+  TCanvas* c1b2 = new TCanvas();
   SCEDraw1(c1b2,"c1b2",phcnonconsE,"junk1b2.png",0);
   //TCanvas* c1b21;
   //SCEDraw1(c1b21,"c1b21",phcnonconsE2,"junk1b21.png",0);
@@ -1261,35 +1278,35 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   //TCanvas* c1b23;
   //SCEDraw1(c1b23,"c1b23",phcnonconsE4,"junk1b23.png",0);
 
-  TCanvas* c1c;
+  TCanvas* c1c = new TCanvas();
   SCEDraw2(c1c,"c1c",ehcEdgeR,phcEdgeR,"junk1c.png",0);
 
 
-  TCanvas* c1d;
+  TCanvas* c1d = new TCanvas();
   SCEDraw1(c1d,"c1d",hedepcal,"junk1d.png",0);
-  TCanvas* c1e;
+  TCanvas* c1e = new TCanvas();
   SCEDraw1(c1e,"c1e",hpdepcal,"junk1e.png",0);
 
 
 
   if(doecal) {
-    TCanvas* ce2;
+    TCanvas* ce2 = new TCanvas();
     SCEDraw2(ce2,"ce2",ehcEcalE,phcEcalE,"junke2.png",0);
-    TCanvas* ce3;
+    TCanvas* ce3 = new TCanvas();
     SCEDraw2(ce3,"ce3",ehcEcalncer,ehcEcalnscint,"junke3.png",0);
-    TCanvas* ce4;
+    TCanvas* ce4 = new TCanvas();
     SCEDraw3(ce4,"ce4",phcEcalncer,phcEcalnscint,phcEcalcorr,"junke4.png",0);
-    TCanvas* ce4dd;
+    TCanvas* ce4dd = new TCanvas();
     SCEDraw3(ce4dd,"ce4dd",phcEandHcalncer,phcEandHcalnscint,phcEandHcalcorr,"junke4dd.png",0);
-    TCanvas* ce5;
+    TCanvas* ce5 = new TCanvas();
     SCEDraw1_2D(ce5,"ce5",ehcEcalNsNc,"junke5.png",0,0.,0.);
     //TCanvas* ce5b;
     //SCEDraw1_2D(ce5b,"ce5b",ehcEcalMarco,"junke5b.png",0,0.,0.);
-    TCanvas* ce6;
+    TCanvas* ce6 = new TCanvas();
     SCEDraw1_2D(ce6,"ce6",phcEcalNsNc,"junke6.png",1,0.5,(0.5/kappaEcal)+1-(1/kappaEcal));
     //TCanvas* ce6b;
     //SCEDraw1_2D(ce6b,"ce6b",phcEcalMarco,"junke6b.png",0,0.,0.);
-    TCanvas* ce7;
+    TCanvas* ce7 = new TCanvas();
     SCEDraw2(ce7,"ce7",eecaltime,piecaltime,"junke7.png",1);
 
     /*
@@ -1302,22 +1319,22 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     */
 
 
-    TCanvas* ecmes1;
+    TCanvas* ecmes1 = new TCanvas();
     SCEDraw1_2D(ecmes1,"ecmes1",mes1Ecal,"junkemes1.png",0,0.,0.);
-    TCanvas* ecmes2;
+    TCanvas* ecmes2 = new TCanvas();
     SCEDraw1_2D(ecmes2,"ecmes2",mes2Ecal,"junkemes2.png",0,0.,0.);
     //TCanvas* ecmes3;
     //SCEDraw1_2D(ecmes3,"ecmes3",mes3Ecal,"junkemes3.png",0,0.,0.);
     //TCanvas* ecmes4;
     //SCEDraw1_2D(ecmes4,"ecmes4",mes4Ecal,"junkemes4.png",0,0.,0.);
-    TCanvas* ecmes5;
+    TCanvas* ecmes5 = new TCanvas();
     SCEDraw2_2D(ecmes5,"ecmes5",mes3Ecal,mes4Ecal,"junkemes5.png",0,0.,0.);
 
     //TCanvas* ecms1;
     //SCEDraw1_2D(ecms1,"ecms1",hfnscinEcal,"junkhes1.png",0,0.,0.);
     //TCanvas* ecms2;
     //SCEDraw1_2D(ecms2,"ecms2",hfncerEcal,"junkhes2.png",0,0.,0.);
-    TCanvas* ecms3;
+    TCanvas* ecms3 = new TCanvas();
     SCEDraw2_2D(ecms3,"ecms3",hfncerEcal,hfnscinEcal,"junkhes3.png",0,0.,0.);
 
 
@@ -1325,7 +1342,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     //SCEDraw1_2D(uu1,"uu1",enonconsEcalcer,"junkuu1.png",0,0.,0.);
     //TCanvas* uu2;
     //SCEDraw1_2D(uu2,"uu2",enonconsEcalscin,"junkuu2.png",0,0.,0.);
-    TCanvas* kk2;
+    TCanvas* kk2 = new TCanvas();
     SCEDraw2_2D(kk2,"kk2",enonconsEcalcer,enonconsEcalscin,"junkkk2.png",0,0.,0.);
 
   }
@@ -1333,52 +1350,52 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
   if(dohcal) {
-    TCanvas* ch2;
+    TCanvas* ch2 = new TCanvas();
     SCEDraw2(ch2,"ch2",ehcHcalE,phcHcalE,"junkh2.png",0);
-    TCanvas* ch2a;
+    TCanvas* ch2a = new TCanvas();
     SCEDraw2(ch2a,"ch2a",ehcHcalE1,phcHcalE1,"junkh2a.png",0);
-    TCanvas* ch2b;
+    TCanvas* ch2b = new TCanvas();
     SCEDraw2(ch2b,"ch2b",ehcHcalE2,phcHcalE2,"junkh2b.png",0);
-    TCanvas* ch3;
+    TCanvas* ch3 = new TCanvas();
     SCEDraw2(ch3,"ch3",ehcHcalncer,ehcHcalnscint,"junkh3.png",0);
-    TCanvas* ch4;
+    TCanvas* ch4 = new TCanvas();
     SCEDraw3(ch4,"ch4",phcHcalncer,phcHcalnscint,phcHcalcorr,"junkh4.png",0);
-    TCanvas* ch5;
+    TCanvas* ch5 = new TCanvas();
     SCEDraw1_2D(ch5,"ch5",ehcHcalNsNc,"junkh5.png",0,0.,0.);
-    TCanvas* ch5c;
+    TCanvas* ch5c = new TCanvas();
     SCEDraw1_2D(ch5c,"ch5c",ehcHcalNsNctc,"junkh5c.png",0,0.,0.);
     //TCanvas* ch5b;
     //SCEDraw1_2D(ch5b,"ch5b",ehcHcalMarco,"junkhb.png",0,0.,0.);
-    TCanvas* ch6;
+    TCanvas* ch6 = new TCanvas();
     SCEDraw1_2D(ch6,"ch6",phcHcalNsNc,"junkh6.png",0,0.5,(0.5/kappaHcal)+1-(1/kappaHcal));
-    TCanvas* ch6c;
+    TCanvas* ch6c = new TCanvas();
     SCEDraw1_2D(ch6c,"ch6c",phcHcalNsNctc,"junkh6c.png",0,0.,0.);
     //TCanvas* ch6b;
     //SCEDraw1_2D(ch6b,"ch6b",phcHcalMarco,"junkh6b.png",0,0.,0.);
-    TCanvas* ch7;
+    TCanvas* ch7 = new TCanvas();
     SCEDraw2_2D(ch7,"ch7",ehcHcalf1f2,phcHcalf1f2,"junkh7.png",0,0.,0.);
 
 
-    TCanvas* ch8;
+    TCanvas* ch8 = new TCanvas();
     SCEDraw2(ch8,"ch8",ehcaltime,pihcaltime,"junkh8.png",1);
 
 
-    TCanvas* hcmes1;
+    TCanvas* hcmes1 = new TCanvas();
     SCEDraw1_2D(hcmes1,"hcmes1",mes1Hcal,"junkhmes1.png",0,0.,0.);
-    TCanvas* hcmes2;
+    TCanvas* hcmes2 = new TCanvas();
     SCEDraw1_2D(hcmes2,"hcmes2",mes2Hcal,"junkhmes2.png",0,0.,0.);
     //TCanvas* hcmes3;
     //SCEDraw1_2D(hcmes3,"hcmes3",mes3Hcal,"junkhmes3.png",0,0.,0.);
     //TCanvas* hcmes4;
     //SCEDraw1_2D(hcmes4,"hcmes4",mes4Hcal,"junkhmes4.png",0,0.,0.);
-    TCanvas* hcmes5;
+    TCanvas* hcmes5 = new TCanvas();
     SCEDraw2_2D(hcmes5,"hcmes5",mes3Hcal,mes4Hcal,"junkhmes5.png",0,0.,0.);
 
     //TCanvas* hcms1;
     //SCEDraw1_2D(hcms1,"hcms1",hfnscinHcal,"junkhms1.png",0,0.,0.);
     //TCanvas* hcms2;
     //SCEDraw1_2D(hcms2,"hcms2",hfncerHcal,"junkhms2.png",0,0.,0.);
-    TCanvas* hcms3;
+    TCanvas* hcms3 = new TCanvas();
     SCEDraw2_2D(hcms3,"hcms3",hfncerHcal,hfnscinHcal,"junkhhes3.png",0,0.,0.);
 
 
@@ -1386,10 +1403,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     //SCEDraw1_2D(uu3,"uu3",enonconsHcalcer,"junkuu3.png",0,0.,0.);
     //TCanvas* uu4;
     //SCEDraw1_2D(uu4,"uu2",enonconsHcalscin,"junkuu4.png",0,0.,0.);
-    TCanvas* kk1;
+    TCanvas* kk1 = new TCanvas();
     SCEDraw2_2D(kk1,"kk1",enonconsHcalcer,enonconsHcalscin,"junkkk1.png",0,0.,0.);
 
-    TCanvas* ct4;
+    TCanvas* ct4 = new TCanvas();
     SCEDraw3(ct4,"ct4",hpfff,hpfffabs,hpffffib,"junkct4.png",0);
   }
 
@@ -1402,32 +1419,32 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     //SCEDraw1_2D(ch9bb,"ch9bb",pinscvni,"junkh9byb.png",0,0.,0.);
     //TCanvas* ch9bc;
     //SCEDraw1_2D(ch9bc,"ch9bc",pincevni,"junkh9byc.png",0,0.,0.);
-    TCanvas* ch9bd;
+    TCanvas* ch9bd = new TCanvas();
     SCEDraw2_2D(ch9bd,"ch9bd",pincevni,pinscvni,"junkh9bd.png",0,0.,0.);
 
 
-    TCanvas* nnn1;
+    TCanvas* nnn1 = new TCanvas();
     SCEDraw1_2D(nnn1,"nnn1",enonconsvnni,"junknnn1.png",0,0.,0.);
-    TCanvas* nnn2;
+    TCanvas* nnn2 = new TCanvas();
     SCEDraw1_2D(nnn2,"nnn2",enonconsvf,"junknnn2.png",0,0.,0.);
-    TCanvas* nnn3;
+    TCanvas* nnn3 = new TCanvas();
     SCEDraw1_2D(nnn3,"nnn3",hcnonconsvesc,"junknnn3.png",0,0.,0.);
 
 
   //TCanvas* c7;
   //SCEDrawp(c7,"c7",phcEcalNsNc_pfx,"junk7.png");
 
-    TCanvas* cc1;
+    TCanvas* cc1 = new TCanvas();
     SCEDraw2(cc1,"cc1",hefff,hpfff,"junkcc1.png",1);
-    TCanvas* cd1;
+    TCanvas* cd1 = new TCanvas();
     SCEDraw3(cd1,"cd1",hpfff,hpfff2,hpfff3,"junkcd1.png",1);
 
 
-    TCanvas* bbv1;
+    TCanvas* bbv1 = new TCanvas();
     SCEDraw2(bbv1,"bbv1",acovECAL,acovHCAL,"junkbbv1.png",1);
 
 
-    TCanvas* bbv2;
+    TCanvas* bbv2 = new TCanvas();
     SCEDraw1(bbv2,"bbv2",ffscinffcer,"junkbbv2.png",0);
 
 
@@ -1442,42 +1459,42 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
 
-    TCanvas* cc2;
+    TCanvas* cc2 = new TCanvas();
     SCEDraw2(cc2,"cc2",eecalpd1scint,eecalpd1cer,"junkcc2.png",1);
-    TCanvas* cc3;
+    TCanvas* cc3 = new TCanvas();
     SCEDraw2(cc3,"cc3",eecalpd2scint,eecalpd2cer,"junkcc3.png",1);
-    TCanvas* cc4;
+    TCanvas* cc4 = new TCanvas();
     SCEDraw2(cc4,"cc4",ehcalpd1scint,ehcalpd1cer,"junkcc4.png",1);
-    TCanvas* cc5;
+    TCanvas* cc5 = new TCanvas();
     SCEDraw2(cc5,"cc5",ehcalpd2scint,ehcalpd2cer,"junkcc5.png",1);
 
 
-    TCanvas* cc6;
+    TCanvas* cc6 = new TCanvas();
     SCEDraw2(cc6,"cc6",pecalpd1scint,pecalpd1cer,"junkcc6.png",1);
-    TCanvas* cc7;
+    TCanvas* cc7 = new TCanvas();
     SCEDraw2(cc7,"cc7",pecalpd2scint,pecalpd2cer,"junkcc7.png",1);
-    TCanvas* cc8;
+    TCanvas* cc8 = new TCanvas();
     SCEDraw2(cc8,"cc8",phcalpd1scint,phcalpd1cer,"junkcc8.png",1);
-    TCanvas* cc9;
+    TCanvas* cc9 = new TCanvas();
     SCEDraw2(cc9,"cc9",phcalpd2scint,phcalpd2cer,"junkcc9.png",1);
 
-    TCanvas* cc2z;
+    TCanvas* cc2z = new TCanvas();
     SCEDraw2(cc2z,"cc2z",eecalpd1scintz,eecalpd1cerz,"junkcc2z.png",1);
-    TCanvas* cc3z;
+    TCanvas* cc3z = new TCanvas();
     SCEDraw2(cc3z,"cc3z",eecalpd2scintz,eecalpd2cerz,"junkcc3z.png",1);
-    TCanvas* cc4z;
+    TCanvas* cc4z = new TCanvas();
     SCEDraw2(cc4z,"cc4z",ehcalpd1scintz,ehcalpd1cerz,"junkcc4z.png",1);
-    TCanvas* cc5z;
+    TCanvas* cc5z = new TCanvas();
     SCEDraw2(cc5z,"cc5z",ehcalpd2scintz,ehcalpd2cerz,"junkcc5z.png",1);
 
 
-    TCanvas* cc6z;
+    TCanvas* cc6z = new TCanvas();
     SCEDraw2(cc6z,"cc6z",pecalpd1scintz,pecalpd1cerz,"junkcc6z.png",1);
-    TCanvas* cc7z;
+    TCanvas* cc7z = new TCanvas();
     SCEDraw2(cc7z,"cc7z",pecalpd2scintz,pecalpd2cerz,"junkcc7z.png",1);
-    TCanvas* cc8z;
+    TCanvas* cc8z = new TCanvas();
     SCEDraw2(cc8z,"cc8z",phcalpd1scintz,phcalpd1cerz,"junkcc8z.png",1);
-    TCanvas* cc9z;
+    TCanvas* cc9z = new TCanvas();
     SCEDraw2(cc9z,"cc9z",phcalpd2scintz,phcalpd2cerz,"junkcc9z.png",1);
 
 
@@ -1716,6 +1733,7 @@ void SCEDraw1 (TCanvas* canv,  const char* name,TH1F* h1, const char* outfile, b
   canv->SetTickx(0);
   canv->SetTicky(0);
   gStyle->SetOptFit();
+  gStyle->SetPalette(1,0);
   if(logy) canv->SetLogy();
 
   h1->SetLineColor(kGreen);
@@ -1774,7 +1792,7 @@ void SCEDrawp (TCanvas* canv,  const char* name,TProfile* h1, const char* outfil
   h1->SetStats(111111);
   h1->SetMarkerSize(20);
   h1->SetMarkerStyle(4);
-  h1->SetMarkerColor(3);
+  h1->SetMarkerColor(6);
   gStyle->SetOptFit();
   h1->Draw("*");
 
@@ -1803,11 +1821,12 @@ void SCEDraw1_2D (TCanvas* canv,  const char* name,TH2F* h1, const char* outfile
   h1->SetLineColor(kGreen);
   h1->SetLineWidth(kGreen);
   h1->SetMarkerSize(0.2);
+  h1->SetMarkerColor(kMagenta);
   h1->SetStats(111111);
-  h1->Draw("");
+  h1->Draw("colz");
 
   TLine line = TLine(eohS,eohC,1.,1.);
-  line.SetLineColor(kYellow);
+  line.SetLineColor(kBlue);
   line.SetLineWidth(2);
   if(doline) line.Draw("same");
 
@@ -1835,8 +1854,7 @@ void SCEDraw2_2D (TCanvas* canv,  const char* name,TH2F* h1, TH2F* h2, const cha
   h1->SetLineWidth(kGreen);
   h1->SetMarkerColor(kGreen);
   h1->SetStats(111111);
-  h1->Draw("");
-
+  h1->Draw("colz");
 
   h2->SetLineColor(kBlue);
   h2->SetLineWidth(kBlue);
@@ -1845,7 +1863,7 @@ void SCEDraw2_2D (TCanvas* canv,  const char* name,TH2F* h1, TH2F* h2, const cha
   h2->Draw("same");
 
   TLine line = TLine(eohS,eohC,1.,1.);
-  line.SetLineColor(kYellow);
+  line.SetLineColor(kCyan);
   line.SetLineWidth(2);
   if(doline) line.Draw("same");
 
@@ -1966,7 +1984,7 @@ void DecodeEcal (long long int ihitchan, int& idet, int& ix, int&iy, int& islice
   if((ilayer==1)&&(islice==3))  type=4;  //resin
   if((ilayer==1)&&(islice==4))  type=1;  //pd
   if((ilayer==1)&&(islice==5))  type=3;  //air
-  
+
   return;
 }
 
