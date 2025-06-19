@@ -4,6 +4,8 @@ See https://iopscience.iop.org/article/10.1088/1748-0221/15/11/P11005 for the co
 ## If you are not on alma9-like OS, but can use singularity
 ```
 singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
+# at Baylor
+# singularity run -B /cvmfs:/cvmfs -B /cms/data:/cms/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
 ```
 
 ## All times:
@@ -38,13 +40,13 @@ cd compact
 ```
 
 ## running in batch mode
-```
-look in massjobs.py to see how to run it
-to analyze the output, look at massjobs_s2.py
-```
 
-or see examples in pipeline for running `ddsim` and `Resolution.C`.
-https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/.gitlab-ci.yml
+Look in [massjobs.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs.py) to see how to run it
+to analyze the output, look at [massjobs_s2.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs_s2.py).
+For Baylor users, see [massjobs_pbsarray.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs_pbsarray.py)
+
+or see examples in CI (continuous integration) yaml file for running `ddsim` and `Resolution.C` in
+[.gitlab-ci.yml](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/.gitlab-ci.yml)
 
 ## running interactively
 Change `--runType=batc` above to `--runType=vis`.

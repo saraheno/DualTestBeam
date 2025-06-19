@@ -5,4 +5,4 @@
 #PBS -J 1-10
 
 cd $PBS_O_WORKDIR
-bash ${PBS_JOBNAME}
+singularity exec -B /cvmfs:/cvmfs -B /cms/data:/cms/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest bash ${PBS_JOBNAME}
