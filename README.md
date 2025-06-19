@@ -47,7 +47,6 @@ For Baylor users, see [massjobs_pbsarray.py](https://gitlab.cern.ch/calvisionsim
 
 or see examples in CI (continuous integration) yaml file for running `ddsim` and `Resolution.C` in
 [.gitlab-ci.yml](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/.gitlab-ci.yml)
->>>>>>> gitlab-calvisionsimulation/master
 
 ## running interactively
 Change `--runType=batc` above to `--runType=vis`.
