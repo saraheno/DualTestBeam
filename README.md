@@ -4,6 +4,8 @@ See https://iopscience.iop.org/article/10.1088/1748-0221/15/11/P11005 for the co
 ## If you are not on alma9-like OS, but can use singularity
 ```
 singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
+# at Baylor
+# singularity run -B /cvmfs:/cvmfs -B /cms/data:/cms/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest
 ```
 
 ## All times:
@@ -18,7 +20,9 @@ mkdir stuff4stuff
 cd stuff4stuff
 
 # git clone, compile, install
-git clone git@github.com:saraheno/DualTestBeam.git
+git clone ssh://git@gitlab.cern.ch:7999/calvisionsimulation/DualTestBeam.git
+# or try sarah's version
+# git clone git@github.com:saraheno/DualTestBeam.git
 cd DualTestBeam
 mkdir build
 mkdir install
@@ -30,31 +34,19 @@ make install
 
 ## All times
 ```
-cd to stuff4stuff/DualTestBeam	
+cd to stuff4stuff/DualTestBeam
 source ./install/bin/thisDualTestBeam.sh
 cd compact
 ```
 
 ## running in batch mode
-```
-look in massjobs.py to see how to run it
-to analyze the output, look at massjobs_s2.py
-```
 
-For example, for generating events
-```
-cd test
-ddsim --compactFile=../DRConly.xml        --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_Conly_20GeV_e-.root        --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="e-" -N 10 >& Conly_20GeV_e-.log
-ddsim --compactFile=../DRDualTestBeam.xml --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_DualTestBeam_20GeV_e-.root --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="e-" -N 10 >& DualTestBeam_20GeV_e-.log
-ddsim --compactFile=../DRFSCEPonly.xml    --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_FSCEPonly_20GeV_e-.root    --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="e-" -N 10 >& FSCEPonly_20GeV_e-.log
+Look in [massjobs.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs.py) to see how to run it
+to analyze the output, look at [massjobs_s2.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs_s2.py).
+For Baylor users, see [massjobs_pbsarray.py](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/compact/massjobs_pbsarray.py)
 
-ddsim --compactFile=../DRConly.xml        --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_Conly_20GeV_pi-.root        --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="pi-" -N 10 >& Conly_20GeV_pi-.log &
-ddsim --compactFile=../DRDualTestBeam.xml --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_DualTestBeam_20GeV_pi-.root --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="pi-" -N 10 >& DualTestBeam_20GeV_pi-.log &
-ddsim --compactFile=../DRFSCEPonly.xml    --runType=batch -G --steeringFile ../SCEPCALsteering.py --outputFile=out_FSCEPonly_20GeV_pi-.root    --part.userParticleHandler='' -G --gun.position="0.,0.,-1*cm" --gun.direction "0. 0.05 0.99875" --gun.energy "20*GeV" --gun.particle="pi-" -N 10 >& FSCEPonly_20GeV_pi-.log &
-```
-and for analyzing them
-```
-```
+or see examples in CI (continuous integration) yaml file for running `ddsim` and `Resolution.C` in
+[.gitlab-ci.yml](https://gitlab.cern.ch/calvisionsimulation/DualTestBeam/-/blob/master/.gitlab-ci.yml)
 
 ## running interactively
 Change `--runType=batc` above to `--runType=vis`.
@@ -71,4 +63,3 @@ Then do typical GEANT4 visualization commands such as:
 /vis/viewer/pan -100 200 cm
 exit
 ```
-
