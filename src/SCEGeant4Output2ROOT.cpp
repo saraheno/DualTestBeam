@@ -111,6 +111,12 @@ void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
     m_tree = section(m_section);
   }
   Geant4OutputAction::beginRun(run);
+
+
+  // yuck yuck yuck
+  int iyuckyuck=3;
+  TBranch* b = 0;
+  b = m_tree->Branch("test",&iyuckyuck);
 }
 
 /// Fill single EVENT branch entry (Geant4 collection data)
