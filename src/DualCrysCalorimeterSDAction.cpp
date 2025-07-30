@@ -11,6 +11,8 @@
 //
 //==========================================================================
 
+#include "DBParameters.h"
+
 // Framework include files
 #include <algorithm>
 #include <CLHEP/Units/PhysicalConstants.h>
@@ -31,22 +33,6 @@ using namespace std;
 
 namespace CalVision {
 
-
-// way too slow if track all photons for now
-// so randomly delete photons after creation according to this fraction
-//   dialScint=1.0, dialCer=1.0 to keep all photons
-double m_dialCherC=10./800000.;
-double m_dialScintC=100./20000000.;
-double m_dialCherO= 100./800000.;
-double m_dialScintO=1./20000000.;
-float m_betarel=1/1.544;
-int m_printlimitSCE=10;
-int m_MAXEVENTSCE=10;
-
-
-
-  
-  
   G4double fromEvToNm(G4double energy)
   {
     // there is some bug somewhere.  shouldn't need this facto
@@ -93,14 +79,14 @@ namespace dd4hep {
      * @}
      */
 
-template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
-      declareProperty("dialCherC", m_dialCherC);
-      declareProperty("dialScintC", m_dialScintC);
-      declareProperty("dialCherO", m_dialCherO);
-      declareProperty("dialScintO", m_dialScintO);
-      declareProperty("betarel", m_betarel);
-      declareProperty("printlimitSCE", m_printlimitSCE);
-      declareProperty("MAXEVENTSCE", m_MAXEVENTSCE);
+    template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
+      declareProperty("dialCherC", DBParameters::instance()->m_dialCherC);
+      declareProperty("dialScintC", DBParameters::instance()->m_dialScintC);
+      declareProperty("dialCherO", DBParameters::instance()->m_dialCherO);
+      declareProperty("dialScintO", DBParameters::instance()->m_dialScintO);
+      declareProperty("betarel", DBParameters::instance()->m_betarel);
+      declareProperty("printlimitSCE", DBParameters::instance()->m_printlimitSCE);
+      declareProperty("MAXEVENTSCE", DBParameters::instance()->m_MAXEVENTSCE);
     }
 
     
@@ -122,7 +108,7 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
 
 
       if(eventNumber != OLDEVENTNUMBER) {
-	if(eventNumber<m_MAXEVENTSCE) {
+	if(eventNumber<DBParameters::instance()->m_MAXEVENTSCE) {
         std::cout<<" SDAction event number is "<<eventNumber<<std::endl;
         OLDEVENTNUMBER=eventNumber;
         SCECOUNT=0;
@@ -138,15 +124,15 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
       if((eventNumber==1)&&(SCECOUNT==1)) {
 	std::cout<<"event number is "<<eventNumber<<std::endl;
 	std::cout<<"DANGER DANGER WILL ROBINSON!!!!!!!!!!!!!!!!!!"<<std::endl;
-	std::cout<<"dialCher for PbWO4 and BGO is "<<m_dialCherC<<std::endl;
-	std::cout<<"dialScint for PbWO4 and BGO is "<<m_dialScintC<<std::endl;
-	std::cout<<"dialCher for others is "<<m_dialCherO<<std::endl;
-	std::cout<<"dialScint for others is "<<m_dialScintO<<std::endl;
+	std::cout<<"dialCher for PbWO4 and BGO is "<<DBParameters::instance()->m_dialCherC<<std::endl;
+	std::cout<<"dialScint for PbWO4 and BGO is "<<DBParameters::instance()->m_dialScintC<<std::endl;
+	std::cout<<"dialCher for others is "<<DBParameters::instance()->m_dialCherO<<std::endl;
+	std::cout<<"dialScint for others is "<<DBParameters::instance()->m_dialScintO<<std::endl;
 	std::cout<<" you need to use this to interpret your results"<<std::endl;
-	std::cout<<" also counting as relativiistic particles with beta >"<<m_betarel<<" you should adjust according to the index of your media"<<std::endl;
+	std::cout<<" also counting as relativiistic particles with beta >"<<DBParameters::instance()->m_betarel<<" you should adjust according to the index of your media"<<std::endl;
       }
 
-      bool SCEPRINT=(SCECOUNT<m_printlimitSCE);
+      bool SCEPRINT=(SCECOUNT<DBParameters::instance()->m_printlimitSCE);
       //if(SCEPRINT) std::cout<<"scecount is "<<SCECOUNT<<" print is "<<SCEPRINT<<std::endl;
 
 
@@ -213,9 +199,9 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
         coll->add(cell, hit);
         printM2("CREATE hit with deposit:%e MeV  Pos:%8.2f %8.2f %8.2f  %s",
                 contrib.deposit,pos.X,pos.Y,pos.Z,handler.path().c_str());
-	if(SCECOUNT2<m_printlimitSCE) {
+	if(SCECOUNT2<DBParameters::instance()->m_printlimitSCE) {
 	  std::cout<<"DRcalo deposit "<<contrib.deposit<<" position ("<<pos.X<<","<<pos.Y<<","<<pos.Z<<") string "<<handler.path().c_str()<<" volume id "<<cell<<" event "<<eventNumber<<std::endl;
-	  if(SCECOUNT2<m_printlimitSCE+1) SCECOUNT2+=1;
+	  if(SCECOUNT2<DBParameters::instance()->m_printlimitSCE+1) SCECOUNT2+=1;
 	}
 
         if ( 0 == hit->cellID )  { // for debugging only!
@@ -251,7 +237,7 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
       if( track->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition() )  {
 	if(SCEPRINT) std::cout<<"     in volume ID "<<cell<<std::endl;
 
-	if(SCECOUNT<m_printlimitSCE+1) SCECOUNT+=1;
+	if(SCECOUNT<DBParameters::instance()->m_printlimitSCE+1) SCECOUNT+=1;
 	//	if(SCEPRINT) std::cout<<"optical photon"<<std::endl;
 
 	bool OptN = (track->GetCreatorProcess()->G4VProcess::GetProcessName() == "CerenkovPhys")||(track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys");
@@ -323,9 +309,9 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
 	      //Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
-		if(rnd.rndm()>m_dialCherC) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>DBParameters::instance()->m_dialCherC) track->SetTrackStatus(fStopAndKill);
 	      } else{
-		if(rnd.rndm()>m_dialCherO) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>DBParameters::instance()->m_dialCherO) track->SetTrackStatus(fStopAndKill);
 	      }
 	    }
 	  }
@@ -373,9 +359,9 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
 		//Geant4Event&  evt = context()->event();
 	      dd4hep::sim::Geant4Random& rnd = evt.random();
 	      if((amedia.find("E_PbWO4")!=std::string::npos)||(amedia.find("BGO")!=std::string::npos)) {
-		if(rnd.rndm()>m_dialScintC) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>DBParameters::instance()->m_dialScintC) track->SetTrackStatus(fStopAndKill);
 	      } else {
-		if(rnd.rndm()>m_dialScintO) track->SetTrackStatus(fStopAndKill);
+		if(rnd.rndm()>DBParameters::instance()->m_dialScintO) track->SetTrackStatus(fStopAndKill);
 	      }
 	    }
 	  }
@@ -431,7 +417,7 @@ template <> void Geant4SensitiveAction<DualCrysCalorimeterSD>::initialize() {
 	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
 	  if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
-	  if(aabeta>m_betarel) {
+	  if(aabeta>DBParameters::instance()->DBParameters::instance()->m_betarel) {
 	    hit->edeprelativistic+=contrib.deposit;	  
 	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
 	  }
