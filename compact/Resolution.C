@@ -32,7 +32,7 @@ using namespace std;
 
 int SCECOUNT=5;
 int SCECOUNT2=20;
-int icountyuck=0;
+int icount777=0;
 int SCECOUNT3=10;
 
 
@@ -296,6 +296,20 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
   TFile* ef = TFile::Open(einputfilename);
   TTree* et = (TTree*)ef->Get("EVENT;1");
+
+  
+  int iyuckne=et->GetEntries();
+  std::cout<<" b_test entries is "<<iyuckne<<std::endl;
+  int iyuck;
+  et->SetBranchAddress("test",&iyuck);
+  for (Long64_t j=0;j<iyuckne;j++) {
+    int nnn = et->GetEntry(j);
+    std::cout<<"j is "<<j<<" iddd is "<<iyuck<<std::endl;
+  }
+
+
+  //      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+  
   if(doecal) b_ecal = et->GetBranch(ECALleaf);
   if(dohcal) b_hcal = et->GetBranch(HCALleaf);
   if(doedge) b_edge = et->GetBranch("EdgeDetNoSegment");
@@ -2452,8 +2466,8 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	    if(ae>0.001) {
 	      if(hacheck/ae<0.999) {
 
-		if(icountyuck<SCECOUNT3) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
-				icountyuck+=1;
+		if(icount777<SCECOUNT3) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
+				icount777+=1;
 	      }
 	    }
 	  }
@@ -2990,3 +3004,4 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 
 
 }
+

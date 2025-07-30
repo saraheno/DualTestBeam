@@ -20,6 +20,8 @@
 #include <DDG4/Geant4Particle.h>
 #include <DDG4/Geant4Data.h>
 
+
+
 // Geant4 include files
 #include <G4HCofThisEvent.hh>
 #include <G4ParticleTable.hh>
@@ -33,6 +35,9 @@
 using namespace dd4hep::sim;
 using namespace dd4hep;
 using namespace std;
+using namespace CalVision;
+
+double* return_dialCherC();
 
 /// Standard constructor
 SCEGeant4Output2ROOT::SCEGeant4Output2ROOT(Geant4Context* ctxt, const string& nam)
@@ -89,7 +94,7 @@ TTree* SCEGeant4Output2ROOT::section(const string& nam) {
 
 /// Callback to store the Geant4 run information
 void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
-  //  std::cout<<"in scegeant4output2root 5"<<std::endl;
+  std::cout<<"in scegeant4output2root start of beginRun"<<std::endl;
   string fname = m_output;
   if ( m_filesByRun )    {
     size_t idx = m_output.rfind(".");
@@ -110,13 +115,25 @@ void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
     }
     m_tree = section(m_section);
   }
+
+
+
+  // put into root tuple information that is per run
+  TBranch* b = 0;
+  
+  //iyuckyuck=3;
+  //fill("iyuckyuck",ComponentCast(iyuckyuck),&iyuckyuck);
+  //b = m_tree->Branch("test",&iyuckyuck,"test/I");
+  b = m_tree->Branch("dialCherC",return_dialCherC(),"dialCherC/d");
+  //m_branches.emplace("test", b);
+  std::cout<<"sce 1  iyuckyuck is "<<iyuckyuck<<std::endl;
+  b->Fill();
+
+
+
+
   Geant4OutputAction::beginRun(run);
 
-
-  // yuck yuck yuck
-  int iyuckyuck=3;
-  TBranch* b = 0;
-  b = m_tree->Branch("test",&iyuckyuck);
 }
 
 /// Fill single EVENT branch entry (Geant4 collection data)
@@ -146,11 +163,13 @@ int SCEGeant4Output2ROOT::fill(const string& nam, const ComponentCast& type, voi
       b->SetAddress(0);
       while (num > 0) {
         b->Fill();
+	std::cout<<"sce 2  iyuckyuck is "<<iyuckyuck<<"nam is "<<nam<<std::endl;
         --num;
       }
     }
     b->SetAddress(&ptr);
     int nbytes = b->Fill();
+    std::cout<<"sce 3  iyuckyuck is "<<iyuckyuck<<"nam is "<<nam<<std::endl;
     if (nbytes < 0) {
       throw runtime_error("Failed to write ROOT collection:" + nam + "!");
     }
@@ -168,17 +187,22 @@ void SCEGeant4Output2ROOT::commit(OutputContext<G4Event>& ctxt) {
     Long64_t evt = m_tree->GetEntries() + 1;
     Int_t nb = a->GetEntriesFast();
     /// Fill NULL pointers to all branches, which have less entries than the Event branch
+    std::cout<<" yuckyuck nb is "<<nb<<std::endl;
     for (Int_t i = 0; i < nb; ++i) {
       TBranch* br_ptr = (TBranch*) a->UncheckedAt(i);
       Long64_t br_evt = br_ptr->GetEntries();
+      std::cout<<"  for branch "<<i<<" class name is "<<br_ptr->GetClassName()<<" icon name is "<<br_ptr->GetIconName()<<std::endl;
+      
       if (br_evt < evt) {
         Long64_t num = evt - br_evt;
         br_ptr->SetAddress(0);
         while (num > 0) {
           br_ptr->Fill();
+	  std::cout<<"sce 4  iyuckyuck is "<<iyuckyuck<<" branch  "<<br_ptr->GetClassName()<<std::endl;
           --num;
         }
       }
+      
     }
     m_tree->SetEntries(evt);
   }

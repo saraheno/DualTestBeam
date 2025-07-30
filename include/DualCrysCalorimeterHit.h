@@ -27,7 +27,6 @@ typedef ROOT::Math::XYZVector Direction;
 namespace CalVision {
 
 
-
   const int finenbin=40;
   const int coarsenbin=4;
 

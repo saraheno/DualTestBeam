@@ -23,10 +23,19 @@
 #include <G4Event.hh>
 using namespace std;
 
+
+
+
+
+
+
+namespace CalVision {
+
+
 // way too slow if track all photons for now
 // so randomly delete photons after creation according to this fraction
-//   dialScint=1.0, dialCer=1.0 to keep all photons 
-double m_dialCherC= 10./800000.;
+//   dialScint=1.0, dialCer=1.0 to keep all photons
+double m_dialCherC=10./800000.;
 double m_dialScintC=100./20000000.;
 double m_dialCherO= 100./800000.;
 double m_dialScintO=1./20000000.;
@@ -34,8 +43,10 @@ float m_betarel=1/1.544;
 int m_printlimitSCE=10;
 int m_MAXEVENTSCE=10;
 
-namespace CalVision {
 
+
+  
+  
   G4double fromEvToNm(G4double energy)
   {
     // there is some bug somewhere.  shouldn't need this facto
@@ -57,6 +68,9 @@ namespace CalVision {
     // If we need special data to personalize the action, be put it here
     //int mumDeposits = 0;
     //double integratedDeposit = 0;
+
+
+    
   };
 }
 
@@ -66,6 +80,7 @@ namespace dd4hep {
   namespace sim   {
 
     using namespace CalVision;
+
     
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //               Geant4SensitiveAction<MyTrackerSD>
