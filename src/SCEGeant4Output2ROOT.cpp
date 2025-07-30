@@ -11,6 +11,8 @@
 //
 //==========================================================================
 
+#include "DBParameters.h"
+
 // Framework include files
 #include <DD4hep/Printout.h>
 #include <DD4hep/Primitives.h>
@@ -36,8 +38,6 @@ using namespace dd4hep::sim;
 using namespace dd4hep;
 using namespace std;
 using namespace CalVision;
-
-double* return_dialCherC();
 
 /// Standard constructor
 SCEGeant4Output2ROOT::SCEGeant4Output2ROOT(Geant4Context* ctxt, const string& nam)
@@ -124,7 +124,7 @@ void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
   //iyuckyuck=3;
   //fill("iyuckyuck",ComponentCast(iyuckyuck),&iyuckyuck);
   //b = m_tree->Branch("test",&iyuckyuck,"test/I");
-  b = m_tree->Branch("dialCherC",return_dialCherC(),"dialCherC/d");
+  b = m_tree->Branch("dialCherC",&DBParameters::instance()->m_dialCherC,"dialCherC/d");
   //m_branches.emplace("test", b);
   std::cout<<"sce 1  iyuckyuck is "<<iyuckyuck<<std::endl;
   b->Fill();
