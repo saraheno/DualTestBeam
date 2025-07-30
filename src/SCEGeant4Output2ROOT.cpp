@@ -121,13 +121,12 @@ void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
   // put into root tuple information that is per run
   TBranch* b = 0;
   
-  //iyuckyuck=3;
-  //fill("iyuckyuck",ComponentCast(iyuckyuck),&iyuckyuck);
-  //b = m_tree->Branch("test",&iyuckyuck,"test/I");
-  b = m_tree->Branch("dialCherC",&DBParameters::instance()->m_dialCherC,"dialCherC/d");
-  //m_branches.emplace("test", b);
-  std::cout<<"sce 1  iyuckyuck is "<<iyuckyuck<<std::endl;
-  b->Fill();
+
+  b = m_tree->Branch("dialCherC",&DBParameters::instance()->m_dialCherC,"dialCherC/d");   b->Fill();
+  b = m_tree->Branch("dialScintC",&DBParameters::instance()->m_dialScintC,"dialScintC/d");  b->Fill();
+  b = m_tree->Branch("dialCherO",&DBParameters::instance()->m_dialCherO,"dialCherO/d");  b->Fill();
+  b = m_tree->Branch("dialScintO",&DBParameters::instance()->m_dialScintO,"dialScintO/d");  b->Fill();
+
 
 
 

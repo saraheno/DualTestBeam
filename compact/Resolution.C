@@ -300,12 +300,19 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   
   int iyuckne=et->GetEntries();
   std::cout<<" b_test entries is "<<iyuckne<<std::endl;
-  int iyuck;
-  et->SetBranchAddress("test",&iyuck);
-  for (Long64_t j=0;j<iyuckne;j++) {
-    int nnn = et->GetEntry(j);
-    std::cout<<"j is "<<j<<" iddd is "<<iyuck<<std::endl;
-  }
+  double adialCherC,adialScintC,adialCherO,adialScintO;
+  double dialCherC,dialScintC,dialCherO,dialScintO;
+  int nnn;
+  et->SetBranchAddress("dialCherC",&adialCherC);
+  nnn=et->GetEntry(0); dialCherC=adialCherC;
+  et->SetBranchAddress("dialScintC",&adialScintC);
+  nnn=et->GetEntry(0); dialScintC=adialScintC;
+  et->SetBranchAddress("dialCherO",&adialCherO);
+  nnn=et->GetEntry(0); dialCherO=adialCherO;
+  et->SetBranchAddress("dialScintO",&adialScintO);
+  nnn=et->GetEntry(0); dialScintO=adialScintO;
+  std::cout<<" dials are "<<dialCherC<<" "<<dialScintC<<" "<<dialCherO<<" "<<dialScintO<<std::endl;
+
 
 
   //      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
