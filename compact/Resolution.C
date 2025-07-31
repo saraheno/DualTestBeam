@@ -55,6 +55,8 @@ typedef dd4hep::sim::Geant4HitData::MonteCarloContrib Contribution;
 typedef std::vector<dd4hep::sim::Geant4HitData::MonteCarloContrib> Contributions;
 
 
+
+
 void SCEDraw1 (TCanvas* canv, const char* name, TH1F* h1, const char* outfile, bool logy);
 void SCEDraw1tp (TCanvas* canv, const char* name, TProfile* h1, const char* outfile);
 void SCEDraw1_2D (TCanvas* canv, const char* name, TH2F* h1, const char* outfile,bool dline, float eohS,float eohC);
@@ -68,6 +70,9 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
+void Elec_Sim(TH1F* In, TH1F* Out);
+
+
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
@@ -262,6 +267,15 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   TH1F *pecalpd1cer = new TH1F("pecalpd1cer","pion cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
   TH1F *eecalpd2scint = new TH1F("eecalpd2scint","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *eecalpd2cer = new TH1F("eecalpd2cer","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
+
+
+
+  TH1F *eecalpd1scints = new TH1F("eecalpd1scints","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+
+
+
+
+
   TH1F *pecalpd2scint = new TH1F("pecalpd2scint","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *pecalpd2cer = new TH1F("pecalpd2cer","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
   TH1F *ehcalpd1scint = new TH1F("ehcalpd1scint","elec scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemax);
@@ -446,6 +460,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       fillfill=1;
       getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
       if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
+      Elec_Sim(eecalpd1scint,eecalpd1scints);
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
       float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
@@ -1548,6 +1563,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   phcalpd2scint->Write();
   phcalpd2cer->Write();
 
+    eecalpd1scints->Write();
+
 
   heesumcal->Write();
   heesumemcal->Write();
@@ -2632,6 +2649,10 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 }
 
+void Elec_Sim(TH1F* In, TH1F* Out) {
+  int nbin = In->GetNbinsX();
+  std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
+}
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
 
@@ -2659,13 +2680,13 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	}
 	*/
 	int iii=(aecalhit->ScinTime).size();
-	std::cout<<" ScinTime pd1 size is "<<iii<<std::endl;
+	//std::cout<<" ScinTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
+	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
 	  ecalpd1scint->Fill((aecalhit->ScinTime)[jjj]);
 	}
 	iii=(aecalhit->CerTime).size();
-	std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
+	//std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  ecalpd1cer->Fill((aecalhit->CerTime)[jjj]);
 	}
@@ -2680,13 +2701,13 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	}
 	*/
 	int iii=(aecalhit->ScinTime).size();
-	std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
+	//std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
+	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
 	  ecalpd2scint->Fill((aecalhit->ScinTime)[jjj]);
 	}
 	iii=(aecalhit->CerTime).size();
-	std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
+	//std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  ecalpd2cer->Fill((aecalhit->CerTime)[jjj]);
 	}
@@ -2729,13 +2750,13 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  }
 	  */
 	  int iii=(ahcalhit->ScinTime).size();
-	  std::cout<<" ScinTime size pd1 is "<<iii<<std::endl;
+	  //std::cout<<" ScinTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
+	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
 	    hcalpd1scint->Fill((ahcalhit->ScinTime)[jjj]);
 	  }
 	  iii=(ahcalhit->CerTime).size();
-	  std::cout<<" CerTime size pd1 is "<<iii<<std::endl;
+	  //std::cout<<" CerTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    hcalpd1cer->Fill((ahcalhit->CerTime)[jjj]);
 	  }
@@ -2752,13 +2773,13 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  */
 
 	  int iii=(ahcalhit->ScinTime).size();
-	  std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
+	  //std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
+	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
 	    hcalpd2scint->Fill((ahcalhit->ScinTime)[jjj]);
 	  }
 	  iii=(ahcalhit->CerTime).size();
-	  std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
+	  //std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    hcalpd2cer->Fill((ahcalhit->CerTime)[jjj]);
 	  }
