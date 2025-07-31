@@ -71,6 +71,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
 void Elec_Sim(TH1F* In, TH1F* Out);
+double SPR(double tNow);
 
 
 
@@ -2656,10 +2657,62 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
   double amax = In->GetBinLowEdge(nbin)+In->GetBinWidth(nbin);
   double awidth=(amax-amin)/nbin;
   std::cout<<"  In min max awidth are "<<amin<<" "<<amax<<" "<<awidth<<std::endl;
-  for (int i=0;i<nbin;i++) {
-    Out->Fill(amin+(i-0.5)*awidth,In->GetBinContent(i));
+  for (int i=0;i<nbin;i++) {  // for each bin in pe creation time
+    int npe=In->GetBinContent(i);
+    if(npe>0) {
+      for ( int j=0;j<npe;j++) {  // for each pe in that bin
+	for (int k=0;k<finenbin;k++ ) {   // for each bin in time frame
+	  float petime = (amin+(i-0.5)*awidth);
+	  float bintime = (timemin+(k-0.5)*timebinsize);
+	  float localtime= bintime-petime;
+	  float charge=SPR(localtime);
+	  if(localtime>0) {
+	    std::cout<<"petime k bintime  localtime charge is "<<petime<<" "<<k<<" "<<bintime<<" "<<localtime<<" "<<charge<<std::endl;        
+	    Out->Fill(bintime, charge);
+	  }
+	}
+      }
+    }
   }
 }
+
+
+
+
+double SPR(double tNow)
+{
+        /*
+        * This example of SPR corresponds to Calvision TB at FNAL in 2023
+        */
+  double tMin_  = 0.0;
+  double tMax_  = 1000.0;
+
+  double tRise       = 0.853;
+  double tDecay      = 6.538;
+  double tUnderShoot = 101.7;
+  double norm        = 0.111051;
+
+
+  double a = 1./ tRise;
+  double b = 1./ tDecay;
+  double A = -a * b / (a - b);
+  double B = -A;
+  double result = A * exp(-a*tNow) + B * exp(-b*tNow);
+    
+  double g = 1./ tUnderShoot;
+  double Atmp = -A * g / ( a - g);
+  double Btmp = -B * g / ( b - g);
+  double G = - Atmp - Btmp ;
+  A = Atmp;
+  B = Btmp;
+  result -= A * exp(-a*tNow) + B * exp(-b*tNow) + G * exp(-g*tNow);
+    
+  return result;
+
+}
+
+
+
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
 
