@@ -1138,13 +1138,14 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   ffm = hpfff->GetBinCenter(hpfff->GetMaximumBin());
   hpfff->Fit("gaus","R0","",ffm-roughfit,ffm+roughfit);
   TF1 *fitffn1 = (TF1*)hpfff->GetListOfFunctions()->FindObject("gaus");
-  ffm = fitffn1->GetParameter(1);
-  rms1 = rmsscale*fitffn1->GetParameter(2);
+  if(fitffn1) ffm = fitffn1->GetParameter(1);
+  if(fitffn1) rms1 = rmsscale*fitffn1->GetParameter(2);
   hpfff->Fit("gaus","R0","",ffm-rms1,ffm+rms1);
   TF1 *fitffn2 = (TF1*)hpfff->GetListOfFunctions()->FindObject("gaus");
-  float ffn2_p0= fitffn2->GetParameter(0);
-  float ffn2_p1= fitffn2->GetParameter(1);
-  float ffn2_p2= fitffn2->GetParameter(2);
+  float ffn2_p0,ffn2_p1,ffn2_p2;
+  if(fitffn2) ffn2_p0= fitffn2->GetParameter(0);
+  if(fitffn2) ffn2_p1= fitffn2->GetParameter(1);
+  if(fitffn2) ffn2_p2= fitffn2->GetParameter(2);
   if(doplots) {
     TCanvas* x1 = new TCanvas();
     SCEDraw1(x1,"x1",hpfff,"junkx1.png",0);
@@ -2700,20 +2701,24 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
       DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
       float ae=aecalhit->energyDeposit;
       if((ilayer==0)&&(islice==1)) {  // pd on entrance to ecal
+	/*
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  ecalpd1scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
 	  ecalpd1cer->Fill((ijk+0.5)*timebinsize,aecalhit->ncertime[ijk]);
 	  ecalpd1scintz->Fill((ijk+0.5)*timebinsizez,aecalhit->nscinttimez[ijk]);
 	  ecalpd1cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
+	*/
       }
       if((ilayer==1)&&(islice==2)) {  // pd on exist of ecal
+	/*
 	for(int ijk=0;ijk<finenbin;ijk++){
 	  ecalpd2scint->Fill((ijk+0.5)*timebinsize,aecalhit->nscinttime[ijk]);
 	  ecalpd2cer->Fill((ijk+0.5)*timebinsize,aecalhit->ncertime[ijk]);
 	  ecalpd2scintz->Fill((ijk+0.5)*timebinsizez,aecalhit->nscinttimez[ijk]);
 	  ecalpd2cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
+	*/
       }
       if(gendet==3||gendet==4){
 	if(idet==5) {
@@ -2743,20 +2748,24 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	int idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy;
 	DecodeFiber(ihitchan,idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy);
 	if(iphdet==1) {  // pd on scintillating fibers
+	  /*
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd1cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
 	    hcalpd1scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
 	    hcalpd1cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
+	  */
 	}
 	if(iphdet==2) {  // pd on cherenkov fibers
+	  /*
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd2cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
 	    hcalpd2scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
 	    hcalpd2cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
+	  */
 	}
 	if(gendet==3||gendet==4) {
 	  if(idet==6) {
@@ -2775,20 +2784,24 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	int idet,ix,iy,ilayer,ibox2,islice;
 	DecodeSampling(ihitchan,idet,ix,iy,ilayer,ibox2,islice);
 	if( (islice==(*mapsampcalslice.find("PD1")).second)||(islice==(*mapsampcalslice.find("PD2")).second)) {  // pd on scint?
+	  /*
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd1scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd1cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
 	    hcalpd1scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
 	    hcalpd1cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
+	  */
 	}
 	if( (islice==(*mapsampcalslice.find("PD3")).second)||(islice==(*mapsampcalslice.find("PD4")).second)) {  // pd on quartz?
+	  /*
 	  for(int ijk=0;ijk<finenbin;ijk++){
 	    hcalpd2scint->Fill((ijk+0.5)*timebinsize,ahcalhit->nscinttime[ijk]);
 	    hcalpd2cer->Fill((ijk+0.5)*timebinsize,ahcalhit->ncertime[ijk]);
 	    hcalpd2scintz->Fill((ijk+0.5)*timebinsizez,ahcalhit->nscinttimez[ijk]);
 	    hcalpd2cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
+	  */
 	}
 	if(gendet==3||gendet==4) {
 	  if((islice==(*mapsampcalslice.find("PS")).second)||(islice==(*mapsampcalslice.find("Quartz")).second) ){
