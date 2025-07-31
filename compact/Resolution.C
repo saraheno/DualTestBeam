@@ -40,7 +40,7 @@ float timecut=10;
 float betacut=1/1.5;
 const int finenbin=40;
 const float timemin=0.;
-const float timemax=400.;
+const float timemax=40.;
 const float timemaxz=40.;
 const float timebinsize=(timemax-timemin)/float(finenbin);
 const float timebinsizez=(timemaxz-timemin)/float(finenbin);
@@ -2709,6 +2709,17 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  ecalpd1cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
 	*/
+	int iii=(aecalhit->ScinTime).size();
+	std::cout<<" ScinTime size is "<<iii<<std::endl;
+	for(int jjj=0;jjj<iii;jjj++) {
+	  std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
+	  ecalpd1scint->Fill((aecalhit->ScinTime)[jjj]);
+	}
+	iii=(aecalhit->CerTime).size();
+	std::cout<<" CerTime size is "<<iii<<std::endl;
+	for(int jjj=0;jjj<iii;jjj++) {
+	  ecalpd1cer->Fill((aecalhit->CerTime)[jjj]);
+	}
       }
       if((ilayer==1)&&(islice==2)) {  // pd on exist of ecal
 	/*
