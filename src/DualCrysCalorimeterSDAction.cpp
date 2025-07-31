@@ -255,14 +255,14 @@ namespace dd4hep {
 
 
 
-        int xbin=-1;
-        float xbinsize=(hit->xmax-hit->xmin)/hit->ncoarsebin;
-        xbin = (thePrePoint->GetPosition().x()-hit->xmin)/xbinsize;
+        //int xbin=-1;
+        //float xbinsize=(hit->xmax-hit->xmin)/hit->ncoarsebin;
+        //xbin = (thePrePoint->GetPosition().x()-hit->xmin)/xbinsize;
 
 
-        int ybin=-1;
-        float ybinsize=(hit->ymax-hit->ymin)/hit->ncoarsebin;
-        ybin = (thePrePoint->GetPosition().y()-hit->ymin)/ybinsize;
+        //int ybin=-1;
+        //float ybinsize=(hit->ymax-hit->ymin)/hit->ncoarsebin;
+        //ybin = (thePrePoint->GetPosition().y()-hit->ymin)/ybinsize;
 
 
 	int phstep = track->GetCurrentStepNumber();
@@ -278,9 +278,10 @@ namespace dd4hep {
 	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
+		(hit->CerTime).push_back(avearrival);
                 //if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
+                //if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
                 if(SCEPRINT) std::cout<<" cer photon kill pre time "<<pretime<<std::endl;
                 if(SCEPRINT) std::cout<<" cer photon kill post time "<<posttime<<std::endl;
@@ -291,8 +292,8 @@ namespace dd4hep {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
 		//if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-              if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
+		//if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 	      }
 	      track->SetTrackStatus(fStopAndKill);
@@ -302,8 +303,8 @@ namespace dd4hep {
 	    if( (phstep==1)  ) {
 	      hit->ncerenkov+=1;
 	      //if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
-              if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
-	      if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
+              //if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
+	      //if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
 	      //              if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->cerhitpos).at(xbin).at(ybin))+=1;
 
 	      //Geant4Event&  evt = context()->event();
@@ -317,7 +318,7 @@ namespace dd4hep {
 	  }
 	}
 	else if (  track->GetCreatorProcess()->G4VProcess::GetProcessName() == "ScintillationPhys"  ) {
-          if(SCEPRINT) std::cout<<"     scintillation photon"<<std::endl;
+          if(SCEPRINT) std::cout<<" found  scintillation photon"<<std::endl;
 	  std::string amedia = ((track->GetMaterial())->GetName());
 	  if(amedia.find("kill")!=std::string::npos) 
 	    //          if(((track->GetMaterial())->GetName())=="killMedia") 
@@ -326,9 +327,10 @@ namespace dd4hep {
 	      //std::cout<<"killing photon"<<std::endl;
 	      if(phstep>1) {
 		hit->nscintillator+=1;
+		(hit->ScinTime).push_back(avearrival);
 		//if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
+                //if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
                 if(SCEPRINT) std::cout<<" scint photon kill pre time "<<pretime<<std::endl;
@@ -339,8 +341,8 @@ namespace dd4hep {
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->nscintillator+=1;
 		//if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
+                //if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 	      }
@@ -351,8 +353,8 @@ namespace dd4hep {
 	    if( (phstep==1) ) {
 	      hit->nscintillator+=1; 
 	      //if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
-                if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
-		if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
+	      //if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
+	      //if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;
 		//                if(( xbin>-1&&xbin<hit->ncoarsebin)&&(ybin>-1&&ybin<hit->ncoarsebin)) ((hit->scinthitpos).at(xbin).at(ybin))+=1;
 
 
@@ -416,10 +418,10 @@ namespace dd4hep {
 	  float aabeta=track->GetVelocity()/CLHEP::c_light;
 	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
-	  if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
+	  //if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
 	  if(aabeta>DBParameters::instance()->DBParameters::instance()->m_betarel) {
 	    hit->edeprelativistic+=contrib.deposit;	  
-	    if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
+	    //if(jbin>-1&&jbin<hit->nfinebin) ((hit->ereldeptime).at(jbin))+=contrib.deposit;
 	  }
 	  if((abs(TrPDGid)==11)||(abs(TrPDGid)==22)) {
 	    hit->edepepgam+=contrib.deposit;	  

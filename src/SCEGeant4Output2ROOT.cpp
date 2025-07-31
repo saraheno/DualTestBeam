@@ -162,13 +162,11 @@ int SCEGeant4Output2ROOT::fill(const string& nam, const ComponentCast& type, voi
       b->SetAddress(0);
       while (num > 0) {
         b->Fill();
-	std::cout<<"sce 2  iyuckyuck is "<<iyuckyuck<<"nam is "<<nam<<std::endl;
         --num;
       }
     }
     b->SetAddress(&ptr);
     int nbytes = b->Fill();
-    std::cout<<"sce 3  iyuckyuck is "<<iyuckyuck<<"nam is "<<nam<<std::endl;
     if (nbytes < 0) {
       throw runtime_error("Failed to write ROOT collection:" + nam + "!");
     }
@@ -186,7 +184,6 @@ void SCEGeant4Output2ROOT::commit(OutputContext<G4Event>& ctxt) {
     Long64_t evt = m_tree->GetEntries() + 1;
     Int_t nb = a->GetEntriesFast();
     /// Fill NULL pointers to all branches, which have less entries than the Event branch
-    std::cout<<" yuckyuck nb is "<<nb<<std::endl;
     for (Int_t i = 0; i < nb; ++i) {
       TBranch* br_ptr = (TBranch*) a->UncheckedAt(i);
       Long64_t br_evt = br_ptr->GetEntries();
@@ -197,7 +194,6 @@ void SCEGeant4Output2ROOT::commit(OutputContext<G4Event>& ctxt) {
         br_ptr->SetAddress(0);
         while (num > 0) {
           br_ptr->Fill();
-	  std::cout<<"sce 4  iyuckyuck is "<<iyuckyuck<<" branch  "<<br_ptr->GetClassName()<<std::endl;
           --num;
         }
       }
