@@ -41,9 +41,9 @@ float betacut=1/1.5;
 const int finenbin=40;
 const float timemin=0.;
 const float timemax=40.;
-const float timemaxz=40.;
+
 const float timebinsize=(timemax-timemin)/float(finenbin);
-const float timebinsizez=(timemaxz-timemin)/float(finenbin);
+
 
 float kappaEcal(1.),kappaHcal(1.);
 float biggesttime=0.;
@@ -67,7 +67,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	      float  &eesum,float &eesumcal,float &eesumem, float &eesumair,float &eesumdead, float &eesumcrystal,float &eesumPDe,float &eesumfiber1,float &eesumfiber2,float &eesumabs,float &eesumPDh,float &eesumairem, float &eesumdeadem, float &eesumcrystalem,float &eesumPDeem,float &eesumfiber1em, float &eesumfiber2em,float &eesumabsem,float &eesumPDhem,float &eesumedge,float &eesumedgerel, float &necertotecal,float &nescinttotecal,float &necertothcal,float &nescinttothcal,float &eecaltimecut, float &ehcaltimecut,float &erelecaltimecut, float &erelhcaltimecut,int &nine,int &ninh);
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,
-	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz);
+	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
@@ -273,22 +273,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   TH1F *phcalpd2scint = new TH1F("phcalpd2scint","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemax);
   TH1F *phcalpd2cer = new TH1F("phcalpd2cer","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemax);
 
-  TH1F *eecalpd1scintz = new TH1F("eecalpd1scintz","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
-  TH1F *eecalpd1cerz = new TH1F("eecalpd1cerz","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
-  TH1F *pecalpd1scintz = new TH1F("pecalpd1scintz","pion scint photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
-  TH1F *pecalpd1cerz = new TH1F("pecalpd1cerz","pion cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemaxz);
-  TH1F *eecalpd2scintz = new TH1F("eecalpd2scintz","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
-  TH1F *eecalpd2cerz = new TH1F("eecalpd2cerz","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
-  TH1F *pecalpd2scintz = new TH1F("pecalpd2scintz","pion scint photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
-  TH1F *pecalpd2cerz = new TH1F("pecalpd2cerz","pion cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemaxz);
-  TH1F *ehcalpd1scintz = new TH1F("ehcalpd1scintz","elec scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
-  TH1F *ehcalpd1cerz = new TH1F("ehcalpd1cerz","elec cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
-  TH1F *phcalpd1scintz = new TH1F("phcalpd1scintz","pion scint photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
-  TH1F *phcalpd1cerz = new TH1F("phcalpd1cerz","pion cerenov photon arrival time ns HCAL scint fiber",finenbin,timemin,timemaxz);
-  TH1F *ehcalpd2scintz = new TH1F("ehcalpd2scintz","elec scint photon arrival time ns HCAL quartz fiber",finenbin,timemin,timemaxz);
-  TH1F *ehcalpd2cerz = new TH1F("ehcalpd2cerz","elec cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
-  TH1F *phcalpd2scintz = new TH1F("phcalpd2scintz","pion scint photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
-  TH1F *phcalpd2cerz = new TH1F("phcalpd2cerz","pion cerenov photon arrival time ns quartz fiber",finenbin,timemin,timemaxz);
+
 
 
   //****************************************************************************************************************************
@@ -460,7 +445,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       fillfill=1;
       getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
-      if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer,eecalpd1scintz,eecalpd1cerz,eecalpd2scintz,eecalpd2cerz,ehcalpd1scintz,ehcalpd1cerz,ehcalpd2scintz,ehcalpd2cerz);
+      if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
       float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
@@ -680,7 +665,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       int nine(0),ninh(0);
       getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,fillfill,pesum,pesumcal,pesumem,pesumair,pesumdead,pesumcrystal,pesumPDe,pesumfiber1,pesumfiber2,pesumabs,pesumPDh,pesumairem,pesumdeadem,pesumcrystalem,pesumPDeem,pesumfiber1em,pesumfiber2em,pesumabsem,pesumPDhem,pesumedge,pesumedgerel,npcertotecal,npscinttotecal,npcertothcal,npscinttothcal,pecaltimecut, phcaltimecut,prelecaltimecut,prelhcaltimecut,nine,ninh);
       fillfill=1;
-      if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,piecaltime,pihcaltime,pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer,pecalpd1scintz,pecalpd1cerz,pecalpd2scintz,pecalpd2cerz,phcalpd1scintz,phcalpd1cerz,phcalpd2scintz,phcalpd2cerz);
+      if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits,timecut,piecaltime,pihcaltime,pecalpd1scint,pecalpd1cer,pecalpd2scint,pecalpd2cer,phcalpd1scint,phcalpd1cer,phcalpd2scint,phcalpd2cer);
 
       // gamma fraction from em fraction
       float pfff=0.;
@@ -1501,26 +1486,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     TCanvas* cc9 = new TCanvas();
     SCEDraw2(cc9,"cc9",phcalpd2scint,phcalpd2cer,"junkcc9.png",1);
 
-    TCanvas* cc2z = new TCanvas();
-    SCEDraw2(cc2z,"cc2z",eecalpd1scintz,eecalpd1cerz,"junkcc2z.png",1);
-    TCanvas* cc3z = new TCanvas();
-    SCEDraw2(cc3z,"cc3z",eecalpd2scintz,eecalpd2cerz,"junkcc3z.png",1);
-    TCanvas* cc4z = new TCanvas();
-    SCEDraw2(cc4z,"cc4z",ehcalpd1scintz,ehcalpd1cerz,"junkcc4z.png",1);
-    TCanvas* cc5z = new TCanvas();
-    SCEDraw2(cc5z,"cc5z",ehcalpd2scintz,ehcalpd2cerz,"junkcc5z.png",1);
-
-
-    TCanvas* cc6z = new TCanvas();
-    SCEDraw2(cc6z,"cc6z",pecalpd1scintz,pecalpd1cerz,"junkcc6z.png",1);
-    TCanvas* cc7z = new TCanvas();
-    SCEDraw2(cc7z,"cc7z",pecalpd2scintz,pecalpd2cerz,"junkcc7z.png",1);
-    TCanvas* cc8z = new TCanvas();
-    SCEDraw2(cc8z,"cc8z",phcalpd1scintz,phcalpd1cerz,"junkcc8z.png",1);
-    TCanvas* cc9z = new TCanvas();
-    SCEDraw2(cc9z,"cc9z",phcalpd2scintz,phcalpd2cerz,"junkcc9z.png",1);
-
-
 
   }
 
@@ -1583,22 +1548,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   phcalpd2scint->Write();
   phcalpd2cer->Write();
 
-  eecalpd1scintz->Write();
-  eecalpd1cerz->Write();
-  pecalpd1scintz->Write();
-  pecalpd1cerz->Write();
-  eecalpd2scintz->Write();
-  eecalpd2cerz->Write();
-  pecalpd2scintz->Write();
-  pecalpd2cerz->Write();
-  ehcalpd1scintz->Write();
-  ehcalpd1cerz->Write();
-  phcalpd1scintz->Write();
-  phcalpd1cerz->Write();
-  ehcalpd2scintz->Write();
-  ehcalpd2cerz->Write();
-  phcalpd2scintz->Write();
-  phcalpd2cerz->Write();
 
   heesumcal->Write();
   heesumemcal->Write();
@@ -2684,7 +2633,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 }
 
 
-void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer,TH1F *ecalpd1scintz,TH1F *ecalpd1cerz,TH1F *ecalpd2scintz,TH1F *ecalpd2cerz,TH1F *hcalpd1scintz,TH1F *hcalpd1cerz,TH1F *hcalpd2scintz,TH1F *hcalpd2cerz){
+void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
 
   if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
   int nbyteecal, nbytehcal, nbyteedge;
