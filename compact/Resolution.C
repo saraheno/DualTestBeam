@@ -2654,7 +2654,11 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
   std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
   double amin = In->GetBinLowEdge(1);
   double amax = In->GetBinLowEdge(nbin)+In->GetBinWidth(nbin);
-  std::cout<<"  In min max are "<<amin<<" "<<amax<<std::endl;
+  double awidth=(amax-amin)/nbin;
+  std::cout<<"  In min max awidth are "<<amin<<" "<<amax<<" "<<awidth<<std::endl;
+  for (int i=0;i<nbin;i++) {
+    Out->Fill(amin+(i-0.5)*awidth,In->GetBinContent(i));
+  }
 }
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
