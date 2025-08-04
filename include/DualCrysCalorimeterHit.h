@@ -81,8 +81,11 @@ namespace CalVision {
     //int ncoarsebin=coarsenbin;
     // std::array<std::array<int,coarsenbin>,coarsenbin> cerhitpos;
     //std::array<std::array<int,coarsenbin>,coarsenbin> scinthitpos;
-    std::vector<float> CerTime;
-    std::vector<float> ScinTime;
+
+    std::vector<std::pair<float, float>> HitCer;
+    std::vector<std::pair<float, float>> HitScin;
+    //    std::vector<float> CerTime;
+    //std::vector<float> ScinTime;
 
 
 

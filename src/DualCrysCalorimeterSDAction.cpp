@@ -278,7 +278,7 @@ namespace dd4hep {
 	      //	      SCEPRINT=1;
 	      if(phstep>1) {  // don't count photons created in kill media
 		hit->ncerenkov+=1;
-		(hit->CerTime).push_back(avearrival);
+		(hit->HitCer).push_back(std::make_pair(avearrival,wavelength));
                 //if(ibin>-1&&ibin<hit->nfinebin) ((hit->ncerwave).at(ibin))+=1;
                 //if(jbin>-1&&jbin<hit->nfinebin) ((hit->ncertime).at(jbin))+=1;
 		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->ncertimez).at(jbinz))+=1;
@@ -327,7 +327,7 @@ namespace dd4hep {
 	      //std::cout<<"killing photon"<<std::endl;
 	      if(phstep>1) {
 		hit->nscintillator+=1;
-		(hit->ScinTime).push_back(avearrival);
+		(hit->HitScin).push_back(std::make_pair(avearrival,wavelength));
 		//if((ibin>-1)&&(ibin<hit->nfinebin)) ((hit->nscintwave).at(ibin))+=1;
                 //if(jbin>-1&&jbin<hit->nfinebin) ((hit->nscinttime).at(jbin))+=1;
 		//if(jbinz>-1&&jbinz<hit->nfinebin) ((hit->nscinttimez).at(jbinz))+=1;

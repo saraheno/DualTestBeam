@@ -2739,16 +2739,16 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  ecalpd1cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
 	*/
-	int iii=(aecalhit->ScinTime).size();
+	int iii=(aecalhit->HitScin).size();
 	//std::cout<<" ScinTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  ecalpd1scint->Fill((aecalhit->ScinTime)[jjj]);
+	  ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
 	}
-	iii=(aecalhit->CerTime).size();
+	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  ecalpd1cer->Fill((aecalhit->CerTime)[jjj]);
+	  ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
 	}
       }
       if((ilayer==1)&&(islice==4)) {  // pd on exist of ecal
@@ -2760,16 +2760,16 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  ecalpd2cerz->Fill((ijk+0.5)*timebinsizez,aecalhit->ncertimez[ijk]);
 	}
 	*/
-	int iii=(aecalhit->ScinTime).size();
+	int iii=(aecalhit->HitScin).size();
 	//std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  ecalpd2scint->Fill((aecalhit->ScinTime)[jjj]);
+	  ecalpd2scint->Fill((aecalhit->HitScin)[jjj].first);
 	}
-	iii=(aecalhit->CerTime).size();
+	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  ecalpd2cer->Fill((aecalhit->CerTime)[jjj]);
+	  ecalpd2cer->Fill((aecalhit->HitCer)[jjj].first);
 	}
 
       }
@@ -2809,16 +2809,16 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	    hcalpd1cerz->Fill((ijk+0.5)*timebinsizez,ahcalhit->ncertimez[ijk]);
 	  }
 	  */
-	  int iii=(ahcalhit->ScinTime).size();
+	  int iii=(ahcalhit->HitScin).size();
 	  //std::cout<<" ScinTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
-	    hcalpd1scint->Fill((ahcalhit->ScinTime)[jjj]);
+	    hcalpd1scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
-	  iii=(ahcalhit->CerTime).size();
+	  iii=(ahcalhit->HitCer).size();
 	  //std::cout<<" CerTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    hcalpd1cer->Fill((ahcalhit->CerTime)[jjj]);
+	    hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
 	  }
 
 	}
@@ -2832,16 +2832,16 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  }
 	  */
 
-	  int iii=(ahcalhit->ScinTime).size();
+	  int iii=(ahcalhit->HitScin).size();
 	  //std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
-	    hcalpd2scint->Fill((ahcalhit->ScinTime)[jjj]);
+	    hcalpd2scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
-	  iii=(ahcalhit->CerTime).size();
+	  iii=(ahcalhit->HitScin).size();
 	  //std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    hcalpd2cer->Fill((ahcalhit->CerTime)[jjj]);
+	    hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 
 	}
