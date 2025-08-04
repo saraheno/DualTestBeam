@@ -34,7 +34,9 @@ int SCECOUNT=5;
 int SCECOUNT2=20;
 int icount777=0;
 int SCECOUNT3=10;
-
+int SCECOUNTHITHIT=30;
+int ihitcounts=0;
+int ihitcountc=0;
 
 float timecut=10;
 float betacut=1/1.5;
@@ -272,6 +274,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
 
   TH1F *eecalpd1scints = new TH1F("eecalpd1scints","electron scint photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+  TH1F *eecalpd1cers = new TH1F("eecalpd1cers","electron cerenov photon arrival time ns ECAL PD1",finenbin,timemin,timemax);
+  TH1F *eecalpd2scints = new TH1F("eecalpd2scints","electron scint photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
+  TH1F *eecalpd2cers = new TH1F("eecalpd2cers","electron cerenov photon arrival time ns ECAL PD2",finenbin,timemin,timemax);
 
 
 
@@ -462,6 +467,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
       if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
       Elec_Sim(eecalpd1scint,eecalpd1scints);
+      Elec_Sim(eecalpd2scint,eecalpd2scints);
+      Elec_Sim(eecalpd1cer,eecalpd1cers);
+      Elec_Sim(eecalpd2cer,eecalpd2cer);
+      
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
       float eedepcal=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumdead;
@@ -1564,7 +1573,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   phcalpd2scint->Write();
   phcalpd2cer->Write();
 
-    eecalpd1scints->Write();
+  eecalpd1scints->Write();
+  eecalpd1cers->Write();
+  eecalpd2scints->Write();
+  eecalpd2cers->Write();
 
 
   heesumcal->Write();
@@ -2667,7 +2679,7 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
 	  float localtime= bintime-petime;
 	  float charge=SPR(localtime);
 	  if(localtime>0) {
-	    std::cout<<"petime k bintime  localtime charge is "<<petime<<" "<<k<<" "<<bintime<<" "<<localtime<<" "<<charge<<std::endl;        
+	    //	    std::cout<<"petime k bintime  localtime charge is "<<petime<<" "<<k<<" "<<bintime<<" "<<localtime<<" "<<charge<<std::endl;        
 	    Out->Fill(bintime, charge);
 	  }
 	}
@@ -2744,11 +2756,19 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
 	  ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
+	  if(ihitcounts<SCECOUNTHITHIT) {
+	    std::cout<<" scin hit time wavelength is "<<(aecalhit->HitScin)[jjj].first<<" "<<(aecalhit->HitScin)[jjj].second<<std::endl;
+	    ihitcounts+=1;
+	  }
 	}
 	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
+	  if(ihitcountc<SCECOUNTHITHIT) {
+	    std::cout<<" cer hit time wavelength is "<<(aecalhit->HitCer)[jjj].first<<" "<<(aecalhit->HitCer)[jjj].second<<std::endl;
+	    ihitcountc+=1;
+	  }
 	}
       }
       if((ilayer==1)&&(islice==4)) {  // pd on exist of ecal
