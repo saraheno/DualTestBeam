@@ -2,7 +2,7 @@ from array import *
 import argparse
 
 
-# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendet 3 -dodual 0 -NNN 2 -dotwocalcor 1
+# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendete 3 -gendeth 3 -dodual 0 -NNN 2 -dotwocalcor 1
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g1", "--geometry1", help="main geometry ")
@@ -14,7 +14,8 @@ argParser.add_argument("-doedge","--doedge", help="0 no 1 yes")
 argParser.add_argument("-dodual","--dodual", help="0 no 1 yes")
 argParser.add_argument("-dotwocalcor","--dotwocalcor", help="0 no 1 yes")
 argParser.add_argument("-NNN","--NNN", help="number to process")
-argParser.add_argument("-gendet","--gendet", help="1 active media photons 2 photodetector  3 deposited energies")
+argParser.add_argument("-gendete","--gendete", help="ecal 1 active media photons 2 photodetector  3 deposited energies 5 digit")
+argParser.add_argument("-gendeth","--gendeth", help="hcal 1 active media photons 2 photodetector  3 deposited energies")
 
 args = argParser.parse_args()
 print("args=%s" % args)
@@ -52,9 +53,9 @@ while (i<nenergy):
     shfile.write('source  /data/users/eno/CalVision/dd4hep/DD4hep/install/bin/thisdd4hep.sh'+'\n')
     shfile.write('echo "ran thisdd4hep"'+'\n')
     if args.hcaltype=='0':
-       shfile.write('root -b -l -q \'Resolution.C('+str(args.NNN)+',"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry1)+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_pi-.root",'+str(energies[i])+','+str(args.doecal)+','+str(args.dohcal)+','+str(args.hcaltype)+','+str(args.doedge)+',0,0,0.,'+str(args.gendet)+',"./output/hists_'+str(energies[i])+'GeV_'+str(args.geometry1)+'_g'+str(args.gendet)+'.root","DRCNoSegment","DRFNoSegment",0,0,'+str(args.dodual)+','+str(args.dotwocalcor)+')\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+str(args.geometry1)+'_'+str(args.geometry2)+'_g'+str(args.gendet)+'.log \n' );
+       shfile.write('root -b -l -q \'Resolution.C('+str(args.NNN)+',"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry1)+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_pi-.root",'+str(energies[i])+','+str(args.doecal)+','+str(args.dohcal)+','+str(args.hcaltype)+','+str(args.doedge)+',0,0,0.,'+str(args.gendete)+','+str(args.gendeth)+',"./output/hists_'+str(energies[i])+'GeV_'+str(args.geometry1)+'_ge'+str(args.gendete)+'_gh'+str(args.gendeth)+'.root","DRCNoSegment","DRFNoSegment",0,0,'+str(args.dodual)+','+str(args.dotwocalcor)+')\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+str(args.geometry1)+'_'+str(args.geometry2)+'_ge'+str(args.gendete)+'_gh'+str(args.gendeth)+'.log \n' );
     if args.hcaltype=='1':
-       shfile.write('root -b -l -q \'Resolution.C('+str(args.NNN)+',"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry1)+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_pi-.root",'+str(energies[i])+','+str(args.doecal)+','+str(args.dohcal)+','+str(args.hcaltype)+','+str(args.doedge)+',0,0,0.,'+str(args.gendet)+',"./output/hists_'+str(energies[i])+'GeV_'+str(args.geometry1)+'_g'+str(args.gendet)+'.root","DRCNoSegment","DRSNoSegment",0,0,'+str(args.dodual)+','+str(args.dotwocalcor)+')\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+str(args.geometry1)+'_'+str(args.geometry2)+'_g'+str(args.gendet)+'.log \n' );
+       shfile.write('root -b -l -q \'Resolution.C('+str(args.NNN)+',"./output/out_'+args.geometry1+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry1)+"_"+str(energies[i])+'GeV_pi-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_e-.root","./output/out_'+str(args.geometry2)+"_"+str(energies[i])+'GeV_pi-.root",'+str(energies[i])+','+str(args.doecal)+','+str(args.dohcal)+','+str(args.hcaltype)+','+str(args.doedge)+',0,0,0.,'+str(args.gendete)+','+str(args.gendeth)+',"./output/hists_'+str(energies[i])+'GeV_'+str(args.geometry1)+'_ge'+str(args.gendete)+'_gh'+str(args.gendeth)+'.root","DRCNoSegment","DRSNoSegment",0,0,'+str(args.dodual)+','+str(args.dotwocalcor)+')\' >& ./Figures/s2_'+str(energies[i])+'GeV'+'_'+str(args.geometry1)+'_'+str(args.geometry2)+'_ge'+str(args.gendete)+'_gh'+str(args.gendeth)+'.log \n' );
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
