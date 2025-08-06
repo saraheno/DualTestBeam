@@ -74,10 +74,11 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
-void Elec_Sim(TH1F* In, TH1F* Out);
-double SPR(double tNow);
-double AFILTER(int ifilter, double wavelength);
-double sipmpde(int isipm, double wavelength);
+void Elec_Sim(TH1F* In, TH1F* Out);  // take histogram of true arrival times at photodetector and produce output signal
+double int_charge(TH1F* out, double pre, double window );
+double SPR(double tNow);  // response of electronics to a photoelectron
+double AFILTER(int ifilter, double wavelength);  // get probability to pass sipm pde and any wavelength filters
+double sipmpde(int isipm, double wavelength);  // sipmm qe as a function of wavelength
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
@@ -469,6 +470,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       getStuff(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
       if(fillfill==1) FillTime(mapsampcalslice,  gendet, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
       Elec_Sim(eecalpd1scint,eecalpd1scints);
+      double acharge = int_charge(eecalpd1scints,10.,100.);
+      std::cout<<" integrated charge is "<<acharge<<std::endl;
       Elec_Sim(eecalpd2scint,eecalpd2scints);
       Elec_Sim(eecalpd1cer,eecalpd1cers);
       Elec_Sim(eecalpd2cer,eecalpd2cer);
@@ -2664,6 +2667,34 @@ void getStuff(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 
 }
 
+// take a time frame and return integrated charge
+double int_charge(TH1F* out, double pre, double window ) {
+  double charge=0;
+
+  if(window<pre) {
+    std::cout<<" illegal arguments to int_charge pre window "<<pre<<" "<<window<<std::endl;
+  } else {
+    //std::cout<<"entering int_charge"<<std::endl;
+    int imax=out->GetMaximumBin();
+    //std::cout<<" max ibin is "<<imax<<std::endl;
+    double amax = out->GetBinLowEdge(imax);
+    //std::cout<<"  which is at time "<<amax<<std::endl;
+    int ilow=max(0,imax-(out->GetBin(amax-pre)));
+    int ihigh=min(out->GetNbinsX(),out->GetBin(amax+(window-pre)));
+    //std::cout<<" integrating from bin "<<ilow<<" to bin "<<ihigh<<std::endl;
+
+    charge=0;
+    for(int i=ilow;i<ihigh;i++ ) {
+      charge+=out->GetBinContent(i);
+    }
+  }
+  //std::cout<<" charge is "<<charge<<std::endl;
+  return charge;
+}
+
+
+
+  // take histogram of true arrival times at photodetector and produce output signal
 void Elec_Sim(TH1F* In, TH1F* Out) {
   int nbin = In->GetNbinsX();
   std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
@@ -2692,7 +2723,7 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
 
 
 
-
+// electronics response to a single photoelectron
 double SPR(double tNow)
 {
         /*
@@ -2725,6 +2756,7 @@ double SPR(double tNow)
 
 }
 
+// sipm QE versus wavelength
 double sipmpde(int isipm, double wavelength) {
 
 double UV_sipm_QE_x[23] = {361.161, 364.766, 379.794, 387.614,
@@ -2799,6 +2831,7 @@ double RGB_sipm_QE_y[29] = {0.034678173, 0.144499016, 0.271678829,
 }
 
 
+// probability a photon ejects a photoelectron and gets through any wavelength filters
 double AFILTER(int ifilter, double wavelength) {
   double passprob=1.;
   
