@@ -77,7 +77,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 void Elec_Sim(TH1F* In, TH1F* Out);
 double SPR(double tNow);
 double AFILTER(int ifilter, double wavelength);
-
+double sipmpde(int isipm, double wavelength);
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
 
@@ -2725,17 +2725,101 @@ double SPR(double tNow)
 
 }
 
+double sipmpde(int isipm, double wavelength) {
+
+double UV_sipm_QE_x[23] = {361.161, 364.766, 379.794, 387.614,
+                           396.624, 406.226, 411.617, 426.594, 436.769, 455.931, 477.492,
+                           496.061, 517.627, 547.583, 573.349, 598.521, 615.299, 649.46,
+                           671.039, 705.202, 755.548, 773.531, 798.108};
+double UV_sipm_QE_y[23] = {0.770120854, 0.787348933, 0.879304547,
+                           0.942520324, 0.982752141, 1, 0.982752141, 0.942520324, 0.890796527,
+                           0.816088771, 0.741381015, 0.683901339, 0.620685563, 0.545977807,
+                           0.488498131, 0.448266313, 0.413790375, 0.356330478, 0.32759064,
+                           0.275866843, 0.201139308, 0.178155349, 0.149415511};
+double RGB_sipm_QE_x[29] = {305.28, 318.47, 334.67, 352.06,
+                            370.06, 396.44, 416.23, 443.81, 466.6, 477.39, 491.78, 515.17,
+                            529.56, 556.53, 582.91, 610.49, 636.26, 663.24, 684.22, 712.39,
+                            738.76, 755.55, 774.73, 795.11, 825.68, 850.26, 874.23, 894.61, 900.61};
+double RGB_sipm_QE_y[29] = {0.034678173, 0.144499016, 0.271678829,
+                            0.427750492, 0.525998688, 0.635839415, 0.705195761, 0.786124754,
+                            0.87860651, 0.907518244, 0.936410093, 0.994213676, 1, 0.97687459,
+                            0.942196417, 0.90173192, 0.849714661, 0.78033843, 0.734107494, 0.664731264,
+                            0.583802271, 0.520232248, 0.485554075, 0.427750492, 0.364160585, 0.289017916,
+                            0.225428009, 0.167624426, 0.144499016};
+
+
+ double prob=1;
+ int j=0;
+
+ 
+ switch (isipm) {
+ case 0:
+   j=0;
+   while(j<23) {
+     if(wavelength<UV_sipm_QE_x[j]) break;
+     j++;
+   }
+   switch (j) {
+   case 0:
+     prob=0.;
+     break;
+   case 22:
+     prob=0.;
+     break;
+   default:
+     prob=UV_sipm_QE_y[j];
+     break;
+   }
+   break;
+ case 1:
+   j=0;
+   while(j<23) {
+     if(wavelength<RGB_sipm_QE_x[j]) break;
+     j++;
+   }
+   switch (j) {
+   case 0:
+     prob=0.;
+     break;
+   case 22:
+     prob=0.;
+     break;
+   default:
+     prob=RGB_sipm_QE_y[j];
+     break;
+   }
+   break;
+ default:
+   std::cout<<"   you messed up the input to AFILTER"<<std::endl;
+   break;
+ }
+
+ 
+  return prob;
+}
+
+
 double AFILTER(int ifilter, double wavelength) {
   double passprob=1.;
-
   
   switch (ifilter) {
-    case 0:
-      break;
-    case 1:
-      break;
-    default:
-      break;
+  case 0:  // no filter
+    break;
+  case 1:  // ecal entrance sipm scint
+    passprob*=sipmpde(0,wavelength);
+    break;
+  case 2: // ecal entrance sipm cer
+    passprob*=sipmpde(0,wavelength);
+    break;
+  case 3:  // ecal exit sipm scint
+    passprob*=sipmpde(0,wavelength);
+    break;
+  case 4: // ecal exit sipm cer
+    passprob*=sipmpde(0,wavelength);
+    break;
+  default:
+    std::cout<<"   you messed up the input to AFILTER"<<std::endl;
+    break;
   }
       
   return passprob;
@@ -2772,7 +2856,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	//std::cout<<" ScinTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
+	  if(aar.Rndm()<AFILTER(1,(aecalhit->HitScin)[jjj].second)) ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
 	  if(ihitcounts<SCECOUNTHITHIT) {
 	    std::cout<<" scin hit time wavelength is "<<(aecalhit->HitScin)[jjj].first<<" "<<(aecalhit->HitScin)[jjj].second<<std::endl;
 	    ihitcounts+=1;
@@ -2781,7 +2865,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
+	  if(aar.Rndm()<AFILTER(2,(aecalhit->HitCer)[jjj].second)) ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
 	  if(ihitcountc<SCECOUNTHITHIT) {
 	    std::cout<<" cer hit time wavelength is "<<(aecalhit->HitCer)[jjj].first<<" "<<(aecalhit->HitCer)[jjj].second<<std::endl;
 	    ihitcountc+=1;
@@ -2801,12 +2885,12 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	//std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd2scint->Fill((aecalhit->HitScin)[jjj].first);
+	  if(aar.Rndm()<AFILTER(3,(aecalhit->HitScin)[jjj].second)) ecalpd2scint->Fill((aecalhit->HitScin)[jjj].first);
 	}
 	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd2cer->Fill((aecalhit->HitCer)[jjj].first);
+	  if(aar.Rndm()<AFILTER(4,(aecalhit->HitCer)[jjj].second)) ecalpd2cer->Fill((aecalhit->HitCer)[jjj].first);
 	}
 
       }
