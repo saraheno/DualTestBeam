@@ -30,6 +30,8 @@
 using namespace std;
 
 
+TRandom3 aar;
+
 int SCECOUNT=5;
 int SCECOUNT2=20;
 int icount777=0;
@@ -74,7 +76,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
 void Elec_Sim(TH1F* In, TH1F* Out);
 double SPR(double tNow);
-
+double AFILTER(int ifilter, double wavelength);
 
 
 void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcalslice, int gendet, float kappaecal, float kappahcal, float meanscinEcal, float meancerEcal, float meanscinHcal, float meancerHcal, int  ievt,bool doecal,bool dohcal, int hcaltype, bool doedge,float &eesumedge, float &eesumedgerel, TBranch* &b_ecal,TBranch* &b_hcal, TBranch* &b_edge,CalHits* &ecalhits, CalHits* &hcalhits,CalHits* &edgehits,float &EEcal, float &EHcal,float &timecut, float &eecaltimecut, float &ehcaltimecut, float &erelecaltimecut, float &erelhcaltimecut);
@@ -2723,7 +2725,22 @@ double SPR(double tNow)
 
 }
 
+double AFILTER(int ifilter, double wavelength) {
+  double passprob=1.;
 
+  
+  switch (ifilter) {
+    case 0:
+      break;
+    case 1:
+      break;
+    default:
+      break;
+  }
+      
+  return passprob;
+    
+}
 
 
 void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
@@ -2755,7 +2772,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	//std::cout<<" ScinTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
+	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd1scint->Fill((aecalhit->HitScin)[jjj].first);
 	  if(ihitcounts<SCECOUNTHITHIT) {
 	    std::cout<<" scin hit time wavelength is "<<(aecalhit->HitScin)[jjj].first<<" "<<(aecalhit->HitScin)[jjj].second<<std::endl;
 	    ihitcounts+=1;
@@ -2764,7 +2781,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime pd1 size is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
+	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd1cer->Fill((aecalhit->HitCer)[jjj].first);
 	  if(ihitcountc<SCECOUNTHITHIT) {
 	    std::cout<<" cer hit time wavelength is "<<(aecalhit->HitCer)[jjj].first<<" "<<(aecalhit->HitCer)[jjj].second<<std::endl;
 	    ihitcountc+=1;
@@ -2784,12 +2801,12 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	//std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  //std::cout<<"    ScinTime["<<jjj<<"] is "<<(aecalhit->ScinTime)[jjj]<<std::endl;
-	  ecalpd2scint->Fill((aecalhit->HitScin)[jjj].first);
+	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd2scint->Fill((aecalhit->HitScin)[jjj].first);
 	}
 	iii=(aecalhit->HitCer).size();
 	//std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
-	  ecalpd2cer->Fill((aecalhit->HitCer)[jjj].first);
+	  if(aar.Rndm()<AFILTER(0,(aecalhit->HitScin)[jjj].second)) ecalpd2cer->Fill((aecalhit->HitCer)[jjj].first);
 	}
 
       }
@@ -2833,12 +2850,12 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  //std::cout<<" ScinTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
-	    hcalpd1scint->Fill((ahcalhit->HitScin)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 	  iii=(ahcalhit->HitCer).size();
 	  //std::cout<<" CerTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
 	  }
 
 	}
@@ -2856,12 +2873,12 @@ void FillTime(map<string, int> mapsampcalslice, int gendet, int ievt, bool doeca
 	  //std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
-	    hcalpd2scint->Fill((ahcalhit->HitScin)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 	  iii=(ahcalhit->HitScin).size();
 	  //std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 
 	}
