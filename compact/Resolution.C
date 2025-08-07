@@ -91,8 +91,8 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendete, int gendeth, in
 
 
 // timeframe
-const int tfnx=2;
-const int tfny=2;
+const int tfnx=25;
+const int tfny=25;
 const int tfndepth=2;
 TH1F* timeframe_true_pd1_s[tfnx][tfny][tfndepth];
 TH1F* timeframe_true_pd1_c[tfnx][tfny][tfndepth];
@@ -129,38 +129,38 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   // prepare timeframes
   string aname,bname;
   for (int i=0;i<tfnx;i++ ) {
-    for (int j=0;j<tfnx;j++ ) {
-      for (int k=0;k<tfny;k++ ) {
-	std::cout<<"i j k are "<<i<<","<<j<<","<<k<<std::endl;
+    for (int j=0;j<tfny;j++ ) {
+      for (int k=0;k<tfndepth;k++ ) {
+	//std::cout<<"i j k are "<<i<<","<<j<<","<<k<<std::endl;
 	
-	aname_pd1_s[i][j][k] = "true pd1 s "+to_string(i)+to_string(j)+to_string(k);
+	aname_pd1_s[i][j][k] = "true pd1 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd1_s[i][j][k]=aname_pd1_s[i][j][k].c_str();
 
 	
-	aname_pd1_c[i][j][k] = "true pd1 c "+to_string(i)+to_string(j)+to_string(k);
+	aname_pd1_c[i][j][k] = "true pd1 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd1_c[i][j][k]=aname_pd1_c[i][j][k].c_str();
 
 	
-	aname_pd2_s[i][j][k] = "true pd2 s "+to_string(i)+to_string(j)+to_string(k);
+	aname_pd2_s[i][j][k] = "true pd2 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd2_s[i][j][k]=aname_pd2_s[i][j][k].c_str();
 
 	
-	aname_pd2_c[i][j][k] = "true pd2 c "+to_string(i)+to_string(j)+to_string(k);
+	aname_pd2_c[i][j][k] = "true pd2 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd2_c[i][j][k]=aname_pd2_c[i][j][k].c_str();
 
-	std::cout<<bname_pd1_s[i][j][k]<<std::endl;
-	std::cout<<bname_pd1_c[i][j][k]<<std::endl;
-	std::cout<<bname_pd2_s[i][j][k]<<std::endl;
-	std::cout<<bname_pd2_c[i][j][k]<<std::endl;
+	//std::cout<<bname_pd1_s[i][j][k]<<std::endl;
+	//std::cout<<bname_pd1_c[i][j][k]<<std::endl;
+	//std::cout<<bname_pd2_s[i][j][k]<<std::endl;
+	//std::cout<<bname_pd2_c[i][j][k]<<std::endl;
 	
 	timeframe_true_pd1_s[i][j][k]= new TH1F(bname_pd1_s[i][j][k],bname_pd1_s[i][j][k],finenbin,timemin,timemax);
-	std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_s[i][j][k]->GetName()<<std::endl;
+	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_s[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd1_c[i][j][k]= new TH1F(bname_pd1_c[i][j][k],bname_pd1_c[i][j][k],finenbin,timemin,timemax);
-	std::cout<<" pd1 c name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_c[i][j][k]->GetName()<<std::endl;
+	//std::cout<<" pd1 c name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_c[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd2_s[i][j][k]= new TH1F(bname_pd2_s[i][j][k],bname_pd2_s[i][j][k],finenbin,timemin,timemax);
-	std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_s[i][j][k]->GetName()<<std::endl;
+	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_s[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd2_c[i][j][k]= new TH1F(bname_pd2_c[i][j][k],bname_pd2_c[i][j][k],finenbin,timemin,timemax);
-	std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_c[i][j][k]->GetName()<<std::endl;
+	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_c[i][j][k]->GetName()<<std::endl;
 	
       }
     }
@@ -1612,8 +1612,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
   if(doecal&&(gendete==5)) {
     for (int i=0;i<tfnx;i++ ) {
-      for (int j=0;j<tfnx;j++ ) {
-	for (int k=0;k<tfnx;k++ ) {
+      for (int j=0;j<tfny;j++ ) {
+	for (int k=0;k<tfndepth;k++ ) {
 	  std::cout<<"ijk "<<i<<" "<<j<<" "<<k<<std::endl;
 	  timeframe_true_pd1_s[i][j][k]->Write();
 	}
@@ -2471,8 +2471,8 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
   // zero out last try
   
   for (int i=0;i<tfnx;i++ ) {
-      for (int j=0;j<tfnx;j++ ) {
-	  for (int k=0;k<tfnx;k++ ) {
+      for (int j=0;j<tfny;j++ ) {
+	  for (int k=0;k<tfndepth;k++ ) {
 	    timeframe_true_pd1_s[i][j][k]->Reset();
 	    timeframe_true_pd1_c[i][j][k]->Reset();
 	    timeframe_true_pd2_s[i][j][k]->Reset();
@@ -2527,7 +2527,7 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
 	}
       }
     } else {
-      //std::cout<<" invalid ix iy "<<ix<<" "<<iy<<std::endl;
+      std::cout<<" invalid ix iy "<<ix<<" "<<iy<<std::endl;
     }
   }  // end loop over ecal hits
 
