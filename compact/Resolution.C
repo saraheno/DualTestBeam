@@ -42,9 +42,9 @@ int ihitcountc=0;
 
 float timecut=10;
 float betacut=1/1.5;
-const int finenbin=40;
+const int finenbin=400;
 const float timemin=0.;
-const float timemax=40.;
+const float timemax=400.;
 
 const float timebinsize=(timemax-timemin)/float(finenbin);
 
