@@ -36,7 +36,7 @@ int SCECOUNT=5;
 int SCECOUNT2=20;
 int icount777=0;
 int SCECOUNT3=10;
-int SCECOUNTHITHIT=30;
+int SCECOUNTHITHIT=1;
 int ihitcounts=0;
 int ihitcountc=0;
 
@@ -425,11 +425,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     // first pass through file for rough calibration
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
-
-      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
-
-      
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"  event number rough calibration "<<ievt<<std::endl;
+      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
       getMeanPhot(mapsampcalslice, gendete, gendeth, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, timecut, meaneecaltimecut, meanehcaltimecut, meanerelecaltimecut, meanerelhcaltimecut);
     }
 
@@ -458,12 +455,15 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
+
+      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+
       CalibRefine(mapsampcalslice, gendete, gendeth, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
     }
 
 
     if(doecal ) {
-
+      
       TF1 *gs = new TF1("gs", "gaus", 0, 1.5);
 
       arms = TMath::Max(CalEcalncer->GetRMS(),0.02); // keep at least +-0.02 (x1.5) width for fit for stability
@@ -542,6 +542,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number second is "<<ievt<<std::endl;
 
+      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      
       float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.),eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
       int nine(0),ninh(0);
 
@@ -769,6 +771,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
+      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
 
       float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.),pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
       int nine(0),ninh(0);
@@ -1209,6 +1212,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       for(int ievt=0;ievt<num_evt; ++ievt) {
 	if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
+	if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhitsc);
 	float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.),desumedgerel(0.);
 	getStuffDualCorr(domissCorr,beamE,mapsampcalslice, gendete, gendeth, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhitsc,hcalhitsc, edgehitsc, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
 	float pp2 = desumedge/beamE;
@@ -1614,7 +1618,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     for (int i=0;i<tfnx;i++ ) {
       for (int j=0;j<tfny;j++ ) {
 	for (int k=0;k<tfndepth;k++ ) {
-	  std::cout<<"ijk "<<i<<" "<<j<<" "<<k<<std::endl;
 	  timeframe_true_pd1_s[i][j][k]->Write();
 	}
       }
@@ -2288,49 +2291,63 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
   if(doecal) {
     if(ievt<SCECOUNT) std::cout<<"getMean phot ievt is "<<ievt<<std::endl;
 
-    nbyteecal = b_ecal->GetEntry(ievt);
-
+    if(gendete<5) {
+      nbyteecal = b_ecal->GetEntry(ievt);
       // ecal hits
-    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
-    for(size_t i=0;i<ecalhits->size(); ++i) {
-      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-      long long int ihitchan=aecalhit->cellID;
-      int idet,ix,iy,islice,ilayer,wc,type;
-      DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
+      if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+      for(size_t i=0;i<ecalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+	long long int ihitchan=aecalhit->cellID;
+	int idet,ix,iy,islice,ilayer,wc,type;
+	DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
 
 
-      Contributions zxzz=aecalhit->truth;
+	Contributions zxzz=aecalhit->truth;
 
-      if(gendete==1) {   // use photons as generated in otical material
-	if(type==2 ) {  // crystal
-	  meancerEcal+=aecalhit->ncerenkov;
-	  meanscinEcal+=aecalhit->nscintillator;
-	}
-      }
-      else if(gendete==2) {
-	if( type==1 ) { // either photo detector
-	  meancerEcal+=aecalhit->ncerenkov;
-	  meanscinEcal+=aecalhit->nscintillator;
-	}
-      }
-      else if(gendete==3||gendete==4){
-	if(idet==5) {
+	if(gendete==1) {   // use photons as generated in otical material
 	  if(type==2 ) {  // crystal
-	    meanscinEcal+=aecalhit->energyDeposit;
-	    if(gendete==3) meancerEcal+=aecalhit->edeprelativistic;
-	    if(gendete==4) meancerEcal+=aecalhit->energyDeposit;
+	    meancerEcal+=aecalhit->ncerenkov;
+	    meanscinEcal+=aecalhit->nscintillator;
+	  }
+	}
+	else if(gendete==2) {
+	  if( type==1 ) { // either photo detector
+	    meancerEcal+=aecalhit->ncerenkov;
+	    meanscinEcal+=aecalhit->nscintillator;
+	  }
+	}
+	else if(gendete==3||gendete==4){
+	  if(idet==5) {
+	    if(type==2 ) {  // crystal
+	      meanscinEcal+=aecalhit->energyDeposit;
+	      if(gendete==3) meancerEcal+=aecalhit->edeprelativistic;
+	      if(gendete==4) meancerEcal+=aecalhit->energyDeposit;
 
-	    for(size_t j=0;j<zxzz.size(); j++) {
-	      if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
-	      if((zxzz.at(j)).time<timecut) {
-		eecaltimecut+=(zxzz.at(j)).deposit;
-		if(((aecalhit->contribBeta)[j])>betacut) erelecaltimecut+=(zxzz.at(j)).deposit;
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		if( (zxzz.at(j)).time>biggesttime) biggesttime=(zxzz.at(j)).time;
+		if((zxzz.at(j)).time<timecut) {
+		  eecaltimecut+=(zxzz.at(j)).deposit;
+		  if(((aecalhit->contribBeta)[j])>betacut) erelecaltimecut+=(zxzz.at(j)).deposit;
+		}
 	      }
 	    }
 	  }
 	}
       }
+    } else { // gendet=5
+      std::cout<<" getmeanphoton gendet 5"<<std::endl;
+      for (int i=0;i<tfnx;i++ ) {
+	for (int j=0;j<tfny;j++ ) {
+	  for (int k=0;k<tfndepth;k++ ) {
+	    meanscinEcal+=(timeframe_true_pd1_s[i][j][k]->Integral());
+	    meancerEcal+=(timeframe_true_pd1_c[i][j][k]->Integral());
+	    meanscinEcal+=(timeframe_true_pd2_s[i][j][k]->Integral());
+	    meancerEcal+=(timeframe_true_pd2_c[i][j][k]->Integral());
+	  }
+	}
+      }
     }
+    std::cout<<" meanscinecal is "<<meanscinEcal<<std::endl;
   }
 
   if(dohcal) {
@@ -2471,15 +2488,15 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
   // zero out last try
   
   for (int i=0;i<tfnx;i++ ) {
-      for (int j=0;j<tfny;j++ ) {
-	  for (int k=0;k<tfndepth;k++ ) {
-	    timeframe_true_pd1_s[i][j][k]->Reset();
-	    timeframe_true_pd1_c[i][j][k]->Reset();
-	    timeframe_true_pd2_s[i][j][k]->Reset();
-	    timeframe_true_pd2_c[i][j][k]->Reset();
+    for (int j=0;j<tfny;j++ ) {
+      for (int k=0;k<tfndepth;k++ ) {
+	timeframe_true_pd1_s[i][j][k]->Reset();
+	timeframe_true_pd1_c[i][j][k]->Reset();
+	timeframe_true_pd2_s[i][j][k]->Reset();
+	timeframe_true_pd2_c[i][j][k]->Reset();
 
-	  }
       }
+    }
   }
   
 
@@ -2500,8 +2517,11 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
       float ae=aecalhit->energyDeposit;
       if((ilayer==0)&&(islice==1)) {  // pd on entrance to ecal
 	int iii=(aecalhit->HitScin).size();
+
 	for(int jjj=0;jjj<iii;jjj++) {
-	  if(aar.Rndm()<AFILTER(1,(aecalhit->HitScin)[jjj].second)) timeframe_true_pd1_s[ix][iy][0]->Fill((aecalhit->HitScin)[jjj].first);
+	  if(aar.Rndm()<AFILTER(1,(aecalhit->HitScin)[jjj].second)) {
+	    timeframe_true_pd1_s[ix][iy][0]->Fill((aecalhit->HitScin)[jjj].first);
+	  }
 	  if(ihitcounts<SCECOUNTHITHIT) {
 	    std::cout<<" scin hit time wavelength is "<<(aecalhit->HitScin)[jjj].first<<" "<<(aecalhit->HitScin)[jjj].second<<std::endl;
 	    ihitcounts+=1;
@@ -2531,6 +2551,7 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
     }
   }  // end loop over ecal hits
 
+
   
   return;
 }
@@ -2558,8 +2579,9 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
   */
 
   if(doecal) {
-    nbyteecal = b_ecal->GetEntry(ievt);
 
+
+    nbyteecal = b_ecal->GetEntry(ievt);
       // ecal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
     eecaltimecut=0.;
@@ -2577,17 +2599,13 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 
       float ae=aecalhit->energyDeposit;
       nine+=aecalhit->n_inelastic;
-
+      
 
       eesum+=ae;
       if(type==3) {eesumair+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumairem+=aecalhit->edeprelativistic;};
       if(type==1) {eesumPDe+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumPDeem+=aecalhit->edeprelativistic;};
       if(type==2) {eesumcrystal+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumcrystalem+=aecalhit->edeprelativistic;};
       if(type==0||type==4) {eesumdead+=ae;eesumcal+=aecalhit->energyDeposit;eesumem+=aecalhit->edeprelativistic;eesumdeadem+=aecalhit->edeprelativistic;};
-
-
-
-
 
       if(gendete==1) {   // use photons as generated in otical material
 	if(type==2) {  // crystal
@@ -2597,8 +2615,8 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
       }
       else if(gendete==2) {
 	if( type==1 ) { // either photo detector
-	  necertotecal+=aecalhit->ncerenkov;
-	  nescinttotecal+=aecalhit->nscintillator;
+	    necertotecal+=aecalhit->ncerenkov;
+	    nescinttotecal+=aecalhit->nscintillator;
 	}
       }
       else if(gendete==3||gendete==4){
@@ -2619,9 +2637,9 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	    }
 	    if(ae>0.001) {
 	      if(hacheck/ae<0.999) {
-
+		  
 		if(icount777<SCECOUNT3) std::cout<<"missing contribs: ecal check contributions Ncontrib is "<<zxzz.size()<<" hackec is  "<<hacheck<<" ae is "<<ae<<" ratio "<<hacheck/ae<<std::endl;
-				icount777+=1;
+		icount777+=1;
 	      }
 	    }
 	  }
@@ -2633,6 +2651,22 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 
 
     }  // end loop over ecal hits
+
+    if(gendete>=5) {
+      nescinttotecal=0;
+      necertotecal=0;
+      for (int i=0;i<tfnx;i++ ) {
+	for (int j=0;j<tfny;j++ ) {
+	  for (int k=0;k<tfndepth;k++ ) {
+	    nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
+	    necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
+	    nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
+	    necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+	  }
+	}
+      }
+    }
+
   }
 
   if(dohcal) {
@@ -3029,6 +3063,8 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 
 
   if(doecal) {
+
+
     nbyteecal = b_ecal->GetEntry(ievt);
       // ecal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
@@ -3230,53 +3266,61 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 
 
   if(doecal) {
-    nbyteecal = b_ecal->GetEntry(ievt);
 
+    nbyteecal = b_ecal->GetEntry(ievt);
       // ecal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
     eecaltimecut=0.;
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
       long long int ihitchan=aecalhit->cellID;
-      int idet,ix,iy,islice,ilayer,wc,type;
-      DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
+	int idet,ix,iy,islice,ilayer,wc,type;
+	DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
 
-
-
-      Contributions zxzz=aecalhit->truth;
-
-
-
-
-
-
-      if(gendete==1) {   // use photons as generated in otical material
-	if(type==2) {
-	  necertotecal+=aecalhit->ncerenkov;
-	  nescinttotecal+=aecalhit->nscintillator;
+	Contributions zxzz=aecalhit->truth;
+	if(gendete==1) {   // use photons as generated in otical material
+	  if(type==2) {
+	    necertotecal+=aecalhit->ncerenkov;
+	    nescinttotecal+=aecalhit->nscintillator;
+	  }
 	}
-      }
-      else if(gendete==2) {
-	if( type==1 ) {
-	  necertotecal+=aecalhit->ncerenkov;
-	  nescinttotecal+=aecalhit->nscintillator;
+	else if(gendete==2) {
+	  if( type==1 ) {
+	    necertotecal+=aecalhit->ncerenkov;
+	    nescinttotecal+=aecalhit->nscintillator;
+	  }
 	}
-      }
-      else if(gendete==3||gendete==4){
-	if(idet==5) {
-	  if(type==2) {  // crystal
-	    nescinttotecal+=aecalhit->energyDeposit;
-	    if(gendete==3) necertotecal+=aecalhit->edeprelativistic;
-	    if(gendete==4) necertotecal+=aecalhit->energyDeposit;
-
-	    for(size_t j=0;j<zxzz.size(); j++) {
-	      if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	else if(gendete==3||gendete==4){
+	  if(idet==5) {
+	    if(type==2) {  // crystal
+	      nescinttotecal+=aecalhit->energyDeposit;
+	      if(gendete==3) necertotecal+=aecalhit->edeprelativistic;
+	      if(gendete==4) necertotecal+=aecalhit->energyDeposit;
+	      
+	      for(size_t j=0;j<zxzz.size(); j++) {
+		if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
+	      }
 	    }
 	  }
 	}
-      }
+      }  // end loop over ecal hits
 
-    }  // end loop over ecal hits
+
+    if(gendete>=5) {
+      nescinttotecal=0;
+      necertotecal=0;
+      for (int i=0;i<tfnx;i++ ) {
+	for (int j=0;j<tfny;j++ ) {
+	  for (int k=0;k<tfndepth;k++ ) {
+	    nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
+	    necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
+	    nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
+	    necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+	  }
+	}
+      }
+    }
+
   }  // end do ecal
 
   if(dohcal) {
