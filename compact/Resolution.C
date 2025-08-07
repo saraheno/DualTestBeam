@@ -472,8 +472,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     std::cout<<"mean rel hcal timecut is "<<meanerelhcaltimecut/1000.<<std::endl;
 
 
+    /*
     // refine calibration
-
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
 
@@ -481,8 +481,6 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       CalibRefine(mapsampcalslice, gendete, gendeth, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
     }
-
-
     if(doecal ) {
       
       TF1 *gs = new TF1("gs", "gaus", 0, 1.5);
@@ -557,6 +555,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       SCEDraw1(z4,"z4",CalHcalnscint,"junkz4.png",0);
 
     }
+
+    */
 
 
     // now that have calibration, do the real work for the electrons
@@ -2161,39 +2161,70 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendete, int gendeth, in
   if(doecal) {
     if(ievt<SCECOUNT) std::cout<<"CalibRefine phot ievt is "<<ievt<<std::endl;
 
-    nbyteecal = b_ecal->GetEntry(ievt);
-
+    if(gendete<5) {
+      nbyteecal = b_ecal->GetEntry(ievt);
       // ecal hits
-    if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
-    for(size_t i=0;i<ecalhits->size(); ++i) {
-      CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
-      long long int ihitchan=aecalhit->cellID;
-      int idet,ix,iy,islice,ilayer,wc,type;
-      DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
+      if(ievt<SCECOUNT) std::cout<<std::endl<<" number of ecal hits is "<<ecalhits->size()<<std::endl;
+      for(size_t i=0;i<ecalhits->size(); ++i) {
+	CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
+	long long int ihitchan=aecalhit->cellID;
+	int idet,ix,iy,islice,ilayer,wc,type;
+	DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
 
-      if(gendete==1) {   // use photons as generated in otical material
-	if(type==2 ) {  // crystal
-	  ameancerEcal+=aecalhit->ncerenkov;
-	  ameanscinEcal+=aecalhit->nscintillator;
-	}
-      }
-      else if(gendete==2) {
-	if( type==1 ) { // either photo detector
-	  ameancerEcal+=aecalhit->ncerenkov;
-	  ameanscinEcal+=aecalhit->nscintillator;
-	}
-      }
-      else if(gendete==3||gendete==4){
-	if(idet==5) {
+	if(gendete==1) {   // use photons as generated in otical material
 	  if(type==2 ) {  // crystal
-	    ameanscinEcal+=aecalhit->energyDeposit;
-	    if(gendete==3) ameancerEcal+=aecalhit->edeprelativistic;
-	    if(gendete==4) ameancerEcal+=aecalhit->energyDeposit;
+	    ameancerEcal+=aecalhit->ncerenkov;
+	    ameanscinEcal+=aecalhit->nscintillator;
+	  }
+	}
+	else if(gendete==2) {
+	  if( type==1 ) { // either photo detector
+	    ameancerEcal+=aecalhit->ncerenkov;
+	    ameanscinEcal+=aecalhit->nscintillator;
+	  }
+	}
+	else if(gendete==3||gendete==4){
+	  if(idet==5) {
+	    if(type==2 ) {  // crystal
+	      ameanscinEcal+=aecalhit->energyDeposit;
+	      if(gendete==3) ameancerEcal+=aecalhit->edeprelativistic;
+	      if(gendete==4) ameancerEcal+=aecalhit->energyDeposit;
+	    }
 	  }
 	}
       }
+    } else {
+      if(gendete==5) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      meanscinEcal+=(timeframe_true_pd1_s[i][j][k]->Integral());
+	      meancerEcal+=(timeframe_true_pd1_c[i][j][k]->Integral());
+	      meanscinEcal+=(timeframe_true_pd2_s[i][j][k]->Integral());
+	      meancerEcal+=(timeframe_true_pd2_c[i][j][k]->Integral());
+	    }
+	  }
+	}
+      } else if(gendete==6) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      meanscinEcal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	    }
+	  }
+	}
+
+      } else {
+	std::cout<<"invalid value gendete"<<std::endl;
+      }
     }
+    std::cout<<" meanscinecal is "<<meanscinEcal<<std::endl;
   }
+
+
 
   if(dohcal) {
     nbytehcal = b_hcal->GetEntry(ievt);
