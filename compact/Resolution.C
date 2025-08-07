@@ -576,7 +576,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       std::cout<<" integrated charge is "<<acharge<<std::endl;
       Elec_Sim(eecalpd2scint,eecalpd2scints);
       Elec_Sim(eecalpd1cer,eecalpd1cers);
-      Elec_Sim(eecalpd2cer,eecalpd2cer);
+      Elec_Sim(eecalpd2cer,eecalpd2cers);
       
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
