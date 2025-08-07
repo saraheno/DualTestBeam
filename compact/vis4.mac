@@ -1,6 +1,7 @@
 # Use this open statement to create an OpenGL view:
 #/vis/open OGL 2400x600-0+0
-/vis/open OGLIX
+
+/vis/open OGLIX  1200x600-0+0
 
 
 # Disable auto refresh and quieten vis messages whilst scene and
