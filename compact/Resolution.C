@@ -94,27 +94,39 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendete, int gendeth, in
 const int tfnx=25;
 const int tfny=25;
 const int tfndepth=2;
+
 TH1F* timeframe_true_pd1_s[tfnx][tfny][tfndepth];
 TH1F* timeframe_true_pd1_c[tfnx][tfny][tfndepth];
 TH1F* timeframe_true_pd2_s[tfnx][tfny][tfndepth];
 TH1F* timeframe_true_pd2_c[tfnx][tfny][tfndepth];
-
 string aname_pd1_s[tfnx][tfny][tfndepth];
 string aname_pd1_c[tfnx][tfny][tfndepth];
 string aname_pd2_s[tfnx][tfny][tfndepth];
 string aname_pd2_c[tfnx][tfny][tfndepth];
-
-
 const char* bname_pd1_s[tfnx][tfny][tfndepth];
 const char* bname_pd1_c[tfnx][tfny][tfndepth];
 const char* bname_pd2_s[tfnx][tfny][tfndepth];
 const char* bname_pd2_c[tfnx][tfny][tfndepth];
 
-bool preparefirst = 1;
+
+TH1F* timeframe_elec_pd1_s[tfnx][tfny][tfndepth];
+TH1F* timeframe_elec_pd1_c[tfnx][tfny][tfndepth];
+TH1F* timeframe_elec_pd2_s[tfnx][tfny][tfndepth];
+TH1F* timeframe_elec_pd2_c[tfnx][tfny][tfndepth];
+string anamee_pd1_s[tfnx][tfny][tfndepth];
+string anamee_pd1_c[tfnx][tfny][tfndepth];
+string anamee_pd2_s[tfnx][tfny][tfndepth];
+string anamee_pd2_c[tfnx][tfny][tfndepth];
+const char* bnamee_pd1_s[tfnx][tfny][tfndepth];
+const char* bnamee_pd1_c[tfnx][tfny][tfndepth];
+const char* bnamee_pd2_s[tfnx][tfny][tfndepth];
+const char* bnamee_pd2_c[tfnx][tfny][tfndepth];
+
+
 
 
 // hcal type 0=fiber, 1 = sampling
-// gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet  5 uses digits for ecal
+// gendet 1=active media photons, 2 = photodetector, 3=energy deposit 4 is a debug gendet  5 uses digits for ecal for true time, 6 uses electronics simulation
 // ECALleaf is
 
 //Resolution(2,"./output/out_DualTestBeam_20GeV_e-.root","./output/out_DualTestBeam_20GeV_pi-.root","./output/out_FSCEPonly_20GeV_e-.root","./output/out_FSCEPonly_20GeV_pi-.root",20,1,1,0,1,0,0,0,3,"hists_20GeV.root","DRCNoSegment","DRFNoSegment",1,0,1,1)
@@ -127,45 +139,52 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
   
   // prepare timeframes
-  string aname,bname;
+
   for (int i=0;i<tfnx;i++ ) {
     for (int j=0;j<tfny;j++ ) {
       for (int k=0;k<tfndepth;k++ ) {
-	//std::cout<<"i j k are "<<i<<","<<j<<","<<k<<std::endl;
-	
 	aname_pd1_s[i][j][k] = "true pd1 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd1_s[i][j][k]=aname_pd1_s[i][j][k].c_str();
-
-	
 	aname_pd1_c[i][j][k] = "true pd1 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd1_c[i][j][k]=aname_pd1_c[i][j][k].c_str();
-
-	
 	aname_pd2_s[i][j][k] = "true pd2 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd2_s[i][j][k]=aname_pd2_s[i][j][k].c_str();
-
-	
 	aname_pd2_c[i][j][k] = "true pd2 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bname_pd2_c[i][j][k]=aname_pd2_c[i][j][k].c_str();
-
-	//std::cout<<bname_pd1_s[i][j][k]<<std::endl;
-	//std::cout<<bname_pd1_c[i][j][k]<<std::endl;
-	//std::cout<<bname_pd2_s[i][j][k]<<std::endl;
-	//std::cout<<bname_pd2_c[i][j][k]<<std::endl;
 	
 	timeframe_true_pd1_s[i][j][k]= new TH1F(bname_pd1_s[i][j][k],bname_pd1_s[i][j][k],finenbin,timemin,timemax);
-	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_s[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd1_c[i][j][k]= new TH1F(bname_pd1_c[i][j][k],bname_pd1_c[i][j][k],finenbin,timemin,timemax);
-	//std::cout<<" pd1 c name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd1_c[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd2_s[i][j][k]= new TH1F(bname_pd2_s[i][j][k],bname_pd2_s[i][j][k],finenbin,timemin,timemax);
-	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_s[i][j][k]->GetName()<<std::endl;
 	timeframe_true_pd2_c[i][j][k]= new TH1F(bname_pd2_c[i][j][k],bname_pd2_c[i][j][k],finenbin,timemin,timemax);
-	//std::cout<<" pd1 s name ["<<i<<","<<j<<","<<k<<"] is "<<timeframe_true_pd2_c[i][j][k]->GetName()<<std::endl;
+
 	
       }
     }
   }
+
   
+  for (int i=0;i<tfnx;i++ ) {
+    for (int j=0;j<tfny;j++ ) {
+      for (int k=0;k<tfndepth;k++ ) {
+	anamee_pd1_s[i][j][k] = "elec pd1 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	bnamee_pd1_s[i][j][k]=anamee_pd1_s[i][j][k].c_str();
+	anamee_pd1_c[i][j][k] = "elec pd1 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	bnamee_pd1_c[i][j][k]=anamee_pd1_c[i][j][k].c_str();
+	anamee_pd2_s[i][j][k] = "elec pd2 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	bnamee_pd2_s[i][j][k]=anamee_pd2_s[i][j][k].c_str();
+	anamee_pd2_c[i][j][k] = "elec pd2 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	bnamee_pd2_c[i][j][k]=anamee_pd2_c[i][j][k].c_str();
+	
+	timeframe_elec_pd1_s[i][j][k]= new TH1F(bnamee_pd1_s[i][j][k],bnamee_pd1_s[i][j][k],finenbin,timemin,timemax);
+	timeframe_elec_pd1_c[i][j][k]= new TH1F(bnamee_pd1_c[i][j][k],bnamee_pd1_c[i][j][k],finenbin,timemin,timemax);
+	timeframe_elec_pd2_s[i][j][k]= new TH1F(bnamee_pd2_s[i][j][k],bnamee_pd2_s[i][j][k],finenbin,timemin,timemax);
+	timeframe_elec_pd2_c[i][j][k]= new TH1F(bnamee_pd2_c[i][j][k],bnamee_pd2_c[i][j][k],finenbin,timemin,timemax);
+
+	
+      }
+    }
+  }
+
 
 
   
@@ -426,7 +445,9 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"  event number rough calibration "<<ievt<<std::endl;
-      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      if(doecal&&(gendete>=5)) {
+	PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      }
       getMeanPhot(mapsampcalslice, gendete, gendeth, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, timecut, meaneecaltimecut, meanehcaltimecut, meanerelecaltimecut, meanerelhcaltimecut);
     }
 
@@ -456,7 +477,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<std::endl<<"event number calibration refinement is "<<ievt<<std::endl;
 
-      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      if(doecal&&(gendete>=5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
 
       CalibRefine(mapsampcalslice, gendete, gendeth, ievt, doecal, dohcal, hcaltype, b_ecal,b_hcal, ecalhits, hcalhits, meanscinEcal, meanscinHcal, meancerEcal, meancerHcal, CalEcalncer, CalEcalnscint, CalHcalncer, CalHcalnscint);
     }
@@ -542,7 +563,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number second is "<<ievt<<std::endl;
 
-      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      if(doecal&&(gendete>=5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
       
       float eesum(0.),eesumcal(0.),eesumem(0.),eesumair(0.),eesumdead(0.),eesumcrystal(0.),eesumPDe(0.),eesumfiber1(0.),eesumfiber2(0.),eesumabs(0.),eesumPDh(0.),eesumedge(0.),eesumedgerel(0.),necertotecal(0.),nescinttotecal(0.),necertothcal(0.),nescinttothcal(0.),eecaltimecut(0.),ehcaltimecut(0.),erelecaltimecut(0.),erelhcaltimecut(0.),eesumairem(0.),eesumdeadem(0.),eesumcrystalem(0.),eesumPDeem(0.),eesumfiber1em(0.),eesumfiber2em(0.),eesumabsem(0.),eesumPDhem(0.);
       int nine(0),ninh(0);
@@ -771,7 +792,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
     for(int ievt=0;ievt<num_evt; ++ievt) {
       if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
-      if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
+      if(doecal&&(gendete>=5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhits);
 
       float pesum(0.),pesumcal(0.),pesumem(0.),pesumair(0.),pesumdead(0.),pesumcrystal(0.),pesumPDe(0.),pesumfiber1(0.),pesumfiber2(0.),pesumabs(0.),pesumPDh(0.),pesumedge(0.),pesumedgerel(0.),npcertotecal(0.),npscinttotecal(0.),npcertothcal(0.),npscinttothcal(0.),pecaltimecut(0.),phcaltimecut(0.),prelecaltimecut(0.),prelhcaltimecut(0.),pesumairem(0.),pesumdeadem(0.),pesumcrystalem(0.),pesumPDeem(0.),pesumfiber1em(0.),pesumfiber2em(0.),pesumabsem(0.),pesumPDhem(0.);
       int nine(0),ninh(0);
@@ -1212,7 +1233,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       for(int ievt=0;ievt<num_evt; ++ievt) {
 	if((ievt<SCECOUNT)||((ievt%SCECOUNT2)==0)) std::cout<<"event number pion is "<<ievt<<std::endl;
-	if(doecal&&(gendete==5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhitsc);
+	if(doecal&&(gendete>=5)) PrepareEcalTimeFrames(ievt, b_ecal,ecalhitsc);
 	float EcorEcal(0),EcorHcal(0),ecaltimecutcor(0),hcaltimecutcor(0),relecaltimecutcor(0),relhcaltimecutcor(0),desumedge(0.),desumedgerel(0.);
 	getStuffDualCorr(domissCorr,beamE,mapsampcalslice, gendete, gendeth, kappaEcal, kappaHcal, meanscinEcal, meancerEcal, meanscinHcal, meancerHcal,ievt,doecal,dohcal, hcaltype, doedge, desumedge,desumedge,b_ecal,b_hcal,b_edge,ecalhitsc,hcalhitsc, edgehitsc, EcorEcal, EcorHcal,timecut, ecaltimecutcor, hcaltimecutcor,relecaltimecutcor,relhcaltimecutcor);
 	float pp2 = desumedge/beamE;
@@ -1614,11 +1635,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
   TFile * out = new TFile(outputfilename,"RECREATE");
 
-  if(doecal&&(gendete==5)) {
+  if(doecal&&(gendete>5)) {
     for (int i=0;i<tfnx;i++ ) {
       for (int j=0;j<tfny;j++ ) {
 	for (int k=0;k<tfndepth;k++ ) {
 	  timeframe_true_pd1_s[i][j][k]->Write();
+	  timeframe_elec_pd1_s[i][j][k]->Write();
 	}
       }
     }
@@ -2334,17 +2356,32 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	  }
 	}
       }
-    } else { // gendet=5
-      std::cout<<" getmeanphoton gendet 5"<<std::endl;
-      for (int i=0;i<tfnx;i++ ) {
-	for (int j=0;j<tfny;j++ ) {
-	  for (int k=0;k<tfndepth;k++ ) {
-	    meanscinEcal+=(timeframe_true_pd1_s[i][j][k]->Integral());
-	    meancerEcal+=(timeframe_true_pd1_c[i][j][k]->Integral());
-	    meanscinEcal+=(timeframe_true_pd2_s[i][j][k]->Integral());
-	    meancerEcal+=(timeframe_true_pd2_c[i][j][k]->Integral());
+    } else { // gendet>=5
+      if(gendete==5) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      meanscinEcal+=(timeframe_true_pd1_s[i][j][k]->Integral());
+	      meancerEcal+=(timeframe_true_pd1_c[i][j][k]->Integral());
+	      meanscinEcal+=(timeframe_true_pd2_s[i][j][k]->Integral());
+	      meancerEcal+=(timeframe_true_pd2_c[i][j][k]->Integral());
+	    }
 	  }
 	}
+      } else if(gendete==6) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      meanscinEcal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	    }
+	  }
+	}
+
+      } else {
+	std::cout<<"invalid value gendete"<<std::endl;
       }
     }
     std::cout<<" meanscinecal is "<<meanscinEcal<<std::endl;
@@ -2553,6 +2590,19 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
 
 
   
+  for (int i=0;i<tfnx;i++ ) {
+    for (int j=0;j<tfny;j++ ) {
+      for (int k=0;k<tfndepth;k++ ) {
+	Elec_Sim(timeframe_true_pd1_s[i][j][k],timeframe_elec_pd1_s[i][j][k]);
+	Elec_Sim(timeframe_true_pd1_c[i][j][k],timeframe_elec_pd1_c[i][j][k]);
+	Elec_Sim(timeframe_true_pd2_s[i][j][k],timeframe_elec_pd2_s[i][j][k]);
+	Elec_Sim(timeframe_true_pd2_c[i][j][k],timeframe_elec_pd2_c[i][j][k]);
+      }
+    }
+  }
+  
+
+  
   return;
 }
 
@@ -2655,19 +2705,34 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
     if(gendete>=5) {
       nescinttotecal=0;
       necertotecal=0;
-      for (int i=0;i<tfnx;i++ ) {
-	for (int j=0;j<tfny;j++ ) {
-	  for (int k=0;k<tfndepth;k++ ) {
-	    nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
-	    necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
-	    nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
-	    necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+      if(gendete==5) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
+	      necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
+	      nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
+	      necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+	    }
 	  }
 	}
+      } else if(gendete==6) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      nescinttotecal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	    }
+	  }
+	}
+      } else {
+	std::cout<<"invalid choice gendete "<<gendete<<std::endl;
       }
     }
 
-  }
+  }  // end doecal
 
   if(dohcal) {
     nbytehcal = b_hcal->GetEntry(ievt);
@@ -2893,11 +2958,11 @@ double int_charge(TH1F* out, double pre, double window ) {
   // take histogram of true arrival times at photodetector and produce output signal
 void Elec_Sim(TH1F* In, TH1F* Out) {
   int nbin = In->GetNbinsX();
-  std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
+  //  std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
   double amin = In->GetBinLowEdge(1);
   double amax = In->GetBinLowEdge(nbin)+In->GetBinWidth(nbin);
   double awidth=(amax-amin)/nbin;
-  std::cout<<"  In min max awidth are "<<amin<<" "<<amax<<" "<<awidth<<std::endl;
+  //  std::cout<<"  In min max awidth are "<<amin<<" "<<amax<<" "<<awidth<<std::endl;
   for (int i=0;i<nbin;i++) {  // for each bin in pe creation time
     int npe=In->GetBinContent(i);
     if(npe>0) {
@@ -3274,50 +3339,64 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
     for(size_t i=0;i<ecalhits->size(); ++i) {
       CalVision::DualCrysCalorimeterHit* aecalhit =ecalhits->at(i);
       long long int ihitchan=aecalhit->cellID;
-	int idet,ix,iy,islice,ilayer,wc,type;
-	DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
+      int idet,ix,iy,islice,ilayer,wc,type;
+      DecodeEcal(ihitchan,idet,ix,iy,islice,ilayer,wc,type );
 
-	Contributions zxzz=aecalhit->truth;
-	if(gendete==1) {   // use photons as generated in otical material
-	  if(type==2) {
-	    necertotecal+=aecalhit->ncerenkov;
-	    nescinttotecal+=aecalhit->nscintillator;
-	  }
+      Contributions zxzz=aecalhit->truth;
+      if(gendete==1) {   // use photons as generated in otical material
+	if(type==2) {
+	  necertotecal+=aecalhit->ncerenkov;
+	  nescinttotecal+=aecalhit->nscintillator;
 	}
-	else if(gendete==2) {
-	  if( type==1 ) {
-	    necertotecal+=aecalhit->ncerenkov;
-	    nescinttotecal+=aecalhit->nscintillator;
-	  }
+      }
+      else if(gendete==2) {
+	if( type==1 ) {
+	  necertotecal+=aecalhit->ncerenkov;
+	  nescinttotecal+=aecalhit->nscintillator;
 	}
-	else if(gendete==3||gendete==4){
-	  if(idet==5) {
-	    if(type==2) {  // crystal
-	      nescinttotecal+=aecalhit->energyDeposit;
-	      if(gendete==3) necertotecal+=aecalhit->edeprelativistic;
-	      if(gendete==4) necertotecal+=aecalhit->energyDeposit;
+      }
+      else if(gendete==3||gendete==4){
+	if(idet==5) {
+	  if(type==2) {  // crystal
+	    nescinttotecal+=aecalhit->energyDeposit;
+	    if(gendete==3) necertotecal+=aecalhit->edeprelativistic;
+	    if(gendete==4) necertotecal+=aecalhit->energyDeposit;
 	      
-	      for(size_t j=0;j<zxzz.size(); j++) {
-		if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
-	      }
+	    for(size_t j=0;j<zxzz.size(); j++) {
+	      if((zxzz.at(j)).time<timecut) eecaltimecut+=(zxzz.at(j)).deposit;
 	    }
 	  }
 	}
-      }  // end loop over ecal hits
-
+      }
+    }  // end loop over ecal hits
 
     if(gendete>=5) {
       nescinttotecal=0;
       necertotecal=0;
-      for (int i=0;i<tfnx;i++ ) {
-	for (int j=0;j<tfny;j++ ) {
-	  for (int k=0;k<tfndepth;k++ ) {
-	    nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
-	    necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
-	    nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
-	    necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+      if(gendete==5) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      nescinttotecal+=timeframe_true_pd1_s[i][j][k]->Integral();
+	      necertotecal+=timeframe_true_pd1_c[i][j][k]->Integral();
+	      nescinttotecal+=timeframe_true_pd2_s[i][j][k]->Integral();
+	      necertotecal+=timeframe_true_pd2_c[i][j][k]->Integral();
+	    }
 	  }
 	}
+      } else if(gendete==6) {
+	for (int i=0;i<tfnx;i++ ) {
+	  for (int j=0;j<tfny;j++ ) {
+	    for (int k=0;k<tfndepth;k++ ) {
+	      nescinttotecal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	    }
+	  }
+	}
+      } else {
+	std::cout<<"invalid choice gendete "<<gendete<<std::endl;
       }
     }
 
