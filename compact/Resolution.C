@@ -1635,7 +1635,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
   TFile * out = new TFile(outputfilename,"RECREATE");
 
-  if(doecal&&(gendete>5)) {
+  if(doecal&&(gendete>=5)) {
     for (int i=0;i<tfnx;i++ ) {
       for (int j=0;j<tfny;j++ ) {
 	for (int k=0;k<tfndepth;k++ ) {
