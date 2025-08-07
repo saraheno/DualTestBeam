@@ -24,7 +24,7 @@
 #/vis/viewer/set/viewpointThetaPhi 0 0 deg
 # from the side
 /vis/viewer/set/upVector 0 1 0
-/vis/viewer/set/viewpointThetaPhi 230 -30 deg
+/vis/viewer/set/viewpointThetaPhi 270 0 deg
 
 
 # Specify zoom value:

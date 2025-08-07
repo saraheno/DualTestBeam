@@ -16,10 +16,10 @@
 
 
 <!-- constants for dual readout crystal calorimeter -->
-    <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->
-    <constant name="DRcrystallength1" value="5.0*cm"/>
-    <constant name="DRcrystallength2" value="15.0*cm"/>
+    <constant name="DRcrystalwidth1" value="1.075*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystalwidth2" value="2.2*cm"/>  <!-- should be 1 -->
+    <constant name="DRcrystallength1" value="6.7*cm"/>
+    <constant name="DRcrystallength2" value="16.0*cm"/>
     <constant name="DRcrystalCookiethick" value="0.5*cm"/>
     <constant name="DRcrystalResinthick" value="0.5*cm"/>
     <constant name="DRcrystalgapl" value="0.001*cm"/>
@@ -32,7 +32,7 @@
 
 
     <constant name="DRcrystalNsize1" value="5"/>    <!-- should be 45 -->
-    <constant name="DRcrystalNsize2" value="5"/>    <!-- should be 45 -->
+    <constant name="DRcrystalNsize2" value="2"/>    <!-- should be 45 -->
 
 <!-- gap between ecal and hcal  -->
     <constant name="EcalHcalgap" value="0.1*mm"/> <!-- should be small 0.1 mm -->
