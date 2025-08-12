@@ -570,6 +570,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       fillfill=1;
       getStuff(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
+      std::cout<<"starting filltime "<<std::endl;
       if(fillfill==1) FillTime(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
       Elec_Sim(eecalpd1scint,eecalpd1scints);
       double acharge = int_charge(eecalpd1scints,10.,100.);
@@ -2774,6 +2775,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
     ehcaltimecut=0.;
     erelhcaltimecut=0.;
     for(size_t i=0;i<hcalhits->size(); ++i) {
+      //std::cout<<" starting hit "<<i<<std::endl;
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
       ninh+=ahcalhit->n_inelastic;
@@ -2789,7 +2791,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 
       long long int ihitchan=ahcalhit->cellID;
       if(hcaltype==0) { // fiber
-
+	//std::cout<<"starting DecodeFiber "<<std::endl;
 	int idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy;
 	DecodeFiber(ihitchan,idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy);
 
@@ -2813,9 +2815,11 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	else if(gendeth==3||gendeth==4) {
 	  if(idet==6) {
 	    if(ifiber==1) {
+	      //std::cout<<"ifiber==1 energy "<<ahcalhit->energyDeposit<<std::endl;
 	      nescinttothcal+=ahcalhit->energyDeposit;
 	    }
 	    if(ifiber==2) {
+	      //std::cout<<"ifiber==2 energy "<<ahcalhit->energyDeposit<<std::endl;
 	      if(gendeth==3) necertothcal+=ahcalhit->edeprelativistic;
 	      if(gendeth==4) necertothcal+=ahcalhit->energyDeposit;
 	    }
@@ -2954,7 +2958,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
     }  // end loop over escaping hits
   }
 
-  //std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
+  std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
 
 }
@@ -3154,7 +3158,7 @@ double AFILTER(int ifilter, double wavelength) {
 
 void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,TH1F* eecaltime, TH1F* ehcaltime,TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer){
 
-  if(ievt<SCECOUNT) std::cout<<"getstuff phot ievt is "<<ievt<<std::endl;
+  if(ievt<SCECOUNT) std::cout<<"fillfill ievt is "<<ievt<<std::endl;
   int nbyteecal, nbytehcal, nbyteedge;
 
 
@@ -3241,6 +3245,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
       // hcal hits
     if(ievt<SCECOUNT) std::cout<<std::endl<<" number of hcal hits is "<<hcalhits->size()<<std::endl;
     for(size_t i=0;i<hcalhits->size(); ++i) {
+      //std::cout<<"fillfill hit "<<i<<std::endl;
       CalVision::DualCrysCalorimeterHit* ahcalhit =hcalhits->at(i);
       float ah=ahcalhit->energyDeposit;
       float aarel = ahcalhit->edeprelativistic;
@@ -3248,6 +3253,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
       if(hcaltype==0) { // fiber
 	int idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy;
 	DecodeFiber(ihitchan,idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy);
+	
 	if(iphdet==1) {  // pd on scintillating fibers
 	  /*
 	  for(int ijk=0;ijk<finenbin;ijk++){
@@ -3258,15 +3264,20 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	  }
 	  */
 	  int iii=(ahcalhit->HitScin).size();
-	  //std::cout<<" ScinTime size pd1 is "<<iii<<std::endl;
+	  std::cout<<"pd1 ScinTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
 	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 	  iii=(ahcalhit->HitCer).size();
-	  //std::cout<<" CerTime size pd1 is "<<iii<<std::endl;
+	  std::cout<<"pd1 CerTime size pd1 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    std::cout<<" hit first is "<<(ahcalhit->HitCer)[jjj].first<<std::endl;
+	    std::cout<<" hit second is "<<(ahcalhit->HitCer)[jjj].second<<std::endl;
+	    hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	      std::cout<<"filled histogram"<<std::endl;
+	      //if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    	      std::cout<<"filled histogram 2"<<std::endl;
 	  }
 
 	}
@@ -3281,15 +3292,16 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	  */
 
 	  int iii=(ahcalhit->HitScin).size();
-	  //std::cout<<" ScinTime size pd2 is "<<iii<<std::endl;
+	  std::cout<<"pd2 ScinTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
 	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 	  iii=(ahcalhit->HitScin).size();
-	  //std::cout<<" CerTime size pd2 is "<<iii<<std::endl;
+	  std::cout<<"pd2 CerTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
+	    hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
+	    //if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 
 	}
@@ -3341,6 +3353,7 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
       }  // end sampling
 
     }  // end loop over hcal hits
+    std::cout<<" done with fillfill loop"<<std::endl;
   }  //end dohcal
 
   return;
