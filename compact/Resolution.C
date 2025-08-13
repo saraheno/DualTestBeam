@@ -3274,9 +3274,9 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	  for(int jjj=0;jjj<iii;jjj++) {
 	    std::cout<<" hit first is "<<(ahcalhit->HitCer)[jjj].first<<std::endl;
 	    std::cout<<" hit second is "<<(ahcalhit->HitCer)[jjj].second<<std::endl;
-	    hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    //hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
 	      std::cout<<"filled histogram"<<std::endl;
-	      //if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitCer)[jjj].second)) hcalpd1cer->Fill((ahcalhit->HitCer)[jjj].first);
 	    	      std::cout<<"filled histogram 2"<<std::endl;
 	  }
 
@@ -3297,11 +3297,11 @@ void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	    //std::cout<<"    ScinTime["<<jjj<<"] is "<<(ahcalhit->ScinTime)[jjj]<<std::endl;
 	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2scint->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
-	  iii=(ahcalhit->HitScin).size();
+	  iii=(ahcalhit->HitCer).size();
 	  std::cout<<"pd2 CerTime size pd2 is "<<iii<<std::endl;
 	  for(int jjj=0;jjj<iii;jjj++) {
-	    hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
-	    //if(aar.Rndm()<AFILTER(0,(ahcalhit->HitScin)[jjj].second)) hcalpd2cer->Fill((ahcalhit->HitScin)[jjj].first);
+	    //hcalpd2cer->Fill((ahcalhit->HitCer)[jjj].first);
+	    if(aar.Rndm()<AFILTER(0,(ahcalhit->HitCer)[jjj].second)) hcalpd2cer->Fill((ahcalhit->HitCer)[jjj].first);
 	  }
 
 	}
