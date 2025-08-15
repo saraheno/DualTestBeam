@@ -570,11 +570,11 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 
       fillfill=1;
       getStuff(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
-      std::cout<<"starting filltime "<<std::endl;
+      //      std::cout<<"starting filltime "<<std::endl;
       if(fillfill==1) FillTime(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
       Elec_Sim(eecalpd1scint,eecalpd1scints);
       double acharge = int_charge(eecalpd1scints,10.,100.);
-      std::cout<<" integrated charge is "<<acharge<<std::endl;
+      //std::cout<<" integrated charge is "<<acharge<<std::endl;
       Elec_Sim(eecalpd2scint,eecalpd2scints);
       Elec_Sim(eecalpd1cer,eecalpd1cers);
       Elec_Sim(eecalpd2cer,eecalpd2cers);
@@ -2551,7 +2551,7 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 
 void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
 
-  std::cout<<" entering PrepareEcalTimeFrames"<<std::endl;
+  //  std::cout<<" entering PrepareEcalTimeFrames"<<std::endl;
   
   
   // zero out last try
@@ -2958,7 +2958,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
     }  // end loop over escaping hits
   }
 
-  std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
+  //  std::cout<<" yuck 2 ehcaltimecut is "<<ehcaltimecut<<std::endl;
 
 
 }
