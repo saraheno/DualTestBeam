@@ -26,7 +26,8 @@
       <dimensions z1="edgeoffset"/>
 
     <structure>
-      <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/>
+<!--      <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/> -->
+          <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/> 
     </structure>
 
     <staves vis="Invisible" sensitive="yes"/>
@@ -36,7 +37,7 @@
             <slice material = "Resin_Window" thickness = "DRcrystalResinthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalResinVis"/>
       <slice material = "Silicone_gap" thickness = "DRcrystalCookiethick" sensitive="yes" limits="cal_limits" vis="CrystalEcalCookieVis"/>
       <slice material = "E_PbWO4" thickness = "DRcrystallength1" sensitive="yes" limits="cal_limits" vis="CrystalEcalCrystalVis"/>
-      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalAirVis"/>
     </layer>
     <layer repeat="1" vis="Invisible" sensitive="yes">
       <dimensions width="DRcrystalwidth2" repeat="DRcrystalNsize2"  gap="DRcrystalgapt" />
@@ -44,7 +45,7 @@
   <slice material = "Silicone_gap" thickness = "DRcrystalCookiethick" sensitive="yes" limits="cal_limits" vis="CrystalEcalCookieVis"/>  
   <slice material = "Resin_Window" thickness = "DRcrystalResinthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalResinVis"/> 
       <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>
-      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalBarrelVis"/>
+      <slice material = "Air" thickness="DRcrystalgapt" senstivie="yes" limits="cal_limits" vis="CrystalAirVis"/>
     </layer>
 
 

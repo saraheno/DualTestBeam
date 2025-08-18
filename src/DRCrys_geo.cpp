@@ -144,6 +144,12 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	 << " solid: " << setw(20) << left << towertrap.type()
 	 << " sensitive: " << yes_no(x_towers.isSensitive()) << endl;
 
+
+    SkinSurface haha = SkinSurface(sdet, "haha", cryS, towerVol);
+    haha.isValid();
+
+    
+
     // place the honeycomb into the tower
     Position b_pos(0.,0.,0.);
     dd4hep::Box abox1   (hwidth+0.5*(agap-hthick)+hthick,hwidth+0.5*(agap-hthick)+hthick,hthickness);
@@ -203,8 +209,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       PlacedVolume layer_phv = towerVol.placeVolume(l_vol,l_pos);
       layer_phv.addPhysVolID("wc", j+1);
       string tt_name = _toString(opt_num,"HallCrys%d");
-      BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, layer_phv,env_phv);
-      haha.isValid();
+      // removed 18 aug 25
+      //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, layer_phv,env_phv);
+      //haha.isValid();
       opt_num++;
 
     }  //end of repeat for this layer
@@ -224,14 +231,17 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     tube_row_vol.setVisAttributes(description, "layerVis");
 
 
+
     for (int ijk1=-Ncount; ijk1<Ncount+1; ijk1++) {
 	double mod_x_off = (ijk1)*2*(hwidth+tol+agap);
 	std::cout<<"placing crystal at ("<<mod_x_off<<")"<<std::endl;
 	trafo= Transform3D(RotationZYX(0.,0.,0.),Position(mod_x_off,0.,0.));
 	pv = tube_row_vol.placeVolume(towerVol,trafo);
 	int towernum = Ncount + ijk1 + 1;
+	int interface = towernum+(2*Ncount+1)*l_num;
 	pv.addPhysVolID("ix",towernum);
 	std::cout<<"placing tower "<<towernum<<std::endl;
+	//string tt_name = _toString(interface,"HallCrys%d");
 	//BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, pv,env_phv);
 	//haha.isValid();
     }  //end of placing towers in layer envelope
