@@ -2,9 +2,12 @@ from array import *
 import argparse
 
 
-# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendete 3 -gendeth 3 -dodual 0 -NNN 2 -dotwocalcor 1
+# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendete 3 -gendeth 3 -dodual 0 -NNN 2 -dotwocalcor 1 -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/ -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/  -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
 
 argParser = argparse.ArgumentParser()
+argParser.add_argument("-w", "--write", help="where to write")
+argParser.add_argument("-c", "--cdarea", help="where to run (compact area)")
+argParser.add_argument("-s", "--script", help="where to put scripts")
 argParser.add_argument("-g1", "--geometry1", help="main geometry ")
 argParser.add_argument("-g2", "--geometry2", help="hcal calibration geometry ")
 argParser.add_argument("-doecal","--doecal", help="0 no 1 yes")
@@ -24,9 +27,13 @@ print("args.name=%s" % args.geometry1)
 print("args.name=%s" % args.geometry2)
 
 
+outputarea=args.write
+hostarea=args.cdarea
+scriptarea=args.script
 
-outputarea="/data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/"
-hostarea="/data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/"
+print("output area is %s" % outputarea )
+print("host area is %s" % hostarea )
+print("script area is %s" % scriptarea )
 
 
 
@@ -41,10 +48,10 @@ name="s2-condor-executable-"+str(args.geometry1)+"_"+str(args.geometry2)+'_g'+st
 i=0
 while (i<nenergy):
     print(i)
-    shfile = open(hostarea+name+str(energies[i])+'_GeV.sh',"w")
+    shfile = open(scriptarea+name+str(energies[i])+'_GeV.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
-    shfile.write('cd /data/users/eno/CalVision/dd4hep/DD4hep/examples/DualTestBeam/compact/'+'\n')
+    shfile.write('cd '+hostarea+'\n')
     shfile.write('START_TIME=`/bin/date`'+'\n')
     shfile.write('echo "started at $START_TIME"'+'\n')
     shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
@@ -72,14 +79,14 @@ while (i<nenergy):
 i=0
 while (i<nenergy):
     print(i)
-    jdlfile = open(hostarea+name+str(energies[i])+'_GeV.jdl',"w")
+    jdlfile = open(scriptarea+name+str(energies[i])+'_GeV.jdl',"w")
     jdlfile.write("universe = vanilla"+'\n')
-    jdlfile.write("Executable ="+hostarea+name+str(energies[i])+"_GeV.sh"+'\n')
+    jdlfile.write("Executable ="+scriptarea+name+str(energies[i])+"_GeV.sh"+'\n')
     jdlfile.write("should_transfer_files = NO"+'\n')
 #    jdlfile.write("Requirements = TARGET.FileSystemDomain == \"r720\""+'\n')
-    jdlfile.write("Output = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stdout"+'\n')
-    jdlfile.write("Error = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stderr"+'\n')
-    jdlfile.write("Log = "+hostarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).condor"+'\n')
+    jdlfile.write("Output = "+outputarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stdout"+'\n')
+    jdlfile.write("Error = "+outputarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).stderr"+'\n')
+    jdlfile.write("Log = "+outputarea+name+str(energies[i])+"-e_sce_$(cluster)_$(process).condor"+'\n')
     jdlfile.write("Arguments = SCE"+'\n')
     jdlfile.write("Queue 1"+'\n')
     jdlfile.close()
@@ -92,7 +99,7 @@ f = open("massjobs_s2.sh",'w')
 f.write('chmod 777 '+hostarea+'*'+'\n')
 i=0
 while (i<nenergy):
-    f.write("condor_submit "+hostarea+name+str(energies[i])+'_GeV.jdl'+'\n')
+    f.write("condor_submit "+scriptarea+name+str(energies[i])+'_GeV.jdl'+'\n')
     i=i+1
 f.write("condor_q")
 f.close()
