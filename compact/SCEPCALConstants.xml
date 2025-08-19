@@ -22,11 +22,13 @@
     <constant name="DRcrystallength2" value="16.0*cm"/>
     <constant name="DRcrystalCookiethick" value="0.5*cm"/>
     <constant name="DRcrystalResinthick" value="0.5*cm"/>
-    <constant name="DRcrystalgapl" value="0.1*cm"/>
+    <constant name="DRcrystalgapl" value="0.05*cm"/>
     <constant name="DRcrystalgapmat" value="DRcrystalgapl/2"/>
-    <constant name="DRcrystalgapt" value="0.1*cm"/>
+    <constant name="DRcrystalgapt" value="0.05*cm"/>
     <constant name="DRcrystalhont" value="0.7*DRcrystalgapt"/>
+    <constant name="ecaltol" value="0.05*cm"/>
 
+    
     <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
 

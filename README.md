@@ -68,5 +68,6 @@ Then do typical GEANT4 visualization commands such as:
 /vis/viewer/refresh
 /vis/viewer/zoomTo 10
 /vis/viewer/pan -100 200 cm
+/vis/viewer/set/viewpointThetaPhi 70 20
 exit
 ```

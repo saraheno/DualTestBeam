@@ -23,7 +23,7 @@
 <detectors>
   <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="InvisibleWithDaughters">
     <comment>Electromagnetic Calorimeter </comment>
-      <dimensions z1="edgeoffset"/>
+      <dimensions z1="edgeoffset" z2="ecaltol"/>
 
     <structure>
      <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/> 
