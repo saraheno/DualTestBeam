@@ -145,14 +145,14 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	 << " sensitive: " << yes_no(x_towers.isSensitive()) << endl;
 
 
-    SkinSurface haha = SkinSurface(sdet, "haha", cryS, towerVol);
-    haha.isValid();
+    //SkinSurface haha = SkinSurface(sdet, "haha", cryS, towerVol);
+    //haha.isValid();
 
     
 
     // place the honeycomb into the tower
     Position b_pos(0.,0.,0.);
-    dd4hep::Box abox1   (hwidth+0.5*(agap-hthick)+hthick,hwidth+0.5*(agap-hthick)+hthick,hthickness);
+    dd4hep::Box abox1   (hwidth+0.5*(agap-hthick)+0.5*hthick,hwidth+0.5*(agap-hthick)+0.5*hthick,hthickness);
     dd4hep::Box abox2   (hwidth+0.5*(agap-hthick),hwidth+0.5*(agap-hthick),hthickness);
     dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
     Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
