@@ -135,7 +135,9 @@ const char* bnamee_pd2_c[tfnx][tfny][tfndepth];
 
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
 		const char* hcalonlyefilename, const char* hcalonlypifilename,
-		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendete, int gendeth, const char* outputfilename,const char* ECALleaf, const char* HCALleaf,bool doplots, bool dotimingplots,bool dodualcorr,bool twocalecalcorr) {
+		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendete, int gendeth,
+		const char* outputfilename,const char* ECALleaf, const char* HCALleaf,
+		bool doplots, bool dotimingplots,bool dodualcorr,bool twocalecalcorr) {
 
   
   // prepare timeframes
