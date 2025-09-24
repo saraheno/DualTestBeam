@@ -109,10 +109,10 @@ const char* bname_pd2_s[tfnx][tfny][tfndepth];
 const char* bname_pd2_c[tfnx][tfny][tfndepth];
 
 
-TH1F* timeframe_elec_pd1_s[tfnx][tfny][tfndepth];
-TH1F* timeframe_elec_pd1_c[tfnx][tfny][tfndepth];
-TH1F* timeframe_elec_pd2_s[tfnx][tfny][tfndepth];
-TH1F* timeframe_elec_pd2_c[tfnx][tfny][tfndepth];
+TH1F* timeframe_current_pd1_s[tfnx][tfny][tfndepth];
+TH1F* timeframe_current_pd1_c[tfnx][tfny][tfndepth];
+TH1F* timeframe_current_pd2_s[tfnx][tfny][tfndepth];
+TH1F* timeframe_current_pd2_c[tfnx][tfny][tfndepth];
 string anamee_pd1_s[tfnx][tfny][tfndepth];
 string anamee_pd1_c[tfnx][tfny][tfndepth];
 string anamee_pd2_s[tfnx][tfny][tfndepth];
@@ -175,10 +175,10 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	anamee_pd2_c[i][j][k] = "elec pd2 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
 	bnamee_pd2_c[i][j][k]=anamee_pd2_c[i][j][k].c_str();
 	
-	timeframe_elec_pd1_s[i][j][k]= new TH1F(bnamee_pd1_s[i][j][k],bnamee_pd1_s[i][j][k],finenbin,timemin,timemax);
-	timeframe_elec_pd1_c[i][j][k]= new TH1F(bnamee_pd1_c[i][j][k],bnamee_pd1_c[i][j][k],finenbin,timemin,timemax);
-	timeframe_elec_pd2_s[i][j][k]= new TH1F(bnamee_pd2_s[i][j][k],bnamee_pd2_s[i][j][k],finenbin,timemin,timemax);
-	timeframe_elec_pd2_c[i][j][k]= new TH1F(bnamee_pd2_c[i][j][k],bnamee_pd2_c[i][j][k],finenbin,timemin,timemax);
+	timeframe_current_pd1_s[i][j][k]= new TH1F(bnamee_pd1_s[i][j][k],bnamee_pd1_s[i][j][k],finenbin,timemin,timemax);
+	timeframe_current_pd1_c[i][j][k]= new TH1F(bnamee_pd1_c[i][j][k],bnamee_pd1_c[i][j][k],finenbin,timemin,timemax);
+	timeframe_current_pd2_s[i][j][k]= new TH1F(bnamee_pd2_s[i][j][k],bnamee_pd2_s[i][j][k],finenbin,timemin,timemax);
+	timeframe_current_pd2_c[i][j][k]= new TH1F(bnamee_pd2_c[i][j][k],bnamee_pd2_c[i][j][k],finenbin,timemin,timemax);
 
 	
       }
@@ -1641,7 +1641,7 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       for (int j=0;j<tfny;j++ ) {
 	for (int k=0;k<tfndepth;k++ ) {
 	  timeframe_true_pd1_s[i][j][k]->Write();
-	  timeframe_elec_pd1_s[i][j][k]->Write();
+	  timeframe_current_pd1_s[i][j][k]->Write();
 	}
       }
     }
@@ -2210,10 +2210,10 @@ void CalibRefine(map<string, int> mapsampcalslice,  int gendete, int gendeth, in
 	for (int i=0;i<tfnx;i++ ) {
 	  for (int j=0;j<tfny;j++ ) {
 	    for (int k=0;k<tfndepth;k++ ) {
-	      meanscinEcal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
-	      meanscinEcal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_current_pd1_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_current_pd1_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_current_pd2_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_current_pd2_c[i][j][k],10.,100.);
 	    }
 	  }
 	}
@@ -2404,10 +2404,10 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	for (int i=0;i<tfnx;i++ ) {
 	  for (int j=0;j<tfny;j++ ) {
 	    for (int k=0;k<tfndepth;k++ ) {
-	      meanscinEcal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
-	      meanscinEcal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_current_pd1_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_current_pd1_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(timeframe_current_pd2_s[i][j][k],10.,100.);
+	      meancerEcal+=int_charge(timeframe_current_pd2_c[i][j][k],10.,100.);
 	    }
 	  }
 	}
@@ -2625,10 +2625,10 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
   for (int i=0;i<tfnx;i++ ) {
     for (int j=0;j<tfny;j++ ) {
       for (int k=0;k<tfndepth;k++ ) {
-	Elec_Sim(timeframe_true_pd1_s[i][j][k],timeframe_elec_pd1_s[i][j][k]);
-	Elec_Sim(timeframe_true_pd1_c[i][j][k],timeframe_elec_pd1_c[i][j][k]);
-	Elec_Sim(timeframe_true_pd2_s[i][j][k],timeframe_elec_pd2_s[i][j][k]);
-	Elec_Sim(timeframe_true_pd2_c[i][j][k],timeframe_elec_pd2_c[i][j][k]);
+	Elec_Sim(timeframe_true_pd1_s[i][j][k],timeframe_current_pd1_s[i][j][k]);
+	Elec_Sim(timeframe_true_pd1_c[i][j][k],timeframe_current_pd1_c[i][j][k]);
+	Elec_Sim(timeframe_true_pd2_s[i][j][k],timeframe_current_pd2_s[i][j][k]);
+	Elec_Sim(timeframe_true_pd2_c[i][j][k],timeframe_current_pd2_c[i][j][k]);
       }
     }
   }
@@ -2752,10 +2752,10 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	for (int i=0;i<tfnx;i++ ) {
 	  for (int j=0;j<tfny;j++ ) {
 	    for (int k=0;k<tfndepth;k++ ) {
-	      nescinttotecal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
-	      nescinttotecal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_current_pd1_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_current_pd1_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_current_pd2_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_current_pd2_c[i][j][k],10.,100.);
 	    }
 	  }
 	}
@@ -3432,10 +3432,10 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 	for (int i=0;i<tfnx;i++ ) {
 	  for (int j=0;j<tfny;j++ ) {
 	    for (int k=0;k<tfndepth;k++ ) {
-	      nescinttotecal+=int_charge(timeframe_elec_pd1_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(timeframe_elec_pd1_c[i][j][k],10.,100.);
-	      nescinttotecal+=int_charge(timeframe_elec_pd2_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(timeframe_elec_pd2_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_current_pd1_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_current_pd1_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(timeframe_current_pd2_s[i][j][k],10.,100.);
+	      necertotecal+=int_charge(timeframe_current_pd2_c[i][j][k],10.,100.);
 	    }
 	  }
 	}

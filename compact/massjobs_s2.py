@@ -2,7 +2,12 @@ from array import *
 import argparse
 
 
-# python massjobs_s2.py -g1 DualTestBeam -g2 FSCEPonly -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendete 3 -gendeth 3 -dodual 0 -NNN 2 -dotwocalcor 1 -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/ -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/  -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
+# python massjobs_s2.py
+# -g1 DualTestBeam -g2 FSCEPonly
+# -doecal 1 -dohcal 1 -hcaltype 0 -doedge 1 -gendete 3 -gendeth 3 -dodual 0 -NNN 2 -dotwocalcor 1
+# -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
+# -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/
+# -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-w", "--write", help="where to write")
@@ -42,7 +47,7 @@ print("script area is %s" % scriptarea )
 #energies=[10,15,20,25,30,35,40,45,50]
 nenergy=1
 energies=[20]
-name="s2-condor-executable-"+str(args.geometry1)+"_"+str(args.geometry2)+'_g'+str(args.gendet)+"-"
+name="s2-condor-executable-"+str(args.geometry1)+"_"+str(args.geometry2)+'_g'+str(args.gendete)+"-"+str(args.gendeth)+"-"
 
 # create the .sh files 
 i=0

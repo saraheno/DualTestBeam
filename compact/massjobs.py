@@ -74,8 +74,8 @@ while (i<nenergy):
     shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
     shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source '+hostarea+'../install/bin/thisDualIanna.sh'+'\n')
-    shfile.write('echo "ran thisDualIanna"'+'\n')
+    shfile.write('source '+hostarea+'../install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('echo "ran thisDualTestBeam"'+'\n')
 # another good direction is  "0 0.05 0.99875"  and position 0.,-7*mm,-1*cm use this for pure fiber
 # DO IT BOTH PLACES!!!
     shfile.write('ddsim --compactFile='+hostarea+'/DR'
@@ -104,8 +104,8 @@ while (i<nenergy):
     shfile.write('singularity run -B /cvmfs:/cvmfs -B /data:/data docker://gitlab-registry.cern.ch/sft/docker/alma9-core:latest'+'\n')
     shfile.write('source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc14-opt/setup.sh'+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source '+hostarea+'../install/bin/thisDualIanna.sh'+'\n')
-    shfile.write('echo "ran thisDualIanna"'+'\n')
+    shfile.write('source '+hostarea+'../install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('echo "ran thisDualTestBeam"'+'\n')
     shfile.write('ddsim --compactFile='+hostarea+'/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile '+hostarea+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
