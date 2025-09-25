@@ -76,9 +76,9 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 
 void FillTime(map<string, int> mapsampcalslice, int gendete, int gendeth, int ievt, bool doecal, bool dohcal, int hcaltype, bool doedge,TBranch* &b_ecal,TBranch* &b_hcal,TBranch*  &b_edge,CalHits* &ecalhits, CalHits* &hcalhits, CalHits* &edgehits, float &timecut,
 	      TH1F* eecaltime, TH1F* ehcaltime, TH1F *ecalpd1scint,TH1F *ecalpd1cer,TH1F *ecalpd2scint,TH1F *ecalpd2cer,TH1F *hcalpd1scint,TH1F *hcalpd1cer,TH1F *hcalpd2scint,TH1F *hcalpd2cer);
-void Elec_Sim(TH1F* In, TH1F* Out);  // take histogram of true arrival times at photodetector and produce output signal
+void Electronics_Sim(TH1F* In, TH1F* Out);  // take histogram of true arrival times at photodetector and produce output signal
 double int_charge(TH1F* out, double pre, double window );
-double SPR(double tNow);  // response of electronics to a photoelectron
+double PhotonToCurrent(double tNow);  // response of electronics to a photoelectron
 double AFILTER(int ifilter, double wavelength);  // get probability to pass sipm pde and any wavelength filters
 double sipmpde(int isipm, double wavelength);  // sipmm qe as a function of wavelength
 
@@ -574,12 +574,12 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
       getStuff(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,fillfill,eesum,eesumcal,eesumem,eesumair,eesumdead,eesumcrystal,eesumPDe,eesumfiber1,eesumfiber2,eesumabs,eesumPDh,eesumairem,eesumdeadem,eesumcrystalem,eesumPDeem,eesumfiber1em,eesumfiber2em,eesumabsem,eesumPDhem,eesumedge,eesumedgerel,necertotecal,nescinttotecal,necertothcal,nescinttothcal,eecaltimecut, ehcaltimecut,erelecaltimecut,erelhcaltimecut,  nine,ninh);
       //      std::cout<<"starting filltime "<<std::endl;
       if(fillfill==1) FillTime(mapsampcalslice,  gendete, gendeth, ievt, doecal, dohcal, hcaltype, doedge, b_ecal,b_hcal,b_edge,ecalhits,hcalhits,edgehits, timecut,eecaltime,ehcaltime,eecalpd1scint,eecalpd1cer,eecalpd2scint,eecalpd2cer,ehcalpd1scint,ehcalpd1cer,ehcalpd2scint,ehcalpd2cer);
-      Elec_Sim(eecalpd1scint,eecalpd1scints);
+      Electronics_Sim(eecalpd1scint,eecalpd1scints);
       double acharge = int_charge(eecalpd1scints,10.,100.);
       //std::cout<<" integrated charge is "<<acharge<<std::endl;
-      Elec_Sim(eecalpd2scint,eecalpd2scints);
-      Elec_Sim(eecalpd1cer,eecalpd1cers);
-      Elec_Sim(eecalpd2cer,eecalpd2cers);
+      Electronics_Sim(eecalpd2scint,eecalpd2scints);
+      Electronics_Sim(eecalpd1cer,eecalpd1cers);
+      Electronics_Sim(eecalpd2cer,eecalpd2cers);
       
 
       float eachecks=eesumair+eesumPDe+eesumcrystal+eesumfiber1+eesumfiber2+eesumabs+eesumPDh+eesumedge+eesumdead;
@@ -2627,10 +2627,10 @@ void PrepareEcalTimeFrames(int ievt, TBranch* &b_ecal,CalHits* &ecalhits) {
   for (int i=0;i<tfnx;i++ ) {
     for (int j=0;j<tfny;j++ ) {
       for (int k=0;k<tfndepth;k++ ) {
-	Elec_Sim(timeframe_true_pd1_s[i][j][k],timeframe_current_pd1_s[i][j][k]);
-	Elec_Sim(timeframe_true_pd1_c[i][j][k],timeframe_current_pd1_c[i][j][k]);
-	Elec_Sim(timeframe_true_pd2_s[i][j][k],timeframe_current_pd2_s[i][j][k]);
-	Elec_Sim(timeframe_true_pd2_c[i][j][k],timeframe_current_pd2_c[i][j][k]);
+	Electronics_Sim(timeframe_true_pd1_s[i][j][k],timeframe_current_pd1_s[i][j][k]);
+	Electronics_Sim(timeframe_true_pd1_c[i][j][k],timeframe_current_pd1_c[i][j][k]);
+	Electronics_Sim(timeframe_true_pd2_s[i][j][k],timeframe_current_pd2_s[i][j][k]);
+	Electronics_Sim(timeframe_true_pd2_c[i][j][k],timeframe_current_pd2_c[i][j][k]);
       }
     }
   }
@@ -2993,7 +2993,7 @@ double int_charge(TH1F* out, double pre, double window ) {
 
 
   // take histogram of true arrival times at photodetector and produce output signal
-void Elec_Sim(TH1F* In, TH1F* Out) {
+void Electronics_Sim(TH1F* In, TH1F* Out) {
   int nbin = In->GetNbinsX();
   //  std::cout<<std::endl<<"elec_sim input nbin is "<<nbin<<std::endl;
   double amin = In->GetBinLowEdge(1);
@@ -3008,7 +3008,7 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
 	  float petime = (amin+(i-0.5)*awidth);
 	  float bintime = (timemin+(k-0.5)*timebinsize);
 	  float localtime= bintime-petime;
-	  float charge=SPR(localtime);
+	  float charge=PhotonToCurrent(localtime);
 	  if(localtime>0) {
 	    //	    std::cout<<"petime k bintime  localtime charge is "<<petime<<" "<<k<<" "<<bintime<<" "<<localtime<<" "<<charge<<std::endl;        
 	    Out->Fill(bintime, charge);
@@ -3022,7 +3022,7 @@ void Elec_Sim(TH1F* In, TH1F* Out) {
 
 
 // electronics response to a single photoelectron
-double SPR(double tNow)
+double PhotonToCurrent(double tNow)
 {
         /*
         * This example of SPR corresponds to Calvision TB at FNAL in 2023
