@@ -2775,13 +2775,13 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
     bool i2=(igangx<fhcal_tfnx);
     bool i3=(igangy>=0);
     bool i4=(igangy<fhcal_tfny);
-    if(iphdet>0) std::cout<<"ix iy igangx igangy i1-i4 iphdet "<<ix<<" "<<iy<<" "<<igangx<<" "<<igangy<<" "<<i1<<" "<<i2<<" "<<i3<<" "<<i4<<" "<<iphdet<<std::endl;
+    //if(iphdet>0) std::cout<<"ix iy igangx igangy i1-i4 iphdet "<<ix<<" "<<iy<<" "<<igangx<<" "<<igangy<<" "<<i1<<" "<<i2<<" "<<i3<<" "<<i4<<" "<<iphdet<<std::endl;
 
     
     if(i1&&i2&&i3&&i4) {
       if(iphdet==1) {    // scint fiber
 	int iii=(ahcalhit->HitScin).size();
-        std::cout<<" number of scint gammas is "<<iii<<std::endl;
+	//        std::cout<<" number of scint gammas is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  if(aar.Rndm()<SipmPDEFILTER(1,(ahcalhit->HitScin)[jjj].second)) { 
 	  fhcal_timeframe_true_pd1_s[igangx][igangy]->Fill((ahcalhit->HitScin)[jjj].first);
