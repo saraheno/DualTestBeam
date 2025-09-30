@@ -9,6 +9,7 @@
      <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
      <constant name="Upstreamwidth" value="10.0*cm"/>  <!-- should be 1 -->
      <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
+     <constant name="killthickf" value="2*cm"/> <!-- for fibers -->
      
 <!-- constants for dual readout crystal calorimeter -->
 <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->

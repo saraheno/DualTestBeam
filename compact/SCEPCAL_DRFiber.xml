@@ -32,7 +32,7 @@ z1 is the photodetector length gap is the distance between modules, and dz is ho
 zmin is where the dtector goes
  -->
 
-<dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="0.25*edgeoffset+2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgapl+EcalHcalgap" z1="killthick"/>
+<dimensions numsides="DRFiberNsizeSCE" thickness="DRFiberAbswidthSCE" z_length="DRFiberlengthSCE" gap="gapSCE"  zmin="0.25*edgeoffset+2*killthick+edgeoffset+DRcrystallength1+DRcrystallength2+DRcrystalgapl+EcalHcalgap" z1="killthickf"/>
 <!-- <dimensions numsides="DRFiberNsize" thickness="DRFiberAbswidth" z_length="DRFiberlength" gap="0.1*mm" dz="0.0*mm" zmin="0." z1="5*mm"/> -->
 
 
@@ -42,8 +42,8 @@ zmin is where the dtector goes
         <core2 name="core2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="DR_Quartz" vis="CerenVis" sensitive="yes"/>
         <hole name="hole" rmax="(DRFiberFibwidthSCE+holeoverSCE)" rmin="0.0" material="Air" vis="InvisibleWithDaughters" sensitive="yes"/>
         <absorb material="Brass" vis="AbsVis" sensitive="yes"/>
-	<phdet1 name="phdet1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia2" vis="InvisibleWithDaughters" sensitive="yes"/>
-	<phdet2 name="phdet2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia3" vis="InvisibleWithDaughers" sensitive="yes"/>
+	<phdet1 name="phdet1" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia2" vis="phdetVis" sensitive="yes"/>
+	<phdet2 name="phdet2" rmax="DRFiberFibwidthSCE" rmin="0.0" material="killMedia3" vis="phdetVis" sensitive="yes"/>
       </structure>
     </detector>
   </detectors>

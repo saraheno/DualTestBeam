@@ -5,6 +5,7 @@
      <constant name="UPL1width" value="50*cm"/>
      <constant name="UPL1gap" value="2*cm"/>
      <constant name="UPL1thick" value="1*cm"/>
+     <constant name="killthickf" value="2*cm"/> <!-- for fibers -->
 
 
 <!-- photodetector thicknesses -->

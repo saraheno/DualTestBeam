@@ -4,7 +4,9 @@
 
 <!-- photodetector thicknesses -->    
      <constant name="killthick" value="0.5*cm"/> <!-- should be 0.1 mm-->
-
+SCEPCALConstants2.xml
+        <constant name="killthickf" value="2*cm"/> <!-- for fibers -->
+  
 <!-- constants for dual readout crystal calorimeter -->
 <constant name="DRcrystalwidth1" value="1.0*cm"/>  <!-- should be 1 -->
     <constant name="DRcrystalwidth2" value="1.0*cm"/>  <!-- should be 1 -->

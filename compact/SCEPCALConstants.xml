@@ -7,12 +7,11 @@
      <constant name="UPL1thick" value="1*cm"/>
 
 <!-- photodetector thicknesses -->
-     <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
+<constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
+     <constant name="killthickf" value="2*cm"/> <!-- for fibers -->
      <constant name="Upstreamwidth" value="10.0*cm"/>  <!-- should be 1 -->
      <constant name="Upstreamoffset" value="-50.0*cm"/>  <!-- distance in front of ecal for start of structure -->
 
-<!-- photodetector thicknesses -->
-     <constant name="killthick" value="0.001*cm"/> <!-- should be 0.1 mm-->
 
 
 <!-- constants for dual readout crystal calorimeter -->
@@ -47,7 +46,7 @@
     <constant name="holeoverSCE" value="0.025*mm"/>
     <constant name="gapSCE" value="0.0001*mm"/>
     <constant name="DRFiberlengthSCE" value="210*cm"/>   <!-- should be 210 cm -->
-    <constant name="DRFiberNsizeSCE" value="250"/>        <!-- should be 250 -->
+    <constant name="DRFiberNsizeSCE" value="60"/>        <!-- should be 250 -->
 
 
 <!-- constants for dual readout spagetti fiber hcal calorimeter in IDEA -->
