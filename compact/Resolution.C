@@ -1713,10 +1713,11 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     for (int i=0;i<fhcal_tfnx;i++ ) {
       for (int j=0;j<fhcal_tfny;j++ ) {
 	if(fhcal_timeframe_true_pd1_s[i][j]->GetEntries()>1)
-	  {std::cout<<"scint writing ["<<i<<","<<j<<"]"<<std::endl;
+	  {
+	    //std::cout<<"scint writing ["<<i<<","<<j<<"]"<<std::endl;
 	    fhcal_timeframe_true_pd1_s[i][j]->Write();}
 	if(fhcal_timeframe_true_pd1_c[i][j]->GetEntries()>1) {
-	  std::cout<<"cer writing ["<<i<<","<<j<<"]"<<std::endl;
+	  //std::cout<<"cer writing ["<<i<<","<<j<<"]"<<std::endl;
 	  fhcal_timeframe_true_pd1_c[i][j]->Write();}
 	if(fhcal_timeframe_current_pd1_s[i][j]->GetEntries()>5)  {fhcal_timeframe_current_pd1_s[i][j]->Write();}
       }
