@@ -42,12 +42,12 @@ int ihitcountc=0;
 
 float timecut=10;
 float betacut=1/1.5;
-const int finenbin=100;
+const int finenbin=200;
 const float timemin=0.;
-const float timemax=100.;
+const float timemax=200.;
 
 const float inttimemin=10.;
-const float inttimemax=100.;
+const float inttimemax=200.;
 
 const float timebinsize=(timemax-timemin)/float(finenbin);
 
@@ -205,6 +205,8 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     } else {
       std::cout<<"invalid hcaltype"<<std::endl;
     }
+    std::string stryuc(HCALleaf);
+    std::cout<<"HCALleaf is "<<stryuc<<std::endl;
   }
 
   std::cout<<"doecal is "<<doecal<<std::endl;
@@ -2880,11 +2882,7 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	//std::cout<<"starting DecodeFiber "<<std::endl;
 	int idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy;
 	DecodeFiber(ihitchan,idet,ilayer,itube,iair,itype,ifiber,iabs,iphdet,ihole,ix,iy);
-	if(ifiber==2) {
-	      //std::cout<<"ifiber==2 energy "<<ahcalhit->energyDeposit<<std::endl;
-	  if(gendeth==3) necertothcal+=ahcalhit->edeprelativistic;
-	  if(gendeth==4) necertothcal+=ahcalhit->energyDeposit;
-	}
+
 	if((ifiber==1)||(ifiber==2) ) {
       // check contribs
 	  Contributions zxzz=ahcalhit->truth;
@@ -2928,6 +2926,11 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	      if(ifiber==1) {
 		//std::cout<<"ifiber==1 energy "<<ahcalhit->energyDeposit<<std::endl;
 		nescinttothcal+=ahcalhit->energyDeposit;
+	      }
+	      if(ifiber==2) {
+		//std::cout<<"ifiber==2 energy "<<ahcalhit->energyDeposit<<std::endl;
+		if(gendeth==3) necertothcal+=ahcalhit->edeprelativistic;
+		if(gendeth==4) necertothcal+=ahcalhit->energyDeposit;
 	      }
 	    }
 	  }
