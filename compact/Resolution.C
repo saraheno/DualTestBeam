@@ -46,6 +46,9 @@ const int finenbin=100;
 const float timemin=0.;
 const float timemax=100.;
 
+const float inttimemin=10.;
+const float inttimemax=100.;
+
 const float timebinsize=(timemax-timemin)/float(finenbin);
 
 
@@ -188,9 +191,21 @@ const char* shbnamee_pd1_c[shcal_tfnx][shcal_tfny][shcal_tfndepth];
 void Resolution(int num_evtsmax, const char* einputfilename, const char* piinputfilename,
 		const char* hcalonlyefilename, const char* hcalonlypifilename,
 		const float beamEE, bool doecal, bool dohcal, int hcaltype, bool doedge, bool domissCorr,bool doedgecut, float edgecut,int gendete, int gendeth,
-		const char* outputfilename,const char* ECALleaf, const char* HCALleaf,
+		const char* outputfilename,
 		bool doplots, bool dodualcorr,bool twocalecalcorr) {
 
+
+  const char* ECALleaf = "DRCNoSegment";
+  const char* HCALleaf;
+  if(dohcal) {
+    if(hcaltype==0 ) {
+      HCALleaf="DRFNoSegment";
+    } else if(hcaltype==1) {
+      HCALleaf="DRSNoSegment";
+    } else {
+      std::cout<<"invalid hcaltype"<<std::endl;
+    }
+  }
 
   std::cout<<"doecal is "<<doecal<<std::endl;
   std::cout<<"dohcal is "<<dohcal<<std::endl;
@@ -207,7 +222,13 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
   std::cout<<" gendet code 1=active media photons 2 = photodetector photons 3=energy deposits 4 is debug 5 uses digits for true time 6 uses electronics simulation"<<std::endl;
   std::cout<<"gendete is "<<gendete<<std::endl;
   std::cout<<"gendeth is "<<gendeth<<std::endl;
-
+  if(gendete==6) {
+    std::cout<<"ecal signal integration times are "<<inttimemin<<" to "<<inttimemax<<std::endl;
+  }
+  if(gendeth==6) {
+    std::cout<<"hcal signal integration times are "<<inttimemin<<" to "<<inttimemax<<std::endl;
+  }
+  
 
   float afacEcal=1.;
   float afacHcal=1.;
@@ -253,6 +274,22 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
     }
   }
 
+
+  
+  for (int i=0;i<shcal_tfnx;i++ ) {
+    for (int j=0;j<shcal_tfny;j++ ) {
+      for (int k=0;k<shcal_tfndepth;k++) {
+	shaname_pd1_s[i][j][k] = "shcal true pd1 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	shbname_pd1_s[i][j][k]=shaname_pd1_s[i][j][k].c_str();
+	shaname_pd1_c[i][j][k] = "shcal true pd1 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	shbname_pd1_c[i][j][k]=shaname_pd1_c[i][j][k].c_str();
+	
+	shcal_timeframe_true_pd1_s[i][j][k]= new TH1F(shbname_pd1_s[i][j][k],shbname_pd1_s[i][j][k],finenbin,timemin,timemax);
+	shcal_timeframe_true_pd1_c[i][j][k]= new TH1F(shbname_pd1_c[i][j][k],shbname_pd1_c[i][j][k],finenbin,timemin,timemax);
+      }
+    }
+  }
+
   // current pulse
   for (int i=0;i<ecal_tfnx;i++ ) {
     for (int j=0;j<ecal_tfny;j++ ) {
@@ -289,6 +326,22 @@ void Resolution(int num_evtsmax, const char* einputfilename, const char* piinput
 	fhcal_timeframe_current_pd1_c[i][j]= new TH1F(fhbnamee_pd1_c[i][j],fhbnamee_pd1_c[i][j],finenbin,timemin,timemax);
     }
   }
+
+  
+  for (int i=0;i<shcal_tfnx;i++ ) {
+    for (int j=0;j<shcal_tfny;j++ ) {
+      for (int k=0;k<shcal_tfndepth;k++) {
+	shanamee_pd1_s[i][j][k] = "shcal electronics pd1 s "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	shbnamee_pd1_s[i][j][k]=shanamee_pd1_s[i][j][k].c_str();
+	shanamee_pd1_c[i][j][k] = "shcal electronics pd1 c "+to_string(i)+"_"+to_string(j)+"_"+to_string(k);
+	shbnamee_pd1_c[i][j][k]=shanamee_pd1_c[i][j][k].c_str();
+	
+	shcal_timeframe_current_pd1_s[i][j][k]= new TH1F(shbnamee_pd1_s[i][j][k],shbnamee_pd1_s[i][j][k],finenbin,timemin,timemax);
+	shcal_timeframe_current_pd1_c[i][j][k]= new TH1F(shbnamee_pd1_c[i][j][k],shbnamee_pd1_c[i][j][k],finenbin,timemin,timemax);
+      }
+    }
+  }
+
 
   
   // these must correspond to the "slice" physvolid used in DRCrys_geo
@@ -2220,10 +2273,10 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	for (int i=0;i<ecal_tfnx;i++ ) {
 	  for (int j=0;j<ecal_tfny;j++ ) {
 	    for (int k=0;k<ecal_tfndepth;k++ ) {
-	      meanscinEcal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],10.,100.);
-	      meanscinEcal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],10.,100.);
-	      meancerEcal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],10.,100.);
+	      meanscinEcal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+	      meancerEcal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+	      meanscinEcal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],inttimemin,inttimemax);
+	      meancerEcal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],inttimemin,inttimemax);
 	    }
 	  }
 	}
@@ -2365,8 +2418,30 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	  }
 	}
       } else { //sampling
-      }
-    }
+	//	std::cout<<" entering code "<<std::endl;
+	if(gendeth==5) {
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
+		//	std::cout<<"["<<i<<","<<j<<","<<k<<"]"<<std::endl;
+		meanscinHcal+=shcal_timeframe_true_pd1_s[i][j][k]->Integral();
+		meancerHcal+=shcal_timeframe_true_pd1_c[i][j][k]->Integral();
+	      }
+	    }
+	  }
+	  if(gendeth==6) {
+	    for (int i=0;i<shcal_tfnx;i++ ) {
+	      for (int j=0;j<shcal_tfny;j++ ) {
+		for (int k=0;k<shcal_tfndepth;k++ ) {
+		  meanscinHcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		  meancerHcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+		}
+	      }
+	    }
+	  }
+	}  //
+      }  // end sampling
+    } // end gendeth>5
   }  //end dohcal
 
 
@@ -2533,14 +2608,18 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 	}
       }
       std::cout<<std::endl;
-      for (int i=0;i<fhcal_tfnx;i++ ) {
-	for (int j=0;j<fhcal_tfny;j++ ) {
-	  Electronics_Sim(fhcal_timeframe_true_pd1_s[i][j],fhcal_timeframe_current_pd1_s[i][j]);
-	  Electronics_Sim(fhcal_timeframe_true_pd1_c[i][j],fhcal_timeframe_current_pd1_c[i][j]);
-	}
-      }
     }
-    
+
+  // simulate electronics
+  for (int i=0;i<fhcal_tfnx;i++ ) {
+    for (int j=0;j<fhcal_tfny;j++ ) {
+      Electronics_Sim(fhcal_timeframe_true_pd1_s[i][j],fhcal_timeframe_current_pd1_s[i][j]);
+      Electronics_Sim(fhcal_timeframe_true_pd1_c[i][j],fhcal_timeframe_current_pd1_c[i][j]);
+    }
+  }
+
+
+  
   return;
 }
   
@@ -2603,6 +2682,30 @@ void PrepareSHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
   }
 
 
+    if(ievt<SCECOUNT)
+    {
+      std::cout<<" what is in the time frames? "<<std::endl;
+      for (int i=0;i<shcal_tfnx;i++ ) {
+	for (int j=0;j<shcal_tfny;j++ ) {
+	  for(int k=0;k<shcal_tfndepth;k++ ) {
+	    if(shcal_timeframe_true_pd1_s[i][j][k]->GetEntries()>0) std::cout<<"s["<<i<<","<<j<<","<<k<<"]="<<shcal_timeframe_true_pd1_s[i][j][k]->GetEntries()<<" "<<shcal_timeframe_true_pd1_s[i][j][k]->Integral()<<" ";
+	    if(shcal_timeframe_true_pd1_c[i][j][k]->GetEntries()>0) std::cout<<"c["<<i<<","<<j<<","<<k<<"]="<<shcal_timeframe_true_pd1_c[i][j][k]->GetEntries()<<" ";
+	  }
+	}
+      }
+      std::cout<<std::endl;
+    }
+
+    // simulate electronics
+    for (int i=0;i<shcal_tfnx;i++ ) {
+      for (int j=0;j<shcal_tfny;j++ ) {
+	for(int k=0;k<shcal_tfndepth;k++ ) {
+	  Electronics_Sim(shcal_timeframe_true_pd1_s[i][j][k],shcal_timeframe_current_pd1_s[i][j][k]);
+	  Electronics_Sim(shcal_timeframe_true_pd1_c[i][j][k],shcal_timeframe_current_pd1_c[i][j][k]);
+	}
+      }
+    }
+    
   return;
 }
 
@@ -2714,10 +2817,10 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	for (int i=0;i<ecal_tfnx;i++ ) {
 	  for (int j=0;j<ecal_tfny;j++ ) {
 	    for (int k=0;k<ecal_tfndepth;k++ ) {
-	      nescinttotecal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],10.,100.);
-	      nescinttotecal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+	      necertotecal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+	      nescinttotecal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],inttimemin,inttimemax);
+	      necertotecal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],inttimemin,inttimemax);
 	    }
 	  }
 	}
@@ -2892,12 +2995,33 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	  if(gendeth==6) {
 	    for (int i=0;i<fhcal_tfnx;i++ ) {
 	      for (int j=0;j<fhcal_tfny;j++ ) {
-		nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],10.,100.);
-		necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],10.,100.);
+		nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],inttimemin,inttimemax);
+		necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],inttimemin,inttimemax);
 	      }
 	    }
 	  }
 	} else {  //sampling
+	if(gendeth==5) {
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfny;k++ ) {
+		nescinttothcal+=shcal_timeframe_true_pd1_s[i][j][k]->Integral();
+		necertothcal+=shcal_timeframe_true_pd1_c[i][j][k]->Integral();
+	      }
+	    }
+	  }
+	  if(gendeth==6) {
+	    for (int i=0;i<shcal_tfnx;i++ ) {
+	      for (int j=0;j<shcal_tfny;j++ ) {
+		for (int k=0;k<shcal_tfny;k++ ) {
+		  nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		  necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+		}
+	      }
+	    }
+	  }
+	}  //
+
 	}
       }
     }
@@ -3081,7 +3205,7 @@ double RGB_sipm_QE_y[29] = {0.034678173, 0.144499016, 0.271678829,
    }
    break;
  default:
-   std::cout<<"   you messed up the input to SipmPDEFILTER"<<std::endl;
+   std::cout<<"   you messed up the simpe"<<std::endl;
    break;
  }
 
@@ -3192,10 +3316,10 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 	for (int i=0;i<ecal_tfnx;i++ ) {
 	  for (int j=0;j<ecal_tfny;j++ ) {
 	    for (int k=0;k<ecal_tfndepth;k++ ) {
-	      nescinttotecal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],10.,100.);
-	      nescinttotecal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],10.,100.);
-	      necertotecal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],10.,100.);
+	      nescinttotecal+=int_charge(ecal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+	      necertotecal+=int_charge(ecal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+	      nescinttotecal+=int_charge(ecal_timeframe_current_pd2_s[i][j][k],inttimemin,inttimemax);
+	      necertotecal+=int_charge(ecal_timeframe_current_pd2_c[i][j][k],inttimemin,inttimemax);
 	    }
 	  }
 	}
@@ -3310,7 +3434,7 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
     if(gendeth>=5) {
       nescinttothcal=0;
       necertothcal=0;
-      if(hcaltype==0) {
+      if(hcaltype==0) { //fiber
 	if(gendeth==5) {
 	  for (int i=0;i<fhcal_tfnx;i++ ) {
 	    for (int j=0;j<fhcal_tfny;j++ ) {
@@ -3322,12 +3446,33 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 	if(gendeth==6) {
 	  for (int i=0;i<fhcal_tfnx;i++ ) {
 	    for (int j=0;j<fhcal_tfny;j++ ) {
-	      nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],10.,100.);
-	      necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],10.,100.);
+	      nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],inttimemin,inttimemax);
+	      necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],inttimemin,inttimemax);
 	    }
 	  }
 	}
-      } else{
+      } else{ // sampling
+		if(gendeth==5) {
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfny;k++ ) {
+		nescinttothcal+=shcal_timeframe_true_pd1_s[i][j][k]->Integral();
+		necertothcal+=shcal_timeframe_true_pd1_c[i][j][k]->Integral();
+	      }
+	    }
+	  }
+	  if(gendeth==6) {
+	    for (int i=0;i<shcal_tfnx;i++ ) {
+	      for (int j=0;j<shcal_tfny;j++ ) {
+		for (int k=0;k<shcal_tfny;k++ ) {
+		  nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		  necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
+		}
+	      }
+	    }
+	  }
+	}  //
+
       }
     }
 
