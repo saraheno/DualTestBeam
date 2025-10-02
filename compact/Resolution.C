@@ -2992,39 +2992,38 @@ void getStuff(map<string, int> mapsampcalslice, int gendete, int gendeth, int ie
 	      necertothcal+=fhcal_timeframe_true_pd1_c[i][j]->Integral();
 	    }
 	  }
-	  if(gendeth==6) {
-	    for (int i=0;i<fhcal_tfnx;i++ ) {
-	      for (int j=0;j<fhcal_tfny;j++ ) {
-		nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],inttimemin,inttimemax);
-		necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],inttimemin,inttimemax);
-	      }
+	}
+	if(gendeth==6) {
+	  for (int i=0;i<fhcal_tfnx;i++ ) {
+	    for (int j=0;j<fhcal_tfny;j++ ) {
+	      nescinttothcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],inttimemin,inttimemax);
+	      necertothcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],inttimemin,inttimemax);
 	    }
 	  }
-	} else {  //sampling
+	}
+      }  else {  //sampling
 	if(gendeth==5) {
 	  for (int i=0;i<shcal_tfnx;i++ ) {
 	    for (int j=0;j<shcal_tfny;j++ ) {
-	      for (int k=0;k<shcal_tfny;k++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
 		nescinttothcal+=shcal_timeframe_true_pd1_s[i][j][k]->Integral();
 		necertothcal+=shcal_timeframe_true_pd1_c[i][j][k]->Integral();
 	      }
 	    }
 	  }
-	  if(gendeth==6) {
-	    for (int i=0;i<shcal_tfnx;i++ ) {
-	      for (int j=0;j<shcal_tfny;j++ ) {
-		for (int k=0;k<shcal_tfny;k++ ) {
-		  nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
-		  necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
-		}
+	}
+	if(gendeth==6) {
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
+		nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
 	      }
 	    }
 	  }
-	}  //
-
 	}
-      }
-    }
+      }  //end sampling
+    }  // end gendeth>5
 	
   }  // end dohcal
 
@@ -3452,29 +3451,28 @@ void getStuffDualCorr(bool domissCorr, float beamE, map<string, int> mapsampcals
 	  }
 	}
       } else{ // sampling
-		if(gendeth==5) {
+	if(gendeth==5) {
 	  for (int i=0;i<shcal_tfnx;i++ ) {
 	    for (int j=0;j<shcal_tfny;j++ ) {
-	      for (int k=0;k<shcal_tfny;k++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
 		nescinttothcal+=shcal_timeframe_true_pd1_s[i][j][k]->Integral();
 		necertothcal+=shcal_timeframe_true_pd1_c[i][j][k]->Integral();
 	      }
 	    }
 	  }
-	  if(gendeth==6) {
-	    for (int i=0;i<shcal_tfnx;i++ ) {
-	      for (int j=0;j<shcal_tfny;j++ ) {
-		for (int k=0;k<shcal_tfny;k++ ) {
-		  nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
-		  necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
-		}
+	}
+	if(gendeth==6) {
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
+		nescinttothcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		necertothcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
 	      }
 	    }
 	  }
-	}  //
-
-      }
-    }
+	}
+      }  // end sampling
+    }  //end gendeth>5
 
   }  // end do hcal
 
