@@ -2408,17 +2408,16 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	      meancerHcal+=fhcal_timeframe_true_pd1_c[i][j]->Integral();
 	    }
 	  }
-	  if(gendeth==6) {
-	    for (int i=0;i<fhcal_tfnx;i++ ) {
-	      for (int j=0;j<fhcal_tfny;j++ ) {
-		meanscinHcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],10.,100.);
-		meancerHcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],10.,100.);
-	      }
+	}
+	if(gendeth==6) {
+	  for (int i=0;i<fhcal_tfnx;i++ ) {
+	    for (int j=0;j<fhcal_tfny;j++ ) {
+	      meanscinHcal+=int_charge(fhcal_timeframe_current_pd1_s[i][j],10.,100.);
+	      meancerHcal+=int_charge(fhcal_timeframe_current_pd1_c[i][j],10.,100.);
 	    }
 	  }
 	}
       } else { //sampling
-	//	std::cout<<" entering code "<<std::endl;
 	if(gendeth==5) {
 	  for (int i=0;i<shcal_tfnx;i++ ) {
 	    for (int j=0;j<shcal_tfny;j++ ) {
@@ -2429,17 +2428,18 @@ void getMeanPhot(map<string, int> mapsampcalslice, int gendete, int gendeth, int
 	      }
 	    }
 	  }
-	  if(gendeth==6) {
-	    for (int i=0;i<shcal_tfnx;i++ ) {
-	      for (int j=0;j<shcal_tfny;j++ ) {
-		for (int k=0;k<shcal_tfndepth;k++ ) {
-		  meanscinHcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
-		  meancerHcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
-		}
+	}
+	if(gendeth==6) {
+	  std::cout<<"here"<<std::endl;
+	  for (int i=0;i<shcal_tfnx;i++ ) {
+	    for (int j=0;j<shcal_tfny;j++ ) {
+	      for (int k=0;k<shcal_tfndepth;k++ ) {
+		meanscinHcal+=int_charge(shcal_timeframe_current_pd1_s[i][j][k],inttimemin,inttimemax);
+		meancerHcal+=int_charge(shcal_timeframe_current_pd1_c[i][j][k],inttimemin,inttimemax);
 	      }
 	    }
 	  }
-	}  //
+	}
       }  // end sampling
     } // end gendeth>5
   }  //end dohcal
@@ -2600,7 +2600,7 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 
   if(ievt<SCECOUNT)
     {
-      std::cout<<" what is in the time frames? "<<std::endl;
+      std::cout<<" what is in true time frames? "<<std::endl;
       for (int i=0;i<fhcal_tfnx;i++ ) {
 	for (int j=0;j<fhcal_tfny;j++ ) {
 	  if(fhcal_timeframe_true_pd1_s[i][j]->GetEntries()>0) std::cout<<"s["<<i<<","<<j<<"]="<<fhcal_timeframe_true_pd1_s[i][j]->GetEntries()<<" "<<fhcal_timeframe_true_pd1_s[i][j]->Integral()<<" ";
@@ -2618,6 +2618,17 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
     }
   }
 
+  if(ievt<SCECOUNT)
+    {
+      std::cout<<" what is in current time frames? "<<std::endl;
+      for (int i=0;i<fhcal_tfnx;i++ ) {
+	for (int j=0;j<fhcal_tfny;j++ ) {
+	  if(fhcal_timeframe_current_pd1_s[i][j]->GetEntries()>0) std::cout<<"s["<<i<<","<<j<<"]="<<fhcal_timeframe_current_pd1_s[i][j]->GetEntries()<<" "<<fhcal_timeframe_current_pd1_s[i][j]->Integral()<<" ";
+	  if(fhcal_timeframe_current_pd1_c[i][j]->GetEntries()>0) std::cout<<"c["<<i<<","<<j<<"]="<<fhcal_timeframe_current_pd1_c[i][j]->GetEntries()<<" ";
+	}
+      }
+      std::cout<<std::endl;
+    }
 
   
   return;
@@ -2684,7 +2695,7 @@ void PrepareSHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 
     if(ievt<SCECOUNT)
     {
-      std::cout<<" what is in the time frames? "<<std::endl;
+      std::cout<<" what is in the true frames? "<<std::endl;
       for (int i=0;i<shcal_tfnx;i++ ) {
 	for (int j=0;j<shcal_tfny;j++ ) {
 	  for(int k=0;k<shcal_tfndepth;k++ ) {
@@ -2705,6 +2716,22 @@ void PrepareSHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 	}
       }
     }
+
+    if(ievt<SCECOUNT)
+    {
+      std::cout<<" what is in the current frames? "<<std::endl;
+      for (int i=0;i<shcal_tfnx;i++ ) {
+	for (int j=0;j<shcal_tfny;j++ ) {
+	  for(int k=0;k<shcal_tfndepth;k++ ) {
+	    if(shcal_timeframe_current_pd1_s[i][j][k]->GetEntries()>0) std::cout<<"s["<<i<<","<<j<<","<<k<<"]="<<shcal_timeframe_current_pd1_s[i][j][k]->GetEntries()<<" "<<shcal_timeframe_current_pd1_s[i][j][k]->Integral()<<" ";
+	    if(shcal_timeframe_current_pd1_c[i][j][k]->GetEntries()>0) std::cout<<"c["<<i<<","<<j<<","<<k<<"]="<<shcal_timeframe_current_pd1_c[i][j][k]->GetEntries()<<" ";
+	  }
+	}
+      }
+      std::cout<<std::endl;
+    }
+
+
     
   return;
 }
