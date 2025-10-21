@@ -175,9 +175,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       double l_hzthick = layering.layer(l_num)->thickness()/2.;  // Layer's thickness.
       std::cout<<"  half  thickness is "<<l_hzthick<<std::endl;
       dd4hep::Box l_box(hwidth,hwidth,l_hzthick);
-      dd4hep::Volume     l_vol(l_name,l_box,air);
+      dd4hep::Volume     sh_vol(l_name,l_box,air);
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
-      l_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
+      sh_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
 
       // Loop over the sublayers or slices for this layer.
@@ -200,7 +200,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	double z_mids2 = z_bottoms2+s_hzthick;
 	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
 	std::cout<<" placed at "<<z_mids2<<std::endl;
-	PlacedVolume slice_phv = l_vol.placeVolume(s_vol,s_pos);
+	PlacedVolume slice_phv = sh_vol.placeVolume(s_vol,s_pos);
 	slice_phv.addPhysVolID("slice", s_num);
 	// Increment Z position of slice.
 	z_bottoms2 += 2.*s_hzthick;
@@ -213,11 +213,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       double z_midl=0.;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
-      PlacedVolume layer_phv = towerVol.placeVolume(l_vol,l_pos);
-      layer_phv.addPhysVolID("wc", j+1);
+      PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
+      sh_phv.addPhysVolID("wc", j+1);
       string tt_name = _toString(opt_num,"HallCrys%d");
       // removed 18 aug 25
-      //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, layer_phv,env_phv);
+      //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);
       //haha.isValid();
       opt_num++;
 
@@ -260,9 +260,9 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	std::cout<<"placing crystal at ("<<mod_y_off<<")"<<std::endl;
 	trafo= Transform3D(RotationZYX(0.,0.,0.),Position(0.,mod_y_off,0.));
 	pv = LayerBoxVol.placeVolume(tube_row_vol,trafo);
-	int towernum = Ncount + ijk2 + 1;
-	pv.addPhysVolID("iy",towernum);
-	std::cout<<"placing tower "<<towernum<<std::endl;
+	int rownum = Ncount + ijk2 + 1;
+	pv.addPhysVolID("iy",rownum);
+	std::cout<<"placing row "<<rownum<<std::endl;
 	//BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, pv,env_phv);
 	//haha.isValid();
     }  //end of placing towers in layer envelope

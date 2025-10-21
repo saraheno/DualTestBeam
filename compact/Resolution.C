@@ -2584,7 +2584,7 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 	//if(iii>0) std::cout<<"for hit "<<i<<" number of scint gammas is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  if(aar.Rndm()<SipmPDEFILTER(1,(ahcalhit->HitScin)[jjj].second)) { 
-	  fhcal_timeframe_true_pd1_s[igangx][igangy]->Fill((ahcalhit->HitScin)[jjj].first);
+	    fhcal_timeframe_true_pd1_s[igangx][igangy]->Fill((ahcalhit->HitScin)[jjj].first);
 	  }
 	}
       }
@@ -2593,7 +2593,7 @@ void PrepareFHcalTimeFrames(int ievt, TBranch* &b_hcal,CalHits* &hcalhits) {
 	//if(iii>0) std::cout<<"for hit "<<i<<" number of cer gammas is "<<iii<<std::endl;
 	for(int jjj=0;jjj<iii;jjj++) {
 	  if(aar.Rndm()<SipmPDEFILTER(2,(ahcalhit->HitCer)[jjj].second)) {
-	  fhcal_timeframe_true_pd1_c[igangx][igangy]->Fill((ahcalhit->HitCer)[jjj].first);
+	    fhcal_timeframe_true_pd1_c[igangx][igangy]->Fill((ahcalhit->HitCer)[jjj].first);
 	  }
 	}
       }
