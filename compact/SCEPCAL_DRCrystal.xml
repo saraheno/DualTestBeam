@@ -26,7 +26,7 @@
       <dimensions z1="edgeoffset" z2="ecaltol"/>
 
     <structure>
-     <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="CrystalEcalHoneyVis" sensitive="yes"/> 
+     <honey name="honey" thickness="DRcrystalhont" material="Brass" vis="CrystalEcalHoneyVis" sensitive="yes"/> 
 <!--          <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/> -->
     </structure>
 

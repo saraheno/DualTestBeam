@@ -75,10 +75,10 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 
 SIM.action.calo = "DualCrysCalorimeterSDAction"
 SIM.action.calo = ("DualCrysCalorimeterSDAction",
-  {"dialCherC": 0.0000125,
-   "dialScintC": 0.000005,
-   "dialCherO": 0.000125,
-   "dialScintO": 0.00000005,
+  {"dialCherC": 1.,
+   "dialScintC": 1.,
+   "dialCherO": 1.,
+   "dialScintO": 1.,
    "betarel": 0.648,
    "printlimitSCE": 10,
    "MAXEVENTSCE": 10,
