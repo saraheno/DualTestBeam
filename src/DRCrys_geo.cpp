@@ -183,6 +183,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       // Loop over the sublayers or slices for this layer.
       int s_num = 1;
       double z_bottoms2=-l_hzthick;
+      double z_midl=0.;
       for(xml_coll_t si(x_layer,_U(slice)); si; ++si)  {
 	std::cout<<" with slice "<<s_num<<std::endl;
 	xml_comp_t x_slice = si;
@@ -198,10 +199,19 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	s_vol.setAttributes(description,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
 	// Slice placement.
 	double z_mids2 = z_bottoms2+s_hzthick;
-	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
-	std::cout<<" placed at "<<z_mids2<<std::endl;
-	PlacedVolume slice_phv = sh_vol.placeVolume(s_vol,s_pos);
-	slice_phv.addPhysVolID("slice", s_num);
+	Position   s_pos(0.,0.,z_mids2+2*j*l_hzthick);      // Position of the layer.
+	std::cout<<" placed at "<<z_mids2+2*j*l_hzthick<<std::endl;
+	//PlacedVolume slice_phv = sh_vol.placeVolume(s_vol,s_pos);
+	//slice_phv.addPhysVolID("slice", s_num);
+	PlacedVolume slice_phv = towerVol.placeVolume(s_vol,s_pos);
+	slice_phv.addPhysVolID("wc", s_num+10*j);
+
+
+      //PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
+      //sh_phv.addPhysVolID("wc", j+1);
+
+
+
 	// Increment Z position of slice.
 	z_bottoms2 += 2.*s_hzthick;
 	// Increment slice number.
@@ -210,11 +220,11 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // place the layer into the tower
       // Set region, limitset, and vis of layer.
-      double z_midl=0.;
-      Position   l_pos(0.,0.,z_midl);      // Position of the layer.
-      std::cout<<" placed at z of "<<z_midl<<std::endl;
-      PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
-      sh_phv.addPhysVolID("wc", j+1);
+
+      //Position   l_pos(0.,0.,z_midl);      // Position of the layer.
+      //std::cout<<" placed at z of "<<z_midl<<std::endl;
+      //PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
+      //sh_phv.addPhysVolID("wc", j+1);
       string tt_name = _toString(opt_num,"HallCrys%d");
       // removed 18 aug 25
       //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);
