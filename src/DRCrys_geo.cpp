@@ -64,16 +64,16 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     std::cout<<"DRCrys layer "<<l_num<<std::endl;
     xml_comp_t x_layer = li;
     xml_comp_t x_dim = x_layer.child(_U(dimensions));
-    int Ncount = x_dim.repeat();
-    double hwidth   = x_dim.width()/2.;
-    double agap=x_dim.gap()/2.;
-    int repeat = x_layer.repeat();
-    double hthickness=repeat*layering.layer(l_num)->thickness()/2.;
+    int Ncount = x_dim.repeat(); std::cout<<"Ncount is "<<Ncount<<std::endl;
+    double hwidth   = x_dim.width()/2.;  std::cout<<"width is "<<x_dim.width()<<std::endl;
+    double agap=x_dim.gap()/2.;  std::cout<<"agap is "<<x_dim.gap()<<std::endl;
+    int repeat = x_layer.repeat();  std::cout<<"repeat is "<<x_layer.repeat()<<std::endl;
+    double hthickness=repeat*layering.layer(l_num)->thickness()/2.;  
     double hnwidth = (2*Ncount+1)*(hwidth+agap);
     detectorhthickness+=hthickness+agap;
     if(hnwidth+agap>detectorhwidth) detectorhwidth=hnwidth+agap;
     std::cout<<" ncount hwidth repeat hthickness "<<Ncount<<" "<<hnwidth<<" "<<repeat<<" "<<hthickness<<std::endl;
-    l_num++;
+    l_num+=repeat;
   }
 
   double frac_tol2=tol/l_num;
@@ -116,7 +116,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     double agap=x_dim.gap()/2.;
     int repeat = x_layer.repeat();  // how many times slice pattern repeats in layer
     double hthickness=repeat*layering.layer(l_num)->thickness()/2.;
-    std::cout<<" ncount hwidth repeat hthickness "<<Ncount<<" "<<hwidth<<" "<<repeat<<" "<<hthickness<<std::endl;
+    double hthickpr=hthickness/repeat;
+    std::cout<<" ncount hwidth repeat hthickness hthickpr "<<Ncount<<" "<<hwidth<<" "<<repeat<<" "<<hthickness<<" "<<hthickpr<<std::endl;
     if(l_num<1) z_bottoml= -hthickness;
 
     // make a layer box volume and a tower volume
@@ -168,7 +169,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     honeycomb_phv.addPhysVolID("wc", 0);
 
     // Loop over number of repeats for this layer.
-
+    double z_midl=-hthickness;
     for (int j=0; j<repeat; j++)    {
       std::cout<<"  DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
       string l_name = _toString(j,"layer%d");
@@ -182,7 +183,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // Loop over the sublayers or slices for this layer.
       int s_num = 1;
-      double z_bottoms2=-l_hzthick;
+      double z_bottoms2=-l_hzthick+hthickpr;
       for(xml_coll_t si(x_layer,_U(slice)); si; ++si)  {
 	std::cout<<" with slice "<<s_num<<std::endl;
 	xml_comp_t x_slice = si;
@@ -210,7 +211,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // place the layer into the tower
       // Set region, limitset, and vis of layer.
-      double z_midl=0.;
+      //double z_midl=0.;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
@@ -219,6 +220,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       // removed 18 aug 25
       //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);
       //haha.isValid();
+      z_midl+=2*hthickpr;
       opt_num++;
 
     }  //end of repeat for this layer
@@ -282,7 +284,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
     // Increment to next layer Z position.
     z_bottoml=z_bottoml+2.*hthickness+4*frac_tol2;
-    ++l_num;
+    l_num+=repeat;
   }  //end of loop over layers
 
   std::cout<<"exiting DRCrys creator"<<std::endl;
