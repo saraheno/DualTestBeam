@@ -119,7 +119,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     double hthickpr=hthickness/repeat;
     std::cout<<" ncount hwidth repeat hthickness hthickpr "<<Ncount<<" "<<hwidth<<" "<<repeat<<" "<<hthickness<<" "<<hthickpr<<std::endl;
     if(l_num<1) z_bottoml= -hthickness;
-
+    double z_midl=-hthickness;
+    
     // make a layer box volume and a tower volume
     dd4hep::Box LayerBox(detectorhwidth,detectorhwidth,hthickness);
     string lbox_name = _toString(l_num,"layerbox%d");
@@ -169,7 +170,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     honeycomb_phv.addPhysVolID("wc", 0);
 
     // Loop over number of repeats for this layer.
-    double z_midl=-hthickness;
+
     for (int j=0; j<repeat; j++)    {
       std::cout<<"  DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
       string l_name = _toString(j,"layer%d");
@@ -183,7 +184,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 
       // Loop over the sublayers or slices for this layer.
       int s_num = 1;
-      double z_bottoms2=-l_hzthick+hthickpr;
+      double z_bottoms2=-l_hzthick;
       for(xml_coll_t si(x_layer,_U(slice)); si; ++si)  {
 	std::cout<<" with slice "<<s_num<<std::endl;
 	xml_comp_t x_slice = si;
@@ -212,6 +213,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       // place the layer into the tower
       // Set region, limitset, and vis of layer.
       //double z_midl=0.;
+      z_midl+=l_hzthick;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
@@ -220,7 +222,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       // removed 18 aug 25
       //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);
       //haha.isValid();
-      z_midl+=2*hthickpr;
+      z_midl+=l_hzthick;
       opt_num++;
 
     }  //end of repeat for this layer
