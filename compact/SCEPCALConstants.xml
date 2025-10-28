@@ -26,8 +26,8 @@
     <constant name="DRcrystalgapt" value="0.05*cm"/>
     <constant name="DRcrystalhont" value="0.7*DRcrystalgapt"/>
     <constant name="ecaltol" value="0.05*cm"/>
-    <constant name="l1r" value="2"/>
-    <constant name="l2r" value="2"/>
+    <constant name="l1r" value="1"/>
+    <constant name="l2r" value="1"/>
     
     <constant name="DRcrystallength" value="l1r*DRcrystallength1+l2r*DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
