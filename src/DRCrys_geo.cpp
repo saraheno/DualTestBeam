@@ -54,6 +54,10 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   xml_comp_t fX_honey(  fX_struct.child( _Unicode(honey) ) );
   double honeythick = fX_honey.thickness()/2.;
   std::cout<<"honeycomb half thickness is "<<honeythick<<std::endl;
+  xml_comp_t fX_honey2(  fX_struct.child( _Unicode(honey2) ) );
+  double honeythick2 = fX_honey2.thickness()/2.;
+  std::cout<<"honeycomb2 half thickness is "<<honeythick2<<std::endl;
+
 
   // calculate size of entire detector and create envelop
   Layering      layering (e);
@@ -162,12 +166,22 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<"danger danger will robinson volume overlap with honeycomb "<<honeythick<<" "<<hwidth<<std::endl;
     }
     dd4hep::Box abox1   (hwidth+agap-0.1*honeythick,hwidth+agap-0.1*honeythick,hthickness);
-    dd4hep::Box abox2   (hwidth+agap-0.6*honeythick,hwidth+agap-0.6*honeythick,hthickness);
-    dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
-    Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
+    //dd4hep::Box abox2   (hwidth+agap-0.6*honeythick,hwidth+agap-0.6*honeythick,hthickness);
+    //dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
+    //Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
+    Volume  honeycomb  (det_name,abox1,description.material(fX_honey.materialStr()));
     honeycomb.setAttributes(description, fX_honey.regionStr(), fX_honey.limitsStr(), fX_honey.visStr());
     PlacedVolume honeycomb_phv = towerVol.placeVolume(honeycomb,b_pos);
     honeycomb_phv.addPhysVolID("wc", 0);
+
+        dd4hep::Box abox2   (hwidth+agap-0.3*honeythick,hwidth+agap-0.3*honeythick,hthickness);
+    //dd4hep::Box abox2   (hwidth+agap-0.6*honeythick,hwidth+agap-0.6*honeythick,hthickness);
+    //dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
+    //Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
+    Volume  honeycomb2  (det_name,abox2,description.material(fX_honey2.materialStr()));
+    honeycomb2.setAttributes(description, fX_honey2.regionStr(), fX_honey2.limitsStr(), fX_honey2.visStr());
+    PlacedVolume honeycomb2_phv = towerVol.placeVolume(honeycomb2,b_pos);
+    honeycomb2_phv.addPhysVolID("wc", 1);
 
     // Loop over number of repeats for this layer.
 
@@ -217,7 +231,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
       PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
-      sh_phv.addPhysVolID("wc", j+1);
+      sh_phv.addPhysVolID("wc", j+2);
       string tt_name = _toString(opt_num,"HallCrys%d");
       // removed 18 aug 25
       //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);

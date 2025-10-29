@@ -29,12 +29,12 @@
   </info>
 
   <includes>
-    <file  ref="materialsJunk.xml"/>
+    <file  ref="materialsjunk.xml"/>
   </includes>
 
 
   <define>
-    <include ref="SCEPCALConstantsJunk.xml"/>
+    <include ref="SCEPCALConstants.xml"/>
   </define>
 
 

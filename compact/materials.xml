@@ -997,7 +997,12 @@
     <fraction n="0.25" ref="Zn"/>
   </material>
 
-
+ <material name="Carbon_Fiber">
+      <D type="density" unit="g/cm3" value="1.69"/>
+      <fraction n="0.84491305" ref="C"/>
+      <fraction n="0.042542086" ref="H"/>
+      <fraction n="0.11254487" ref="O"/>
+ </material>
 
     <material name="Silicone_gap">
       <D type="density" unit="g/cm3" value="0.965"/>
