@@ -21,17 +21,17 @@
 <!-- please note these are half lengths and widths -->
 
 <detectors>
-  <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="InvisibleWithDaughters">
+  <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="CrystalEcalVis">
     <comment>Electromagnetic Calorimeter </comment>
       <dimensions z1="edgeoffset" z2="ecaltol"/>
 
     <structure>
      <honey name="honey" thickness="DRcrystalhont/2" material="Carbon_Fiber" vis="CrystalEcalHoneyVis" sensitive="yes"/> 
 <!--          <honey name="honey" thickness="DRcrystalhont" material="NS_Polystyrene" vis="InvisibleWithDaughters" sensitive="yes"/> -->
-     <honey2 name="honey2" thickness="DRcrystalhont/2" material="NS_Polystyrene" vis="CrystalEcalAirVis" sensitive="yes"/> 
+     <honey2 name="honey2"  material="Air" vis="CrystalEcalAirVis" sensitive="yes"/> 
     </structure>
 
-    <staves vis="Invisible" sensitive="yes"/> 
+    <staves vis="CrystalEcalStaveVis" sensitive="yes"/> 
     <layer repeat="l1r" vis="CrystalEcalBarrelVis" sensitive="yes">
       <dimensions width="DRcrystalwidth1" repeat="DRcrystalNsize1"  gap="DRcrystalgapt" />
       <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrystalEcalSensitiveVis"/>

@@ -23,14 +23,16 @@
 	</define>
         <!--  Definition of the used visualization attributes    -->
 	<display>
-		<vis name="CrystalEcalBarrelVis"       alpha="0.1" r="0.0"  g="0.0"  b="0.1"	showDaughters="true" visible="true"/>
-		<vis name="CrystalEcalResinVis"        alpha="0.5" r="0.0"  g="0.0"  b="1.0"	showDaughters="true" visible="true"/>
-		<vis name="CrystalEcalCookieVis"        alpha="0.5" r="1.0"  g="1.0"  b="1.0"	showDaughters="true" visible="true"/>
-		<vis name="CrystalEcalCrystalVis"        alpha="0.5" r="1.0"  g="0.0"  b="0.0"	showDaughters="true" visible="true"/>
-		<vis name="CrystalEcalHoneyVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"	showDaughters="true" visible="true"/>
-		<vis name="CrystalEcalSensitiveVis"    alpha="0.5" r="1.0"  g="0.0"  b="1.0"	showDaughters="true" visible="true"/>
-		<vis name="CrystalAirVis"              alpha="0.1" r="0.0"  g="0.0"  b="1.0"    showDaughters="true" visible="true"/>
-		<vis name="Invisible" 								showDaughters="true" visible="false"/>
+	  <vis name="CrystalEcalVis"       alpha="0.1" r="0.0"  g="0.1"  b="0.1"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalBarrelVis"       alpha="0.1" r="0.0"  g="0.0"  b="0.1"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalResinVis"        alpha="0.5" r="0.0"  g="0.0"  b="1.0"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalCookieVis"        alpha="0.5" r="1.0"  g="1.0"  b="1.0"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalCrystalVis"        alpha="0.5" r="1.0"  g="0.0"  b="0.0"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalHoneyVis"        alpha="0.1" r="0.0"  g="1.0"  b="0.0"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalSensitiveVis"    alpha="0.5" r="1.0"  g="0.0"  b="1.0"	showDaughters="true" visible="true"/>
+	  <vis name="CrystalAirVis"              alpha="0.1" r="0.0"  g="0.0"  b="1.0"    showDaughters="true" visible="true"/>
+	  <vis name="CrystalEcalStaveVis"        alpha="0.1" r="0.0"  g="0.0"  b="1.0"    showDaughters="true" visible="true"/>
+	  <vis name="Invisible" 								showDaughters="true" visible="false"/>
 	</display>
 	<include ref="SCEPCAL_DRCrystal.xml"/>
 
