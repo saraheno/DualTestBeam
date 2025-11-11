@@ -23,7 +23,8 @@
 <detectors>
   <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="CrystalEcalVis">
     <comment>Electromagnetic Calorimeter </comment>
-      <dimensions z1="edgeoffset" z2="ecaltol"/>
+    <!-- using level for optical skinsurface type -->
+      <dimensions z1="edgeoffset" z2="ecaltol" level="1"/>
 
     <structure>
      <honey name="honey" thickness="DRcrystalhont/2" material="Carbon_Fiber" vis="CrystalEcalHoneyVis" sensitive="yes"/> 

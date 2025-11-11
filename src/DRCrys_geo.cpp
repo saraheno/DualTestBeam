@@ -34,6 +34,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   PlacedVolume pv;
   Solid sol;
 
+  int skinnumber=0;
+  
   // get stuff from xml file
   // look in DDCore/include/Parsers/detail/Dimension.h for arguments
   xml_det_t     x_det     = e;
@@ -48,6 +50,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   double zoffset = x_dimg.z1();
   std::cout<<" z offset is "<<zoffset<<std::endl;
   double tol = x_dimg.z2();
+  // which type of skin to use
+  int skintype = x_dimg.level();
 
   // honeycomb thickness
   xml_comp_t fX_struct( x_det.child( _Unicode(structure) ) );
@@ -103,7 +107,19 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // crystal wrappings
   std::cout<<"setting up optical surfaces"<<std::endl;
   OpticalSurfaceManager surfMgr = description.surfaceManager();
-  OpticalSurface cryS  = surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+
+  OpticalSurface cryS= surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+  if(skintype==1) {
+    std::cout<<"skin type mirror "<<std::endl;
+  }
+  if(skintype==2) {
+    cryS=surfMgr.opticalSurface("/world/"+det_name+"#tyvekSurface");
+        std::cout<<"skin type tyvek "<<std::endl;
+  }
+  if(skintype==3) {
+    std::cout<<"skin type dielectric "<<std::endl;
+    cryS=surfMgr.opticalSurface("/world/"+det_name+"#dielectricSurface");
+  }
   std::cout<<" done"<<std::endl;
 
   // Loop over the sets of layer elements in the detector.
@@ -156,10 +172,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	 << " solid: " << setw(20) << left << towertrap.type()
 	 << " sensitive: " << yes_no(x_towers.isSensitive()) << endl;
 
-
-    //SkinSurface haha = SkinSurface(sdet, "haha", cryS, towerVol);
-    //haha.isValid();
-
     
 
     // place the honeycomb into the tower
@@ -197,7 +209,17 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
       sh_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
-
+      /*
+      if(skintype>0) {
+	skinnumber+=1;
+	DetElement    imconfused ("skin", skinnumber);
+	string aanam = _toString(skinnumber,"yuck%d");
+	SkinSurface haha = SkinSurface(description, imconfused, aanam, cryS, sh_vol);
+	haha.isValid();
+	std::cout<<"adding skin surface!!!!"<<std::endl;
+      }
+      */
+      
       // Loop over the sublayers or slices for this layer.
       int s_num = 1;
       double z_bottoms2=-l_hzthick;
@@ -214,6 +236,16 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	}
 	std::cout<<"          slice visstr is "<<x_slice.visStr()<<std::endl;
 	s_vol.setAttributes(description,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
+
+	if(skintype>0) {
+	  skinnumber+=1;
+	  DetElement    imconfused ("skin", skinnumber);
+	  string aanam = _toString(skinnumber,"yuck%d");
+	  SkinSurface haha = SkinSurface(description, imconfused, aanam, cryS, s_vol);
+	  haha.isValid();
+	  std::cout<<"adding skin surface!!!!"<<std::endl;
+	}
+
 	// Slice placement.
 	double z_mids2 = z_bottoms2+s_hzthick;
 	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
