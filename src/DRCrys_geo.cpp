@@ -209,7 +209,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
       sh_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
-      /*
+      
       if(skintype>0) {
 	skinnumber+=1;
 	DetElement    imconfused ("skin", skinnumber);
@@ -218,7 +218,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	haha.isValid();
 	std::cout<<"adding skin surface!!!!"<<std::endl;
       }
-      */
+      
       
       // Loop over the sublayers or slices for this layer.
       int s_num = 1;
@@ -236,15 +236,6 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	}
 	std::cout<<"          slice visstr is "<<x_slice.visStr()<<std::endl;
 	s_vol.setAttributes(description,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
-
-	if(skintype>0) {
-	  skinnumber+=1;
-	  DetElement    imconfused ("skin", skinnumber);
-	  string aanam = _toString(skinnumber,"yuck%d");
-	  SkinSurface haha = SkinSurface(description, imconfused, aanam, cryS, s_vol);
-	  haha.isValid();
-	  std::cout<<"adding skin surface!!!!"<<std::endl;
-	}
 
 	// Slice placement.
 	double z_mids2 = z_bottoms2+s_hzthick;
