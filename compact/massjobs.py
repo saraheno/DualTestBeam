@@ -1,8 +1,8 @@
 from array import *
 import argparse
+import os
 
-
-# python massjobs.py -g DualTestBeam -N 500 -d 0 -o 2 -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/ -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/ -o 2 -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
+# python massjobs.py -g DualTestBeam -N 500 -d 0 -o 2 -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/ -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/  -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g", "--geometry", help="geometry code")
@@ -64,6 +64,8 @@ print(poss)
 i=0
 while (i<nenergy):
     print(i)
+    yuck=scriptarea+name+str(energies[i])+'_GeV-e.sh'
+    print(yuck)
     shfile = open(scriptarea+name+str(energies[i])+'_GeV-e.sh',"w")
 
     shfile.write('#!/bin/bash'+'\n')
@@ -89,7 +91,8 @@ while (i<nenergy):
     shfile.close()
     i=i+1
     print("file closed")
-
+    junklala=os.listdir(scriptarea)
+    print(junklala)
 # create the .sh files for pions
 i=0
 while (i<nenergy):
