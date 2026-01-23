@@ -56,8 +56,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   // honeycomb thickness
   xml_comp_t fX_struct( x_det.child( _Unicode(structure) ) );
   xml_comp_t fX_honey(  fX_struct.child( _Unicode(honey) ) );
-  double honeythick = fX_honey.thickness()/2.;
-  std::cout<<"honeycomb half thickness is "<<honeythick<<std::endl;
+  double honeythick = fX_honey.thickness();
+  std::cout<<"honeycomb thickness is "<<honeythick<<std::endl;
   xml_comp_t fX_honey2(  fX_struct.child( _Unicode(honey2) ) );
 
 
@@ -109,6 +109,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
   OpticalSurfaceManager surfMgr = description.surfaceManager();
 
   OpticalSurface cryS= surfMgr.opticalSurface("/world/"+det_name+"#mirrorSurface");
+  if(skintype==0) std::cout<<"no optical wrappings"<<std::endl;
   if(skintype==1) {
     std::cout<<"skin type mirror "<<std::endl;
   }
@@ -179,23 +180,32 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
     if(honeythick>0.9*agap) {
       std::cout<<"danger danger will robinson volume overlap with honeycomb "<<honeythick<<" "<<hwidth<<std::endl;
     }
-    dd4hep::Box abox1   (hwidth+agap-0.1*honeythick,hwidth+agap-0.1*honeythick,hthickness);
+    float aaa=hwidth+agap-0.05*agap;
+    float bbb=hwidth+agap-0.05*agap;
+    std::cout<<"making honey outer box with dimensions ("<<aaa<<","<<bbb<<","<<hthickness<<") and material "<<fX_honey.materialStr()<<std::endl;
+    dd4hep::Box abox1   (aaa,bbb,hthickness);
     //dd4hep::Box abox2   (hwidth+agap-0.6*honeythick,hwidth+agap-0.6*honeythick,hthickness);
     //dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
     //Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
     Volume  honeycomb  (det_name,abox1,description.material(fX_honey.materialStr()));
     honeycomb.setAttributes(description, fX_honey.regionStr(), fX_honey.limitsStr(), fX_honey.visStr());
+    honeycomb.setSensitiveDetector(sens);
     PlacedVolume honeycomb_phv = towerVol.placeVolume(honeycomb,b_pos);
-    honeycomb_phv.addPhysVolID("wc", 0);
+    honeycomb_phv.addPhysVolID("wc1", 1);
 
-        dd4hep::Box abox2   (hwidth+agap-0.3*honeythick,hwidth+agap-0.3*honeythick,hthickness);
+    float aaa2=hwidth+agap-0.05*agap-honeythick;
+    float bbb2=hwidth+agap-0.05*agap-honeythick;
+    std::cout<<"making honey outer box with dimensions ("<<aaa2<<","<<bbb2<<","<<hthickness<<") and material "<<fX_honey2.materialStr()<<std::endl;
+
+    dd4hep::Box abox2   (aaa2,bbb2,hthickness);
     //dd4hep::Box abox2   (hwidth+agap-0.6*honeythick,hwidth+agap-0.6*honeythick,hthickness);
     //dd4hep::Solid tmps = dd4hep::SubtractionSolid(abox1,abox2,b_pos);
     //Volume  honeycomb  (det_name,tmps,description.material(fX_honey.materialStr()));
     Volume  honeycomb2  (det_name,abox2,description.material(fX_honey2.materialStr()));
     honeycomb2.setAttributes(description, fX_honey2.regionStr(), fX_honey2.limitsStr(), fX_honey2.visStr());
-    PlacedVolume honeycomb2_phv = towerVol.placeVolume(honeycomb2,b_pos);
-    honeycomb2_phv.addPhysVolID("wc", 1);
+    honeycomb2.setSensitiveDetector(sens);
+    PlacedVolume honeycomb2_phv = honeycomb.placeVolume(honeycomb2,b_pos);
+    honeycomb2_phv.addPhysVolID("wc2", 2);
 
     // Loop over number of repeats for this layer.
 
@@ -203,13 +213,13 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       std::cout<<"  DRCrys layer "<<l_num<<" repeat "<<j<<std::endl;
       string l_name = _toString(j,"layer%d");
       double l_hzthick = layering.layer(l_num)->thickness()/2.;  // Layer's thickness.
-      std::cout<<"  half  thickness is "<<l_hzthick<<std::endl;
-      dd4hep::Box l_box(hwidth,hwidth,l_hzthick);
+      std::cout<<" half  width and half  thickness are "<<hwidth+0.05*agap<<" "<<l_hzthick<<std::endl;
+      dd4hep::Box l_box(hwidth+0.05*agap,hwidth+0.05*agap,l_hzthick);
       dd4hep::Volume     sh_vol(l_name,l_box,air);
       std::cout<<" layer visstr is "<<x_layer.visStr()<<std::endl;
       sh_vol.setAttributes(description,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
-      
+          
       if(skintype>0) {
 	skinnumber+=1;
 	DetElement    imconfused ("skin", skinnumber);
@@ -228,7 +238,7 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	xml_comp_t x_slice = si;
 	string     s_name  = _toString(s_num,"slice%d");
 	double     s_hzthick = x_slice.thickness()/2.;
-	std::cout<<" with half  thickness "<<s_hzthick<<" and material "<<x_slice.materialStr()<<std::endl;
+	std::cout<<" with half width and half  thickness "<<hwidth<<" "<<s_hzthick<<" and material "<<x_slice.materialStr()<<std::endl;
 	dd4hep::Box s_box(hwidth,hwidth,s_hzthick);
 	dd4hep::Volume     s_vol(s_name,s_box,description.material(x_slice.materialStr()));
 	if ( x_slice.isSensitive() ) {
@@ -237,6 +247,21 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
 	std::cout<<"          slice visstr is "<<x_slice.visStr()<<std::endl;
 	s_vol.setAttributes(description,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
 
+
+	/*
+      if(skintype>0) {
+	skinnumber+=1;
+	DetElement    imconfused ("skin", skinnumber);
+	string aanam = _toString(skinnumber,"yuck%d");
+	SkinSurface haha = SkinSurface(description, imconfused, aanam, cryS, s_vol);
+	haha.isValid();
+	std::cout<<"adding skin surface!!!!"<<std::endl;
+      }
+	*/
+      
+
+
+	
 	// Slice placement.
 	double z_mids2 = z_bottoms2+s_hzthick;
 	Position   s_pos(0.,0.,z_mids2);      // Position of the layer.
@@ -255,8 +280,8 @@ static Ref_t create_detector(Detector& description, xml_h e, SensitiveDetector s
       z_midl+=l_hzthick;
       Position   l_pos(0.,0.,z_midl);      // Position of the layer.
       std::cout<<" placed at z of "<<z_midl<<std::endl;
-      PlacedVolume sh_phv = towerVol.placeVolume(sh_vol,l_pos);
-      sh_phv.addPhysVolID("wc", j+2);
+      PlacedVolume sh_phv = honeycomb2.placeVolume(sh_vol,l_pos);
+      sh_phv.addPhysVolID("wc3", j+3);
       string tt_name = _toString(opt_num,"HallCrys%d");
       // removed 18 aug 25
       //BorderSurface haha = BorderSurface(description,sdet, tt_name, cryS, sh_phv,env_phv);

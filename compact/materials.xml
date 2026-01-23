@@ -569,6 +569,38 @@
       3.54241*eV 0.200*m
       4.13281*eV 0.100*m
       "/>
+    <matrix name="AbsLen_CF" coldim="2" values="
+      1.1*eV 0.001*m
+      1.54980*eV 0.001*mm
+      1.65312*eV 0.001*mm
+      1.71013*eV 0.001*mm
+      1.77120*eV 0.001*mm
+      1.83680*eV 0.0001*mm
+      1.90745*eV 0.001*mm
+      1.98375*eV 0.001*mm
+      2.06640*eV 0.001*mm
+      2.10143*eV 0.001*mm
+      2.13766*eV 0.001*mm
+      2.17516*eV 0.001*mm
+      2.21400*eV 0.001*mm
+      2.25426*eV 0.001*mm
+      2.29600*eV 0.001*mm
+      2.33932*eV 0.001*mm
+      2.38431*eV 0.001*mm
+      2.43106*eV 0.001*mm
+      2.47968*eV 0.001*mm
+      2.53029*eV 0.001*mm
+      2.58300*eV 0.001*mm
+      2.63796*eV 0.001*mm
+      2.69531*eV 0.001*mm
+      2.75520*eV 0.001*mm
+      2.81782*eV 0.001*mm
+      2.88335*eV 0.001*mm
+      2.95200*eV 0.001*mm
+      3.09960*eV 0.001*mm
+      3.54241*eV 0.001*mm
+      4.13281*eV 0.001*mm
+      "/>
     <matrix name="scintFast_PS" coldim="2" values="
       1.1*eV 0.
       1.37760*eV 0.
@@ -997,12 +1029,7 @@
     <fraction n="0.25" ref="Zn"/>
   </material>
 
- <material name="Carbon_Fiber">
-      <D type="density" unit="g/cm3" value="1.69"/>
-      <fraction n="0.84491305" ref="C"/>
-      <fraction n="0.042542086" ref="H"/>
-      <fraction n="0.11254487" ref="O"/>
- </material>
+
 
     <material name="Silicone_gap">
       <D type="density" unit="g/cm3" value="0.965"/>
@@ -1011,6 +1038,7 @@
       <fraction n="0.006" ref="C"/>
       <fraction n="0.006" ref="H"/>      
       <property name="RINDEX"        ref="RINDEX__Silicone"/>
+      <property name="ABSLENGTH"        ref="AbsLen_PS"/>
     </material>
     <!--Check mass fractions - these are not the correct ones -->
 
@@ -1021,9 +1049,19 @@
       <fraction n="0.006" ref="C"/>
       <fraction n="0.006" ref="H"/>      
       <property name="RINDEX"        ref="RINDEX__ResWin"/>
+      <property name="ABSLENGTH"        ref="AbsLen_PS"/>
     </material>
 
-  
+
+    <!-- Added Carbon Fiber material -->
+    <material name="Carbon_Fiber">
+      <D type="density" unit="g/cm3" value="1.69"/>
+      <fraction n="0.84491305" ref="C"/>
+      <fraction n="0.042542086" ref="H"/>
+      <fraction n="0.11254487" ref="O"/>
+      <property name="RINDEX"        ref="RINDEX__ResWin"/>
+      <property name="ABSLENGTH"        ref="AbsLen_CF"/>
+    </material>
 
 </materials>
 
@@ -1056,7 +1094,7 @@
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-7,iy:-7,slice:3,layer:3,wc:3</id>
+      <id>system:3,ix:-7,iy:-7,slice:3,layer:3,wc1:3,wc2:3,wc3:3</id>
  </readout>
  <readout name="DRUNoSegment">
       <segmentation type="NoSegmentation"/>
