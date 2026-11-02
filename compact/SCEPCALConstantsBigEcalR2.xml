@@ -5,7 +5,6 @@
      <constant name="UPL1width" value="50*cm"/>
      <constant name="UPL1gap" value="2*cm"/>
      <constant name="UPL1thick" value="1*cm"/>
-     <constant name="killthickf" value="2*cm"/> <!-- for fibers -->
 
 
 <!-- photodetector thicknesses -->
@@ -26,7 +25,9 @@
 
     <constant name="DRcrystallength" value="DRcrystallength1+DRcrystallength2"/>  <!-- should be 20 normally, 400 for 20 interacion length test-->
 
-
+    <constant name="ecaltol" value="0.05*cm"/>
+    <constant name="l1r" value="1"/>
+    <constant name="l2r" value="1"/>
 
     <constant name="DRcrystalNsize1" value="0"/>    <!-- should be 45 -->
     <constant name="DRcrystalNsize2" value="0"/>    <!-- should be 45 -->

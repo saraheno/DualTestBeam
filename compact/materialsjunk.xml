@@ -569,6 +569,38 @@
       3.54241*eV 0.200*m
       4.13281*eV 0.100*m
       "/>
+    <matrix name="AbsLen_CF" coldim="2" values="
+      1.10000*eV 0.0005*m
+      1.54980*eV 0.0005*mm
+      1.65312*eV 0.0005*mm
+      1.71013*eV 0.0005*mm
+      1.77120*eV 0.0005*mm
+      1.83680*eV 0.0005*mm
+      1.90745*eV 0.0005*mm
+      1.98375*eV 0.0005*mm
+      2.06640*eV 0.0005*mm
+      2.10143*eV 0.0005*mm
+      2.13766*eV 0.0005*mm
+      2.17516*eV 0.0005*mm
+      2.21400*eV 0.0005*mm
+      2.25426*eV 0.0005*mm
+      2.29600*eV 0.0005*mm
+      2.33932*eV 0.0005*mm
+      2.38431*eV 0.0005*mm
+      2.43106*eV 0.0005*mm
+      2.47968*eV 0.0005*mm
+      2.53029*eV 0.0005*mm
+      2.58300*eV 0.0005*mm
+      2.63796*eV 0.0005*mm
+      2.69531*eV 0.0005*mm
+      2.75520*eV 0.0005*mm
+      2.81782*eV 0.0005*mm
+      2.88335*eV 0.0005*mm
+      2.95200*eV 0.0005*mm
+      3.09960*eV 0.0005*mm
+      3.54241*eV 0.0005*mm
+      4.13281*eV 0.0005*mm
+      "/>
     <matrix name="scintFast_PS" coldim="2" values="
       1.1*eV 0.
       1.37760*eV 0.
@@ -820,7 +852,6 @@
 
   <surfaces>
     <opticalsurface name="/world/DRCrystal#mirrorSurface" finish="polished" model="glisur" type="dielectric_metal">
-      <property name="REFLECTIVITY" coldim="2" values="1.0*eV 1.0 4.5*eV 1.0" />
     </opticalsurface>
     <opticalsurface name="/world/DRCrystal#tyvekSurface" finish="etchedtyvekair" model="LUT" type="dielectric_LUT" value="1.0">
     </opticalsurface>
@@ -913,6 +944,24 @@
 
 
 
+  <material name="E_gdal03">
+    <D value="8.28" unit="g/cm3" />
+    <fraction n="0.63" ref="Gd"/>
+    <fraction n="0.13" ref="Al"/>
+    <fraction n="0.24" ref="O"/>
+    <property name="RINDEX"        ref="RINDEX__PbWO4"/>
+      <property name="ABSLENGTH" ref="AbsLen_PbWO4"/>
+      <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PbWO4"/>
+      <constant name="SCINTILLATIONYIELD" value="0.0001/keV"/>   <!-- should be 0.45 -->
+      <constant name="SCINTILLATIONTIMECONSTANT1" value="5.*ns"/>
+      <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
+      <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
+      <constant name="RESOLUTIONSCALE" value="1."/>
+      <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fraction of scintil in process 1 -->
+  </material>
+
+
+
   <material name="E_PbWO4">
     <D value="8.28" unit="g/cm3" />
     <fraction n="0.45532661" ref="Pb"/>
@@ -921,7 +970,7 @@
     <property name="RINDEX"        ref="RINDEX__PbWO4"/>
       <property name="ABSLENGTH" ref="AbsLen_PbWO4"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PbWO4"/>
-      <constant name="SCINTILLATIONYIELD" value="0.0001/keV"/>  <!-- should be 0.45 -->
+      <constant name="SCINTILLATIONYIELD" value="0.0001/keV"/>   <!-- should be 0.45 -->
       <constant name="SCINTILLATIONTIMECONSTANT1" value="5.*ns"/>
       <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
       <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
@@ -929,6 +978,7 @@
       <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fraction of scintil in process 1 -->
   </material>
 
+  
   <material name="DR_Polystyrene">
       <D value="1.032" unit="g/cm3"/>
       <composite n="19" ref="C"/>
@@ -937,7 +987,7 @@
       <property name="ABSLENGTH" ref="AbsLen_PS"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PS"/>
 <!-- correct yield 10000/MeV -->
-      <constant name="SCINTILLATIONYIELD" value="10000/MeV"/>
+      <constant name="SCINTILLATIONYIELD" value="1/MeV"/>  <!-- should be 10000 -->
       <constant name="SCINTILLATIONTIMECONSTANT1" value="2.8*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>
@@ -998,12 +1048,7 @@
     <fraction n="0.25" ref="Zn"/>
   </material>
 
- <material name="Carbon_Fiber">
-      <D type="density" unit="g/cm3" value="1.69"/>
-      <fraction n="0.84491305" ref="C"/>
-      <fraction n="0.042542086" ref="H"/>
-      <fraction n="0.11254487" ref="O"/>
- </material>
+
 
     <material name="Silicone_gap">
       <D type="density" unit="g/cm3" value="0.965"/>
@@ -1012,6 +1057,7 @@
       <fraction n="0.006" ref="C"/>
       <fraction n="0.006" ref="H"/>      
       <property name="RINDEX"        ref="RINDEX__Silicone"/>
+      <property name="ABSLENGTH"        ref="AbsLen_PS"/>
     </material>
     <!--Check mass fractions - these are not the correct ones -->
 
@@ -1022,9 +1068,19 @@
       <fraction n="0.006" ref="C"/>
       <fraction n="0.006" ref="H"/>      
       <property name="RINDEX"        ref="RINDEX__ResWin"/>
+      <property name="ABSLENGTH"        ref="AbsLen_PS"/>
     </material>
 
-  
+
+    <!-- Added Carbon Fiber material -->
+    <material name="Carbon_Fiber">
+      <D type="density" unit="g/cm3" value="1.69"/>
+      <fraction n="0.84491305" ref="C"/>
+      <fraction n="0.042542086" ref="H"/>
+      <fraction n="0.11254487" ref="O"/>
+      <property name="RINDEX"        ref="RINDEX__ResWin"/>
+      <property name="ABSLENGTH"        ref="AbsLen_CF"/>
+    </material>
 
 </materials>
 
@@ -1057,7 +1113,7 @@
   <readouts>
  <readout name="DRCNoSegment">
       <segmentation type="NoSegmentation"/>
-      <id>system:3,ix:-7,iy:-7,slice:3,layer:3,wc:3</id>
+      <id>system:3,ix:-7,iy:-7,slice:3,layer:3,wc1:3,wc2:3,wc3:3</id>
  </readout>
  <readout name="DRUNoSegment">
       <segmentation type="NoSegmentation"/>

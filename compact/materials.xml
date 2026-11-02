@@ -960,6 +960,26 @@
       <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fraction of scintil in process 1 -->
   </material>
 
+
+  <material name="E_gdal03">
+    <D value="8.28" unit="g/cm3" />
+    <fraction n="0.63" ref="Gd"/>
+    <fraction n="0.13" ref="Al"/>
+    <fraction n="0.24" ref="O"/>
+    <property name="RINDEX"        ref="RINDEX__PbWO4"/>
+      <property name="ABSLENGTH" ref="AbsLen_PbWO4"/>
+      <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_PbWO4"/>
+      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>   <!-- should be 0.45 -->
+      <constant name="SCINTILLATIONTIMECONSTANT1" value="5.*ns"/>
+      <constant name="SCINTILLATIONTIMECONSTANT2" value="15.*ns"/>
+      <constant name="SCINTILLATIONRISETIME1" value="0.01*ns"/>
+      <constant name="RESOLUTIONSCALE" value="1."/>
+      <constant name="SCINTILLATIONYIELD1" value="0.3"/> <!-- fraction of scintil in process 1 -->
+  </material>
+
+
+
+  
   <material name="DR_Polystyrene">
       <D value="1.032" unit="g/cm3"/>
       <composite n="19" ref="C"/>
@@ -1004,9 +1024,8 @@
     <property name="RINDEX"        ref="RINDEX__BGO"/>
       <property name="ABSLENGTH" ref="AbsLen_BGO"/>
       <property name="SCINTILLATIONCOMPONENT1" ref="scintFast_BGO"/>
-<!--      <constant name="SCINTILLATIONYIELD" value="9./keV"/> -->
+      <constant name="SCINTILLATIONYIELD" value="9./keV"/> -->
 <!-- scale factor for scint is 20 -->
-      <constant name="SCINTILLATIONYIELD" value="0.45/keV"/>
       <constant name="SCINTILLATIONTIMECONSTANT1" value="300.0*ns"/>
       <constant name="RESOLUTIONSCALE" value="1."/>
   </material>

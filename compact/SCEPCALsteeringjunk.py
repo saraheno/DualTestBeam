@@ -85,8 +85,8 @@ SIM.action.calo = ("DualCrysCalorimeterSDAction",
    "dialCherO": 1.,
    "dialScintO": 1.,
    "betarel": 0.648,
-   "printlimitSCE": 10,
-   "MAXEVENTSCE": 10,
+   "printlimitSCE": 100,
+   "MAXEVENTSCE": 100,
    # etc.
   })
 

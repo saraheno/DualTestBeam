@@ -80,7 +80,7 @@ while (i<nenergy):
     shfile.write('echo "started at $START_TIME on ${HOSTNAME}"'+'\n')
     shfile.write('source '+LCGsetup+'\n')
     shfile.write('echo "ran setup"'+'\n')
-    shfile.write('source  '+basedir+'/../install/bin/thisDualTestBeam.sh'+'\n')
+    shfile.write('source  '+basedir+'/install/bin/thisDualTestBeam.sh'+'\n')
     shfile.write('echo "ran thisDualTestBeam"'+'\n')
     shfile.write('mkdir -p '+outputarea+'\n')
     shfile.write('ddsim --compactFile='+compactdir+'/DR'+args.geometry+'.xml --runType=batch -G --steeringFile '+compactdir+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+args.geometry+'-dial_'+str(energies[i])+'GeV_pi-.${PBS_ARRAY_INDEX}.root --part.userParticleHandler='' -G --gun.position="'+position+'" --gun.direction "'+direction+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N 50 >& '+outputarea+'sce_pi_'+args.geometry+'-dial_'+str(energies[i])+'.${PBS_ARRAY_INDEX}.log'+'\n')

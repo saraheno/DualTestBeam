@@ -399,25 +399,37 @@ namespace dd4hep {
 
       }
       else {   // particles other than optical photons
-	
+	hit->truth.emplace_back(contrib);
       //if(SCEPRINT) std::cout<<"NOT optical photon"<<std::endl;
 
 	if(amedia.find("BlackHole")!=std::string::npos) {  //edge detector
 	  // note this is the edge detector, not the kill media of photodetector
 	  hit->energyDeposit += track->GetKineticEnergy();
 	  if((abs(TrPDGid)==11)||(abs(TrPDGid)==22)) {
-	    hit->edepepgam+=contrib.deposit;	  
+	    hit->edepepgam+=track->GetKineticEnergy();	  
 	  }
+
+
+          float aabeta=track->GetVelocity()/CLHEP::c_light;
+          hit->contribBeta.emplace_back(aabeta);
+          hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
+	  hit->contribKE.emplace_back(track->GetKineticEnergy());
+          if(aabeta>DBParameters::instance()->DBParameters::instance()->m_betarel) {
+            hit->edeprelativistic+=contrib.deposit;
+          }
+	  
 	  track->SetTrackStatus(fStopAndKill);
+
 	} else {
       //add information about each contribution to the hit
-	  hit->truth.emplace_back(contrib);
+	  //hit->truth.emplace_back(contrib);
 
 	  hit->energyDeposit += contrib.deposit;
 	  //	  hit->contribBeta.emplace_back(track->GetVelocity()/CLHEP::c_light*10000.);
 	  float aabeta=track->GetVelocity()/CLHEP::c_light;
 	  hit->contribBeta.emplace_back(aabeta);
 	  hit->contribCharge.emplace_back((track->GetParticleDefinition())->GetPDGCharge());
+	  hit->contribKE.emplace_back(track->GetKineticEnergy());
 	  //if(jbin>-1&&jbin<hit->nfinebin) ((hit->edeptime).at(jbin))+=contrib.deposit;
 	  if(aabeta>DBParameters::instance()->DBParameters::instance()->m_betarel) {
 	    hit->edeprelativistic+=contrib.deposit;	  

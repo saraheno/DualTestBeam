@@ -1,0 +1,46 @@
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--    XML description of the complete SiD tracker detector                -->
+<!--    of the SiD linear collider detector design.                         -->
+<!--                                                                        -->
+<!--    Contained are the required                                          -->
+<!--      ++ global constants used uniquely by this module                  -->
+<!--      ++ visualization attributes                                       -->
+<!--      ++ the definition of the readout structure and the                -->
+<!--         readout segmentation (if necessary)                            -->
+<!--      ++ the include statements for the sensitive detectors and         -->
+<!--         the corresponding support structure(s)                         -->
+<!--                                                                        -->
+<!--                                                                        -->
+<!--   @author  M.Frank                                                     -->
+<!--   @date    14/11/2014                                                  -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+
+<!-- please note these are half lengths and widths -->
+
+<detectors>
+  <detector id="Ecal_ID" name="DRCrystal" type="DRCrys" readout="DRCNoSegment" vis="CrilinEcalVis">
+    <comment>Electromagnetic Calorimeter </comment>
+    <!-- using level for optical skinsurface type -->
+      <dimensions z1="edgeoffset" z2="ecaltol" level="1"/>
+
+    <structure>
+     <honey name="honey" thickness="DRCrilinhont" material="Carbon_Fiber" vis="CrilinEcalHoneyVis" sensitive="yes"/> 
+     <honey2 name="honey2"  material="Air" vis="CrilinEcalAirVis" sensitive="yes"/> 
+    </structure>
+
+    <staves vis="CrilinEcalStaveVis" sensitive="yes"/> 
+    <layer repeat="CrilinNl" vis="CrilinEcalBarrelVis" sensitive="yes">
+      <dimensions width="DRCrilinwidth" repeat="DRCrilinNsize"  gap="DRCrilingapt" />
+      <slice material = "Air" thickness="DRCrilingapt" senstivie="yes" limits="cal_limits" vis="CrilinAirVis"/>
+      <slice material = "E_PbWO4" thickness = "DRCrilinlength" sensitive="yes" limits="cal_limits" vis="CrilinEcalCrystalVis"/>
+      <slice material = "Silicone_gap" thickness = "DRCrilinCookiethick" sensitive="yes" limits="cal_limits" vis="CrilinEcalCookieVis"/>
+      <slice material = "Resin_Window" thickness = "DRCrilinResinthick" sensitive="yes" limits="cal_limits" vis="CrilinEcalResinVis"/>
+      <slice material = "killMediaphotocathode" thickness = "killthick" sensitive="yes" limits="cal_limits" vis="CrilinEcalSensitiveVis"/>
+    </layer>
+
+
+  </detector>
+</detectors>

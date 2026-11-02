@@ -94,6 +94,7 @@ namespace CalVision {
     //std::array<float,truthnbin> contribCharge;
     std::vector<float> contribBeta;
     std::vector<float> contribCharge;
+    std::vector<float> contribKE;
 
 
   public:

@@ -2,23 +2,25 @@ from array import *
 import argparse
 import os
 
-# python massjobs.py -g DualTestBeam -N 500 -d 0 -o 2 -c /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/ -w /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/output/  -s /data/users/eno/CalVision/dd4hep/stuff4stuff/DualTestBeam/compact/jobs/
+# python massjobs.py -g DualTestBeam -N 500 -t smalldial -d 0 -o 5 -c /data/users/eno/CalVision/dd4hep/gitlab/DualTestBeam/compact/ -w /data/users/eno/CalVision/dd4hep/gitlab/DualTestBeam/compact/output/  -s /data/users/eno/CalVision/dd4hep/gitlab/DualTestBeam/compact/jobs/
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-g", "--geometry", help="geometry code")
+argParser.add_argument("-t", "--steering", help="choose steering file ")
 argParser.add_argument("-w", "--write", help="where to write")
 argParser.add_argument("-s", "--script", help="where to put scripts")
 argParser.add_argument("-c", "--cdarea", help="where to run (compact area)")
 
 
 argParser.add_argument("-N", "--number", help="number to make")
-argParser.add_argument("-d", "--direction", help="0 is straight 1 is fiber angle")
-argParser.add_argument("-o", "--origin", help="0 is 0,0,-1  1 is 0,-7,-1  2 is 0,0,-80")
+argParser.add_argument("-d", "--direction", help="0 is straight, 1 is 0.05, 2 is 0.0125")
+argParser.add_argument("-o", "--origin", help="0 is 0,0,-1  1 is 0,-7,-1  2 is 0,0,-80 3 is 0,-1.5,-80 4 is 0.7 0.7 -80")
 
 args = argParser.parse_args()
 print("args=%s" % args)
 
 print("args.name=%s" % args.geometry)
+print("args.name=%s" % args.steering)
 
 
 
@@ -36,7 +38,7 @@ print("script area is %s" % scriptarea )
 #energies=[10,15,20,25,30,35,40,45,50]
 nenergy=1
 energies=[20]
-name="condor-executable-"+str(args.geometry)+"-"
+name="condor-executable-"+str(args.geometry)+'-'+str(args.steering)+'-direction-'+str(args.direction)+'-origin-'+str(args.origin)+'-'
 direct="0. 0.0 1."
 poss=" 0. 0. -80.*cm"
 
@@ -45,6 +47,8 @@ if args.direction=="0" :
     direct="0. 0. 1."
 if args.direction=="1" :
     direct="0. 0.05 0.99875"
+if args.direction=="2" :
+    direct="0. 0.0125 0.99992"
 
 
 print(args.origin)
@@ -55,6 +59,12 @@ if args.origin=="1" :
     poss="0.,-7*mm,-1*mm"
 if args.origin=="2" :
     poss="0. 0.*mm -80*cm"
+if args.origin=="3" :
+    poss="0. -1.5*cm -80*cm"
+if args.origin=="4" :
+    poss="0.7*cm 0.7*cm -80*cm"
+if args.origin=="5" :
+    poss="-0.3*mm 0.*cm -80*cm"
 
 
 print(direct)
@@ -64,7 +74,7 @@ print(poss)
 i=0
 while (i<nenergy):
     print(i)
-    yuck=scriptarea+name+str(energies[i])+'_GeV-e.sh'
+    yuck=str(scriptarea)+str(name)+str(energies[i])+'_GeV-e.sh'
     print(yuck)
     shfile = open(scriptarea+name+str(energies[i])+'_GeV-e.sh',"w")
 
@@ -81,7 +91,7 @@ while (i<nenergy):
 # another good direction is  "0 0.05 0.99875"  and position 0.,-7*mm,-1*cm use this for pure fiber
 # DO IT BOTH PLACES!!!
     shfile.write('ddsim --compactFile='+hostarea+'/DR'
-                 +str(args.geometry)+'.xml --runType=batch -G --steeringFile '+hostarea+'SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_e-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N '+str(args.number)+' >& '+outputarea+'sce_e_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
+                 +str(args.geometry)+'.xml --runType=batch -G --steeringFile '+hostarea+'SCEPCALsteering_'+str(args.steering)+'.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(args.steering)+'_direction_'+str(args.direction)+'_origin_'+str(args.origin)+'_energy_'+str(energies[i])+'GeV_e-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="e-" -N '+str(args.number)+' >& '+outputarea+'sce_e_'+name+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')
@@ -109,7 +119,7 @@ while (i<nenergy):
     shfile.write('echo "ran setup"'+'\n')
     shfile.write('source '+hostarea+'../install/bin/thisDualTestBeam.sh'+'\n')
     shfile.write('echo "ran thisDualTestBeam"'+'\n')
-    shfile.write('ddsim --compactFile='+hostarea+'/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile '+hostarea+'/SCEPCALsteering.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+str(args.geometry)+'_'+str(energies[i])+'.log'+'\n')
+    shfile.write('ddsim --compactFile='+hostarea+'/DR'+str(args.geometry)+'.xml --runType=batch -G --steeringFile '+hostarea+'/SCEPCALsteering_'+str(args.steering)+'.py --outputFile='+outputarea+'out_'+str(args.geometry)+'_'+str(args.steering)+'_direction_'+str(args.direction)+'_origin_'+str(args.origin)+'_energy_'+str(energies[i])+'GeV_pi-.root --part.userParticleHandler='' -G --gun.position="'+poss+'" --gun.direction "'+direct+'" --gun.energy "'+str(energies[i])+'*GeV" --gun.particle="pi-" -N '+str(args.number)+' >& '+outputarea+'sce_pi_'+name+'_'+str(energies[i])+'.log'+'\n')
     shfile.write('exitcode=$?'+'\n')
     shfile.write('echo ""'+'\n')
     shfile.write('END_TIME=`/bin/date`'+'\n')

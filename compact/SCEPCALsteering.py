@@ -76,18 +76,24 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 
 SIM.action.calo = "DualCrysCalorimeterSDAction"
 ## parameters for Calvision sensitive action
+# C is for crystal.  O is for non-crystal (e.g. fibers)
+#SIM.action.calo = ("DualCrysCalorimeterSDAction",
+#  {"dialCherC": 0.1,
+#   "dialScintC": 0.1,
+#   "dialCherO": 0.1,
+#   "dialScintO": 0.1,
+#   "betarel": 0.648,
+#   "printlimitSCE": 10,
+#   "MAXEVENTSCE": 10,
+#  })
 SIM.action.calo = ("DualCrysCalorimeterSDAction",
-  {
-#   "dialCherC": 0.0000125,
-#   "dialScintC": 0.0000125,
-   "dialCherC": 0.1,
-   "dialScintC": 0.1,
-   "dialCherO": 0.01,
-   "dialScintO": 0.01,
+  {"dialCherC": 0.0000125,
+   "dialScintC": 0.000005,
+   "dialCherO": 0.000125,
+   "dialScintO": 0.00000005,
    "betarel": 0.648,
    "printlimitSCE": 10,
    "MAXEVENTSCE": 10,
-   # etc.
   })
 
 

@@ -11,8 +11,6 @@
 //
 //==========================================================================
 
-#include "DBParameters.h"
-
 // Framework include files
 #include <DD4hep/Printout.h>
 #include <DD4hep/Primitives.h>
@@ -21,8 +19,6 @@
 #include "SCEGeant4Output2ROOT.h"
 #include <DDG4/Geant4Particle.h>
 #include <DDG4/Geant4Data.h>
-
-
 
 // Geant4 include files
 #include <G4HCofThisEvent.hh>
@@ -37,7 +33,6 @@
 using namespace dd4hep::sim;
 using namespace dd4hep;
 using namespace std;
-using namespace CalVision;
 
 /// Standard constructor
 SCEGeant4Output2ROOT::SCEGeant4Output2ROOT(Geant4Context* ctxt, const string& nam)
@@ -94,7 +89,7 @@ TTree* SCEGeant4Output2ROOT::section(const string& nam) {
 
 /// Callback to store the Geant4 run information
 void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
-  std::cout<<"in scegeant4output2root start of beginRun"<<std::endl;
+  //  std::cout<<"in scegeant4output2root 5"<<std::endl;
   string fname = m_output;
   if ( m_filesByRun )    {
     size_t idx = m_output.rfind(".");
@@ -115,24 +110,7 @@ void SCEGeant4Output2ROOT::beginRun(const G4Run* run) {
     }
     m_tree = section(m_section);
   }
-
-
-
-  // put into root tuple information that is per run
-  TBranch* b = 0;
-  
-
-  b = m_tree->Branch("dialCherC",&DBParameters::instance()->m_dialCherC,"dialCherC/d");   b->Fill();
-  b = m_tree->Branch("dialScintC",&DBParameters::instance()->m_dialScintC,"dialScintC/d");  b->Fill();
-  b = m_tree->Branch("dialCherO",&DBParameters::instance()->m_dialCherO,"dialCherO/d");  b->Fill();
-  b = m_tree->Branch("dialScintO",&DBParameters::instance()->m_dialScintO,"dialScintO/d");  b->Fill();
-
-
-
-
-
   Geant4OutputAction::beginRun(run);
-
 }
 
 /// Fill single EVENT branch entry (Geant4 collection data)
@@ -187,8 +165,6 @@ void SCEGeant4Output2ROOT::commit(OutputContext<G4Event>& ctxt) {
     for (Int_t i = 0; i < nb; ++i) {
       TBranch* br_ptr = (TBranch*) a->UncheckedAt(i);
       Long64_t br_evt = br_ptr->GetEntries();
-      std::cout<<"  for branch "<<i<<" class name is "<<br_ptr->GetClassName()<<" icon name is "<<br_ptr->GetIconName()<<std::endl;
-      
       if (br_evt < evt) {
         Long64_t num = evt - br_evt;
         br_ptr->SetAddress(0);
@@ -197,7 +173,6 @@ void SCEGeant4Output2ROOT::commit(OutputContext<G4Event>& ctxt) {
           --num;
         }
       }
-      
     }
     m_tree->SetEntries(evt);
   }
